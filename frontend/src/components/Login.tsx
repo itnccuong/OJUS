@@ -5,6 +5,7 @@ import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { Slide, toast } from "react-toastify";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
@@ -22,12 +23,20 @@ export default function Login() {
         password,
       });
       console.log(data);
-      // alert("Login successfully!");
-
       localStorage.setItem("user", JSON.stringify(data.data));
       navigate("/");
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
       console.error(error);
     }
   };

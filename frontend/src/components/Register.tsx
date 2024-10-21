@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { Slide, toast } from "react-toastify";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Register() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("The passwords you entered do not match.")
       return;
     }
 
@@ -31,10 +32,20 @@ export default function Register() {
         fullname,
       });
       console.log(data);
-      alert("Registered successfully!");
+      toast.success("Registered successfully!")
       navigate("/accounts/login");
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
       console.error(error);
     }
   };
