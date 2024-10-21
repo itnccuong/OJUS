@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import getURL from "../../utils/getURL";
 import { Link, useNavigate } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { FloatingLabel, Form } from "react-bootstrap";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -37,14 +37,25 @@ export default function Register() {
     }
   };
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{
+        backgroundColor: "#eceff1",
+      }}
+    >
       <Form
-        className="p-4 border border-secondary rounded w-25"
+        className="p-4 rounded w-25 bg-white shadow"
         onSubmit={handleSubmit}
       >
         <h3 className="text-center mb-3">Sign Up</h3>
 
-        <div className="mb-3">
+        <FloatingLabel
+          className="mb-3"
+          label="Username"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             pattern="[^@]+"
             title="The username cannot contain '@'"
@@ -53,42 +64,65 @@ export default function Register() {
             placeholder="Username"
             onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
-        <div className="mb-3">
+        </FloatingLabel>
+        <FloatingLabel
+          className="mb-3"
+          label="Full Name"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="text"
             placeholder="Full Name"
             onChange={(e) => setFullName(e.target.value)}
           />
-        </div>
-
-        <div className="mb-3">
+        </FloatingLabel>
+        <FloatingLabel
+          className="mb-3"
+          label="Password"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="password"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
+        </FloatingLabel>
 
-        <div className="mb-3">
+        <FloatingLabel
+          className="mb-3"
+          label="Confirm Password"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="password"
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-        </div>
+        </FloatingLabel>
 
-        <div className="mb-3">
+        <FloatingLabel
+          className="mb-3"
+          label="E-mail address"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="email"
             placeholder="E-mail address"
             onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
+        </FloatingLabel>
 
         <div className="mb-3">
           <button className="btn btn-primary w-100" type="submit">
