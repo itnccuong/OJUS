@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import getURL from "../../utils/getURL";
-import { Form } from "react-bootstrap";
+import { FloatingLabel, Form } from "react-bootstrap";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
@@ -31,29 +31,46 @@ export default function Login() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{
+        backgroundColor: "#eceff1",
+      }}
+    >
       <Form
-        className="p-4 border border-secondary rounded w-25"
+        className="p-4 rounded w-25 bg-white shadow"
         onSubmit={handleSubmit}
       >
         <h3 className="text-center mb-3">Sign In</h3>
-        <div className="mb-3">
+        <FloatingLabel
+          className="mb-3"
+          label="Username or E-mail"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="text"
             placeholder="Username or E-mail"
             onChange={(e) => setUsernameOrEmail(e.target.value)}
           />
-        </div>
+        </FloatingLabel>
 
-        <div className="mb-3">
+        <FloatingLabel
+          className="mb-3"
+          label="Password"
+          style={{
+            color: "#666666",
+          }}
+        >
           <Form.Control
             required
             type="password"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
+        </FloatingLabel>
 
         <div className="mb-2">
           <button type="submit" className="btn btn-primary w-100">

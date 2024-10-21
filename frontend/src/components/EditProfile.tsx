@@ -11,7 +11,7 @@ export default function EditProfile() {
 
   useEffect(() => {
     if (!storage) {
-      navigate("/accounts/login")
+      navigate("/accounts/login");
     }
   }, [storage, navigate])
 
