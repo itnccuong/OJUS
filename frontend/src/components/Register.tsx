@@ -52,7 +52,15 @@ export default function Register() {
           className="p-4 rounded w-25 bg-white shadow"
           onSubmit={handleSubmit}
         >
-          <h3 className="text-center mb-3">Sign Up</h3>
+          <Container className="d-flex justify-content-center align-items-center mb-4">
+            <img
+              src="https://assets.leetcode.com/static_assets/public/webpack_bundles/images/logo.c36eaf5e6.svg"
+              width="80"
+              height="80"
+              // className="d-inline-block align-top"
+              alt="React Bootstrap logo"
+            />
+          </Container>
 
           <FloatingLabel
             className="mb-3"

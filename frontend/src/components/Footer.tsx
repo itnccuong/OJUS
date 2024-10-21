@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="d-flex flex-wrap justify-content-between align-items-center py-1 my-2">
       <div className="col-md-4 d-flex align-items-center">
-        <a
+        {/* <a
           href="/"
           className="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1"
         >
@@ -13,10 +13,7 @@ export default function Footer() {
             className="d-inline-block align-top"
             alt="React Bootstrap logo"
           />
-          <svg className="bi" width="30" height="24">
-            <use xlinkHref="#bootstrap" />
-          </svg>
-        </a>
+        </a> */}
         <span className="mb-3 mb-md-0 text-body-secondary">
           Copyright &copy; 2024 LeetCode
         </span>
