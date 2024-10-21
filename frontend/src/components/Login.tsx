@@ -2,8 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import getURL from "../../utils/getURL";
-import { FloatingLabel, Form } from "react-bootstrap";
+import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
@@ -38,7 +39,7 @@ export default function Login() {
         className="d-flex justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "93vh",
+          height: "86vh",
         }}
       >
         <Form
@@ -92,6 +93,9 @@ export default function Login() {
           </div>
         </Form>
       </div>
+      <Container>
+        <Footer />
+      </Container>
     </>
   );
 }

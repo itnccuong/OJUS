@@ -2,8 +2,9 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import getURL from "../../utils/getURL";
 import { Link, useNavigate } from "react-router-dom";
-import { FloatingLabel, Form } from "react-bootstrap";
+import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function Register() {
         className="d-flex justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "93vh",
+          height: "86vh",
         }}
       >
         <Form
@@ -141,6 +142,9 @@ export default function Register() {
           </div>
         </Form>
       </div>
+      <Container>
+        <Footer />
+      </Container>
     </>
   );
 }
