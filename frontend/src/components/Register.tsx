@@ -2,7 +2,9 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import getURL from "../../utils/getURL";
 import { Link, useNavigate } from "react-router-dom";
-import { FloatingLabel, Form } from "react-bootstrap";
+import { Container, FloatingLabel, Form } from "react-bootstrap";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -37,105 +39,120 @@ export default function Register() {
     }
   };
   return (
-    <div
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{
-        backgroundColor: "#eceff1",
-      }}
-    >
-      <Form
-        className="p-4 rounded w-25 bg-white shadow"
-        onSubmit={handleSubmit}
+    <>
+      <NavBar />
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{
+          backgroundColor: "#eceff1",
+          height: "86vh",
+        }}
       >
-        <h3 className="text-center mb-3">Sign Up</h3>
-
-        <FloatingLabel
-          className="mb-3"
-          label="Username"
-          style={{
-            color: "#666666",
-          }}
+        <Form
+          className="p-4 rounded w-25 bg-white shadow"
+          onSubmit={handleSubmit}
         >
-          <Form.Control
-            pattern="[^@]+"
-            title="The username cannot contain '@'"
-            required
-            type="text"
-            placeholder="Username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </FloatingLabel>
-        <FloatingLabel
-          className="mb-3"
-          label="Full Name"
-          style={{
-            color: "#666666",
-          }}
-        >
-          <Form.Control
-            required
-            type="text"
-            placeholder="Full Name"
-            onChange={(e) => setFullName(e.target.value)}
-          />
-        </FloatingLabel>
-        <FloatingLabel
-          className="mb-3"
-          label="Password"
-          style={{
-            color: "#666666",
-          }}
-        >
-          <Form.Control
-            required
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FloatingLabel>
+          <Container className="d-flex justify-content-center align-items-center mb-4">
+            <img
+              src="https://assets.leetcode.com/static_assets/public/webpack_bundles/images/logo.c36eaf5e6.svg"
+              width="80"
+              height="80"
+              // className="d-inline-block align-top"
+              alt="React Bootstrap logo"
+            />
+          </Container>
 
-        <FloatingLabel
-          className="mb-3"
-          label="Confirm Password"
-          style={{
-            color: "#666666",
-          }}
-        >
-          <Form.Control
-            required
-            type="password"
-            placeholder="Confirm Password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </FloatingLabel>
+          <FloatingLabel
+            className="mb-3"
+            label="Username"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              pattern="[^@]+"
+              title="The username cannot contain '@'"
+              required
+              type="text"
+              placeholder="Username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            className="mb-3"
+            label="Full Name"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="text"
+              placeholder="Full Name"
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            className="mb-3"
+            label="Password"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FloatingLabel>
 
-        <FloatingLabel
-          className="mb-3"
-          label="E-mail address"
-          style={{
-            color: "#666666",
-          }}
-        >
-          <Form.Control
-            required
-            type="email"
-            placeholder="E-mail address"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </FloatingLabel>
+          <FloatingLabel
+            className="mb-3"
+            label="Confirm Password"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="password"
+              placeholder="Confirm Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </FloatingLabel>
 
-        <div className="mb-3">
-          <button className="btn btn-primary w-100" type="submit">
-            Sign Up
-          </button>
-        </div>
+          <FloatingLabel
+            className="mb-3"
+            label="E-mail address"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="email"
+              placeholder="E-mail address"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FloatingLabel>
 
-        <div className="d-flex justify-content-center">
-          <p>
-            Have an account? <Link to="/accounts/login">Sign In</Link>
-          </p>
-        </div>
-      </Form>
-    </div>
+          <div className="mb-3">
+            <button className="btn btn-primary w-100" type="submit">
+              Sign Up
+            </button>
+          </div>
+
+          <div className="d-flex justify-content-center">
+            <p>
+              Have an account? <Link to="/accounts/login">Sign In</Link>
+            </p>
+          </div>
+        </Form>
+      </div>
+      <Container>
+        <Footer />
+      </Container>
+    </>
   );
 }
