@@ -24,6 +24,8 @@ export default function Footer() {
           <a
             className="text-body-secondary"
             href="https://www.facebook.com/profile.php?id=61557169305419"
+            target="_blank" // Open in new tab
+            rel="noopener noreferrer" // Open in new tab
           >
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg"
@@ -36,7 +38,9 @@ export default function Footer() {
         <li className="ms-3">
           <a
             className="text-body-secondary"
-            href="https://www.youtube.com/watch?v=4Ntc2lTu7LQ&t=1212s"
+            href="https://youtu.be/4Ntc2lTu7LQ?si=cPA79t3sZV6rahV5"
+            target="_blank" // Open in new tab
+            rel="noopener noreferrer" // Open in new tab
           >
             <img
               src="/youtube.svg"
@@ -51,9 +55,11 @@ export default function Footer() {
           <a
             className="text-body-secondary"
             href="https://github.com/VuongNhatHien/Vua-Leetcode"
+            target="_blank" // Open in new tab
+            rel="noopener noreferrer" // Open in new tab
           >
             <img
-              src="https://vincent-yao27.github.io/ph-icon-gen/git.png"
+              src="/git.png"
               width="50"
               height="24"
               // className="d-inline-block align-top"

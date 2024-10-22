@@ -5,6 +5,7 @@ import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { Slide, toast } from "react-toastify";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
@@ -22,12 +23,11 @@ export default function Login() {
         password,
       });
       console.log(data);
-      // alert("Login successfully!");
-
+      toast.success("Logged in successfully");
       localStorage.setItem("user", JSON.stringify(data.data));
       navigate("/");
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
       console.error(error);
     }
   };
@@ -87,7 +87,7 @@ export default function Login() {
             />
           </FloatingLabel>
 
-          <div className="mb-2">
+          <div className="mb-3">
             <button type="submit" className="btn btn-primary w-100">
               Sign In
             </button>
@@ -95,10 +95,24 @@ export default function Login() {
 
           <div className="d-flex justify-content-between align-items-center">
             <p>
-              <Link to="/accounts/password/reset">Forgot Password?</Link>
+              <Link
+                to="/accounts/password/reset"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Forgot Password?
+              </Link>
             </p>
             <p>
-              <Link to="/accounts/register">Sign Up</Link>
+              <Link
+                to="/accounts/register"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Sign Up
+              </Link>
             </p>
           </div>
         </Form>
