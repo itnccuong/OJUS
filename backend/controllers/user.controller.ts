@@ -11,9 +11,9 @@ interface ProfileRequest extends Request {
   };
 }
 
+const prisma = new PrismaClient();
 const getProfileByName = async (req: ProfileRequest, res: Response) => {
   try {
-    const prisma = new PrismaClient();
     const username = req.params.username
 
     const user = await prisma.user.findFirst({

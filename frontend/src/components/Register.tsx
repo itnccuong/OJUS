@@ -20,7 +20,7 @@ export default function Register() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("The passwords you entered do not match.")
+      toast.error("The passwords you entered do not match.");
       return;
     }
 
@@ -32,20 +32,10 @@ export default function Register() {
         fullname,
       });
       console.log(data);
-      toast.success("Registered successfully!")
+      toast.success("Registered successfully!");
       navigate("/accounts/login");
     } catch (error: any) {
-      toast.error(error.response.data.message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide,
-      });
+      toast.error(error.response.data.message);
       console.error(error);
     }
   };
@@ -156,7 +146,15 @@ export default function Register() {
 
           <div className="d-flex justify-content-center">
             <p>
-              Have an account? <Link to="/accounts/login">Sign In</Link>
+              Have an account?{" "}
+              <Link
+                to="/accounts/login"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Sign In
+              </Link>
             </p>
           </div>
         </Form>

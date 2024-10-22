@@ -23,20 +23,11 @@ export default function Login() {
         password,
       });
       console.log(data);
+      toast.success("Logged in successfully");
       localStorage.setItem("user", JSON.stringify(data.data));
       navigate("/");
     } catch (error: any) {
-      toast.error(error.response.data.message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide,
-      });
+      toast.error(error.response.data.message);
       console.error(error);
     }
   };
@@ -96,7 +87,7 @@ export default function Login() {
             />
           </FloatingLabel>
 
-          <div className="mb-2">
+          <div className="mb-3">
             <button type="submit" className="btn btn-primary w-100">
               Sign In
             </button>
@@ -104,10 +95,24 @@ export default function Login() {
 
           <div className="d-flex justify-content-between align-items-center">
             <p>
-              <Link to="/accounts/password/reset">Forgot Password?</Link>
+              <Link
+                to="/accounts/password/reset"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Forgot Password?
+              </Link>
             </p>
             <p>
-              <Link to="/accounts/register">Sign Up</Link>
+              <Link
+                to="/accounts/register"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Sign Up
+              </Link>
             </p>
           </div>
         </Form>

@@ -9,6 +9,9 @@ import EditProfile from "./components/EditProfile";
 import { Slide, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import ForgotPassWord from "./components/ForgotPassword";
+import ForgotPasswordDone from "./components/ForgotPasswordDone";
+import ChangePassword from "./components/ChangePassword";
 
 export default function App() {
   return (
@@ -21,6 +24,9 @@ export default function App() {
           <Route path="/u/:username" element={<Profile />} />
           <Route path="/problem" element={<Problem />} />
           <Route path="/profile" element={<EditProfile />} />
+          <Route path="/accounts/password/reset" element={<ForgotPassWord />} />
+          <Route path="/accounts/password/reset/done" element={<ForgotPasswordDone />} />
+          <Route path="/accounts/password/reset/key/:token" element={<ChangePassword />} />
         </Routes>
       </Router>
       <ToastContainer
