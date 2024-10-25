@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { Slide, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const navigate = useNavigate();
