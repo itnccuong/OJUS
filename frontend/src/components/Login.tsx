@@ -5,7 +5,7 @@ import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { Slide, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
