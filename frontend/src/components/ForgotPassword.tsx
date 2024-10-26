@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "./NavBar";
@@ -10,33 +10,26 @@ import { toast } from "react-toastify";
 export default function ForgotPassWord() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent default form submission behavior
+    setLoading(true);
     try {
-    //   const res = await axios.post(getURL("/api/auth/reset-link"), {
-    //     email: email,
-    //   });
-      toast.promise(
+      await toast.promise(
         axios.post(getURL("/api/auth/reset-link"), {
-            email: email,
-          }),
+          email: email,
+        }),
         {
           pending: "Sending reset link...",
           success: "Reset link sent successfully!",
           error: "Failed to send reset link",
-        },
-        // {
-        //   style: {
-        //     minWidth: "250px",
-        //   },
-        // }
-      ).then(() => {
-          navigate("/accounts/password/reset/done");
-      })
-
+        }
+      );
+      navigate("/accounts/password/reset/done");
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,8 +79,12 @@ export default function ForgotPassWord() {
           </FloatingLabel>
 
           <div className="mb-2">
-            <button type="submit" className="btn btn-primary w-100">
-              Reset My Password
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Reset My Password"}
             </button>
           </div>
         </Form>
