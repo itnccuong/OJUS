@@ -165,7 +165,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                     {tags.map((tag, index) => (
                       <span
                         key={index}
-                        className={`badge rounded-pill ${
+                        className={`badge rounded-pill m-1 ${
                           tag.selected ? "bg-primary" : "bg-grey text-dark"
                         } mx-1`}
                         onClick={() => toggleTag(index)}
