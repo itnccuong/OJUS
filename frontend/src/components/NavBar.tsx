@@ -14,7 +14,7 @@ function NavBar() {
     navigate("/accounts/login"); // Redirect to login
   };
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary border-bottom">
       <Container>
         <Navbar.Brand as={NavLink} to={"/"}>
           <img
@@ -26,9 +26,15 @@ function NavBar() {
           />
         </Navbar.Brand>
 
-        <Nav className="me-auto">
+        <Nav>
           <Nav.Link as={NavLink} to={"/problem"}>
             Problems
+          </Nav.Link>
+        </Nav>
+
+        <Nav className="me-auto">
+          <Nav.Link as={NavLink} to={"/contribute"}>
+            Contribute
           </Nav.Link>
         </Nav>
 
