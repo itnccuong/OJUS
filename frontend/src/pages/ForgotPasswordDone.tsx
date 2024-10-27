@@ -1,11 +1,6 @@
-import axios from "axios";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import getURL from "../../utils/getURL";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import { toast } from "react-toastify";
 
 export default function ForgotPasswordDone() {
   return (
