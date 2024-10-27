@@ -5,7 +5,7 @@ import getURL from "../../utils/getURL";
 import { StorageConfig } from "../../interfaces/interface";
 import getStorage from "../../utils/getStorage";
 import { Button } from "react-bootstrap";
-import NavBar from "./NavBar";
+import NavBar from "../components/NavBar";
 
 export default function Profile() {
   const navigate = useNavigate();

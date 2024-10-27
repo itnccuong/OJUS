@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/Login";
-import Home from "./components/Home";
-import Register from "./components/Register";
-import Profile from "./components/Profile";
-import Problem from "./components/Problem";
-import EditProfile from "./components/EditProfile";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import Problem from "./pages/Problem";
+import EditProfile from "./pages/EditProfile";
 
 import { Slide, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import ForgotPassWord from "./components/ForgotPassword";
-import ForgotPasswordDone from "./components/ForgotPasswordDone";
-import ChangePassword from "./components/ChangePassword";
+import ForgotPassWord from "./pages/ForgotPassword";
+import ForgotPasswordDone from "./pages/ForgotPasswordDone";
+import ChangePassword from "./pages/ChangePassword";
 
 export default function App() {
   return (
