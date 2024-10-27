@@ -1,4 +1,4 @@
-import { Button, Container, Form } from "react-bootstrap";
+import { Accordion, Badge, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -7,6 +7,11 @@ import { StorageConfig } from "../../interfaces/interface";
 import getStorage from "../../utils/getStorage";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+interface Tag {
+  label: string;
+  selected: boolean;
+}
 
 export default function Contribute() {
   const navigate = useNavigate(); // Initialize navigate
@@ -29,7 +34,8 @@ export default function Contribute() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      console.log("submit", inputFile?.name, outputFile?.name);
+        console.log("submit", tags.filter(tag => tag.selected).map(tag => tag.label));
+
       // const { data } = await axios.post(getURL("/api/contribute"), {
       //   title,
       //   description,
@@ -42,6 +48,34 @@ export default function Contribute() {
       toast.error(error.response.data.message);
     }
   };
+  const initialTags: Tag[] = [
+    { label: "Array", selected: false },
+    { label: "String", selected: false },
+    { label: "Hash Table", selected: false },
+    { label: "Dynamic Programming", selected: false },
+    { label: "Math", selected: false },
+    { label: "Sorting", selected: false },
+    { label: "Greedy", selected: false },
+    { label: "Depth-First Search", selected: false },
+    { label: "Database", selected: false },
+    { label: "Binary Search", selected: false },
+    { label: "Matrix", selected: false },
+    { label: "Tree", selected: false },
+    { label: "Breadth-First Search", selected: false },
+  ];
+
+  const [tags, setTags] = useState<Tag[]>(initialTags);
+
+  const toggleTag = (index: number) => {
+    setTags(prevTags =>
+      prevTags.map((tag, i) => (i === index ? { ...tag, selected: !tag.selected } : tag))
+    );
+  };
+
+  const handleResetTags = () => {
+    setTags(initialTags);
+  }
+
   const markdown = `
 **1. Great titles are concise, descriptive, and specific.**
 
@@ -118,6 +152,35 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               <option value="Hard">Hard</option>
             </Form.Select>
 
+            <Accordion defaultActiveKey="0" className="mt-3 mb-3 w-50">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Tags</Accordion.Header>
+                <Accordion.Body className="shadow bg-light">
+                  <div className="mb-3">
+                    {tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className={`badge rounded-pill ${
+                          tag.selected ? "bg-primary" : "bg-secondary"
+                        } mx-1`}
+                        onClick={() => toggleTag(index)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {tag.label}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="d-flex justify-content-end border-top">
+                    
+                    <Button variant="primary" className="w-25 mt-3" onClick={() => handleResetTags()}>
+                      Reset
+                    </Button>
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+
             <h5 className="mt-3 mb-3">Description</h5>
             <Form.Check
               type="switch"
@@ -164,6 +227,26 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               onChange={(e) =>
                 setOutputFile((e.target as HTMLInputElement).files?.[0] || null)
               }
+            />
+
+            <h5 className="mt-3 mb-3">Time limit (ms)</h5>
+
+            <Form.Control
+              required
+              type="text"
+              //   placeholder="Time limit"
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-50 mb-2"
+            />
+
+            <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
+
+            <Form.Control
+              required
+              type="text"
+              //   placeholder="Pick a title"
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-50 mb-2"
             />
 
             <Container className="d-flex justify-content-center mt-2">
