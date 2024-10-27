@@ -152,7 +152,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               <option value="Hard">Hard</option>
             </Form.Select>
 
-            <Accordion defaultActiveKey="0" className="mt-3 mb-3 w-50">
+            <Accordion className="mt-3 mb-3 w-50">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Tags</Accordion.Header>
                 <Accordion.Body className="shadow bg-light">
