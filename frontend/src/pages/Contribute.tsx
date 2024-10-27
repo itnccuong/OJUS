@@ -34,7 +34,10 @@ export default function Contribute() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-        console.log("submit", tags.filter(tag => tag.selected).map(tag => tag.label));
+      console.log(
+        "submit",
+        tags.filter((tag) => tag.selected).map((tag) => tag.label)
+      );
 
       // const { data } = await axios.post(getURL("/api/contribute"), {
       //   title,
@@ -67,14 +70,16 @@ export default function Contribute() {
   const [tags, setTags] = useState<Tag[]>(initialTags);
 
   const toggleTag = (index: number) => {
-    setTags(prevTags =>
-      prevTags.map((tag, i) => (i === index ? { ...tag, selected: !tag.selected } : tag))
+    setTags((prevTags) =>
+      prevTags.map((tag, i) =>
+        i === index ? { ...tag, selected: !tag.selected } : tag
+      )
     );
   };
 
   const handleResetTags = () => {
     setTags(initialTags);
-  }
+  };
 
   const markdown = `
 **1. Great titles are concise, descriptive, and specific.**
@@ -155,13 +160,13 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Accordion className="mt-3 mb-3 w-50">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Tags</Accordion.Header>
-                <Accordion.Body className="bg-light">
+                <Accordion.Body>
                   <div className="mb-3">
                     {tags.map((tag, index) => (
                       <span
                         key={index}
                         className={`badge rounded-pill ${
-                          tag.selected ? "bg-primary" : "bg-secondary"
+                          tag.selected ? "bg-primary" : "bg-grey text-dark"
                         } mx-1`}
                         onClick={() => toggleTag(index)}
                         style={{ cursor: "pointer" }}
@@ -170,10 +175,12 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                       </span>
                     ))}
                   </div>
-                  
                   <div className="d-flex justify-content-end border-top">
-                    
-                    <Button variant="primary" className="w-25 mt-3" onClick={() => handleResetTags()}>
+                    <Button
+                      variant="primary"
+                      className=" w-25 mt-3"
+                      onClick={() => handleResetTags()}
+                    >
                       Reset
                     </Button>
                   </div>
@@ -234,7 +241,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Control
               required
               type="text"
-              //   placeholder="Time limit"
+                placeholder="Time limit"
               onChange={(e) => setTitle(e.target.value)}
               className="w-50 mb-2"
             />
@@ -244,7 +251,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Control
               required
               type="text"
-              //   placeholder="Pick a title"
+                placeholder="Memory limit"
               onChange={(e) => setTitle(e.target.value)}
               className="w-50 mb-2"
             />
@@ -257,10 +264,9 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
           </Container>
 
           <Container
-            className="p-3 border-bottom border-end"
+            className="p-3 border-bottom border-end bg-light"
             style={{
               width: "550px",
-              backgroundColor: "#fbfbfb",
             }}
           >
             <Container

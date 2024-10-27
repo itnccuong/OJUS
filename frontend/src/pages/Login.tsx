@@ -36,9 +36,9 @@ export default function Login() {
     <>
       <NavBar />
       <div
-        className="d-flex justify-content-center align-items-center"
+        className="d-flex justify-content-center align-items-center bg-grey"
         style={{
-          backgroundColor: "#eceff1",
+          // backgroundColor: "#eceff1",
           height: "86vh",
         }}
       >
