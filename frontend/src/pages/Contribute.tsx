@@ -1,10 +1,23 @@
 import { Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
+import { StorageConfig } from "../../interfaces/interface";
+import getStorage from "../../utils/getStorage";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Contribute() {
+  const navigate = useNavigate(); // Initialize navigate
+  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+
+  useEffect(() => {
+    if (!storage) {
+        toast.error("You need to login first");
+      navigate("/accounts/login");
+    }
+  }, [storage, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isMarkdown, setIsMarkdown] = useState(false);
