@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar";
+import NavBar from "../components/NavBar";
 import { StorageConfig } from "../../interfaces/interface";
 import getStorage from "../../utils/getStorage";
 import { useEffect } from "react";

@@ -1,7 +1,7 @@
 // import { useNavigate } from "react-router-dom";
 import getStorage from "../../utils/getStorage";
 import { StorageConfig } from "../../interfaces/interface";
-import NavBar from "./NavBar";
+import NavBar from "../components/NavBar";
 // import { useEffect } from "react";
 
 export default function Home() {

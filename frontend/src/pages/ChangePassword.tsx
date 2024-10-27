@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
-import { Slide, toast } from "react-toastify";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import { toast } from "react-toastify";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function ChangePassword() {

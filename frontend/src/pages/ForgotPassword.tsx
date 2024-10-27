@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 
 export default function ForgotPassWord() {
