@@ -155,7 +155,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Accordion className="mt-3 mb-3 w-50">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Tags</Accordion.Header>
-                <Accordion.Body className="shadow bg-light">
+                <Accordion.Body className="bg-light">
                   <div className="mb-3">
                     {tags.map((tag, index) => (
                       <span
