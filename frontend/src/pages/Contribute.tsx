@@ -38,6 +38,10 @@ export default function Contribute() {
         "submit",
         tags.filter((tag) => tag.selected).map((tag) => tag.label)
       );
+      console.log(
+        "submit",
+        tags.filter((tag) => tag.selected).map((tag) => tag.label)
+      );
 
       // const { data } = await axios.post(getURL("/api/contribute"), {
       //   title,
