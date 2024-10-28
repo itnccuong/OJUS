@@ -163,16 +163,17 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 <Accordion.Body>
                   <div className="mb-3">
                     {tags.map((tag, index) => (
-                      <span
+                      <Button
+                        variant={tag.selected ? "primary" : "light"}
                         key={index}
                         className={`badge rounded-pill m-1 ${
-                          tag.selected ? "bg-primary" : "bg-grey text-dark"
+                          tag.selected ? "" : "text-dark"
                         } mx-1`}
                         onClick={() => toggleTag(index)}
                         style={{ cursor: "pointer" }}
                       >
                         {tag.label}
-                      </span>
+                      </Button>
                     ))}
                   </div>
                   <div className="d-flex justify-content-end border-top">
@@ -241,7 +242,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Control
               required
               type="text"
-                placeholder="Time limit"
+              placeholder="Time limit"
               onChange={(e) => setTitle(e.target.value)}
               className="w-50 mb-2"
             />
@@ -251,7 +252,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Control
               required
               type="text"
-                placeholder="Memory limit"
+              placeholder="Memory limit"
               onChange={(e) => setTitle(e.target.value)}
               className="w-50 mb-2"
             />
