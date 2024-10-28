@@ -14,8 +14,8 @@ function NavBar() {
     navigate("/accounts/login"); // Redirect to login
   };
   return (
-    <Navbar expand="lg" className="bg-body-tertiary border-bottom">
-      <Container>
+    <Navbar expand="lg" className="bg-body-tertiary border-bottom d-flex">
+      <Container className="d-flex">
         <Navbar.Brand as={NavLink} to={"/"}>
           <img
             src="/leetcode.svg"
@@ -27,50 +27,54 @@ function NavBar() {
         </Navbar.Brand>
 
         <Nav>
-          <Nav.Link as={NavLink} to={"/problem"}>
+          <Nav.Link as={NavLink} to={"/problem"} className="mx-2">
             Problems
           </Nav.Link>
         </Nav>
 
-        <Nav className="me-auto">
-          <Nav.Link as={NavLink} to={"/contribute"}>
+        <Nav>
+          <Nav.Link as={NavLink} to={"/contribute"} className="mx-2">
             Contribute
           </Nav.Link>
         </Nav>
 
-        {storage ? (
-          <>
-            <Nav>
-              <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
-                Profile
-              </Nav.Link>
-            </Nav>
+        <Nav>
+          <Nav.Link as={NavLink} to={"/contributions"} className="mx-2">
+            Contributions
+          </Nav.Link>
+        </Nav>
 
-            <Nav>|</Nav>
+        <Container className="d-flex justify-content-end">
+          {storage ? (
+            <>
+              <Nav>
+                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`} className="mx-2">
+                  Profile
+                </Nav.Link>
+              </Nav>
 
-            <Nav className="d-flex justify-content-end">
-              <Nav.Link href="#" onClick={handleSignOut}>
-                Sign Out
-              </Nav.Link>
-            </Nav>
-          </>
-        ) : (
-          <>
-            <Nav>
-              <Nav.Link as={NavLink} to="/accounts/register">
-                Register
-              </Nav.Link>
-            </Nav>
+              <Nav>
+                <Nav.Link href="#" onClick={handleSignOut}>
+                  Sign Out
+                </Nav.Link>
+              </Nav>
+            </>
+          ) : (
+            <>
+              <Nav>
+                <Nav.Link as={NavLink} to="/accounts/register" className="mx-2">
+                  Register
+                </Nav.Link>
+              </Nav>
 
-            <Nav>|</Nav>
-
-            <Nav>
-              <Nav.Link as={NavLink} to="/accounts/login">
-                Sign In
-              </Nav.Link>
-            </Nav>
-          </>
-        )}
+              <Nav>
+                <Nav.Link as={NavLink} to="/accounts/login">
+                  Sign In
+                </Nav.Link>
+              </Nav>
+            </>
+          )}
+        </Container>
       </Container>
     </Navbar>
   );

@@ -13,6 +13,7 @@ import ForgotPassWord from "./pages/ForgotPassword";
 import ForgotPasswordDone from "./pages/ForgotPasswordDone";
 import ChangePassword from "./pages/ChangePassword";
 import Contribute from "./pages/Contribute";
+import Contributions from "./pages/Contributions";
 
 export default function App() {
   return (
@@ -26,9 +27,16 @@ export default function App() {
           <Route path="/problem" element={<Problem />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassWord />} />
-          <Route path="/accounts/password/reset/done" element={<ForgotPasswordDone />} />
-          <Route path="/accounts/password/reset/key/:token" element={<ChangePassword />} />
+          <Route
+            path="/accounts/password/reset/done"
+            element={<ForgotPasswordDone />}
+          />
+          <Route
+            path="/accounts/password/reset/key/:token"
+            element={<ChangePassword />}
+          />
           <Route path="/contribute" element={<Contribute />} />
+          <Route path="/contributions" element={<Contributions />} />
         </Routes>
       </Router>
       <ToastContainer
