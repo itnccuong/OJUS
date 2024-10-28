@@ -3,7 +3,14 @@ import getStorage from "../../utils/getStorage";
 import { StorageConfig } from "../../interfaces/interface";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import { Accordion, Button, Container } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  ButtonGroup,
+  Container,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
 import { useState } from "react";
 // import { useEffect } from "react";
 
@@ -52,6 +59,78 @@ export default function Contributions() {
             height: "100vh",
           }}
         >
+          <div className="d-flex mt-3">
+            <ButtonGroup>
+              <DropdownButton
+                variant="secondary"
+                title="Difficulty"
+                className="me-2"
+              >
+                <div className="d-flex flex-column">
+                  <Dropdown.Item>
+                    <Button variant="white" className="w-100 text-success">
+                      Easy
+                    </Button>
+                  </Dropdown.Item>
+
+                  <Dropdown.Item>
+                    <Button variant="white" className="w-100 text-warning">
+                      Medium
+                    </Button>
+                  </Dropdown.Item>
+
+                  <Dropdown.Item>
+                    <Button variant="white" className="w-100 text-danger">
+                      Hard
+                    </Button>
+                  </Dropdown.Item>
+                </div>
+              </DropdownButton>
+
+              <DropdownButton
+                // key="2"
+                variant="secondary"
+                title="Status"
+                className="me-2"
+              >
+                <Dropdown.Item eventKey="1">Solved</Dropdown.Item>
+                <Dropdown.Item eventKey="2">Attempted</Dropdown.Item>
+              </DropdownButton>
+
+              <DropdownButton
+                // key="2"
+                variant="secondary"
+                title="Tags"
+              >
+                <div className="mb-3" style={{
+                    width: "300px",
+                }}>
+                  {tags.map((tag, index) => (
+                    <Button
+                      variant={tag.selected ? "primary" : "light"}
+                      key={index}
+                      className={`badge rounded-pill m-1 ${
+                        tag.selected ? "" : "text-dark"
+                      } mx-1`}
+                      onClick={() => toggleTag(index)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {tag.label}
+                    </Button>
+                  ))}
+                </div>
+                <div className="d-flex justify-content-end border-top">
+                  <Button
+                    variant="primary"
+                    className=" w-25 mt-3"
+                    onClick={() => handleResetTags()}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </DropdownButton>
+            </ButtonGroup>
+          </div>
           {/* <div className="d-flex mt-3">
             <Accordion>
               <Accordion.Item eventKey="0">
