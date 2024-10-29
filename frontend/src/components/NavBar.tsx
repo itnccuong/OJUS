@@ -15,7 +15,7 @@ function NavBar() {
   };
   return (
     <Navbar expand="lg" className="bg-body-tertiary border-bottom d-flex">
-      <Container className="d-flex">
+      <Container className="d-flex gap-3">
         <Navbar.Brand as={NavLink} to={"/"}>
           <img
             src="/leetcode.svg"
@@ -27,28 +27,28 @@ function NavBar() {
         </Navbar.Brand>
 
         <Nav>
-          <Nav.Link as={NavLink} to={"/problem"} className="mx-2">
+          <Nav.Link as={NavLink} to={"/problem"}>
             Problems
           </Nav.Link>
         </Nav>
 
         <Nav>
-          <Nav.Link as={NavLink} to={"/contribute"} className="mx-2">
+          <Nav.Link as={NavLink} to={"/contribute"}>
             Contribute
           </Nav.Link>
         </Nav>
 
         <Nav>
-          <Nav.Link as={NavLink} to={"/contributions"} className="mx-2">
+          <Nav.Link as={NavLink} to={"/contributions"}>
             Contributions
           </Nav.Link>
         </Nav>
 
-        <Container className="d-flex justify-content-end">
+        <Container className="d-flex justify-content-end gap-2">
           {storage ? (
             <>
               <Nav>
-                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`} className="mx-2">
+                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
                   Profile
                 </Nav.Link>
               </Nav>
@@ -62,7 +62,7 @@ function NavBar() {
           ) : (
             <>
               <Nav>
-                <Nav.Link as={NavLink} to="/accounts/register" className="mx-2">
+                <Nav.Link as={NavLink} to="/accounts/register">
                   Register
                 </Nav.Link>
               </Nav>
