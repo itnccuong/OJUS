@@ -97,9 +97,7 @@ export default function ChangePassword() {
           </div>
         </Form>
       </div>
-      <Container>
-        <Footer />
-      </Container>
+      <Footer />
     </>
   );
 }

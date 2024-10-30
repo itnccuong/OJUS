@@ -46,7 +46,7 @@ export default function Register() {
         className="d-flex justify-content-center align-items-center bg-grey"
         style={{
           // backgroundColor: "#eceff1",
-          height: "86vh",
+          height: "87vh",
         }}
       >
         <Form
@@ -159,9 +159,7 @@ export default function Register() {
           </div>
         </Form>
       </div>
-      <Container>
-        <Footer />
-      </Container>
+      <Footer />
     </>
   );
 }
