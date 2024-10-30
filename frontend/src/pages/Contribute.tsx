@@ -20,12 +20,12 @@ export default function Contribute() {
   const navigate = useNavigate(); // Initialize navigate
   const storage: StorageConfig | null = getStorage(); // Get token from localStorage
 
-  useEffect(() => {
-    if (!storage) {
-      toast.error("You need to login first");
-      navigate("/accounts/login");
-    }
-  }, [storage, navigate]);
+  // useEffect(() => {
+  //   if (!storage) {
+  //     toast.error("You need to login first");
+  //     navigate("/accounts/login");
+  //   }
+  // }, [storage, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
