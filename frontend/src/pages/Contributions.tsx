@@ -148,8 +148,8 @@ export default function Contributions() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <Container
-          className="d-flex flex-column"
+        <div
+          className="container d-flex flex-column"
           style={{
             height: "100vh",
           }}
@@ -376,10 +376,8 @@ export default function Contributions() {
               ))}
             </tbody>
           </Table>
-        </Container>
-        <Container>
-          <Footer />
-        </Container>
+        </div>
+        <Footer />
       </div>
     </>
   );

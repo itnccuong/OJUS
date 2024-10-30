@@ -1,4 +1,4 @@
-import { Accordion, Badge, Button, Container, Form } from "react-bootstrap";
+import { Accordion, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -7,6 +7,9 @@ import { StorageConfig } from "../../interfaces/interface";
 import getStorage from "../../utils/getStorage";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+// import remarkMath from "remark-math";
+// import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 interface Tag {
   label: string;
@@ -204,7 +207,13 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             {isMarkdown ? (
               <>
                 <Container className="border rounded mb-3 mt-2">
-                  <ReactMarkdown>{description}</ReactMarkdown>
+                  <ReactMarkdown
+                    children={description}
+                    // remarkPlugins={[remarkMath]}
+                    // rehypePlugins={[rehypeKatex]}
+                  />
+                  {/* {description} */}
+                  {/* </ReactMarkdown> */}
                 </Container>
               </>
             ) : (
@@ -293,9 +302,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
           </Container>
         </Container>
       </Form>
-      <Container>
-        <Footer />
-      </Container>
+      <Footer />
     </div>
   );
 }

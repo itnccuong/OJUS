@@ -14,8 +14,8 @@ function NavBar() {
     navigate("/accounts/login"); // Redirect to login
   };
   return (
-    <Navbar expand="lg" className="bg-body-tertiary border-bottom d-flex">
-      <Container className="d-flex gap-3">
+    <Navbar className="bg-body-tertiary border-bottom d-flex">
+      <div className="container d-flex gap-3 justify-content-start ms-5">
         <Navbar.Brand as={NavLink} to={"/"}>
           <img
             src="/leetcode.svg"
@@ -43,39 +43,39 @@ function NavBar() {
             Contributions
           </Nav.Link>
         </Nav>
+      </div>
 
-        <Container className="d-flex justify-content-end gap-2">
-          {storage ? (
-            <>
-              <Nav>
-                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
-                  Profile
-                </Nav.Link>
-              </Nav>
+      <div className="container d-flex justify-content-end gap-2 me-5">
+        {storage ? (
+          <>
+            <Nav>
+              <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
+                Profile
+              </Nav.Link>
+            </Nav>
 
-              <Nav>
-                <Nav.Link href="#" onClick={handleSignOut}>
-                  Sign Out
-                </Nav.Link>
-              </Nav>
-            </>
-          ) : (
-            <>
-              <Nav>
-                <Nav.Link as={NavLink} to="/accounts/register">
-                  Register
-                </Nav.Link>
-              </Nav>
+            <Nav>
+              <Nav.Link href="#" onClick={handleSignOut}>
+                Sign Out
+              </Nav.Link>
+            </Nav>
+          </>
+        ) : (
+          <>
+            <Nav>
+              <Nav.Link as={NavLink} to="/accounts/register">
+                Register
+              </Nav.Link>
+            </Nav>
 
-              <Nav>
-                <Nav.Link as={NavLink} to="/accounts/login">
-                  Sign In
-                </Nav.Link>
-              </Nav>
-            </>
-          )}
-        </Container>
-      </Container>
+            <Nav>
+              <Nav.Link as={NavLink} to="/accounts/login">
+                Sign In
+              </Nav.Link>
+            </Nav>
+          </>
+        )}
+      </div>
     </Navbar>
   );
 }
