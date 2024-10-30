@@ -11,14 +11,16 @@ export default function Contribution() {
   return (
     <div className="d-flex-flex-column">
       <NavBar />
-      <Container
+      <div
         className="d-flex flex-column"
         style={{
-          height: "100vh",
+          height: "92vh",
         }}
       >
-        <h3>Contribution id: {id}</h3>
-      </Container>
+        <div className="container d-flex">
+          <h3>Contribution id: {id}</h3>
+        </div>
+      </div>
     </div>
   );
 }
