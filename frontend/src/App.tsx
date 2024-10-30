@@ -14,6 +14,7 @@ import ForgotPasswordDone from "./pages/ForgotPasswordDone";
 import ChangePassword from "./pages/ChangePassword";
 import Contribute from "./pages/Contribute";
 import Contributions from "./pages/Contributions";
+import Contribution from "./pages/Contribution";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           />
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<Contributions />} />
+          <Route path="/contributions/:id" element={<Contribution />} />
         </Routes>
       </Router>
       <ToastContainer
