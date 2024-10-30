@@ -60,7 +60,7 @@ export default function Contributions() {
   const Problems = [
     {
       id: 1,
-      title: "2684. Maximum Number of Moves in a Grid",
+      title: "2689. Maximum Number of Moves in a Grid",
       difficulty: "Medium",
       tags: ["Array", "Dynamic Programming"],
     },
