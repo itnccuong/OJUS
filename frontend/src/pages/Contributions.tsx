@@ -1,12 +1,9 @@
 // import { useNavigate } from "react-router-dom";
-import getStorage from "../../utils/getStorage";
-import { StorageConfig } from "../../interfaces/interface";
+
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import {
-  Accordion,
   Button,
-  ButtonGroup,
   Container,
   Dropdown,
   DropdownButton,
@@ -14,7 +11,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { useEffect } from "react";
 
 interface Tag {
@@ -23,6 +20,7 @@ interface Tag {
 }
 
 export default function Contributions() {
+  const navigate = useNavigate();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
     { label: "String", selected: false },
@@ -52,6 +50,11 @@ export default function Contributions() {
 
   const handleResetTags = () => {
     setTags(initialTags);
+  };
+
+  const pickRandom = () => {
+    const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
+    navigate(`/contributions/${randomProblem.id}`);
   };
 
   const Problems = [
@@ -280,28 +283,46 @@ export default function Contributions() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </Form>
-            <div className="d-flex ms-2">
-              <Link
-                to="/"
-                style={{
-                  textDecoration: "none",
-                  color: "black",
-                }}
-              >
-                <img
-                  src="/random.svg"
-                  width="30"
-                  height="24"
-                  alt="React Bootstrap logo"
-                />
-                <span className="ms-2">Pick Random Problem</span>
-              </Link>
+            <div
+              className="d-flex ms-2"
+              onClick={() => pickRandom()}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <img
+                src="/random.svg"
+                width="30"
+                height="24"
+                alt="React Bootstrap logo"
+              />
+              <span className="ms-2">Pick Random Problem</span>
             </div>
           </div>
           <Table hover responsive className="mt-3">
             <thead>
               <tr>
-                <th style={{ width: "40%" }}>Title</th>
+                {/* <div className="d-flex"> */}
+                <th style={{ width: "40%" }}>
+                  <div
+                    className="d-flex justify-content-between"
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      alert("implement sort");
+                    }}
+                  >
+                    <span>Title</span>
+                    <img
+                      src="/sort.svg"
+                      // width="30"
+                      // height="24"
+                      alt="React Bootstrap logo"
+                    />
+                  </div>
+                </th>
+                {/* </div> */}
                 <th style={{ width: "40%" }}>Tags</th>
                 <th>Difficulty</th>
               </tr>
