@@ -38,7 +38,7 @@ export default function App() {
           />
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<Contributions />} />
-          <Route path="/contributions/:id" element={<Contribution />} />
+          <Route path="/contributions/:id/:page" element={<Contribution />} />
         </Routes>
       </Router>
       <ToastContainer

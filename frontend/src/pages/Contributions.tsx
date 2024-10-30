@@ -150,9 +150,11 @@ export default function Contributions() {
         <NavBar />
         <div
           className="container d-flex flex-column"
-          style={{
-            height: "100vh",
-          }}
+          style={
+            {
+              height: "100vh",
+            }
+          }
         >
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <div>
@@ -332,7 +334,7 @@ export default function Contributions() {
                 <tr key={problem.id}>
                   <td>
                     <Link
-                      to={`/contributions/${problem.id}`}
+                      to={`/contributions/${problem.id}/description`}
                       style={{
                         textDecoration: "none",
                         color: "black",
