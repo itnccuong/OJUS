@@ -296,10 +296,10 @@ export default function Contributions() {
                 height="24"
                 alt="React Bootstrap logo"
               />
-              <span className="ms-2">Pick Random Problem</span>
+              <span className="ms-2">Pick Random</span>
             </div>
           </div>
-          <Table hover responsive className="mt-3">
+          <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
                 {/* <div className="d-flex"> */}
