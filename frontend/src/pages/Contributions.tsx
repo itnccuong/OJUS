@@ -148,8 +148,8 @@ export default function Contributions() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <Container
-          className="d-flex flex-column"
+        <div
+          className="container d-flex flex-column"
           style={{
             height: "100vh",
           }}
@@ -296,10 +296,10 @@ export default function Contributions() {
                 height="24"
                 alt="React Bootstrap logo"
               />
-              <span className="ms-2">Pick Random Problem</span>
+              <span className="ms-2">Pick Random</span>
             </div>
           </div>
-          <Table hover responsive className="mt-3">
+          <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
                 {/* <div className="d-flex"> */}
@@ -376,10 +376,8 @@ export default function Contributions() {
               ))}
             </tbody>
           </Table>
-        </Container>
-        <Container>
-          <Footer />
-        </Container>
+        </div>
+        <Footer />
       </div>
     </>
   );

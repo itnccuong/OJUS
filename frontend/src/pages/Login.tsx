@@ -33,13 +33,13 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div>
       <NavBar />
       <div
         className="d-flex justify-content-center align-items-center bg-grey"
         style={{
           // backgroundColor: "#eceff1",
-          height: "86vh",
+          height: "87vh",
         }}
       >
         <Form
@@ -117,9 +117,7 @@ export default function Login() {
           </div>
         </Form>
       </div>
-      <Container>
         <Footer />
-      </Container>
-    </>
+    </div>
   );
 }
