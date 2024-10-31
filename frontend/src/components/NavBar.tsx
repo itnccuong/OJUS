@@ -28,7 +28,7 @@ function NavBar() {
           </Navbar.Brand>
 
           <Nav>
-            <Nav.Link as={NavLink} to={"/problem"}>
+            <Nav.Link as={NavLink} to={"/problems"}>
               Problems
             </Nav.Link>
           </Nav>
