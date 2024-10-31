@@ -54,7 +54,7 @@ export default function Contributions() {
 
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
-    navigate(`/contributions/${randomProblem.id}`);
+    navigate(`/contributions/${randomProblem.id}/description`);
   };
 
   const Problems = [

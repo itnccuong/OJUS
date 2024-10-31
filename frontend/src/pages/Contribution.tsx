@@ -1,7 +1,15 @@
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  Nav,
+  Navbar,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import { StorageConfig } from "../../interfaces/interface";
 import getStorage from "../../utils/getStorage";
 import ReactMarkdown from "react-markdown";
@@ -25,6 +33,41 @@ import rehypePrism from "rehype-prism-plus";
 export default function Contribution() {
   const { id } = useParams();
   const { page } = useParams();
+  const difficulty: string = "Medium";
+
+  const tags: string[] = [
+    "Array",
+    "String",
+    "Hash Table",
+    "Dynamic Programming",
+    "Math",
+    "Sorting",
+    "Greedy",
+    "Depth-First Search",
+    "Database",
+    "Binary Search",
+    "Matrix",
+    "Tree",
+    "Breadth-First Search",
+  ];
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">Topics</Popover.Header>
+      <Popover.Body>
+        <div className="mb-3">
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
 
   const [code, setCode] = useState("");
   // const highlightCode = (code: string) =>
@@ -118,8 +161,37 @@ The matching should cover the **entire** input string (not partial).
                     overflowY: "auto",
                   }}
                 >
-                  <h3>3. Longest Substring Without Repeating Characters</h3>
-                  <ReactMarkdown>{markdown}</ReactMarkdown>
+                  <h3 className="mb-3">
+                    3. Longest Substring Without Repeating Characters
+                  </h3>
+                  <span
+                    className={`badge bg-grey me-2 ${
+                      difficulty === "Easy"
+                        ? "text-success"
+                        : difficulty === "Medium"
+                        ? "text-warning"
+                        : "text-danger"
+                    }`}
+                  >
+                    {difficulty}
+                  </span>
+
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="right"
+                    overlay={popover}
+                  >
+                    <span
+                      className="badge text-dark bg-grey"
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      Topics
+                    </span>
+                  </OverlayTrigger>
+
+                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
                 </div>
               ) : (
                 <div
