@@ -9,57 +9,56 @@ import { useState } from "react";
 
 // import SyntaxHighlighter from "react-syntax-highlighter";
 // import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+// import Editor from "react-simple-code-editor";
+// import Prism from "prismjs";
+// import "prismjs/themes/prism.css"; // Choose a Prism theme you like
+
+// // Load the language you need
+// import "prismjs/components/prism-javascript";
+
+// import CodeMirror from "@uiw/react-codemirror";
+// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+
+import CodeEditor from "@uiw/react-textarea-code-editor";
+import rehypePrism from "rehype-prism-plus";
 
 export default function Contribution() {
   const { id } = useParams();
   const { page } = useParams();
 
   const [code, setCode] = useState("");
+  // const highlightCode = (code: string) =>
+  //   Prism.highlight(code, Prism.languages.javascript, "javascript");
 
   const markdown = `
-Given a string \`s\`, find the length of the **longest substring** without repeating characters.
+Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
+
+- \`'.'\` Matches any single character.
+- \`'*'\` Matches zero or more of the preceding element.
+
+The matching should cover the **entire** input string (not partial).
 
 #### Example 1:
-- **Input**: \`s = "abcabcbb"\`
-- **Output**: \`3\`
-- **Explanation**: The answer is \`"abc"\`, with the length of \`3\`.
+- **Input:** \`s = "aa"\`, \`p = "a"\`
+- **Output:** \`false\`
+- **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
 
 #### Example 2:
-- **Input**: \`s = "bbbbb"\`
-- **Output**: \`1\`
-- **Explanation**: The answer is \`"b"\`, with the length of \`1\`.
+- **Input:** \`s = "aa"\`, \`p = "a*"\`
+- **Output:** \`true\`
+- **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
 
 #### Example 3:
-- **Input**: \`s = "pwwkew"\`
-- **Output**: \`3\`
-- **Explanation**: The answer is \`"wke"\`, with the length of \`3\`.  
-  Notice that the answer must be a substring, \`"pwke"\` is a subsequence and not a substring.
+- **Input:** \`s = "ab"\`, \`p = ".*"\`
+- **Output:** \`true\`
+- **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
 
 #### Constraints:
-- \`0 <= s.length <= 5 * 10^4\`
-- \`s\` consists of English letters, digits, symbols, and spaces.
-
-Given a string \`s\`, find the length of the **longest substring** without repeating characters.
-
-#### Example 1:
-- **Input**: \`s = "abcabcbb"\`
-- **Output**: \`3\`
-- **Explanation**: The answer is \`"abc"\`, with the length of \`3\`.
-
-#### Example 2:
-- **Input**: \`s = "bbbbb"\`
-- **Output**: \`1\`
-- **Explanation**: The answer is \`"b"\`, with the length of \`1\`.
-
-#### Example 3:
-- **Input**: \`s = "pwwkew"\`
-- **Output**: \`3\`
-- **Explanation**: The answer is \`"wke"\`, with the length of \`3\`.  
-  Notice that the answer must be a substring, \`"pwke"\` is a subsequence and not a substring.
-
-#### Constraints:
-- \`0 <= s.length <= 5 * 10^4\`
-- \`s\` consists of English letters, digits, symbols, and spaces.
+- \`1 <= s.length <= 20\`
+- \`1 <= p.length <= 20\`
+- \`s\` contains only lowercase English letters.
+- \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
+- It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
 
   return (
@@ -147,7 +146,7 @@ Given a string \`s\`, find the length of the **longest substring** without repea
                   overflowY: "auto",
                 }}
               >
-                <Form.Control
+                {/* <Form.Control
                   style={{
                     border: "none",
                     boxShadow: "none",
@@ -159,11 +158,56 @@ Given a string \`s\`, find the length of the **longest substring** without repea
                   rows={26}
                   //   value={code}
                   onChange={(e) => setCode(e.target.value)}
+                /> */}
+                {/* <Editor
+                  value={code}
+                  onValueChange={(code) => setCode(code)}
+                  highlight={highlightCode}
+                  className="custom-editor"
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 14,
+                    // backgroundColor: "#f5f5f5",
+                    // borderRadius: "5px",
+                    // border: "none",
+                    // outline: "none",
+                    height: "100%",
+                    // maxWidth: "90%",
+                  }}
+                /> */}
+                <CodeEditor
+                  value={code}
+                  language="js"
+                  // placeholder="Please enter JS code."
+                  onChange={(evn) => setCode(evn.target.value)}
+                  rehypePlugins={[
+                    [
+                      rehypePrism,
+                      { ignoreMissing: true, showLineNumbers: true },
+                    ],
+                  ]}
+                  style={{
+                    // overflowY: "auto",
+                    minHeight: "100%",
+                    backgroundColor: "white",
+                    fontSize: 16,
+                    fontFamily:
+                      "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+                  }}
                 />
               </div>
             </div>
 
             {/* <SyntaxHighlighter language="javascript" style={docco}>
+              {code}
+            </SyntaxHighlighter> */}
+            {/* <SyntaxHighlighter
+              language="javascript"
+              style={docco}
+              showLineNumbers
+              wrapLongLines
+            >
               {code}
             </SyntaxHighlighter> */}
           </div>
