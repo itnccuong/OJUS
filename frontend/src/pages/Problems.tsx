@@ -19,7 +19,7 @@ interface Tag {
   selected: boolean;
 }
 
-export default function Contributions() {
+export default function Problems() {
   const navigate = useNavigate();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
@@ -54,7 +54,7 @@ export default function Contributions() {
 
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
-    navigate(`/contributions/${randomProblem.id}/description`);
+    navigate(`/problems/${randomProblem.id}/description`);
   };
 
   const Problems = [
@@ -63,76 +63,89 @@ export default function Contributions() {
       title: "2684. Maximum Number of Moves in a Grid",
       difficulty: "Medium",
       tags: ["Array", "Dynamic Programming"],
+      status: "Solved",
     },
     {
       id: 2,
       title: "1. Two Sum",
       difficulty: "Easy",
       tags: ["Array", "Hash Table"],
+      status: "Solved",
     },
     {
       id: 3,
       title: "2. Add Two Numbers",
       difficulty: "Medium",
       tags: ["Linked List", "Math"],
+      status: "Attempted",
     },
     {
       id: 4,
       title: "3. Longest Substring Without Repeating Characters",
       difficulty: "Medium",
       tags: ["String", "Sliding Window"],
+      status: "",
     },
     {
       id: 5,
       title: "4. Median of Two Sorted Arrays",
       difficulty: "Hard",
       tags: ["Array", "Binary Search"],
+      status: "Attempted",
     },
     {
       id: 6,
       title: "5. Longest Palindromic Substring",
       difficulty: "Medium",
       tags: ["String", "Dynamic Programming"],
+      status: "",
     },
     {
       id: 7,
       title: "6. Zigzag Conversion",
       difficulty: "Medium",
       tags: ["String"],
+      status: "Solved",
     },
     {
       id: 8,
       title: "7. Reverse Integer",
       difficulty: "Medium",
       tags: ["Math"],
+      status: "Attempted",
     },
     {
       id: 9,
       title: "8. String to Integer (atoi)",
       difficulty: "Medium",
       tags: ["String", "Math"],
+      status: "",
     },
     {
       id: 10,
       title: "9. Palindrome Number",
       difficulty: "Easy",
       tags: ["Math"],
+      status: "Solved",
     },
     {
       id: 11,
       title: "10. Regular Expression Matching",
       difficulty: "Hard",
       tags: ["String", "Dynamic Programming"],
+      status: "Attempted",
     },
     {
       id: 12,
       title: "11. Container With Most Water",
       difficulty: "Medium",
       tags: ["Array", "Two Pointers"],
+      status: "",
     },
   ];
 
   const [difficulty, setDifficulty] = useState("All");
+  const [status, setStatus] = useState("All");
 
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
@@ -140,6 +153,7 @@ export default function Contributions() {
   const filteredProblems = Problems.filter(
     (problem) =>
       (problem.difficulty === difficulty || difficulty === "All") &&
+      (problem.status === status || status === "All") &&
       getSelectedTags().every((tag) => problem.tags.includes(tag)) &&
       problem.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -150,88 +164,134 @@ export default function Contributions() {
         <NavBar />
         <div
           className="container d-flex flex-column"
-          style={
-            {
-              height: "100vh",
-            }
-          }
+          style={{
+            height: "100vh",
+          }}
         >
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
-            <div>
-              <DropdownButton
-                variant="secondary"
-                title="Difficulty"
-                //
-              >
-                <div className="d-flex flex-column">
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Easy"
-                        ? setDifficulty("All")
-                        : setDifficulty("Easy");
-                    }}
-                  >
-                    <Button variant="white" className="text-success">
-                      Easy
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Easy" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
+            <DropdownButton variant="secondary" title="Difficulty">
+              <div className="d-flex flex-column">
+                <Dropdown.Item
+                  onClick={() => {
+                    difficulty === "Easy"
+                      ? setDifficulty("All")
+                      : setDifficulty("Easy");
+                  }}
+                >
+                  <Button variant="white" className="text-success">
+                    Easy
+                  </Button>
+                  <span className="ms-4">
+                    {difficulty === "Easy" ? (
+                      <img
+                        src="/done.svg"
+                        width="30"
+                        height="24"
+                        alt="React Bootstrap logo"
+                      />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
 
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Medium"
-                        ? setDifficulty("All")
-                        : setDifficulty("Medium");
-                    }}
-                  >
-                    <Button variant="white" className="text-warning">
-                      Medium
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Medium" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    difficulty === "Medium"
+                      ? setDifficulty("All")
+                      : setDifficulty("Medium");
+                  }}
+                >
+                  <Button variant="white" className="text-warning">
+                    Medium
+                  </Button>
+                  <span className="ms-4">
+                    {difficulty === "Medium" ? (
+                      <img
+                        src="/done.svg"
+                        width="30"
+                        height="24"
+                        alt="React Bootstrap logo"
+                      />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
 
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Hard"
-                        ? setDifficulty("All")
-                        : setDifficulty("Hard");
-                    }}
-                  >
-                    <Button variant="white" className="text-danger">
-                      Hard
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Hard" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-                </div>
-              </DropdownButton>
-            </div>
+                <Dropdown.Item
+                  onClick={() => {
+                    difficulty === "Hard"
+                      ? setDifficulty("All")
+                      : setDifficulty("Hard");
+                  }}
+                >
+                  <Button variant="white" className="text-danger">
+                    Hard
+                  </Button>
+                  <span className="ms-4">
+                    {difficulty === "Hard" ? (
+                      <img
+                        src="/done.svg"
+                        width="30"
+                        height="24"
+                        alt="React Bootstrap logo"
+                      />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
+              </div>
+            </DropdownButton>
+
+            <DropdownButton variant="secondary" title="Status">
+              <div className="d-flex flex-column">
+                <Dropdown.Item
+                  onClick={() => {
+                    status === "Solved"
+                      ? setStatus("All")
+                      : setStatus("Solved");
+                  }}
+                >
+                  <Button variant="white" className="text-success">
+                    <div className="d-flex gap-2">
+                      <img src="/done2.svg" width="24" height="24" />
+                      Solved
+                    </div>
+                  </Button>
+                  <span className="ms-4">
+                    {status === "Solved" ? (
+                      <img
+                        src="/done.svg"
+                        width="30"
+                        height="24"
+                        alt="React Bootstrap logo"
+                      />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
+
+                <Dropdown.Item
+                  onClick={() => {
+                    status === "Attempted"
+                      ? setStatus("All")
+                      : setStatus("Attempted");
+                  }}
+                >
+                  <Button variant="white" className="text-warning">
+                    <div className="d-flex gap-2">
+                      <img src="/attempted.svg" width="24" height="24" />
+                      Attempted
+                    </div>
+                  </Button>
+                  <span className="ms-4">
+                    {status === "Attempted" ? (
+                      <img
+                        src="/done.svg"
+                        width="30"
+                        height="24"
+                        alt="React Bootstrap logo"
+                      />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
+              </div>
+            </DropdownButton>
 
             {/* <DropdownButton
               // key="2"
@@ -305,6 +365,7 @@ export default function Contributions() {
             <thead>
               <tr>
                 {/* <div className="d-flex"> */}
+                <th>Status</th>
                 <th style={{ width: "40%" }}>
                   <div
                     className="d-flex justify-content-between"
@@ -333,8 +394,15 @@ export default function Contributions() {
               {filteredProblems.map((problem) => (
                 <tr key={problem.id}>
                   <td>
+                    {problem.status === "Solved" ? (
+                      <img src="/done2.svg" width="30" height="24" />
+                    ) : problem.status === "Attempted" ? (
+                      <img src="/attempted.svg" width="30" height="24" />
+                    ) : null}
+                  </td>
+                  <td>
                     <Link
-                      to={`/contributions/${problem.id}/description`}
+                      to={`/problems/${problem.id}/description`}
                       style={{
                         textDecoration: "none",
                         color: "black",
