@@ -4,7 +4,6 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import {
   Button,
-  Container,
   Dropdown,
   DropdownButton,
   Form,
@@ -130,7 +129,57 @@ export default function Contributions() {
       difficulty: "Medium",
       tags: ["Array", "Two Pointers"],
     },
+    {
+      id: 13,
+      title: "12. Integer to Roman",
+      difficulty: "Medium",
+      tags: ["Math", "String"],
+    },
+    {
+      id: 14,
+      title: "13. Roman to Integer",
+      difficulty: "Easy",
+      tags: ["Math", "String"],
+    },
+    {
+      id: 15,
+      title: "14. Longest Common Prefix",
+      difficulty: "Easy",
+      tags: ["String"],
+    },
+    {
+      id: 16,
+      title: "15. 3Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+    },
+    {
+      id: 17,
+      title: "16. 3Sum Closest",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers"],
+    },
+    {
+      id: 18,
+      title: "17. Letter Combinations of a Phone Number",
+      difficulty: "Medium",
+      tags: ["String", "Backtracking"],
+    },
+    {
+      id: 19,
+      title: "18. 4Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+    },
+    {
+      id: 20,
+      title: "19. Remove Nth Node From End of List",
+      difficulty: "Medium",
+      tags: ["Linked List", "Two Pointers"],
+    },
   ];
+
+  const Difficulty = ["Easy", "Medium", "Hard"];
 
   const [difficulty, setDifficulty] = useState("All");
 
@@ -148,34 +197,34 @@ export default function Contributions() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <div
-          className="container d-flex flex-column"
-          style={
-            {
-              height: "100vh",
-            }
-          }
-        >
+        <div className="container d-flex flex-column">
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
-            <div>
-              <DropdownButton
-                variant="secondary"
-                title="Difficulty"
-                //
-              >
-                <div className="d-flex flex-column">
+            <DropdownButton variant="secondary" title="Difficulty">
+              <div className="d-flex flex-column">
+                {Difficulty.map((diff, index) => (
                   <Dropdown.Item
+                    key={index}
                     onClick={() => {
-                      difficulty === "Easy"
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                      difficulty === diff
                         ? setDifficulty("All")
-                        : setDifficulty("Easy");
+                        : setDifficulty(diff);
                     }}
                   >
-                    <Button variant="white" className="text-success">
-                      Easy
+                    <Button
+                      variant="white"
+                      className={`text-${
+                        diff === "Easy"
+                          ? "success"
+                          : diff === "Medium"
+                          ? "warning"
+                          : "danger"
+                      }`}
+                    >
+                      {diff}
                     </Button>
                     <span className="ms-4">
-                      {difficulty === "Easy" ? (
+                      {difficulty === diff ? (
                         <img
                           src="/done.svg"
                           width="30"
@@ -185,53 +234,9 @@ export default function Contributions() {
                       ) : null}
                     </span>
                   </Dropdown.Item>
-
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Medium"
-                        ? setDifficulty("All")
-                        : setDifficulty("Medium");
-                    }}
-                  >
-                    <Button variant="white" className="text-warning">
-                      Medium
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Medium" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Hard"
-                        ? setDifficulty("All")
-                        : setDifficulty("Hard");
-                    }}
-                  >
-                    <Button variant="white" className="text-danger">
-                      Hard
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Hard" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-                </div>
-              </DropdownButton>
-            </div>
+                ))}
+              </div>
+            </DropdownButton>
 
             {/* <DropdownButton
               // key="2"

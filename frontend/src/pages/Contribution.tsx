@@ -118,7 +118,7 @@ The matching should cover the **entire** input string (not partial).
         }}
       >
         <Button variant="danger">Reject</Button>
-        <Button>Run</Button>
+        <Button>Submit</Button>
         <Button variant="success">Accept</Button>
       </div>
 

@@ -117,7 +117,7 @@ The matching should cover the **entire** input string (not partial).
           zIndex: 10,
         }}
       >
-        <Button>Run</Button>
+        <Button>Submit</Button>
       </div>
 
       <div className="bg-light">
@@ -175,7 +175,7 @@ The matching should cover the **entire** input string (not partial).
                   </span>
 
                   <OverlayTrigger
-                    trigger="click"
+                    trigger="hover"
                     placement="right"
                     overlay={popover}
                   >

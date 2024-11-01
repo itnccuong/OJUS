@@ -142,7 +142,65 @@ export default function Problems() {
       tags: ["Array", "Two Pointers"],
       status: "",
     },
+    {
+      id: 13,
+      title: "12. Integer to Roman",
+      difficulty: "Medium",
+      tags: ["Math", "String"],
+      status: "Attempted",
+    },
+    {
+      id: 14,
+      title: "13. Roman to Integer",
+      difficulty: "Easy",
+      tags: ["Math", "String"],
+      status: "Solved",
+    },
+    {
+      id: 15,
+      title: "14. Longest Common Prefix",
+      difficulty: "Easy",
+      tags: ["String"],
+      status: "Solved",
+    },
+    {
+      id: 16,
+      title: "15. 3Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+      status: "Attempted",
+    },
+    {
+      id: 17,
+      title: "16. 3Sum Closest",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers"],
+      status: "",
+    },
+    {
+      id: 18,
+      title: "17. Letter Combinations of a Phone Number",
+      difficulty: "Medium",
+      tags: ["String", "Backtracking"],
+      status: "",
+    },
+    {
+      id: 19,
+      title: "18. 4Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+      status: "Attempted",
+    },
+    {
+      id: 20,
+      title: "19. Remove Nth Node From End of List",
+      difficulty: "Medium",
+      tags: ["Linked List", "Two Pointers"],
+      status: "Solved",
+    },
   ];
+
+  const Difficulty = ["Easy", "Medium", "Hard"];
 
   const [difficulty, setDifficulty] = useState("All");
   const [status, setStatus] = useState("All");
@@ -162,80 +220,43 @@ export default function Problems() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <div
-          className="container d-flex flex-column"
-          style={{
-            height: "100vh",
-          }}
-        >
+        <div className="container d-flex flex-column">
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <DropdownButton variant="secondary" title="Difficulty">
               <div className="d-flex flex-column">
-                <Dropdown.Item
-                  onClick={() => {
-                    difficulty === "Easy"
-                      ? setDifficulty("All")
-                      : setDifficulty("Easy");
-                  }}
-                >
-                  <Button variant="white" className="text-success">
-                    Easy
-                  </Button>
-                  <span className="ms-4">
-                    {difficulty === "Easy" ? (
-                      <img
-                        src="/done.svg"
-                        width="30"
-                        height="24"
-                        alt="React Bootstrap logo"
-                      />
-                    ) : null}
-                  </span>
-                </Dropdown.Item>
-
-                <Dropdown.Item
-                  onClick={() => {
-                    difficulty === "Medium"
-                      ? setDifficulty("All")
-                      : setDifficulty("Medium");
-                  }}
-                >
-                  <Button variant="white" className="text-warning">
-                    Medium
-                  </Button>
-                  <span className="ms-4">
-                    {difficulty === "Medium" ? (
-                      <img
-                        src="/done.svg"
-                        width="30"
-                        height="24"
-                        alt="React Bootstrap logo"
-                      />
-                    ) : null}
-                  </span>
-                </Dropdown.Item>
-
-                <Dropdown.Item
-                  onClick={() => {
-                    difficulty === "Hard"
-                      ? setDifficulty("All")
-                      : setDifficulty("Hard");
-                  }}
-                >
-                  <Button variant="white" className="text-danger">
-                    Hard
-                  </Button>
-                  <span className="ms-4">
-                    {difficulty === "Hard" ? (
-                      <img
-                        src="/done.svg"
-                        width="30"
-                        height="24"
-                        alt="React Bootstrap logo"
-                      />
-                    ) : null}
-                  </span>
-                </Dropdown.Item>
+                {Difficulty.map((diff, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    onClick={() => {
+                      difficulty === diff
+                        ? setDifficulty("All")
+                        : setDifficulty(diff);
+                    }}
+                  >
+                    <Button
+                      variant="white"
+                      className={`text-${
+                        diff === "Easy"
+                          ? "success"
+                          : diff === "Medium"
+                          ? "warning"
+                          : "danger"
+                      }`}
+                    >
+                      {diff}
+                    </Button>
+                    <span className="ms-4">
+                      {difficulty === diff ? (
+                        <img
+                          src="/done.svg"
+                          width="30"
+                          height="24"
+                          alt="React Bootstrap logo"
+                        />
+                      ) : null}
+                    </span>
+                  </Dropdown.Item>
+                ))}
               </div>
             </DropdownButton>
 
@@ -292,15 +313,6 @@ export default function Problems() {
                 </Dropdown.Item>
               </div>
             </DropdownButton>
-
-            {/* <DropdownButton
-              // key="2"
-              variant="secondary"
-              title="Status"
-            >
-              <Dropdown.Item eventKey="1">Solved</Dropdown.Item>
-              <Dropdown.Item eventKey="2">Attempted</Dropdown.Item>
-            </DropdownButton> */}
 
             <DropdownButton
               // key="2"
@@ -365,7 +377,13 @@ export default function Problems() {
             <thead>
               <tr>
                 {/* <div className="d-flex"> */}
-                <th>Status</th>
+                <th
+                  style={{
+                    width: "6%",
+                  }}
+                >
+                  Status
+                </th>
                 <th style={{ width: "40%" }}>
                   <div
                     className="d-flex justify-content-between"
