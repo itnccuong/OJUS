@@ -4,7 +4,6 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import {
   Button,
-  Container,
   Dropdown,
   DropdownButton,
   Form,
@@ -206,6 +205,7 @@ export default function Contributions() {
                   <Dropdown.Item
                     key={index}
                     onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                       difficulty === diff
                         ? setDifficulty("All")
                         : setDifficulty(diff);
