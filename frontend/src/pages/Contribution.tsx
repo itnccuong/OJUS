@@ -1,17 +1,13 @@
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import {
   Button,
-  Container,
-  Form,
-  Nav,
-  Navbar,
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
-import { StorageConfig } from "../../interfaces/interface";
-import getStorage from "../../utils/getStorage";
+// import { StorageConfig } from "../../interfaces/interface";
+// import getStorage from "../../utils/getStorage";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 
