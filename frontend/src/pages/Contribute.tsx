@@ -1,6 +1,6 @@
 import { Accordion, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
 import { StorageConfig } from "../../interfaces/interface";
