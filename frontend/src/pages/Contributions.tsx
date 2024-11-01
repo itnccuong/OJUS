@@ -132,6 +132,8 @@ export default function Contributions() {
     },
   ];
 
+  const Difficulty = ["Easy", "Medium", "Hard"];
+
   const [difficulty, setDifficulty] = useState("All");
 
   const getSelectedTags = () =>
@@ -150,32 +152,36 @@ export default function Contributions() {
         <NavBar />
         <div
           className="container d-flex flex-column"
-          style={
-            {
-              height: "100vh",
-            }
-          }
+          style={{
+            height: "100vh",
+          }}
         >
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
-            <div>
-              <DropdownButton
-                variant="secondary"
-                title="Difficulty"
-                //
-              >
-                <div className="d-flex flex-column">
+            <DropdownButton variant="secondary" title="Difficulty">
+              <div className="d-flex flex-column">
+                {Difficulty.map((diff, index) => (
                   <Dropdown.Item
+                    key={index}
                     onClick={() => {
-                      difficulty === "Easy"
+                      difficulty === diff
                         ? setDifficulty("All")
-                        : setDifficulty("Easy");
+                        : setDifficulty(diff);
                     }}
                   >
-                    <Button variant="white" className="text-success">
-                      Easy
+                    <Button
+                      variant="white"
+                      className={`text-${
+                        diff === "Easy"
+                          ? "success"
+                          : diff === "Medium"
+                          ? "warning"
+                          : "danger"
+                      }`}
+                    >
+                      {diff}
                     </Button>
                     <span className="ms-4">
-                      {difficulty === "Easy" ? (
+                      {difficulty === diff ? (
                         <img
                           src="/done.svg"
                           width="30"
@@ -185,53 +191,9 @@ export default function Contributions() {
                       ) : null}
                     </span>
                   </Dropdown.Item>
-
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Medium"
-                        ? setDifficulty("All")
-                        : setDifficulty("Medium");
-                    }}
-                  >
-                    <Button variant="white" className="text-warning">
-                      Medium
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Medium" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-
-                  <Dropdown.Item
-                    onClick={() => {
-                      difficulty === "Hard"
-                        ? setDifficulty("All")
-                        : setDifficulty("Hard");
-                    }}
-                  >
-                    <Button variant="white" className="text-danger">
-                      Hard
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === "Hard" ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-                </div>
-              </DropdownButton>
-            </div>
+                ))}
+              </div>
+            </DropdownButton>
 
             {/* <DropdownButton
               // key="2"
