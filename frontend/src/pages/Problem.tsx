@@ -175,7 +175,7 @@ The matching should cover the **entire** input string (not partial).
                   </span>
 
                   <OverlayTrigger
-                    trigger="click"
+                    trigger="hover"
                     placement="right"
                     overlay={popover}
                   >

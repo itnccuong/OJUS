@@ -142,6 +142,62 @@ export default function Problems() {
       tags: ["Array", "Two Pointers"],
       status: "",
     },
+    {
+      id: 13,
+      title: "12. Integer to Roman",
+      difficulty: "Medium",
+      tags: ["Math", "String"],
+      status: "Attempted",
+    },
+    {
+      id: 14,
+      title: "13. Roman to Integer",
+      difficulty: "Easy",
+      tags: ["Math", "String"],
+      status: "Solved",
+    },
+    {
+      id: 15,
+      title: "14. Longest Common Prefix",
+      difficulty: "Easy",
+      tags: ["String"],
+      status: "Solved",
+    },
+    {
+      id: 16,
+      title: "15. 3Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+      status: "Attempted",
+    },
+    {
+      id: 17,
+      title: "16. 3Sum Closest",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers"],
+      status: "",
+    },
+    {
+      id: 18,
+      title: "17. Letter Combinations of a Phone Number",
+      difficulty: "Medium",
+      tags: ["String", "Backtracking"],
+      status: "",
+    },
+    {
+      id: 19,
+      title: "18. 4Sum",
+      difficulty: "Medium",
+      tags: ["Array", "Two Pointers", "Sorting"],
+      status: "Attempted",
+    },
+    {
+      id: 20,
+      title: "19. Remove Nth Node From End of List",
+      difficulty: "Medium",
+      tags: ["Linked List", "Two Pointers"],
+      status: "Solved",
+    },
   ];
 
   const Difficulty = ["Easy", "Medium", "Hard"];
@@ -164,12 +220,7 @@ export default function Problems() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <div
-          className="container d-flex flex-column"
-          style={{
-            height: "100vh",
-          }}
-        >
+        <div className="container d-flex flex-column">
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <DropdownButton variant="secondary" title="Difficulty">
               <div className="d-flex flex-column">
