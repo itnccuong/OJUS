@@ -1,13 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import {
-  Button,
-  OverlayTrigger,
-  Popover,
-} from "react-bootstrap";
+import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // import SyntaxHighlighter from "react-syntax-highlighter";
 // import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -18,11 +14,11 @@ import { useState } from "react";
 // // Load the language you need
 // import "prismjs/components/prism-javascript";
 
-// import CodeMirror from "@uiw/react-codemirror";
-// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-
-import CodeEditor from "@uiw/react-textarea-code-editor";
-import rehypePrism from "rehype-prism-plus";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { vscodeLight } from "@uiw/codemirror-theme-vscode";
+import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
+import { javasciprt, javascript } from "@codemirror/lang-javascript";
 
 export default function Problem() {
   const { id } = useParams();
@@ -64,8 +60,9 @@ export default function Problem() {
   );
 
   const [code, setCode] = useState("");
-  // const highlightCode = (code: string) =>
-  //   Prism.highlight(code, Prism.languages.javascript, "javascript");
+  const onChange = React.useCallback((val: string, viewUpdate) => {
+    setCode(val);
+  }, []);
 
   const markdown = `
 Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
@@ -161,8 +158,8 @@ The matching should cover the **entire** input string (not partial).
                       difficulty === "Easy"
                         ? "text-success"
                         : difficulty === "Medium"
-                        ? "text-warning"
-                        : "text-danger"
+                          ? "text-warning"
+                          : "text-danger"
                     }`}
                   >
                     {difficulty}
@@ -210,70 +207,15 @@ The matching should cover the **entire** input string (not partial).
                   overflowY: "auto",
                 }}
               >
-                {/* <Form.Control
-                  style={{
-                    border: "none",
-                    boxShadow: "none",
-                    resize: "none",
-                  }}
-                  //   placeholder="Write your description in markdown"
-                  className=""
-                  as="textarea"
-                  rows={26}
-                  //   value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                /> */}
-                {/* <Editor
+                <CodeMirror
                   value={code}
-                  onValueChange={(code) => setCode(code)}
-                  highlight={highlightCode}
-                  className="custom-editor"
-                  padding={10}
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 14,
-                    // backgroundColor: "#f5f5f5",
-                    // borderRadius: "5px",
-                    // border: "none",
-                    // outline: "none",
-                    height: "100%",
-                    // maxWidth: "90%",
-                  }}
-                /> */}
-                <CodeEditor
-                  value={code}
-                  language="js"
-                  // placeholder="Please enter JS code."
-                  onChange={(evn) => setCode(evn.target.value)}
-                  rehypePlugins={[
-                    [
-                      rehypePrism,
-                      { ignoreMissing: true, showLineNumbers: true },
-                    ],
-                  ]}
-                  style={{
-                    // overflowY: "auto",
-                    minHeight: "100%",
-                    backgroundColor: "white",
-                    fontSize: 16,
-                    fontFamily:
-                      "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
-                  }}
+                  theme={vscodeLight}
+                  extensions={[javascript()]}
+                  style={{ fontSize: "16px", color: "black" }}
+                  onChange={onChange}
                 />
               </div>
             </div>
-
-            {/* <SyntaxHighlighter language="javascript" style={docco}>
-              {code}
-            </SyntaxHighlighter> */}
-            {/* <SyntaxHighlighter
-              language="javascript"
-              style={docco}
-              showLineNumbers
-              wrapLongLines
-            >
-              {code}
-            </SyntaxHighlighter> */}
           </div>
         </div>
       </div>
