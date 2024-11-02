@@ -211,7 +211,7 @@ The matching should cover the **entire** input string (not partial).
                   value={code}
                   theme={vscodeLight}
                   extensions={[javascript()]}
-                  style={{ fontSize: "16px", color: "black" }}
+                  style={{ fontSize: "16px" }}
                   onChange={onChange}
                 />
               </div>
