@@ -1,5 +1,3 @@
-import { Container } from "react-bootstrap";
-
 export default function Footer() {
   return (
     <div className="d-flex align-items-center border-top pt-2 pb-2">

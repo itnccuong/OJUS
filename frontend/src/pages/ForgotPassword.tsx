@@ -23,7 +23,7 @@ export default function ForgotPassWord() {
           pending: "Sending reset link...",
           success: "Reset link sent successfully!",
           error: "Failed to send reset link",
-        }
+        },
       );
       navigate("/accounts/password/reset/done");
     } catch (error) {

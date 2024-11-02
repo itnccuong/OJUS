@@ -2,15 +2,10 @@
 
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  Form,
-  Table,
-} from "react-bootstrap";
+import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 // import { useEffect } from "react";
 
 interface Tag {
@@ -42,8 +37,8 @@ export default function Contributions() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -190,7 +185,7 @@ export default function Contributions() {
     (problem) =>
       (problem.difficulty === difficulty || difficulty === "All") &&
       getSelectedTags().every((tag) => problem.tags.includes(tag)) &&
-      problem.title.toLowerCase().includes(search.toLowerCase())
+      problem.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -217,8 +212,8 @@ export default function Contributions() {
                         diff === "Easy"
                           ? "success"
                           : diff === "Medium"
-                          ? "warning"
-                          : "danger"
+                            ? "warning"
+                            : "danger"
                       }`}
                     >
                       {diff}
@@ -372,8 +367,8 @@ export default function Contributions() {
                         problem.difficulty === "Easy"
                           ? "text-success"
                           : problem.difficulty === "Medium"
-                          ? "text-warning"
-                          : "text-danger"
+                            ? "text-warning"
+                            : "text-danger"
                       }`}
                     >
                       {problem.difficulty}
