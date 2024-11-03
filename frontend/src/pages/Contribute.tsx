@@ -1,15 +1,15 @@
 import { Accordion, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-import { StorageConfig } from "../../interfaces/interface";
-import getStorage from "../../utils/getStorage";
-import { useNavigate } from "react-router-dom";
+// import {StorageConfig} from "../../interfaces/interface";
+// import getStorage from "../../utils/getStorage";
+// import {useNavigate} from "react-router-dom";
 import { toast } from "react-toastify";
 // import remarkMath from "remark-math";
 // import rehypeKatex from "rehype-katex";
-import "katex/dist/katex.min.css";
+// import "katex/dist/katex.min.css";
 
 interface Tag {
   label: string;
@@ -17,15 +17,15 @@ interface Tag {
 }
 
 export default function Contribute() {
-  const navigate = useNavigate(); // Initialize navigate
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  // const navigate = useNavigate(); // Initialize navigate
+  // const storage: StorageConfig | null = getStorage(); // Get token from localStorage
 
-  useEffect(() => {
-    if (!storage) {
-      toast.error("You need to login first");
-      navigate("/accounts/login");
-    }
-  }, [storage, navigate]);
+  // useEffect(() => {
+  //   if (!storage) {
+  //     toast.error("You need to login first");
+  //     navigate("/accounts/login");
+  //   }
+  // }, [storage, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
@@ -39,11 +39,11 @@ export default function Contribute() {
     try {
       console.log(
         "submit",
-        tags.filter((tag) => tag.selected).map((tag) => tag.label)
-      );
-      console.log(
-        "submit",
-        tags.filter((tag) => tag.selected).map((tag) => tag.label)
+        title,
+        description,
+        difficulty,
+        inputFile,
+        outputFile,
       );
 
       // const { data } = await axios.post(getURL("/api/contribute"), {
@@ -79,8 +79,8 @@ export default function Contribute() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -230,7 +230,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 className="mb-3 w-50"
                 onChange={(e) =>
                   setInputFile(
-                    (e.target as HTMLInputElement).files?.[0] || null
+                    (e.target as HTMLInputElement).files?.[0] || null,
                   )
                 }
               />
@@ -242,7 +242,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 className="mb-3 w-50"
                 onChange={(e) =>
                   setOutputFile(
-                    (e.target as HTMLInputElement).files?.[0] || null
+                    (e.target as HTMLInputElement).files?.[0] || null,
                   )
                 }
               />

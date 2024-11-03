@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -28,7 +27,7 @@ function NavBar() {
           </Navbar.Brand>
 
           <Nav>
-            <Nav.Link as={NavLink} to={"/problem"}>
+            <Nav.Link as={NavLink} to={"/problems"}>
               Problems
             </Nav.Link>
           </Nav>
