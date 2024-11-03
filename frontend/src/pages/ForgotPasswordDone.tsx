@@ -10,7 +10,7 @@ export default function ForgotPasswordDone() {
         className="d-flex justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "86vh",
+          height: "87vh",
         }}
       >
         <Form className="p-4 rounded w-25 bg-white shadow">

@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -72,6 +71,12 @@ function NavBar() {
               <Nav>
                 <Nav.Link as={NavLink} to="/accounts/login">
                   Sign In
+                </Nav.Link>
+              </Nav>
+              
+              <Nav>
+                <Nav.Link as={NavLink} to="/showProfile">
+                  Profile
                 </Nav.Link>
               </Nav>
             </>

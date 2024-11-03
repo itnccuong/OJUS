@@ -48,7 +48,7 @@ export default function ChangePassword() {
         className="d-flex justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "86vh",
+          height: "87vh",
         }}
       >
         <Form

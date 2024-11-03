@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Problems from "./pages/Problems";
 import EditProfile from "./pages/EditProfile";
+import ShowProfile from "./pages/ShowProfile"
 
 import { Slide, ToastContainer } from "react-toastify";
 
@@ -31,6 +32,8 @@ export default function App() {
           <Route path="/problems/:id/:page" element={<Problem />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassWord />} />
+          <Route path="/showprofile" element={<ShowProfile />} />
+
           <Route
             path="/accounts/password/reset/done"
             element={<ForgotPasswordDone />}

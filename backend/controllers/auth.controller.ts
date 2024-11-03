@@ -19,7 +19,7 @@ const register = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Please fill all fields!"
+        "Please fill all fields!",
       );
     }
 
@@ -34,7 +34,7 @@ const register = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "A user is already registered with this e-mail address."
+        "A user is already registered with this e-mail address.",
       );
     }
 
@@ -49,7 +49,7 @@ const register = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Username cannot be used. Please choose another username."
+        "Username cannot be used. Please choose another username.",
       );
     }
 
@@ -69,14 +69,14 @@ const register = async (req: Request, res: Response) => {
       res,
       { user },
       STATUS_CODE.SUCCESS,
-      "Create account successfully!"
+      "Create account successfully!",
     );
   } catch (err: any) {
     return formatResponse(
       res,
       {},
       STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message
+      err.message,
     );
   }
 };
@@ -103,7 +103,7 @@ const login = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Invalid email or username"
+        "Invalid email or username",
       );
     }
 
@@ -114,7 +114,7 @@ const login = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Invalid password"
+        "Invalid password",
       );
     }
 
@@ -122,7 +122,7 @@ const login = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { userId: user.id }, // Payload
       process.env.JWT_SECRET as string, // Secret
-      { expiresIn: "3d" } // Token expiration
+      { expiresIn: "3d" }, // Token expiration
     );
 
     return formatResponse(
@@ -136,14 +136,14 @@ const login = async (req: Request, res: Response) => {
         },
       },
       STATUS_CODE.SUCCESS,
-      "Login successfully!"
+      "Login successfully!",
     );
   } catch (err: any) {
     return formatResponse(
       res,
       {},
       STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message
+      err.message,
     );
   }
 };
@@ -164,7 +164,7 @@ const sendResetLink = async (req: Request, res: Response) => {
     const resetToken = jwt.sign(
       { email: user.email }, // Payload: email to identify the user
       process.env.JWT_RESET as string, // Secret key for signing the token
-      { expiresIn: "1h" } // Token expiration time (1 hour)
+      { expiresIn: "1h" }, // Token expiration time (1 hour)
     );
 
     // Construct the reset link
@@ -185,7 +185,7 @@ const sendResetLink = async (req: Request, res: Response) => {
       to: email, // Receiver's email
       subject: "Password Reset E-mail",
       // text: `You're receiving this e-mail because you or someone else has requested a password reset for your user account at.
-      
+
       // Click the link below to reset your password:
       // ${resetLink}
       // If you did not request a password reset you can safely ignore this email.`,
@@ -202,14 +202,14 @@ const sendResetLink = async (req: Request, res: Response) => {
       res,
       {},
       STATUS_CODE.SUCCESS,
-      "Password reset link sent to your email"
+      "Password reset link sent to your email",
     );
   } catch (err: any) {
     return formatResponse(
       res,
       {},
       STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message
+      err.message,
     );
   }
 };
@@ -221,7 +221,7 @@ const changePassword = async (req: Request, res: Response) => {
     // Verify the JWT token
     const decodedToken: any = jwt.verify(
       token,
-      process.env.JWT_RESET as string
+      process.env.JWT_RESET as string,
     );
 
     if (!decodedToken || !decodedToken.email) {
@@ -229,7 +229,7 @@ const changePassword = async (req: Request, res: Response) => {
         res,
         {},
         STATUS_CODE.UNAUTHORIZED,
-        "Invalid or expired token"
+        "Invalid or expired token",
       );
     }
 
@@ -256,14 +256,14 @@ const changePassword = async (req: Request, res: Response) => {
       res,
       {},
       STATUS_CODE.SUCCESS,
-      "Password changed successfully"
+      "Password changed successfully",
     );
   } catch (err: any) {
     return formatResponse(
       res,
       {},
       STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message
+      err.message,
     );
   }
 };
