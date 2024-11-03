@@ -6,6 +6,8 @@ import {
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
+// import { StorageConfig } from "../../interfaces/interface";
+// import getStorage from "../../utils/getStorage";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 
@@ -24,7 +26,7 @@ import { useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import rehypePrism from "rehype-prism-plus";
 
-export default function Problem() {
+export default function Contribution() {
   const { id } = useParams();
   const { page } = useParams();
   const difficulty: string = "Medium";
@@ -111,7 +113,9 @@ The matching should cover the **entire** input string (not partial).
           zIndex: 10,
         }}
       >
+        <Button variant="danger">Reject</Button>
         <Button>Submit</Button>
+        <Button variant="success">Accept</Button>
       </div>
 
       <div className="bg-light">
@@ -125,7 +129,7 @@ The matching should cover the **entire** input string (not partial).
             <div className="border rounded bg-white mt-2">
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
                 <Link
-                  to={`/problems/${id}/description`}
+                  to={`/contributions/${id}/description`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -135,7 +139,7 @@ The matching should cover the **entire** input string (not partial).
                 </Link>
                 <span className="text-body-tertiary ">|</span>
                 <Link
-                  to={`/problems/${id}/submissions`}
+                  to={`/contributions/${id}/submissions`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -169,7 +173,7 @@ The matching should cover the **entire** input string (not partial).
                   </span>
 
                   <OverlayTrigger
-                    trigger="hover"
+                    trigger="click"
                     placement="right"
                     overlay={popover}
                   >

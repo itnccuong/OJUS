@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -14,41 +13,43 @@ function NavBar() {
     navigate("/accounts/login"); // Redirect to login
   };
   return (
-    <Navbar expand="lg" className="bg-body-tertiary border-bottom d-flex">
-      <Container className="d-flex">
-        <Navbar.Brand as={NavLink} to={"/"}>
-          <img
-            src="/leetcode.svg"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-            alt="React Bootstrap logo"
-          />
-        </Navbar.Brand>
+    <Navbar className="bg-body-tertiary border-bottom d-flex">
+      <div className="d-flex container">
+        <div className="container d-flex gap-3 justify-content-start">
+          <Navbar.Brand as={NavLink} to={"/"}>
+            <img
+              src="/leetcode.svg"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+              alt="React Bootstrap logo"
+            />
+          </Navbar.Brand>
 
-        <Nav>
-          <Nav.Link as={NavLink} to={"/problem"} className="mx-2">
-            Problems
-          </Nav.Link>
-        </Nav>
+          <Nav>
+            <Nav.Link as={NavLink} to={"/problems"}>
+              Problems
+            </Nav.Link>
+          </Nav>
 
-        <Nav>
-          <Nav.Link as={NavLink} to={"/contribute"} className="mx-2">
-            Contribute
-          </Nav.Link>
-        </Nav>
+          <Nav>
+            <Nav.Link as={NavLink} to={"/contribute"}>
+              Contribute
+            </Nav.Link>
+          </Nav>
 
-        <Nav>
-          <Nav.Link as={NavLink} to={"/contributions"} className="mx-2">
-            Contributions
-          </Nav.Link>
-        </Nav>
+          <Nav>
+            <Nav.Link as={NavLink} to={"/contributions"}>
+              Contributions
+            </Nav.Link>
+          </Nav>
+        </div>
 
-        <Container className="d-flex justify-content-end">
+        <div className="d-flex container gap-2 justify-content-end">
           {storage ? (
             <>
               <Nav>
-                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`} className="mx-2">
+                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
                   Profile
                 </Nav.Link>
               </Nav>
@@ -62,7 +63,7 @@ function NavBar() {
           ) : (
             <>
               <Nav>
-                <Nav.Link as={NavLink} to="/accounts/register" className="mx-2">
+                <Nav.Link as={NavLink} to="/accounts/register">
                   Register
                 </Nav.Link>
               </Nav>
@@ -74,8 +75,8 @@ function NavBar() {
               </Nav>
             </>
           )}
-        </Container>
-      </Container>
+        </div>
+      </div>
     </Navbar>
   );
 }

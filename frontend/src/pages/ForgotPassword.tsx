@@ -23,7 +23,7 @@ export default function ForgotPassWord() {
           pending: "Sending reset link...",
           success: "Reset link sent successfully!",
           error: "Failed to send reset link",
-        }
+        },
       );
       navigate("/accounts/password/reset/done");
     } catch (error) {
@@ -40,7 +40,7 @@ export default function ForgotPassWord() {
         className="d-flex justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "86vh",
+          height: "87vh",
         }}
       >
         <Form
@@ -89,9 +89,7 @@ export default function ForgotPassWord() {
           </div>
         </Form>
       </div>
-      <Container>
-        <Footer />
-      </Container>
+      <Footer />
     </>
   );
 }

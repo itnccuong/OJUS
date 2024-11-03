@@ -1,12 +1,15 @@
-import { Accordion, Badge, Button, Container, Form } from "react-bootstrap";
+import { Accordion, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-import { StorageConfig } from "../../interfaces/interface";
-import getStorage from "../../utils/getStorage";
-import { useNavigate } from "react-router-dom";
+// import {StorageConfig} from "../../interfaces/interface";
+// import getStorage from "../../utils/getStorage";
+// import {useNavigate} from "react-router-dom";
 import { toast } from "react-toastify";
+// import remarkMath from "remark-math";
+// import rehypeKatex from "rehype-katex";
+// import "katex/dist/katex.min.css";
 
 interface Tag {
   label: string;
@@ -14,15 +17,15 @@ interface Tag {
 }
 
 export default function Contribute() {
-  const navigate = useNavigate(); // Initialize navigate
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  // const navigate = useNavigate(); // Initialize navigate
+  // const storage: StorageConfig | null = getStorage(); // Get token from localStorage
 
-  useEffect(() => {
-    if (!storage) {
-      toast.error("You need to login first");
-      navigate("/accounts/login");
-    }
-  }, [storage, navigate]);
+  // useEffect(() => {
+  //   if (!storage) {
+  //     toast.error("You need to login first");
+  //     navigate("/accounts/login");
+  //   }
+  // }, [storage, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
@@ -36,11 +39,11 @@ export default function Contribute() {
     try {
       console.log(
         "submit",
-        tags.filter((tag) => tag.selected).map((tag) => tag.label)
-      );
-      console.log(
-        "submit",
-        tags.filter((tag) => tag.selected).map((tag) => tag.label)
+        title,
+        description,
+        difficulty,
+        inputFile,
+        outputFile,
       );
 
       // const { data } = await axios.post(getURL("/api/contribute"), {
@@ -76,8 +79,8 @@ export default function Contribute() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -109,15 +112,8 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   return (
     <div className="d-flex flex-column">
       <NavBar />
-      <Form onSubmit={handleSubmit}>
-        <Container
-          className="d-flex"
-          style={
-            {
-              // height: "100vh",
-            }
-          }
-        >
+      <div className="d-flex flex-row">
+        <div className="d-flex container">
           <Container
             className="d-flex flex-column p-3 border-end border-start"
             style={
@@ -140,132 +136,143 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             </big>
 
             <h5 className="mt-3 mb-3">Title</h5>
+            <Form onSubmit={handleSubmit}>
+              <Form.Control
+                required
+                type="text"
+                placeholder="Pick a title"
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-50 mb-2"
+              />
 
-            <Form.Control
-              required
-              type="text"
-              placeholder="Pick a title"
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-50 mb-2"
-            />
+              <h5 className="mt-3 mb-3">Difficulty</h5>
+              <Form.Select
+                required
+                aria-label="Default select example"
+                onChange={(e) => setDifficulty(e.target.value)}
+                className="w-50 mb-2"
+              >
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </Form.Select>
 
-            <h5 className="mt-3 mb-3">Difficulty</h5>
-            <Form.Select
-              required
-              aria-label="Default select example"
-              onChange={(e) => setDifficulty(e.target.value)}
-              className="w-50 mb-2"
-            >
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </Form.Select>
-
-            <Accordion className="mt-3 mb-3 w-50">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Tags</Accordion.Header>
-                <Accordion.Body>
-                  <div className="mb-3">
-                    {tags.map((tag, index) => (
+              <Accordion className="mt-3 mb-3 w-50">
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>Tags</Accordion.Header>
+                  <Accordion.Body>
+                    <div className="mb-3">
+                      {tags.map((tag, index) => (
+                        <Button
+                          variant={tag.selected ? "primary" : "light"}
+                          key={index}
+                          className={`badge rounded-pill m-1 ${
+                            tag.selected ? "" : "text-dark"
+                          } mx-1`}
+                          onClick={() => toggleTag(index)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {tag.label}
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="d-flex justify-content-end border-top">
                       <Button
-                        variant={tag.selected ? "primary" : "light"}
-                        key={index}
-                        className={`badge rounded-pill m-1 ${
-                          tag.selected ? "" : "text-dark"
-                        } mx-1`}
-                        onClick={() => toggleTag(index)}
-                        style={{ cursor: "pointer" }}
+                        variant="primary"
+                        className=" w-25 mt-3"
+                        onClick={() => handleResetTags()}
                       >
-                        {tag.label}
+                        Reset
                       </Button>
-                    ))}
-                  </div>
-                  <div className="d-flex justify-content-end border-top">
-                    <Button
-                      variant="primary"
-                      className=" w-25 mt-3"
-                      onClick={() => handleResetTags()}
-                    >
-                      Reset
-                    </Button>
-                  </div>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
 
-            <h5 className="mt-3 mb-3">Description</h5>
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Markdown Preview"
-              onChange={(e) => setIsMarkdown(e.target.checked)}
-            />
+              <h5 className="mt-3 mb-3">Description</h5>
+              <Form.Check
+                type="switch"
+                id="custom-switch"
+                label="Markdown Preview"
+                onChange={(e) => setIsMarkdown(e.target.checked)}
+              />
 
-            {isMarkdown ? (
-              <>
-                <Container className="border rounded mb-3 mt-2">
-                  <ReactMarkdown>{description}</ReactMarkdown>
-                </Container>
-              </>
-            ) : (
-              <>
-                <Form.Control
-                  placeholder="Write your description in markdown"
-                  className="mb-3 mt-2"
-                  required
-                  as="textarea"
-                  rows={8}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </>
-            )}
+              {isMarkdown ? (
+                <>
+                  <Container className="border rounded mb-3 mt-2">
+                    <ReactMarkdown
+                      children={description}
+                      // remarkPlugins={[remarkMath]}
+                      // rehypePlugins={[rehypeKatex]}
+                    />
+                    {/* {description} */}
+                    {/* </ReactMarkdown> */}
+                  </Container>
+                </>
+              ) : (
+                <>
+                  <Form.Control
+                    placeholder="Write your description in markdown"
+                    className="mb-3 mt-2"
+                    required
+                    as="textarea"
+                    rows={8}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </>
+              )}
 
-            <h5 className="mt-3 mb-3">Input File</h5>
-            <Form.Control
-              required
-              type="file"
-              className="mb-3 w-50"
-              onChange={(e) =>
-                setInputFile((e.target as HTMLInputElement).files?.[0] || null)
-              }
-            />
+              <h5 className="mt-3 mb-3">Input File</h5>
+              <Form.Control
+                required
+                type="file"
+                className="mb-3 w-50"
+                onChange={(e) =>
+                  setInputFile(
+                    (e.target as HTMLInputElement).files?.[0] || null,
+                  )
+                }
+              />
 
-            <h5 className="mt-3 mb-3">Output File</h5>
-            <Form.Control
-              required
-              type="file"
-              className="mb-3 w-50"
-              onChange={(e) =>
-                setOutputFile((e.target as HTMLInputElement).files?.[0] || null)
-              }
-            />
+              <h5 className="mt-3 mb-3">Output File</h5>
+              <Form.Control
+                required
+                type="file"
+                className="mb-3 w-50"
+                onChange={(e) =>
+                  setOutputFile(
+                    (e.target as HTMLInputElement).files?.[0] || null,
+                  )
+                }
+              />
 
-            <h5 className="mt-3 mb-3">Time limit (ms)</h5>
+              <h5 className="mt-3 mb-3">Time limit (ms)</h5>
 
-            <Form.Control
-              required
-              type="text"
-              placeholder="Time limit"
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-50 mb-2"
-            />
+              <Form.Control
+                required
+                type="text"
+                placeholder="Time limit"
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-50 mb-2"
+              />
 
-            <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
+              <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
 
-            <Form.Control
-              required
-              type="text"
-              placeholder="Memory limit"
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-50 mb-2"
-            />
+              <Form.Control
+                required
+                type="text"
+                placeholder="Memory limit"
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-50 mb-2"
+              />
 
-            <Container className="d-flex justify-content-center mt-2">
-              <Button className="w-25" type="submit">
-                Submit
-              </Button>
-            </Container>
+              <Container className="d-flex justify-content-center mt-3">
+                <Button className="w-25" type="submit">
+                  Submit
+                </Button>
+              </Container>
+            </Form>
           </Container>
 
           <Container
@@ -291,11 +298,9 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               <ReactMarkdown>{markdown}</ReactMarkdown>
             </Container>
           </Container>
-        </Container>
-      </Form>
-      <Container>
-        <Footer />
-      </Container>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

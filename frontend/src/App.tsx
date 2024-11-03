@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import Problem from "./pages/Problem";
+import Problems from "./pages/Problems";
 import EditProfile from "./pages/EditProfile";
 
 import { Slide, ToastContainer } from "react-toastify";
@@ -14,6 +14,8 @@ import ForgotPasswordDone from "./pages/ForgotPasswordDone";
 import ChangePassword from "./pages/ChangePassword";
 import Contribute from "./pages/Contribute";
 import Contributions from "./pages/Contributions";
+import Contribution from "./pages/Contribution";
+import Problem from "./pages/Problem";
 
 export default function App() {
   return (
@@ -24,7 +26,8 @@ export default function App() {
           <Route path="/accounts/login" element={<Login />} />
           <Route path="/accounts/register" element={<Register />} />
           <Route path="/u/:username" element={<Profile />} />
-          <Route path="/problem" element={<Problem />} />
+          <Route path="/problems" element={<Problems />} />
+          <Route path="/problems/:id/:page" element={<Problem />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassWord />} />
           <Route
@@ -37,6 +40,7 @@ export default function App() {
           />
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<Contributions />} />
+          <Route path="/contributions/:id/:page" element={<Contribution />} />
         </Routes>
       </Router>
       <ToastContainer
