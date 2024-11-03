@@ -30,21 +30,14 @@ export default function Contribute() {
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
 
-  const [inputFile, setInputFile] = useState<File | null>(null);
-  const [outputFile, setOutputFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  // const [outputFile, setOutputFile] = useState<File | null>(null);
 
   const [isMarkdown, setIsMarkdown] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      console.log(
-        "submit",
-        title,
-        description,
-        difficulty,
-        inputFile,
-        outputFile,
-      );
+      console.log("submit", title, description, difficulty, file);
 
       // const { data } = await axios.post(getURL("/api/contribute"), {
       //   title,
@@ -223,27 +216,13 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 </>
               )}
 
-              <h5 className="mt-3 mb-3">Input File</h5>
+              <h5 className="mt-3 mb-3">Upload tests</h5>
               <Form.Control
                 required
                 type="file"
                 className="mb-3 w-50"
                 onChange={(e) =>
-                  setInputFile(
-                    (e.target as HTMLInputElement).files?.[0] || null,
-                  )
-                }
-              />
-
-              <h5 className="mt-3 mb-3">Output File</h5>
-              <Form.Control
-                required
-                type="file"
-                className="mb-3 w-50"
-                onChange={(e) =>
-                  setOutputFile(
-                    (e.target as HTMLInputElement).files?.[0] || null,
-                  )
+                  setFile((e.target as HTMLInputElement).files?.[0] || null)
                 }
               />
 
