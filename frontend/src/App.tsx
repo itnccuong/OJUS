@@ -17,6 +17,7 @@ import Contribute from "./pages/Contribute";
 import Contributions from "./pages/Contributions";
 import Contribution from "./pages/Contribution";
 import Problem from "./pages/Problem";
+import Submission from "./pages/Submission";
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<Contributions />} />
           <Route path="/contributions/:id/:page" element={<Contribution />} />
+          <Route path="/submissions" element = {<Submission />} />
         </Routes>
       </Router>
       <ToastContainer

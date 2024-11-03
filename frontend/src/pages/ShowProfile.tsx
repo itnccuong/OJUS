@@ -69,7 +69,7 @@ const ShowProfile: React.FC = () => {
   const navigate = useNavigate();
 
   const handleViewAllSubmissions = () => {
-    navigate("/all-submissions"); // Navigate to the submissions page (change route as per your project)
+    navigate("/submissions"); // Navigate to the submissions page (change route as per your project)
   };
 
   const percentageSolved =
