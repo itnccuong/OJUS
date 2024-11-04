@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="d-flex container">
         <div className="container d-flex justify-content-start">
           <span className="text-body-secondary">
-            Copyright &copy; 2024 LeetCode
+            Copyright &copy; 2024 VuaLeetCode
           </span>
         </div>
 

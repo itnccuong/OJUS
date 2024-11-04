@@ -1,11 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import {
-  Button,
-  OverlayTrigger,
-  Popover,
-} from "react-bootstrap";
+import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 // import { StorageConfig } from "../../interfaces/interface";
 // import getStorage from "../../utils/getStorage";
 import ReactMarkdown from "react-markdown";
@@ -165,15 +161,15 @@ The matching should cover the **entire** input string (not partial).
                       difficulty === "Easy"
                         ? "text-success"
                         : difficulty === "Medium"
-                        ? "text-warning"
-                        : "text-danger"
+                          ? "text-warning"
+                          : "text-danger"
                     }`}
                   >
                     {difficulty}
                   </span>
 
                   <OverlayTrigger
-                    trigger="click"
+                    trigger="hover"
                     placement="right"
                     overlay={popover}
                   >

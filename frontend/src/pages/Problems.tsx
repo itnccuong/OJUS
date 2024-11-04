@@ -36,8 +36,8 @@ export default function Problems() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -206,7 +206,7 @@ export default function Problems() {
       (problem.difficulty === difficulty || difficulty === "All") &&
       (problem.status === status || status === "All") &&
       getSelectedTags().every((tag) => problem.tags.includes(tag)) &&
-      problem.title.toLowerCase().includes(search.toLowerCase())
+      problem.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -232,8 +232,8 @@ export default function Problems() {
                         diff === "Easy"
                           ? "success"
                           : diff === "Medium"
-                          ? "warning"
-                          : "danger"
+                            ? "warning"
+                            : "danger"
                       }`}
                     >
                       {diff}
@@ -379,10 +379,12 @@ export default function Problems() {
                 </th>
                 <th style={{ width: "40%" }}>
                   <div
-                    className="d-flex justify-content-between"
-                    style={{
-                      cursor: "pointer",
-                    }}
+                    className="d-flex justify-content-between cursor-pointer"
+                    style={
+                      {
+                        // cursor: "pointer",
+                      }
+                    }
                     onClick={() => {
                       alert("implement sort");
                     }}
@@ -446,8 +448,8 @@ export default function Problems() {
                         problem.difficulty === "Easy"
                           ? "text-success"
                           : problem.difficulty === "Medium"
-                          ? "text-warning"
-                          : "text-danger"
+                            ? "text-warning"
+                            : "text-danger"
                       }`}
                     >
                       {problem.difficulty}
