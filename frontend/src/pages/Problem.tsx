@@ -15,10 +15,10 @@ import React, { useState } from "react";
 // import "prismjs/components/prism-javascript";
 
 import CodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
-import { javasciprt, javascript } from "@codemirror/lang-javascript";
+// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
+import { javascript } from "@codemirror/lang-javascript";
 
 export default function Problem() {
   const { id } = useParams();
@@ -60,7 +60,7 @@ export default function Problem() {
   );
 
   const [code, setCode] = useState("");
-  const onChange = React.useCallback((val: string, viewUpdate) => {
+  const onChange = React.useCallback((val: string) => {
     setCode(val);
   }, []);
 

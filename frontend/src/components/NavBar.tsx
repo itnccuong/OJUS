@@ -73,6 +73,12 @@ function NavBar() {
                   Sign In
                 </Nav.Link>
               </Nav>
+              
+              <Nav>
+                <Nav.Link as={NavLink} to="/showProfile">
+                  Profile
+                </Nav.Link>
+              </Nav>
             </>
           )}
         </div>
