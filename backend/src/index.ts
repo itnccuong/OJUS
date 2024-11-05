@@ -9,6 +9,7 @@ const app = express();
 
 // router
 import router from '../routes/index.route';
+import upload from '../upload/upload.route';
 
 // middlewares
 app.use(express.json());
@@ -34,7 +35,12 @@ if (!fs.existsSync(uploadDir)) {
 // routes
 app.use("/api", router);
 
-// app.use("/file", express.static(path.join(__dirname, "../public/upload")));
+// temorary route for upload
+app.get('/upload', (req, res) => {
+  res.sendFile(path.join(__dirname, '../upload/test.html'));
+});
+
+app.use('/upload', upload);
 
 // server
 const PORT = process.env.PORT || 8000;
