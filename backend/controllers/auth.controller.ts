@@ -120,7 +120,7 @@ const login = async (req: Request, res: Response) => {
 
     // Generate token
     const token = jwt.sign(
-      { userId: user.id }, // Payload
+      user,
       process.env.JWT_SECRET as string, // Secret
       { expiresIn: "3d" }, // Token expiration
     );
@@ -130,7 +130,7 @@ const login = async (req: Request, res: Response) => {
       {
         token: token,
         user: {
-          id: user.id,
+          id: user.userId,
           email: user.email,
           username: user.username,
         },

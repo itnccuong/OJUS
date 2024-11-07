@@ -8,10 +8,39 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
+  userId    Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
   fullname  String
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+
+  problems  Problem[] // The problems list represents a one-to-many relationship between User and Problem (one user can author many problems).
+}
+
+model Problem {
+  problemId   Int       @id @default(autoincrement())
+  title       String    @unique
+  description String
+  isActive   Boolean   @default(false)  
+  difficulty  Int
+  tags        String
+  timeLimit   Int
+  memoryLimit Int
+  createdAt   DateTime @default(now())
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [userId])
+
+  fileId      Int       @unique
+  file        Files     @relation(fields: [fileId], references: [fileId])
+}
+
+model Files {
+  fileId     Int        @id @default(autoincrement())
+  filename   String
+  filesize   Int
+  fileType   String
+  location   String
+  createdAt  DateTime   @default(now())
+  problem    Problem?   // Optional link back to Problem
 }
