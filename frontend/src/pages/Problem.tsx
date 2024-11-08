@@ -1,7 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import { Button, OverlayTrigger, Popover } from "react-bootstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownButton,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import React, { useState } from "react";
 
@@ -24,6 +30,10 @@ export default function Problem() {
   const { id } = useParams();
   const { page } = useParams();
   const difficulty: string = "Medium";
+
+  const Language = ["C++", "Java", "Python"];
+
+  const [language, setLanguage] = useState("Python");
 
   const tags: string[] = [
     "Array",
@@ -198,7 +208,30 @@ The matching should cover the **entire** input string (not partial).
           <div className="container">
             <div className="border rounded bg-white mt-2">
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <span>Code</span>
+                <DropdownButton variant="light" title={language}>
+                  <div className="d-flex flex-column">
+                    {Language.map((lang, index) => (
+                      <Dropdown.Item
+                        key={index}
+                        onClick={() => {
+                          setLanguage(lang);
+                        }}
+                      >
+                        <Button variant="white">{lang}</Button>
+                        <span className="ms-4">
+                          {language === lang ? (
+                            <img
+                              src="/done.svg"
+                              width="30"
+                              height="24"
+                              alt="React Bootstrap logo"
+                            />
+                          ) : null}
+                        </span>
+                      </Dropdown.Item>
+                    ))}
+                  </div>
+                </DropdownButton>
               </div>
               <div
                 className="container p-3"
