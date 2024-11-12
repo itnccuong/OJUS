@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 
-export default function ForgotPassWord() {
+export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

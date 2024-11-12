@@ -12,7 +12,6 @@ import ReactMarkdown from "react-markdown";
 import React, { useState } from "react";
 
 // import SyntaxHighlighter from "react-syntax-highlighter";
-// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 // import Editor from "react-simple-code-editor";
 // import Prism from "prismjs";
 // import "prismjs/themes/prism.css"; // Choose a Prism theme you like

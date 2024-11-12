@@ -12,7 +12,7 @@ interface Tag {
   selected: boolean;
 }
 
-export default function Problems() {
+export default function ProblemList() {
   const navigate = useNavigate();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },

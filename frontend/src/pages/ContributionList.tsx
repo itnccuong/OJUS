@@ -13,7 +13,7 @@ interface Tag {
   selected: boolean;
 }
 
-export default function Contributions() {
+export default function ContributionList() {
   const navigate = useNavigate();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },

@@ -3,18 +3,18 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import Problems from "./pages/Problems";
+import ProblemList from "./pages/ProblemList.tsx";
 import EditProfile from "./pages/EditProfile";
-import ShowProfile from "./pages/ShowProfile"
+import ShowProfile from "./pages/ShowProfile";
 
 import { Slide, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import ForgotPassWord from "./pages/ForgotPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import ForgotPasswordDone from "./pages/ForgotPasswordDone";
 import ChangePassword from "./pages/ChangePassword";
 import Contribute from "./pages/Contribute";
-import Contributions from "./pages/Contributions";
+import ContributionList from "./pages/ContributionList.tsx";
 import Contribution from "./pages/Contribution";
 import Problem from "./pages/Problem";
 import Submission from "./pages/Submission";
@@ -28,10 +28,10 @@ export default function App() {
           <Route path="/accounts/login" element={<Login />} />
           <Route path="/accounts/register" element={<Register />} />
           <Route path="/u/:username" element={<Profile />} />
-          <Route path="/problems" element={<Problems />} />
+          <Route path="/problems" element={<ProblemList />} />
           <Route path="/problems/:id/:page" element={<Problem />} />
           <Route path="/profile" element={<EditProfile />} />
-          <Route path="/accounts/password/reset" element={<ForgotPassWord />} />
+          <Route path="/accounts/password/reset" element={<ForgotPassword />} />
           <Route path="/showprofile" element={<ShowProfile />} />
 
           <Route
@@ -43,9 +43,9 @@ export default function App() {
             element={<ChangePassword />}
           />
           <Route path="/contribute" element={<Contribute />} />
-          <Route path="/contributions" element={<Contributions />} />
+          <Route path="/contributions" element={<ContributionList />} />
           <Route path="/contributions/:id/:page" element={<Contribution />} />
-          <Route path="/submissions" element = {<Submission />} />
+          <Route path="/submissions" element={<Submission />} />
         </Routes>
       </Router>
       <ToastContainer
