@@ -47,14 +47,14 @@ const details: Record<string, ExecDetail> = {
  * @param config - Container configuration with name and image.
  * @returns Promise<string> - Returns the container ID.
  */
-const createContainer = (config: ContainerConfig): Promise<string> => {
+const createContainer = async (config: ContainerConfig): Promise<string> => {
+  const { name, image } = config;
   return new Promise((resolve, reject) => {
-    const { name, image } = config;
     exec(
       `docker run -i -d --rm --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
       (error, stdout, stderr) => {
         if (error || stderr) {
-          reject({ msg: "on docker error", error, stderr });
+          return reject({ msg: "on docker error", error, stderr });
         }
         const containerId = stdout.trim();
         resolve(containerId);
@@ -68,7 +68,7 @@ const createContainer = (config: ContainerConfig): Promise<string> => {
  * @param container_id_name - The container ID or name.
  * @returns Promise<string> - Returns the container ID or name.
  */
-const killContainer = (container_id_name: string): Promise<string> => {
+const killContainer = async (container_id_name: string): Promise<string> => {
   return new Promise((resolve) => {
     exec(`docker kill ${container_id_name}`, (error, stdout) => {
       if (stdout) console.log("Deleted(stopped):", stdout);
@@ -84,7 +84,7 @@ const killContainer = (container_id_name: string): Promise<string> => {
  * @param language - The language of the file.
  * @returns Promise<string> - Returns the file ID.
  */
-const compile = (
+const compile = async (
   containerId: string,
   filename: string,
   language: string,
@@ -94,12 +94,12 @@ const compile = (
     ? details[language].compilerCmd(id)
     : null;
 
-  return new Promise((resolve, reject) => {
-    if (!command) return resolve(filename);
+  if (!command) return filename;
 
+  return new Promise((resolve, reject) => {
     exec(`docker exec ${containerId} ${command}`, (error, stdout, stderr) => {
-      if (error) reject({ msg: "on error", error, stderr });
-      if (stderr) reject({ msg: "on stderr", stderr });
+      if (error) return reject({ msg: "on error", error, stderr });
+      if (stderr) return reject({ msg: "on stderr", stderr });
       resolve(id);
     });
   });
@@ -114,22 +114,18 @@ const compile = (
  * @param onProgress - Callback for progress events.
  * @returns Promise<string> - Returns the execution output.
  */
-
-const execute = (
+const execute = async (
   containerId: string,
   filename: string,
   input: string,
   language: string,
   onProgress: (data: string, type: string, pid: number) => void | null,
 ): Promise<string> => {
-  // const command = details[language]?.executorCmd
-  //   ? details[language].executorCmd(filename)
-  //   : null;
   const command = details[language].executorCmd(filename);
 
-  return new Promise((resolve, reject) => {
-    if (!command) return reject("Language Not Supported");
+  if (!command) throw new Error("Language Not Supported");
 
+  return new Promise((resolve, reject) => {
     const cmd = spawn("docker", ["exec", "-i", `${containerId} ${command}`], {
       shell: true,
     });
@@ -166,20 +162,10 @@ const execute = (
       if (code !== 0) {
         reject(stderr);
       } else {
-        // resolve(stdout.trim());
         resolve(stdout);
       }
     });
   });
 };
-
-// await execute(
-//   "2f68aa0c626f72aeabb5a0207465b362d2547ba71c55bb3b8d75039022c8cf4c",
-//   "main.py",
-//   "",
-//   "py",
-// )
-//   .then(console.log)
-//   .catch(console.error);
 
 export { createContainer, killContainer, compile, execute, STDOUT, STDERR };

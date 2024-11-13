@@ -31,23 +31,22 @@ const containerNames = [
   "js-oj-container",
   "java-oj-container",
 ];
-/** @type {string[]} */
+
 const containerIds: string[] = [];
-const initDockerContainer = (image: string, index: number) => {
+const initDockerContainer = async (image: string, index: number) => {
   const name = containerNames[index];
-  return new Promise(async (resolve, reject) => {
-    try {
-      // check and kill already running container
-      await killContainer(name);
-      // now create new container of image
-      const data = await createContainer({ name, image });
-      containerIds[index] = data;
-      resolve(`${name} Id : ${data}`);
-    } catch (error) {
-      reject(`${name} Docker Error : ${JSON.stringify(error)}`);
-    }
-  });
+  try {
+    // check and kill already running container
+    await killContainer(name);
+    // now create a new container of image
+    const data = await createContainer({ name, image });
+    containerIds[index] = data;
+    return `${name} Id : ${data}`;
+  } catch (error) {
+    throw new Error(`${name} Docker Error : ${JSON.stringify(error)}`);
+  }
 };
+
 const initAllDockerContainers = async () => {
   try {
     const res = await Promise.all(
@@ -139,8 +138,8 @@ const execCodeAgainstTestcases = async (
   }
 
   // const { input, output } = require(`./testcases/${testcase}`);
-  const input = ["1", "2"];
-  const output = ["Hello 1\n", "Hello 3\n"];
+  const input = ["1", "2", "3"];
+  const output = ["Hello 1\n", "Hello 3\n", "Hello 3\n"];
 
   let filename = path.basename(filePath);
   const compiledId = await compile(containerId, filename, language);
@@ -180,8 +179,8 @@ const execCodeAgainstTestcases = async (
 const Execute = async () => {
   try {
     await initAllDockerContainers();
-    const filename = "main.cpp";
-    const language = "cpp";
+    const filename = "main.py";
+    const language = "py";
 
     const exeTestcase = await execCodeAgainstTestcases(
       filename,
