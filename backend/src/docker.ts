@@ -166,7 +166,8 @@ const execute = (
       if (code !== 0) {
         reject(stderr);
       } else {
-        resolve(stdout.trim());
+        // resolve(stdout.trim());
+        resolve(stdout);
       }
     });
   });
