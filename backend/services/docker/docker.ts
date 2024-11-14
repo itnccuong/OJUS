@@ -98,8 +98,8 @@ const compile = async (
 
   return new Promise((resolve, reject) => {
     exec(`docker exec ${containerId} ${command}`, (error, stdout, stderr) => {
-      if (error) return reject({ msg: "on error", error, stderr });
-      if (stderr) return reject({ msg: "on stderr", stderr });
+      if (error) return reject({ msg: "on error", error, message: stderr });
+      if (stderr) return reject({ msg: "on stderr", message: stderr });
       resolve(id);
     });
   });

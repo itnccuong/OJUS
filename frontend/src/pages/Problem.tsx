@@ -24,13 +24,19 @@ import CodeMirror from "@uiw/react-codemirror";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 // import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
+import axios from "axios";
+import getURL from "../../utils/getURL.ts";
+import { StorageConfig } from "../../interfaces/interface.ts";
+import getStorage from "../../utils/getStorage.ts";
+import { toast } from "react-toastify";
 
 export default function Problem() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const id = 1;
   const { page } = useParams();
   const difficulty: string = "Medium";
 
-  const Language = ["C++", "Java", "Python"];
+  const Language = ["C++", "C", "Java", "Python", "Javascript"];
 
   const [language, setLanguage] = useState("Python");
 
@@ -104,6 +110,37 @@ The matching should cover the **entire** input string (not partial).
 - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
 
+  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  const token = storage?.token;
+
+  const handleSubmit = async () => {
+    try {
+      const res = await toast.promise(
+        axios.post(
+          getURL(`/api/problems/${id}/submit`),
+          {
+            code: code,
+            language: language,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
+        {
+          pending: "Submitting...",
+          success: "Submit successfully!",
+          // error: "Failed to submit",
+        },
+      );
+      console.log("Submit response: ", res.data);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.error(error);
+    }
+  };
+
   return (
     <div className="d-flex-flex-column">
       <NavBar />
@@ -117,7 +154,7 @@ The matching should cover the **entire** input string (not partial).
           zIndex: 10,
         }}
       >
-        <Button>Submit</Button>
+        <Button onClick={() => handleSubmit()}>Submit</Button>
       </div>
 
       <div className="bg-light">
