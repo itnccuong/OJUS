@@ -129,7 +129,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
           : testcases[index].input,
         language,
         (data, type, pid) => {
-          console.log(`[${pid}] ${type}: ${data}`);
+          // console.log(`[${pid}] ${type}: ${data}`);
         },
       );
 

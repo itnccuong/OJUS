@@ -51,7 +51,7 @@ const createContainer = async (config: ContainerConfig): Promise<string> => {
   const { name, image } = config;
   return new Promise((resolve, reject) => {
     exec(
-      `docker run -i -d --rm --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
+      `docker run -i -d --rm --memory=100m --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
       (error, stdout, stderr) => {
         if (error || stderr) {
           return reject({ msg: "on docker error", error, stderr });
