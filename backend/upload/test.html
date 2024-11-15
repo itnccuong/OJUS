@@ -7,34 +7,73 @@
 </head>
 
 <body>
-    <input type="file" id="upload-input" multiple="false">
+    <form id="upload-form">
+        <!-- Add your required fields here -->
+        <input type="text" id="authorization" name="authorization" required placeholder="authorization">
+        <input type="text" id="title" name="title" required placeholder="Title">
+        <textarea id="description" name="description" required placeholder="Description"></textarea>
+        <input type="number" id="difficulty" name="difficulty" required placeholder="Difficulty">
+        <input type="text" id="tags" name="tags" required placeholder="Tags">
+        <input type="number" id="timeLimit" name="timeLimit" required placeholder="Time Limit (ms)">
+        <input type="number" id="memoryLimit" name="memoryLimit" required placeholder="Memory Limit (KB)">
+        <!-- File input -->
+        <input type="file" id="upload-input" name="file" required>
+        <!-- Upload button -->
+        <button type="submit">Upload</button>
+    </form>
     <hr />
 
     <script>
-        const uploadInput = document.getElementById("upload-input");
+        document.getElementById('upload-form').onsubmit = async (event) => {
+            event.preventDefault();  
 
-        uploadInput.onchange = async (event) => {
-            const file = event.target.files[0];
+            // Get form values
+            const authorization = document.getElementById('authorization').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const difficulty = document.getElementById('difficulty').value.trim();
+            const tags = document.getElementById('tags').value.trim();
+            const timeLimit = document.getElementById('timeLimit').value.trim();
+            const memoryLimit = document.getElementById('memoryLimit').value.trim();
+            const fileInput = document.getElementById('upload-input');
+            const file = fileInput.files[0];
 
-            if (file) {
+            // Validate required fields
+            if (!authorization || !title || !file) {
+                alert('Please fill all required fields and select a file.');
+                return;
+            }
+
+            try {
+                // Initialize upload
                 const details = await initializeUpload(file.name, file.size, file.type);
-
                 console.log(details);
 
+                // Upload to S3
                 const etags = await uploadToS3(file, details.key, details.chunk_size, details.urls, details.fields);
-
                 console.log(etags);
 
-                const url = await completeUpload(details.key, details.upload_id, etags)
+                // Complete upload
+                const url = await completeUpload(details.key, details.upload_id, etags);
+
                 if (url) {
-                    handleSuccess(url, file.type.includes('image'))
+                    // Send data to /api/contributes/
+                    const contributeResponse = await submitContribute(authorization, title, description, difficulty, tags, timeLimit, memoryLimit, url, file.size, file.type);
+
+                    if (contributeResponse.success) {
+                        handleSuccess(url, file.type.includes('image'));
+                    } else {
+                        console.error('Error submitting contribute:', contributeResponse.message);
+                        alert('Submission failed: ' + contributeResponse.message);
+                    }
                 }
+            } catch (error) {
+                console.error('Upload failed:', error);
+                alert('An error occurred during the upload process. Please try again.');
             }
         };
 
-
         const initializeUpload = async (fileName, fileSize, contentType) => {
-
             try {
                 const response = await fetch('/upload/start-upload', {
                     method: 'POST',
@@ -49,39 +88,34 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Failed to initialize upload.');
                 }
 
                 const result = await response.json();
-
                 return result;
-
-                console.log('Success:', result);
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error initializing upload:', error);
+                throw error;
             }
-
-        }
+        };
 
         const uploadToS3 = async (file, key, chunkSize, urls, fields) => {
-
             const etags = [];
-
             const chunks = splitFileIntoChunks(file, chunkSize);
+
             for (let i = 0; i < chunks.length; i++) {
                 try {
                     const etag = await uploadChunk(urls[i], chunks[i], file.type, fields);
-                    etags.push(etag)
+                    etags.push(etag);
                     console.log(`Chunk ${i + 1} of ${chunks.length} uploaded successfully`);
                 } catch (error) {
                     console.error(`Error uploading chunk ${i + 1}:`, error);
-                    break;
+                    throw error;
                 }
             }
 
             return etags;
-
-        }
+        };
 
         const splitFileIntoChunks = (file, chunkSize) => {
             const chunks = [];
@@ -94,7 +128,7 @@
             }
 
             return chunks;
-        }
+        };
 
         const uploadChunk = async (url, chunk, contentType, fields) => {
             try {
@@ -102,20 +136,17 @@
                     method: "PUT",
                     body: chunk,
                 });
-                
-                console.log("Response", response)
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Failed to upload chunk.');
                 }
 
                 return response.headers.get('Etag');
-
             } catch (error) {
-                console.log("Error", error)
+                console.error('Error uploading chunk:', error);
+                throw error;
             }
-        }
-
+        };
 
         const completeUpload = async (key, uploadId, etags) => {
             try {
@@ -131,54 +162,74 @@
                     })
                 });
 
-
                 if (!response.ok) {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Failed to complete upload.');
                 }
 
                 const result = await response.json();
-
                 return result['url'];
-
-                console.log('Success:', result);
             } catch (error) {
-                console.error('Complete Upload Failed:', {
-                    message: error.message,
-                    stack: error.stack,  // Provides a trace of where the error occurred
-                    // Including additional custom properties if any specific to the context
-                });
-                return null;
+                console.error('Complete Upload Failed:', error);
+                throw error;
             }
-        }
+        };
+
+        const submitContribute = async (authorization, title, description, difficulty, tags, timeLimit, memoryLimit, fileUrl, fileSize, fileType) => {
+            try {
+                const response = await fetch('/api/contributes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': authorization
+                    },
+                    body: JSON.stringify({
+                        'title': title,
+                        'description': description,
+                        'difficulty': difficulty,
+                        'tags': tags,
+                        'timeLimit': timeLimit,
+                        'memoryLimit': memoryLimit,
+                        'fileUrl': fileUrl,
+                        'fileSize': fileSize,
+                        'fileType': fileType
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit contribute.');
+                }
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error submitting contribute:', error);
+                throw error;
+            }
+        };
 
         const handleSuccess = (url, isImage) => {
             console.log("Success", url);
 
             const section = document.createElement("section");
 
-
             if (isImage) {
-                const img = document.createElement("img")
-                img.src = url
-                img.width = 300
+                const img = document.createElement("img");
+                img.src = url;
+                img.width = 300;
                 section.appendChild(img);
             }
 
             const link = document.createElement("a");
             link.href = url;
-            link.target = "_blank"
-            const linkText = document.createTextNode(url)
-            link.appendChild(linkText)
-            section.appendChild(document.createElement("div"))
-            section.appendChild(link)
+            link.target = "_blank";
+            link.textContent = url;
+            section.appendChild(document.createElement("div"));
+            section.appendChild(link);
 
+            document.body.appendChild(section);
+            document.body.appendChild(document.createElement("hr"));
 
-            document.body.appendChild(section)
-            document.body.appendChild(document.createElement("hr"))
-
-
-        }
-
+        };
     </script>
 </body>
 

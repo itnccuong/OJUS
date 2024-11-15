@@ -9,7 +9,7 @@ interface AuthRequest extends Request {
 export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const token = req.headers['authorization']?.split(' ')[1];
 
-  console.log(token);
+  // console.log(token);
 
   if (!token) {
     res.status(401).json({
