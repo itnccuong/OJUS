@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import {
@@ -9,7 +9,7 @@ import {
   Popover,
 } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // import SyntaxHighlighter from "react-syntax-highlighter";
 // import Editor from "react-simple-code-editor";
@@ -26,11 +26,18 @@ import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import axios from "axios";
 import getURL from "../../utils/getURL.ts";
-import { StorageConfig } from "../../interfaces/interface.ts";
-import getStorage from "../../utils/getStorage.ts";
 import { toast } from "react-toastify";
+import getToken from "../../utils/getToken.ts";
 
 export default function Problem() {
+  const navigate = useNavigate(); // Initialize navigate
+  const token = getToken(); // Get token from localStorage
+  useEffect(() => {
+    if (!token) {
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
+
   // const { id } = useParams();
   const id = 1;
   const { page } = useParams();
@@ -109,9 +116,6 @@ The matching should cover the **entire** input string (not partial).
 - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
 - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
-
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
-  const token = storage?.token;
 
   const handleSubmit = async () => {
     try {
