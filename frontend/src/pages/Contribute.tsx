@@ -38,7 +38,7 @@ interface Tag {
 export default function Contribute() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [difficulty, setDifficulty] = useState("Easy");
+  const [difficulty, setDifficulty] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
@@ -241,9 +241,9 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 onChange={(e) => setDifficulty(e.target.value)}
                 className="w-50 mb-2"
               >
-                <option value={0}>Easy</option>
-                <option value={1}>Medium</option>
-                <option value={2}>Hard</option>
+                <option value={1}>Easy</option>
+                <option value={2}>Medium</option>
+                <option value={3}>Hard</option>
               </Form.Select>
 
               <Accordion className="mt-3 mb-3 w-50">
