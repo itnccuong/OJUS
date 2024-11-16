@@ -1,15 +1,15 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
-import { StorageConfig } from "../../interfaces/interface";
-import getStorage from "../../utils/getStorage";
+import getToken from "../../utils/getToken.ts";
+import storageKeyMap from "../../utils/storageKeyMap.ts";
 
 function NavBar() {
   const navigate = useNavigate();
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  const token = getToken(); // Get token from localStorage
   // Initialize navigate
   const handleSignOut = () => {
-    localStorage.removeItem("user"); // Remove token from localStorage
+    localStorage.removeItem(storageKeyMap.token); // Remove token from localStorage
     navigate("/accounts/login"); // Redirect to login
   };
   return (
@@ -46,10 +46,11 @@ function NavBar() {
         </div>
 
         <div className="d-flex container gap-2 justify-content-end">
-          {storage ? (
+          {token ? (
             <>
               <Nav>
-                <Nav.Link as={NavLink} to={`/u/${storage.user.username}`}>
+                {/*Use token to get username, for now this is hardcoded*/}
+                <Nav.Link as={NavLink} to={`/u/duygay`}>
                   Profile
                 </Nav.Link>
               </Nav>
@@ -73,7 +74,7 @@ function NavBar() {
                   Sign In
                 </Nav.Link>
               </Nav>
-              
+
               <Nav>
                 <Nav.Link as={NavLink} to="/showProfile">
                   Profile
