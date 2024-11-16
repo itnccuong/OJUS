@@ -3,8 +3,6 @@ import NavBar from "../components/NavBar";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-// import {StorageConfig} from "../../interfaces/interface";
-// import getStorage from "../../utils/getStorage";
 // import {useNavigate} from "react-router-dom";
 import { toast } from "react-toastify";
 // import remarkMath from "remark-math";
