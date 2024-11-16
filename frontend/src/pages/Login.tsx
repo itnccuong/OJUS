@@ -25,6 +25,7 @@ export default function Login() {
       console.log(data);
       toast.success("Logged in successfully");
       localStorage.setItem("user", JSON.stringify(data.data));
+      localStorage.setItem("token", JSON.stringify(data.token));
       navigate("/");
     } catch (error: any) {
       toast.error(error.response.data.message);

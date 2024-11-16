@@ -3,13 +3,32 @@ import NavBar from "../components/NavBar";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-// import {StorageConfig} from "../../interfaces/interface";
-// import getStorage from "../../utils/getStorage";
-// import {useNavigate} from "react-router-dom";
+import getURL from "../../utils/getURL";
 import { toast } from "react-toastify";
-// import remarkMath from "remark-math";
-// import rehypeKatex from "rehype-katex";
-// import "katex/dist/katex.min.css";
+import getStorage from "../../utils/getStorage";
+import getToken from "../../utils/getToken";
+import axios from "axios";
+
+const getUserInfo = () => {
+  const userData = getStorage(); // Gọi hàm getStorage
+
+  if ( !userData) {
+    console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+    return null;
+  }
+
+  const username = userData.user.username; // Lấy username từ user storage
+  return { username };
+};
+
+// Sử dụng
+const userInfo = getUserInfo();
+if (userInfo) {
+  console.log("Đã lấy thông tin người dùng:", userInfo);
+} else {
+  console.error("Không thể lấy thông tin người dùng.");
+}
+
 
 interface Tag {
   label: string;
@@ -17,40 +36,13 @@ interface Tag {
 }
 
 export default function Contribute() {
-  // const navigate = useNavigate(); // Initialize navigate
-  // const storage: StorageConfig | null = getStorage(); // Get token from localStorage
-
-  // useEffect(() => {
-  //   if (!storage) {
-  //     toast.error("You need to login first");
-  //     navigate("/accounts/login");
-  //   }
-  // }, [storage, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
-
   const [file, setFile] = useState<File | null>(null);
-  // const [outputFile, setOutputFile] = useState<File | null>(null);
+  const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
+  const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
 
-  const [isMarkdown, setIsMarkdown] = useState(false);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      console.log("submit", title, description, difficulty, file);
-
-      // const { data } = await axios.post(getURL("/api/contribute"), {
-      //   title,
-      //   description,
-      // });
-      // console.log("data", data);
-      toast.success("Your question has been submitted");
-      //   navigate("/problem");
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error.response.data.message);
-    }
-  };
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
     { label: "String", selected: false },
@@ -79,6 +71,110 @@ export default function Contribute() {
 
   const handleResetTags = () => {
     setTags(initialTags);
+  };
+
+
+  // const [outputFile, setOutputFile] = useState<File | null>(null);
+
+  const [isMarkdown, setIsMarkdown] = useState(false);
+
+
+    const initializeUpload = async (fileName: string, fileSize: number, contentType: string) => {
+    const response = await axios.post(getURL("/upload/start-upload"), {
+      file_name: fileName,
+      file_size: fileSize,
+      content_type: contentType,
+    });
+    return response.data;
+  };
+
+  const uploadChunk = async (url: string, chunk: Blob) => {
+    const response = await axios.put(url, chunk);
+    if (response.status === 200) {
+      return response.headers["etag"];
+    }
+    throw new Error("Failed to upload chunk.");
+  };
+
+  const splitFileIntoChunks = (file: File, chunkSize: number) => {
+    const chunks = [];
+    let start = 0;
+
+    while (start < file.size) {
+      const end = Math.min(start + chunkSize, file.size);
+      chunks.push(file.slice(start, end));
+      start = end;
+    }
+
+    return chunks;
+  };
+
+  const uploadToS3 = async (file: File, chunkSize: number, urls: string[]) => {
+    const chunks = splitFileIntoChunks(file, chunkSize);
+    const etags = [];
+
+    for (let i = 0; i < chunks.length; i++) {
+      const etag = await uploadChunk(urls[i], chunks[i]);
+      etags.push(etag);
+    }
+
+    return etags;
+  };
+
+  const completeUpload = async (key: string, uploadId: string, etags: string[]) => {
+    const response = await axios.post(getURL("/upload/complete-upload"), {
+      key,
+      upload_id: uploadId,
+      etags: etags.join(","),
+    });
+    return response.data.url;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!file) {
+      toast.error("Please select a file.");
+      return;
+    }
+
+    try {
+      // Initialize upload
+      const uploadDetails = await initializeUpload(file.name, file.size, file.type);
+
+      // Upload file chunks
+      const etags = await uploadToS3(file, uploadDetails.chunk_size, uploadDetails.urls);
+
+      // Complete the upload
+      const fileUrl = await completeUpload(uploadDetails.key, uploadDetails.upload_id, etags);
+
+      // Prepare API payload
+      const selectedTags = tags
+      .filter((tag) => tag.selected)
+      .map((tag) => tag.label)
+      .join(","); // Chuyển thành chuỗi với dấu phẩy
+      const payload = {
+        title,
+        description,
+        difficulty,
+        tags: selectedTags,
+        timeLimit,
+        memoryLimit,
+        fileUrl,
+        fileSize: file.size,
+        fileType: file.type,
+      };
+
+      // Submit the form
+      const response = await axios.post(getURL("/api/contributes"), payload, {
+        headers: { Authorization: "Bearer " +  getToken()},
+      });
+
+      toast.success("Your question has been submitted");
+    } catch (error: any) {
+      console.error("Error submitting the form:", error);
+      toast.error("An error occurred while submitting your question.");
+    }
   };
 
   const markdown = `
@@ -145,9 +241,9 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 onChange={(e) => setDifficulty(e.target.value)}
                 className="w-50 mb-2"
               >
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
+                <option value={0}>Easy</option>
+                <option value={1}>Medium</option>
+                <option value={2}>Hard</option>
               </Form.Select>
 
               <Accordion className="mt-3 mb-3 w-50">
@@ -232,7 +328,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 required
                 type="text"
                 placeholder="Time limit"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
                 className="w-50 mb-2"
               />
 
@@ -242,7 +338,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 required
                 type="text"
                 placeholder="Memory limit"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
                 className="w-50 mb-2"
               />
 
