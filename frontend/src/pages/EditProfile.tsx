@@ -1,19 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { StorageConfig } from "../../interfaces/interface";
-import getStorage from "../../utils/getStorage";
 import { useEffect } from "react";
+import getToken from "../../utils/getToken.ts";
 
 export default function EditProfile() {
   const navigate = useNavigate(); // Initialize navigate
 
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  const token = getToken(); // Get token from localStorage
 
   useEffect(() => {
-    if (!storage) {
+    if (!token) {
       navigate("/accounts/login");
     }
-  }, [storage, navigate])
+  }, [token, navigate]);
 
   return (
     <div>

@@ -129,11 +129,11 @@ const login = async (req: Request, res: Response) => {
       res,
       {
         token: token,
-        user: {
-          id: user.userId,
-          email: user.email,
-          username: user.username,
-        },
+        // user: {
+        //   id: user.userId,
+        //   email: user.email,
+        //   username: user.username,
+        // },
       },
       STATUS_CODE.SUCCESS,
       "Login successfully!",

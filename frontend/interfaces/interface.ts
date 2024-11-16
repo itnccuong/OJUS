@@ -5,11 +5,11 @@ export interface UserConfig {
   username: string;
 }
 
-export interface StorageConfig {
-  token: string;
-  user: {
-    user_id: number;
-    email: string;
-    username: string;
-  };
-}
+// export interface StorageConfig {
+//   token: string;
+//   user: {
+//     user_id: number;
+//     email: string;
+//     username: string;
+//   };
+// }
