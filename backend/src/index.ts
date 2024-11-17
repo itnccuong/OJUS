@@ -12,8 +12,11 @@ import router from "../routes/index.route";
 import upload from "../upload/upload.route";
 
 import { initAllDockerContainers } from "../services/docker/docker-executor";
+import globalErrorHandler from "../controllers/error.controller";
 
-initAllDockerContainers();
+initAllDockerContainers().catch((err) => {
+  console.log(err);
+});
 
 // middlewares
 app.use(express.json());
@@ -45,6 +48,8 @@ app.get("/upload", (req, res) => {
 });
 
 app.use("/upload", upload);
+
+app.use(globalErrorHandler);
 
 // server
 const PORT = process.env.PORT || 8000;

@@ -1,7 +1,12 @@
 import { exec, spawn } from "child_process";
 import path from "path";
-// import { codeDirectory } from "./index";
+import { promisify } from "node:util";
+import { CompileError } from "../../utils/error";
+// import { AppError, ErrorName } from "../../utils/error";
 const codeDirectory = path.join(__dirname, "codeFiles");
+
+const execAsync = promisify(exec);
+const spawnAsync = promisify(spawn);
 
 const STDOUT = "stdout";
 const STDERR = "stderr";
@@ -47,20 +52,28 @@ const details: Record<string, ExecDetail> = {
  * @param config - Container configuration with name and image.
  * @returns Promise<string> - Returns the container ID.
  */
-const createContainer = async (config: ContainerConfig): Promise<string> => {
+// const createContainer = async (config: ContainerConfig): Promise<string> => {
+//   const { name, image } = config;
+//   return new Promise((resolve, reject) => {
+//     exec(
+//       `docker run -i -d --rm --memory=100m --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
+//       (error, stdout, stderr) => {
+//         if (error || stderr) {
+//           return reject({ msg: "on docker error", error, stderr });
+//         }
+//         const containerId = stdout.trim();
+//         resolve(containerId);
+//       },
+//     );
+//   });
+// };
+const createContainer = async (config: ContainerConfig) => {
   const { name, image } = config;
-  return new Promise((resolve, reject) => {
-    exec(
-      `docker run -i -d --rm --memory=100m --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
-      (error, stdout, stderr) => {
-        if (error || stderr) {
-          return reject({ msg: "on docker error", error, stderr });
-        }
-        const containerId = stdout.trim();
-        resolve(containerId);
-      },
-    );
-  });
+  const result = await execAsync(
+    `docker run -i -d --rm --memory=100m --mount type=bind,src="${codeDirectory}",dst=/codeFiles --name ${name} --label oj=oj ${image}`,
+  );
+  const containerId = result.stdout.trim();
+  return containerId;
 };
 
 /**
@@ -84,25 +97,47 @@ const killContainer = async (container_id_name: string): Promise<string> => {
  * @param language - The language of the file.
  * @returns Promise<string> - Returns the file ID.
  */
+// const compile = async (
+//   containerId: string,
+//   filename: string,
+//   language: string,
+// ): Promise<string> => {
+//   const id = filename.split(".")[0];
+//   const command = details[language]?.compilerCmd
+//     ? details[language].compilerCmd(id)
+//     : null;
+//
+//   if (!command) return filename;
+//
+//   return new Promise((resolve, reject) => {
+//     exec(`docker exec ${containerId} ${command}`, (error, stdout, stderr) => {
+//       if (error) return reject({ msg: "on error", error, message: stderr });
+//       if (stderr) return reject({ msg: "on stderr", message: stderr });
+//       resolve(id);
+//     });
+//   });
+// };
 const compile = async (
   containerId: string,
   filename: string,
   language: string,
-): Promise<string> => {
+) => {
   const id = filename.split(".")[0];
-  const command = details[language]?.compilerCmd
+  const command = details[language].compilerCmd
     ? details[language].compilerCmd(id)
     : null;
 
-  if (!command) return filename;
+  if (!command) {
+    return filename;
+  }
 
-  return new Promise((resolve, reject) => {
-    exec(`docker exec ${containerId} ${command}`, (error, stdout, stderr) => {
-      if (error) return reject({ msg: "on error", error, message: stderr });
-      if (stderr) return reject({ msg: "on stderr", message: stderr });
-      resolve(id);
-    });
-  });
+  try {
+    await execAsync(`docker exec ${containerId} ${command}`);
+    return id;
+  } catch (error: any) {
+    console.log(error);
+    throw new CompileError(error.stderr);
+  }
 };
 
 /**
@@ -114,6 +149,7 @@ const compile = async (
  * @param onProgress - Callback for progress events.
  * @returns Promise<string> - Returns the execution output.
  */
+
 const execute = async (
   containerId: string,
   filename: string,

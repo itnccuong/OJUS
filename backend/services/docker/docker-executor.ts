@@ -22,29 +22,20 @@ const containerNames = [
 const containerIds: string[] = [];
 const initDockerContainer = async (image: string, index: number) => {
   const name = containerNames[index];
-  try {
-    // check and kill already running container
-    await killContainer(name);
-    // now create a new container of image
-    const data = await createContainer({ name, image });
-    containerIds[index] = data;
-    return `${name} Id : ${data}`;
-  } catch (error) {
-    throw new Error(`${name} Docker Error : ${JSON.stringify(error)}`);
-  }
+  // check and kill already running container
+  await killContainer(name);
+  // now create a new container of image
+  const data = await createContainer({ name, image });
+  containerIds[index] = data;
+  return `${name} Id : ${data}`;
 };
 
 const initAllDockerContainers = async () => {
-  try {
-    const res = await Promise.all(
-      imageNames.map((image, index) => initDockerContainer(image, index)),
-    );
-    console.log(res.join("\n"));
-    console.log("\nAll Containers Initialized");
-  } catch (error) {
-    console.error("Docker Error:", error);
-    console.error(dateTimeNowFormated());
-  }
+  const res = await Promise.all(
+    imageNames.map((image, index) => initDockerContainer(image, index)),
+  );
+  console.log(res.join("\n"));
+  console.log("\nAll Containers Initialized");
 };
 
 //Exec against testcases

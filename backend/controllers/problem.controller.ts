@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { formatResponse, STATUS_CODE } from "../utils/services";
 import { UserConfig } from "../interfaces/user-interface";
 import path from "path";
@@ -13,6 +11,10 @@ import {
   languageSpecificDetails,
 } from "../services/docker/docker-executor";
 import fs from "fs";
+import { CompileError } from "../utils/error";
+// import { ErrorName, isErrorName } from "../utils/error";
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 
@@ -104,15 +106,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
       );
     }
 
-    // if (!filePath.includes("\\") && !filePath.includes("/")) {
-    //   filePath = path.join(codeDirectory, filePath);
-    // }
-
-    // const { input, output } = require(`./testcases/${testcase}`);
-    // const input = ["1", "2", "3"];
-    // const output = ["Hello 1\n", "Hello 2\n", "Hello 3\n"];
-
-    // let filename = path.basename(filePath);
     const compiledId = await compile(containerId, filename, language);
     console.log("Compiled ID: ", compiledId);
 
@@ -152,7 +145,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
           submission.verdict = verdict;
         }
       }
-      await prisma.result.create({
+      const result = await prisma.result.create({
         data: {
           submissionId: submission.submissionId,
           testcaseId: testcases[index].testcaseId,
@@ -163,7 +156,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
         },
       });
     }
-    const result = await prisma.result.findMany({
+    const results = await prisma.result.findMany({
       where: {
         submissionId: submission.submissionId,
       },
@@ -172,19 +165,23 @@ const submit = async (req: SubmitRequest, res: Response) => {
       res,
       {
         submission: submission,
-        result: result,
+        result: results,
         testcases: testcases,
       },
       STATUS_CODE.SUCCESS,
       "Submit successfully",
     );
   } catch (err: any) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
+    if (err instanceof CompileError) {
+      return formatResponse(res, {}, err.statusCode, err.message, err.name);
+    } else {
+      return formatResponse(
+        res,
+        {},
+        STATUS_CODE.INTERNAL_SERVER_ERROR,
+        err.message,
+      );
+    }
   }
 };
 
