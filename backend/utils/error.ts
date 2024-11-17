@@ -7,7 +7,7 @@ import { STATUS_CODE } from "./services";
 
 //Dùng custom class cụ thể, ko dồn hết chung vô 1 custom class vì mỗi class có khi cần log ra các lỗi khác nhau (VD compile err thì có stderr, validation err thì log ra giá trị và range)
 //Lúc gửi res thì có thể ko gửi hết value, range,... nhưng có thể dùng để viết vô message
-export class CompileError extends Error {
+export class CompilationError extends Error {
   public statusCode: number;
 
   constructor(message: string) {

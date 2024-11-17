@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { CompileError } from "../utils/error";
+import { CompilationError } from "../utils/error";
 import { formatResponse, STATUS_CODE } from "../utils/services";
 
 const globalErrorHandler = (
@@ -8,8 +8,8 @@ const globalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("POWPDOPWEKE", err);
-  if (err instanceof CompileError) {
+  console.log(err);
+  if (err instanceof CompilationError) {
     return formatResponse(res, {}, err.statusCode, err.message, err.name);
   } else {
     return formatResponse(

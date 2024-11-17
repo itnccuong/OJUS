@@ -1,7 +1,7 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
-import { CompileError } from "../../utils/error";
+import { CompilationError } from "../../utils/error";
 // import { AppError, ErrorName } from "../../utils/error";
 const codeDirectory = path.join(__dirname, "codeFiles");
 
@@ -135,8 +135,7 @@ const compile = async (
     await execAsync(`docker exec ${containerId} ${command}`);
     return id;
   } catch (error: any) {
-    console.log(error);
-    throw new CompileError(error.stderr);
+    throw new CompilationError(error.stderr);
   }
 };
 
