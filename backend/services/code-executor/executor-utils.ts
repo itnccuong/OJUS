@@ -4,9 +4,6 @@ import { promisify } from "node:util";
 import { CompilationError, RuntimeError } from "../../utils/error";
 import {
   ContainerConfig,
-  containerNames,
-  imageIndex,
-  imageNames,
   LanguageDetail,
 } from "../../interfaces/code-executor-interface";
 
@@ -18,68 +15,88 @@ const codeDirectory = path.join(__dirname, codeFiles);
 //Convert callback function to promise to use await
 const execAsync = promisify(exec);
 
-const containerIds: string[] = [];
+const containers: Record<string, ContainerConfig> = {
+  gcc: {
+    image: "gcc:latest",
+    name: "gcc-container",
+    id: "",
+  },
+  py: {
+    image: "python:3.10-slim",
+    name: "py-container",
+    id: "",
+  },
+  js: {
+    image: "node:16.17.0-bullseye-slim",
+    name: "js-container",
+    id: "",
+  },
+  java: {
+    image: "openjdk:20-slim",
+    name: "java-container",
+    id: "",
+  },
+};
 
 const languageDetails: Record<string, LanguageDetail> = {
   c: {
     compiledExtension: "out",
     inputFunction: null,
-    containerId: () => containerIds[imageIndex.GCC],
     compilerCmd: (id) =>
       `gcc ./${codeFiles}/${id}.c -o ./${codeFiles}/${id}.out -lpthread -lrt`,
     executorCmd: (id) => `./${codeFiles}/${id}.out`,
+    container: containers.gcc,
   },
   cpp: {
     compiledExtension: "out",
     inputFunction: null,
-    containerId: () => containerIds[imageIndex.GCC],
     compilerCmd: (id) =>
       `g++ ./${codeFiles}/${id}.cpp -o ./${codeFiles}/${id}.out`,
     executorCmd: (id) => `./${codeFiles}/${id}.out`,
+    container: containers.gcc,
   },
   py: {
     compiledExtension: "",
     inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
-    containerId: () => containerIds[imageIndex.PY],
     compilerCmd: null,
     executorCmd: (id) => `python ./${codeFiles}/${id}`,
+    container: containers.py,
   },
   js: {
     compiledExtension: "",
     inputFunction: null,
-    containerId: () => containerIds[imageIndex.JS],
     compilerCmd: null,
     executorCmd: (id) => `node ./${codeDirectory}/${id}`,
+    container: containers.js,
   },
   java: {
     compiledExtension: "class",
     inputFunction: null,
-    containerId: () => containerIds[imageIndex.JAVA],
     compilerCmd: (id) =>
       `javac -d ./${codeDirectory}/${id} ./${codeDirectory}/${id}.java`,
     executorCmd: (id) => `java -cp ./${codeDirectory}/${id} Solution`,
+    container: containers.java,
   },
 };
 
 /**
  * Creates a Docker container.
- * @param config - Container configuration with name and image.
+ * @param container - Container configuration with name and image.
  * @returns Promise<string> - Returns the container ID.
  */
 
-const createContainer = async (config: ContainerConfig) => {
-  const { name, image } = config;
+const createContainer = async (container: ContainerConfig) => {
+  const { name, image } = container;
   const result = await execAsync(
-    `docker run -i -d --rm --memory=100m --mount type=bind,src="${codeDirectory}",dst=/${codeFiles} --name ${name} --label oj=oj ${image}`,
+    `docker run -i -d --rm --mount type=bind,src="${codeDirectory}",dst=/${codeFiles} --name ${name} --label oj=oj ${image}`,
   );
-  //Return container id
   return result.stdout.trim();
 };
 
 /**
  * Stops a Docker container.
  * @param container_name - The container ID or name.
- * @returns Promise<string> - Returns the container ID or name.
+ * @returns Promise<string> - Returns the container ID.
  */
 const getContainerId = async (container_name: string) => {
   const running = await execAsync(
@@ -87,33 +104,24 @@ const getContainerId = async (container_name: string) => {
   );
   return running.stdout.trim();
 };
-// const killContainer = async (container_id_name: string) => {
-//   const running = await getContainerId(container_id_name);
-//   if (running) {
-//     const result = await execAsync(`docker kill ${container_id_name}`);
-//     if (result.stdout) process.stdout.write(`Deleted: ${result.stdout}`);
-//   }
-//   return container_id_name;
-// };
 
-const initDockerContainer = async (image: string, index: number) => {
-  const name = containerNames[index];
-  // check and kill already running container
-  // await killContainer(name);
-  // now create a new container of image
+const initDockerContainer = async (container: ContainerConfig) => {
+  const name = container.name;
   const container_id = await getContainerId(name);
 
   if (!container_id) {
-    containerIds[index] = await createContainer({ name, image });
+    container.id = await createContainer(container);
     console.log(`${name} created`);
   } else {
-    containerIds[index] = container_id;
+    container.id = container_id;
   }
 };
 
 const initAllDockerContainers = async () => {
   await Promise.all(
-    imageNames.map((image, index) => initDockerContainer(image, index)),
+    Object.values(containers).map((container) =>
+      initDockerContainer(container),
+    ),
   );
   console.log("\nAll containers initialized");
 };
@@ -203,7 +211,8 @@ const execute = async (
       reject(new RuntimeError(err.message));
     });
 
-    cmd.on("close", (code) => {
+    //Can also use close instead of exit?
+    cmd.on("exit", (code) => {
       if (code !== 0) {
         reject(
           new RuntimeError(
@@ -215,14 +224,6 @@ const execute = async (
         resolve(stdout);
       }
     });
-    // cmd.on("close", (code) => {
-    //     console.log("code number", code);
-    //     if (code !== 0) {
-    //         reject(new RuntimeError(stderr, code));
-    //     } else {
-    //         resolve(stdout);
-    //     }
-    // });
   });
 };
 

@@ -88,7 +88,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const filePath = path.join(codeDirectory, filename);
   fs.writeFileSync(filePath, code, { encoding: "utf-8" });
 
-  let containerId = languageDetails[language].containerId();
+  const containerId = languageDetails[language].container.id;
   if (!containerId) {
     return formatResponse(
       res,
@@ -114,12 +114,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
         // console.log(`[${pid}] ${type}: ${data}`);
       },
     );
-
-    // console.log(`Testcase ${index + 1}:`);
-    // console.log("Expected output:", testcases[index].output);
-    // console.log("Your output:", exOut);
-    // const time = 0;
-    // const memory = 0;
 
     if (
       // time < problem.timeLimit &&
