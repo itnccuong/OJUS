@@ -11,8 +11,8 @@ const app = express();
 import router from "../routes/index.route";
 import upload from "../upload/upload.route";
 
-import { initAllDockerContainers } from "../services/docker/docker-executor";
 import globalErrorHandler from "../controllers/error.controller";
+import { initAllDockerContainers } from "../services/code-executor/utils";
 
 initAllDockerContainers().catch((err) => {
   console.log(err);

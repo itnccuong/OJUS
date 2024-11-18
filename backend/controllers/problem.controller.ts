@@ -1,18 +1,16 @@
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { formatResponse, STATUS_CODE } from "../utils/services";
 import { UserConfig } from "../interfaces/user-interface";
 import path from "path";
-import { compile, execute } from "../services/docker/docker";
 import {
   codeDirectory,
-  languageErrMsg,
-  languageSpecificDetails,
-} from "../services/docker/docker-executor";
+  compile,
+  execute,
+  languageDetails,
+} from "../services/code-executor/utils";
 import fs from "fs";
-import { CompilationError } from "../utils/error";
-// import { ErrorName, isErrorName } from "../utils/error";
 
 dotenv.config();
 
@@ -42,8 +40,8 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const user = req.user;
   const { code } = req.body;
   const language = extensionMap[req.body.language];
-  if (!languageSpecificDetails[language]) {
-    return formatResponse(res, {}, STATUS_CODE.BAD_REQUEST, languageErrMsg);
+  if (!languageDetails[language]) {
+    return formatResponse(res, {}, STATUS_CODE.BAD_REQUEST, "Invalid language");
   }
   //Create a new submission
   const submission = await prisma.submission.create({
@@ -90,7 +88,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const filePath = path.join(codeDirectory, filename);
   fs.writeFileSync(filePath, code, { encoding: "utf-8" });
 
-  let containerId = languageSpecificDetails[language].containerId();
+  let containerId = languageDetails[language].containerId();
   if (!containerId) {
     return formatResponse(
       res,
@@ -108,10 +106,8 @@ const submit = async (req: SubmitRequest, res: Response) => {
     const exOut = await execute(
       containerId,
       compiledId,
-      languageSpecificDetails[language].inputFunction
-        ? languageSpecificDetails[language].inputFunction(
-            testcases[index].input,
-          )
+      languageDetails[language].inputFunction
+        ? languageDetails[language].inputFunction(testcases[index].input)
         : testcases[index].input,
       language,
       (data, type, pid) => {
