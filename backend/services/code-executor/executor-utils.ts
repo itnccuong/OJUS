@@ -3,7 +3,6 @@ import path from "path";
 import { promisify } from "node:util";
 import { CompilationError, RuntimeError } from "../../utils/error";
 import {
-  commandDetailsType,
   ContainerConfig,
   containerNames,
   imageIndex,
@@ -21,57 +20,44 @@ const execAsync = promisify(exec);
 
 const containerIds: string[] = [];
 
-const commandDetails: Record<string, commandDetailsType> = {
-  c: {
-    compilerCmd: (id) =>
-      `gcc ./${codeFiles}/${id}.c -o ./${codeFiles}/${id}.out -lpthread -lrt`,
-    executorCmd: (id) => `./${codeFiles}/${id}.out`,
-  },
-  cpp: {
-    compilerCmd: (id) =>
-      `g++ ./${codeFiles}/${id}.cpp -o ./${codeFiles}/${id}.out`,
-    executorCmd: (id) => `./${codeFiles}/${id}.out`,
-  },
-  py: {
-    compilerCmd: null,
-    executorCmd: (id) => `python ./${codeFiles}/${id}`,
-  },
-  js: {
-    compilerCmd: null,
-    executorCmd: (id) => `node ./${codeDirectory}/${id}`,
-  },
-  java: {
-    compilerCmd: (id) =>
-      `javac -d ./${codeDirectory}/${id} ./${codeDirectory}/${id}.java`,
-    executorCmd: (id) => `java -cp ./${codeDirectory}/${id} Solution`,
-  },
-};
-
 const languageDetails: Record<string, LanguageDetail> = {
   c: {
     compiledExtension: "out",
     inputFunction: null,
     containerId: () => containerIds[imageIndex.GCC],
+    compilerCmd: (id) =>
+      `gcc ./${codeFiles}/${id}.c -o ./${codeFiles}/${id}.out -lpthread -lrt`,
+    executorCmd: (id) => `./${codeFiles}/${id}.out`,
   },
   cpp: {
     compiledExtension: "out",
     inputFunction: null,
     containerId: () => containerIds[imageIndex.GCC],
+    compilerCmd: (id) =>
+      `g++ ./${codeFiles}/${id}.cpp -o ./${codeFiles}/${id}.out`,
+    executorCmd: (id) => `./${codeFiles}/${id}.out`,
   },
   py: {
     compiledExtension: "",
     inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
     containerId: () => containerIds[imageIndex.PY],
+    compilerCmd: null,
+    executorCmd: (id) => `python ./${codeFiles}/${id}`,
   },
   js: {
     compiledExtension: "",
     inputFunction: null,
     containerId: () => containerIds[imageIndex.JS],
+    compilerCmd: null,
+    executorCmd: (id) => `node ./${codeDirectory}/${id}`,
   },
   java: {
     compiledExtension: "class",
     inputFunction: null,
     containerId: () => containerIds[imageIndex.JAVA],
+    compilerCmd: (id) =>
+      `javac -d ./${codeDirectory}/${id} ./${codeDirectory}/${id}.java`,
+    executorCmd: (id) => `java -cp ./${codeDirectory}/${id} Solution`,
   },
 };
 
@@ -145,8 +131,8 @@ const compile = async (
   language: string,
 ) => {
   const id = filename.split(".")[0];
-  const command = commandDetails[language].compilerCmd
-    ? commandDetails[language].compilerCmd(id)
+  const command = languageDetails[language].compilerCmd
+    ? languageDetails[language].compilerCmd(id)
     : null;
 
   if (!command) {
@@ -178,7 +164,7 @@ const execute = async (
   language: string,
   onProgress: (data: string, type: string, pid: number) => void | null,
 ): Promise<string> => {
-  const command = commandDetails[language].executorCmd(filename);
+  const command = languageDetails[language].executorCmd(filename);
 
   if (!command) throw new Error("Language Not Supported");
 

@@ -2,17 +2,19 @@ interface ContainerConfig {
   name: string;
   image: string;
 }
-type CompExecCmd = (id: string) => string;
-interface commandDetailsType {
-  compilerCmd: CompExecCmd | null;
-  executorCmd: CompExecCmd;
-}
+// interface commandDetailsType {
+//   compilerCmd: CompExecCmd | null;
+//   executorCmd: CompExecCmd;
+// }
 
+type CompExecCmd = (id: string) => string;
 type InputFunc = (id: string) => string;
 interface LanguageDetail {
   compiledExtension: string;
   containerId: () => string;
   inputFunction: InputFunc | null;
+  compilerCmd: CompExecCmd | null;
+  executorCmd: CompExecCmd;
 }
 
 const imageIndex = { GCC: 0, PY: 1, JS: 2, JAVA: 3 };
@@ -32,7 +34,6 @@ const containerNames = [
 export {
   ContainerConfig,
   CompExecCmd,
-  commandDetailsType,
   InputFunc,
   LanguageDetail,
   imageIndex,
