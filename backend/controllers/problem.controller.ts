@@ -174,7 +174,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
       testcases: testcases,
     },
     STATUS_CODE.BAD_REQUEST,
-    "Wrong answer",
+    `Wrong answer, ${submission.numTestPassed}/${testcases.length} testcases passed`,
   );
 };
 
