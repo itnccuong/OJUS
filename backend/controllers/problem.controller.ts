@@ -101,7 +101,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
   }
 
   const compiledId = await compile(containerId, filename, language);
-  console.log("Compiled ID: ", compiledId);
 
   var is_ok = true;
   for (let index = 0; index < testcases.length; ++index) {
@@ -139,7 +138,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
         submission.verdict = verdict;
       }
     }
-    const result = await prisma.result.create({
+    await prisma.result.create({
       data: {
         submissionId: submission.submissionId,
         testcaseId: testcases[index].testcaseId,
@@ -155,6 +154,18 @@ const submit = async (req: SubmitRequest, res: Response) => {
       submissionId: submission.submissionId,
     },
   });
+  if (submission.verdict === "OK") {
+    return formatResponse(
+      res,
+      {
+        submission: submission,
+        result: results,
+        testcases: testcases,
+      },
+      STATUS_CODE.SUCCESS,
+      "All testcases passed!",
+    );
+  }
   return formatResponse(
     res,
     {
@@ -162,8 +173,8 @@ const submit = async (req: SubmitRequest, res: Response) => {
       result: results,
       testcases: testcases,
     },
-    STATUS_CODE.SUCCESS,
-    "Submit successfully",
+    STATUS_CODE.BAD_REQUEST,
+    "Wrong answer",
   );
 };
 

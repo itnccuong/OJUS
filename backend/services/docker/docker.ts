@@ -1,7 +1,7 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
-import { CompilationError } from "../../utils/error";
+import { CompilationError, RuntimeError } from "../../utils/error";
 // import { AppError, ErrorName } from "../../utils/error";
 const codeDirectory = path.join(__dirname, "codeFiles");
 
@@ -174,7 +174,7 @@ const execute = async (
     }
 
     cmd.stdin.on("error", (err) => {
-      reject({ msg: "on stdin error", error: `${err}` });
+      // reject(new RuntimeError(err.message));
     });
 
     cmd.stdout.on("data", (data) => {
@@ -191,16 +191,85 @@ const execute = async (
       }
     });
 
-    cmd.on("error", (error) => reject(error));
+    cmd.on("error", (err) => {
+      reject(new RuntimeError(err.message));
+    });
 
-    cmd.on("close", (code) => {
+    cmd.on("exit", (code) => {
       if (code !== 0) {
-        reject(stderr);
+        reject(
+          new RuntimeError(
+            `Runtime error: Process exited with code ${code}`,
+            code,
+          ),
+        );
       } else {
         resolve(stdout);
       }
     });
+    // cmd.on("close", (code) => {
+    //     console.log("code number", code);
+    //     if (code !== 0) {
+    //         reject(new RuntimeError(stderr, code));
+    //     } else {
+    //         resolve(stdout);
+    //     }
+    // });
   });
 };
+
+// const execute = async (
+//   containerId: string,
+//   filename: string,
+//   input: string,
+//   language: string,
+//   onProgress: (data: string, type: string, pid: number) => void | null,
+// ): Promise<string> => {
+//   const command = details[language].executorCmd(filename);
+//
+//   if (!command) throw new Error("Language Not Supported");
+//
+//   return new Promise((resolve, reject) => {
+//     const cmd = spawn("docker", ["exec", "-i", `${containerId} ${command}`], {
+//       shell: true,
+//     });
+//
+//     let stdout = "";
+//     let stderr = "";
+//
+//     if (input) {
+//       cmd.stdin.write(input);
+//       cmd.stdin.end();
+//     }
+//
+//     cmd.stdin.on("error", (err) => {
+//       reject({ msg: "on stdin error", error: `${err}` });
+//     });
+//
+//     cmd.stdout.on("data", (data) => {
+//       stdout += data.toString();
+//       if (onProgress && cmd.pid !== undefined) {
+//         onProgress(data.toString(), STDOUT, cmd.pid);
+//       }
+//     });
+//
+//     cmd.stderr.on("data", (data) => {
+//       stderr += data.toString();
+//       if (onProgress && cmd.pid !== undefined) {
+//         onProgress(data.toString(), STDERR, cmd.pid);
+//       }
+//     });
+//
+//     cmd.on("error", (error) => reject(error));
+//
+//     cmd.on("close", (code) => {
+//       if (code !== 0) {
+//         reject(stderr);
+//       } else {
+//         resolve(stdout);
+//       }
+//     });
+//   });
+// };
 
 export { createContainer, killContainer, compile, execute, STDOUT, STDERR };

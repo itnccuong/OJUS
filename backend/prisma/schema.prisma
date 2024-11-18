@@ -64,7 +64,7 @@ model Submission {
   problem       Problem  @relation(fields: [problemId], references: [problemId])
   userId        Int
   user          User     @relation(fields: [userId], references: [userId])
-  code          String
+  code          String   @db.Text
   language      String
   verdict       String
   numTestPassed Int

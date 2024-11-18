@@ -17,6 +17,18 @@ export class CompilationError extends Error {
   }
 }
 
+export class RuntimeError extends Error {
+  public statusCode: number;
+  public exitCode: number | undefined | null;
+
+  constructor(message: string, exitCode?: number | null) {
+    super(message);
+    this.exitCode = exitCode;
+    this.statusCode = STATUS_CODE.BAD_REQUEST;
+    this.name = this.constructor.name;
+  }
+}
+
 // // If this return true, then the error is set to be an instance of AppError
 // export const isErrorName = (error: any, name: ErrorName): error is AppError =>
 //   error instanceof AppError && error.name === name;

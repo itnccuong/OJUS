@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { CompilationError } from "../utils/error";
+import { CompilationError, RuntimeError } from "../utils/error";
 import { formatResponse, STATUS_CODE } from "../utils/services";
 
 const globalErrorHandler = (
@@ -8,8 +8,11 @@ const globalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(err);
+  console.log("Error in global error handler:", err);
   if (err instanceof CompilationError) {
+    return formatResponse(res, {}, err.statusCode, err.message, err.name);
+  }
+  if (err instanceof RuntimeError) {
     return formatResponse(res, {}, err.statusCode, err.message, err.name);
   } else {
     return formatResponse(
