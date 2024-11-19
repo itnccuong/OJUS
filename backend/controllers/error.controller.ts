@@ -5,7 +5,8 @@ import {
   FindTestByProblemIdError,
   RuntimeError,
 } from "../utils/error";
-import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
 
 const responseError = (res: Response, err: any) => {
   if (err instanceof CustomError) {

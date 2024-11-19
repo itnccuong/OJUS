@@ -3,7 +3,8 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
 
 interface ProfileRequest extends Request {
   params: {

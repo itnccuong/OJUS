@@ -1,4 +1,4 @@
-import { STATUS_CODE } from "./formatResponse";
+import { STATUS_CODE } from "./constants";
 
 export class CustomError extends Error {
   public statusCode: number;

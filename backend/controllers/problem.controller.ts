@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
+
 import { UserConfig } from "../interfaces/user-interface";
 import path from "path";
 import {
@@ -12,6 +13,7 @@ import {
 } from "../services/code-executor/executor-utils";
 import fs from "fs";
 import { findTestsByProblemId } from "../services/database-queries/testcase";
+import { STATUS_CODE } from "../utils/constants";
 
 dotenv.config();
 

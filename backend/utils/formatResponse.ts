@@ -15,4 +15,4 @@ const formatResponse = (
   });
 };
 
-export { formatResponse, STATUS_CODE };
+export { formatResponse };
