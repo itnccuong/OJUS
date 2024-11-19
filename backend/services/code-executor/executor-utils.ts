@@ -107,6 +107,14 @@ const getContainerId = async (container_name: string) => {
 };
 
 /**
+ * Stop a running container
+ * @param container_name
+ */
+const killContainer = async (container_name: string) => {
+  await execAsync(`docker kill ${container_name}`);
+};
+
+/**
  * Create new container if not created yet
  * @param container - Container configuration with name and image.
  */
@@ -114,12 +122,12 @@ const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
   const container_id = await getContainerId(name);
 
-  if (!container_id) {
-    container.id = await createContainer(container);
-    console.log(`${name} created`);
-  } else {
-    container.id = container_id;
+  if (container_id) {
+    await killContainer(container_id);
+    console.log(`Container ${name} stopped`);
   }
+  container.id = await createContainer(container);
+  console.log(`Container ${name} created`);
 };
 
 /**
