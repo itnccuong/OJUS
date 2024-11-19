@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `TestCase` MODIFY `input` LONGTEXT NOT NULL,
+    MODIFY `output` LONGTEXT NOT NULL;

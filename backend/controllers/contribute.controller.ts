@@ -3,21 +3,30 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/services";
-
+import { formatResponse } from "../utils/formatResponse";
+import { UserConfig } from "../interfaces/user-interface";
+import { STATUS_CODE } from "../utils/constants";
 
 const prisma = new PrismaClient();
 
 interface CustomRequest extends Request {
-  user?: any;
+  user?: UserConfig;
   file?: any;
 }
 
 const submitContribute = async (req: CustomRequest, res: Response) => {
   try {
-    const { title, description, difficulty, tags, timelimit, memorylimit} = req.body;
+    const { title, description, difficulty, tags, timelimit, memorylimit } =
+      req.body;
 
-    if (!title || !description || !difficulty || !tags || !timelimit || !memorylimit) {
+    if (
+      !title ||
+      !description ||
+      !difficulty ||
+      !tags ||
+      !timelimit ||
+      !memorylimit
+    ) {
       return formatResponse(
         res,
         {},
@@ -34,8 +43,8 @@ const submitContribute = async (req: CustomRequest, res: Response) => {
         tags: tags,
         timeLimit: timelimit,
         memoryLimit: memorylimit,
-        authorId: req.user.userId,
-        fileId: req.file.fileId 
+        authorId: req.user!.userId,
+        fileId: req.file.fileId,
       },
     });
 
@@ -46,22 +55,27 @@ const submitContribute = async (req: CustomRequest, res: Response) => {
       "Contribute submitted successfully!",
     );
   } catch (err: any) {
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
 
-const searchContribute = async (req: Request, res: Response) => {
+const searchContribute = async (req: Request, res: Response) => {};
+
+const getOneContribute = async (req: Request, res: Response) => {};
+
+const acceptContribute = async (req: Request, res: Response) => {};
+
+const rejectContribute = async (req: Request, res: Response) => {};
+
+export {
+  searchContribute,
+  getOneContribute,
+  submitContribute,
+  acceptContribute,
+  rejectContribute,
 };
-
-const getOneContribute = async (req: Request, res: Response) => {
-};
-
-
-
-const acceptContribute = async (req: Request, res: Response) => {
-};
-
-const rejectContribute = async (req: Request, res: Response) => {
-};
-
-export { searchContribute, getOneContribute, submitContribute, acceptContribute, rejectContribute };

@@ -8,8 +8,15 @@ import fs from "fs";
 const app = express();
 
 // router
-import router from '../routes/index.route';
-import upload from '../upload/upload.route';
+import router from "../routes/index.route";
+import upload from "../upload/upload.route";
+
+import globalErrorHandler from "../controllers/error.controller";
+import { initAllDockerContainers } from "../services/code-executor/executor-utils";
+
+initAllDockerContainers().catch((err) => {
+  console.log(err);
+});
 
 // middlewares
 app.use(express.json());
@@ -19,7 +26,7 @@ app.use(
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(express.json());
@@ -36,11 +43,13 @@ if (!fs.existsSync(uploadDir)) {
 app.use("/api", router);
 
 // temorary route for upload
-app.get('/upload', (req, res) => {
-  res.sendFile(path.join(__dirname, '../upload/test.html'));
+app.get("/upload", (req, res) => {
+  res.sendFile(path.join(__dirname, "../upload/test.html"));
 });
 
-app.use('/upload', upload);
+app.use("/upload", upload);
+
+app.use(globalErrorHandler);
 
 // server
 const PORT = process.env.PORT || 8000;

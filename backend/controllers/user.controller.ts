@@ -3,7 +3,8 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/services";
+import { formatResponse } from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
 
 interface ProfileRequest extends Request {
   params: {
@@ -14,7 +15,7 @@ interface ProfileRequest extends Request {
 const prisma = new PrismaClient();
 const getProfileByName = async (req: ProfileRequest, res: Response) => {
   try {
-    const username = req.params.username
+    const username = req.params.username;
 
     const user = await prisma.user.findFirst({
       where: {
@@ -27,7 +28,7 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Username not exists!"
+        "Username not exists!",
       );
     }
 
@@ -37,14 +38,14 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
         user: user,
       },
       STATUS_CODE.SUCCESS,
-      "Get profile successfully!"
+      "Get profile successfully!",
     );
   } catch (err: any) {
     return formatResponse(
       res,
       {},
       STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message
+      err.message,
     );
   }
 };
