@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import {
-  CompilationError,
+  CompileError,
   ConvertLanguageError,
   CustomError,
   FindProblemByIdError,
@@ -23,7 +23,7 @@ const responseError = (res: Response, err: any) => {
   );
 };
 
-const CompilationErrorHandler = (err: CompilationError) => {
+const CompileErrorHandler = (err: CompileError) => {
   return err;
 };
 
@@ -58,8 +58,8 @@ const globalErrorHandler = (
   next: NextFunction,
 ) => {
   console.log("Error in global error handler:", err);
-  if (err instanceof CompilationError) {
-    err = CompilationErrorHandler(err);
+  if (err instanceof CompileError) {
+    err = CompileErrorHandler(err);
   }
   if (err instanceof RuntimeError) {
     err = runTimeErrorHandler(err);

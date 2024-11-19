@@ -1,9 +1,10 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
-import { CompilationError, RuntimeError } from "../../utils/error";
+import { CompileError, RuntimeError } from "../../utils/error";
 import {
   ContainerConfig,
+  ExecuteInterface,
   LanguageDetail,
 } from "../../interfaces/code-executor-interface";
 
@@ -158,7 +159,7 @@ const compile = async (
     await execAsync(`docker exec ${containerId} ${command}`);
     return id;
   } catch (error: any) {
-    throw new CompilationError(error.stderr);
+    throw new CompileError(error.stderr);
   }
 };
 
@@ -167,17 +168,21 @@ const compile = async (
  * @param containerId - The container ID.
  * @param filename - The file name to execute.
  * @param input - The input to pass to the program.
+ * @param expectedOutput - Expected output
  * @param language - The language of the file.
  * @param onProgress - Callback for progress events.
- * @returns Promise<string> - Returns the execution output.
+ * @param timeLimit - Time limit
+ * @returns Promise<string> - Returns the verdict
  */
-const execute = async (
+const executeAgainstTestcase = async (
   containerId: string,
   filename: string,
   input: string,
+  expectedOutput: string,
   language: string,
   onProgress: (data: string, type: string, pid: number) => void | null,
-): Promise<string> => {
+  timeLimit: number,
+): Promise<ExecuteInterface> => {
   const command = languageDetails[language].executorCmd(filename);
 
   if (!command) throw new Error("Language Not Supported");
@@ -194,6 +199,13 @@ const execute = async (
       cmd.stdin.write(input);
       cmd.stdin.end();
     }
+
+    let isTimeout = false;
+    const timeoutId = setTimeout(() => {
+      isTimeout = true;
+      cmd.stdout.destroy();
+      cmd.kill();
+    }, timeLimit);
 
     cmd.stdin.on("error", (err) => {
       reject(new RuntimeError(err.message, cmd.pid));
@@ -219,13 +231,29 @@ const execute = async (
 
     //Can also use close instead of exit?
     cmd.on("exit", (exitCode) => {
+      clearTimeout(timeoutId);
+      // console.log("Stdout on exit", stdout);
+      if (isTimeout) {
+        resolve({
+          stdout: stdout,
+          verdict: "TIME_LIMIT_EXCEEDED",
+        });
+      }
       if (exitCode !== 0) {
         reject(
           new RuntimeError(`Error while executing command`, cmd.pid, exitCode),
         );
-      } else {
-        resolve(stdout);
       }
+      if (stdout !== expectedOutput) {
+        resolve({
+          stdout: stdout,
+          verdict: "WRONG_ANSWER",
+        });
+      }
+      resolve({
+        stdout: stdout,
+        verdict: "OK",
+      });
     });
   });
 };
@@ -233,7 +261,7 @@ const execute = async (
 export {
   createContainer,
   compile,
-  execute,
+  executeAgainstTestcase,
   codeDirectory,
   initAllDockerContainers,
   languageDetails,

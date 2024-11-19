@@ -15,4 +15,19 @@ interface LanguageDetail {
   container: ContainerConfig;
 }
 
-export { ContainerConfig, CompExecCmd, InputFunc, LanguageDetail };
+interface ExecuteInterface {
+  stdout: string;
+  verdict:
+    | "WRONG_ANSWER"
+    | "OK"
+    | "TIME_LIMIT_EXCEEDED"
+    | "MEMORY_LIMIT_EXCEEDED";
+}
+
+export {
+  ContainerConfig,
+  CompExecCmd,
+  InputFunc,
+  LanguageDetail,
+  ExecuteInterface,
+};

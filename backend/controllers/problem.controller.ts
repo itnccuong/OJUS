@@ -8,7 +8,7 @@ import path from "path";
 import {
   codeDirectory,
   compile,
-  execute,
+  executeAgainstTestcase,
   languageDetails,
 } from "../services/code-executor/executor-utils";
 import fs from "fs";
@@ -42,7 +42,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   // const language = extensionMap[req.body.language];
   const language = convertLanguage(req.body.language);
 
-  const submission = await prisma.submission.create({
+  let submission = await prisma.submission.create({
     data: {
       problemId: problem_id,
       userId: user!.userId,
@@ -72,7 +72,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const containerId = getContainerId(container);
 
   const compiledId = await compile(containerId, filename, language);
-  await prisma.submission.update({
+  submission = await prisma.submission.update({
     where: {
       submissionId: submission.submissionId,
     },
@@ -82,42 +82,36 @@ const submit = async (req: SubmitRequest, res: Response) => {
   });
 
   //Used to identify verdict of submission (first 'not ok' verdict in testcases)
-  var is_correcting = true;
+  let is_correcting = true;
 
   for (let index = 0; index < testcases.length; ++index) {
-    let verdict = "OK";
-    const exOut = await execute(
+    const result = await executeAgainstTestcase(
       containerId,
       compiledId,
       languageDetails[language].inputFunction
         ? languageDetails[language].inputFunction(testcases[index].input)
         : testcases[index].input,
+      testcases[index].output,
       language,
       (data, type, pid) => {
         // console.log(`[${pid}] ${type}: ${data}`);
       },
+      100,
     );
 
-    if (
-      // time < problem.timeLimit &&
-      // memory < problem.memoryLimit &&
-      exOut === testcases[index].output
-    ) {
+    if (result.verdict === "OK") {
       submission.numTestPassed += 1;
-    } else {
-      verdict = "WRONG_ANSWER";
-      if (is_correcting) {
-        is_correcting = false;
-        submission.verdict = verdict;
-      }
+    } else if (is_correcting) {
+      is_correcting = false;
+      submission.verdict = result.verdict;
     }
 
     await prisma.result.create({
       data: {
         submissionId: submission.submissionId,
         testcaseId: testcases[index].testcaseId,
-        output: exOut,
-        verdict: verdict,
+        output: result.stdout,
+        verdict: submission.verdict,
         time: 0,
         memory: 0,
       },
@@ -128,7 +122,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
     submission.verdict = "OK";
   }
 
-  await prisma.submission.update({
+  submission = await prisma.submission.update({
     where: {
       submissionId: submission.submissionId,
     },
