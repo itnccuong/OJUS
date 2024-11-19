@@ -1,34 +1,42 @@
-import { STATUS_CODE } from "./services";
-// Define error types as a const object
-// export enum ErrorName {
-//   COMPILATION = "COMPILATION_ERROR",
-//   RUNTIME = "RUNTIME_ERROR",
-// }
+import { STATUS_CODE } from "./formatResponse";
+
+export class CustomError extends Error {
+  public statusCode: number;
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = this.constructor.name;
+  }
+}
 
 //Dùng custom class cụ thể, ko dồn hết chung vô 1 custom class vì mỗi class có khi cần log ra các lỗi khác nhau (VD compile err thì có stderr, validation err thì log ra giá trị và range)
 //Lúc gửi res thì có thể ko gửi hết value, range,... nhưng có thể dùng để viết vô message
-export class CompilationError extends Error {
-  public statusCode: number;
-
+export class CompilationError extends CustomError {
   constructor(message: string) {
-    super(message);
-    this.statusCode = STATUS_CODE.BAD_REQUEST;
-    this.name = this.constructor.name;
+    super(message, STATUS_CODE.BAD_REQUEST);
   }
 }
 
-export class RuntimeError extends Error {
-  public statusCode: number;
+export class RuntimeError extends CustomError {
   public exitCode: number | undefined | null;
+  public pid: number;
 
-  constructor(message: string, exitCode?: number | null) {
-    super(message);
+  constructor(
+    message: string,
+    pid: number | undefined,
+    exitCode?: number | null,
+  ) {
+    super(message, STATUS_CODE.BAD_REQUEST);
+    this.pid = pid ? pid : 0;
     this.exitCode = exitCode;
-    this.statusCode = STATUS_CODE.BAD_REQUEST;
-    this.name = this.constructor.name;
   }
 }
 
-// // If this return true, then the error is set to be an instance of AppError
-// export const isErrorName = (error: any, name: ErrorName): error is AppError =>
-//   error instanceof AppError && error.name === name;
+export class FindTestByProblemIdError extends CustomError {
+  problemId: number;
+
+  constructor(message: string, problemId: number) {
+    super(message, STATUS_CODE.NOT_FOUND);
+    this.problemId = problemId;
+  }
+}

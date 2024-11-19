@@ -190,7 +190,7 @@ const execute = async (
     }
 
     cmd.stdin.on("error", (err) => {
-      reject(new RuntimeError(err.message));
+      reject(new RuntimeError(err.message, cmd.pid));
     });
 
     cmd.stdout.on("data", (data) => {
@@ -208,17 +208,14 @@ const execute = async (
     });
 
     cmd.on("error", (err) => {
-      reject(new RuntimeError(err.message));
+      reject(new RuntimeError(err.message, cmd.pid));
     });
 
     //Can also use close instead of exit?
-    cmd.on("exit", (code) => {
-      if (code !== 0) {
+    cmd.on("exit", (exitCode) => {
+      if (exitCode !== 0) {
         reject(
-          new RuntimeError(
-            `Runtime error: Process ${cmd.pid} exited with code ${code}`,
-            code,
-          ),
+          new RuntimeError(`Error while executing command`, cmd.pid, exitCode),
         );
       } else {
         resolve(stdout);

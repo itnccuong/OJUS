@@ -1,6 +1,37 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { CompilationError, RuntimeError } from "../utils/error";
-import { formatResponse, STATUS_CODE } from "../utils/services";
+import {
+  CompilationError,
+  CustomError,
+  FindTestByProblemIdError,
+  RuntimeError,
+} from "../utils/error";
+import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
+
+const responseError = (res: Response, err: any) => {
+  if (err instanceof CustomError) {
+    return formatResponse(res, {}, err.statusCode, err.message, err.name);
+  }
+  return formatResponse(
+    res,
+    {},
+    STATUS_CODE.INTERNAL_SERVER_ERROR,
+    err.message,
+  );
+};
+
+const CompilationErrorHandler = (err: CompilationError) => {
+  return err;
+};
+
+const runTimeErrorHandler = (err: RuntimeError) => {
+  err.message = `Runtime error: process ${err.pid} exited with code ${err.exitCode}`;
+  return err;
+};
+
+const FindTestByProblemIdErrorHandler = (err: FindTestByProblemIdError) => {
+  err.message = `Testcases for problem with id ${err.problemId} not found`;
+  return err;
+};
 
 const globalErrorHandler = (
   err: Error,
@@ -10,18 +41,16 @@ const globalErrorHandler = (
 ) => {
   console.log("Error in global error handler:", err);
   if (err instanceof CompilationError) {
-    return formatResponse(res, {}, err.statusCode, err.message, err.name);
+    err = CompilationErrorHandler(err);
   }
   if (err instanceof RuntimeError) {
-    return formatResponse(res, {}, err.statusCode, err.message, err.name);
-  } else {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
+    err = runTimeErrorHandler(err);
   }
+  if (err instanceof FindTestByProblemIdError) {
+    err = FindTestByProblemIdErrorHandler(err);
+  }
+
+  return responseError(res, err);
 };
 
 export default globalErrorHandler;

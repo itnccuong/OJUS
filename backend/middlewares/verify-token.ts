@@ -1,4 +1,4 @@
-import { formatResponse, STATUS_CODE } from "../utils/services";
+import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 

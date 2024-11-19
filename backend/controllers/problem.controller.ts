@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/services";
+import { formatResponse, STATUS_CODE } from "../utils/formatResponse";
 import { UserConfig } from "../interfaces/user-interface";
 import path from "path";
 import {
@@ -11,6 +11,7 @@ import {
   languageDetails,
 } from "../services/code-executor/executor-utils";
 import fs from "fs";
+import { findTestsByProblemId } from "../services/database-queries/testcase";
 
 dotenv.config();
 
@@ -54,22 +55,9 @@ const submit = async (req: SubmitRequest, res: Response) => {
       numTestPassed: 0,
     },
   });
-  //Get testcases
-  const testcases = await prisma.testCase.findMany({
-    where: {
-      problemId: problem_id,
-    },
-  });
 
-  if (!testcases) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.NOT_FOUND,
-      "Testcases not found",
-    );
-  }
-  //Get problem detail
+  const testcases = await findTestsByProblemId(problem_id);
+
   const problem = await prisma.problem.findUnique({
     where: {
       problemId: problem_id,
