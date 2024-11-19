@@ -94,7 +94,7 @@ const createContainer = async (container: ContainerConfig) => {
 };
 
 /**
- * Stops a Docker container.
+ * Get container id
  * @param container_name - The container ID or name.
  * @returns Promise<string> - Returns the container ID.
  */
@@ -105,6 +105,10 @@ const getContainerId = async (container_name: string) => {
   return running.stdout.trim();
 };
 
+/**
+ * Create new container if not created yet
+ * @param container - Container configuration with name and image.
+ */
 const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
   const container_id = await getContainerId(name);
@@ -117,6 +121,9 @@ const initDockerContainer = async (container: ContainerConfig) => {
   }
 };
 
+/**
+ * Initialize all docker from container list
+ */
 const initAllDockerContainers = async () => {
   await Promise.all(
     Object.values(containers).map((container) =>
@@ -164,7 +171,6 @@ const compile = async (
  * @param onProgress - Callback for progress events.
  * @returns Promise<string> - Returns the execution output.
  */
-
 const execute = async (
   containerId: string,
   filename: string,

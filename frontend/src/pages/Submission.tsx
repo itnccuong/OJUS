@@ -2,13 +2,7 @@
 
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  Form,
-  Table,
-} from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { useEffect } from "react";
@@ -42,8 +36,8 @@ export default function Contributions() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -221,14 +215,14 @@ export default function Contributions() {
 
   function getStatusColor(status: string) {
     switch (status) {
-      case 'Accepted':
-        return 'green';
-      case 'Wrong Answer':
-        return 'red';
-      case 'Time Limit Exceeded':
-        return 'orange';
+      case "Accepted":
+        return "green";
+      case "Wrong Answer":
+        return "red";
+      case "Time Limit Exceeded":
+        return "orange";
       default:
-        return 'gray';
+        return "gray";
     }
   }
 
@@ -237,8 +231,7 @@ export default function Contributions() {
       <div className="d-flex flex-column">
         <NavBar />
         <div className="container d-flex flex-column">
-          <div className="d-flex flex-row mt-3 align-items-center gap-2">
-          </div>
+          <div className="d-flex flex-row mt-3 align-items-center gap-2"></div>
           <h4>All My Submissions</h4>
           <Table striped bordered hover className="mt-3">
             <thead>
@@ -252,10 +245,10 @@ export default function Contributions() {
               </tr>
             </thead>
             <tbody>
-            {Problems.map((problem) => (
+              {Problems.map((problem) => (
                 <tr key={problem.id}>
-                <td>{problem.timeSubmitted}</td>
-                <td>
+                  <td>{problem.timeSubmitted}</td>
+                  <td>
                     <Link
                       to={`/contributions/${problem.id}/description`}
                       style={{
@@ -272,11 +265,13 @@ export default function Contributions() {
                       {problem.title}
                     </Link>
                   </td>
-                <td style={{ color: getStatusColor(problem.status) }}><strong>{problem.status}</strong></td>
-                <td>{problem.runtime}</td>
-                <td>{problem.language}</td>
+                  <td style={{ color: getStatusColor(problem.status) }}>
+                    <strong>{problem.status}</strong>
+                  </td>
+                  <td>{problem.runtime}</td>
+                  <td>{problem.language}</td>
                 </tr>
-            ))}
+              ))}
             </tbody>
           </Table>
         </div>

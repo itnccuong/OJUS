@@ -42,7 +42,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
   // const language = extensionMap[req.body.language];
   const language = convertLanguage(req.body.language);
 
-  //Create a new submission
   const submission = await prisma.submission.create({
     data: {
       problemId: problem_id,
@@ -70,7 +69,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
   fs.writeFileSync(filePath, code, { encoding: "utf-8" });
 
   const container = languageDetails[language].container;
-  // const containerId = languageDetails[language].container.id;
   const containerId = getContainerId(container);
 
   const compiledId = await compile(containerId, filename, language);
@@ -83,7 +81,9 @@ const submit = async (req: SubmitRequest, res: Response) => {
     },
   });
 
+  //Used to identify verdict of submission (first 'not ok' verdict in testcases)
   var is_correcting = true;
+
   for (let index = 0; index < testcases.length; ++index) {
     let verdict = "OK";
     const exOut = await execute(
