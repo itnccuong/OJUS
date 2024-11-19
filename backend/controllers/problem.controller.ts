@@ -57,7 +57,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const problem = await findProblemById(problem_id);
 
   const timeLimit = problem.timeLimit;
-  const memoryLimit = problem.memoryLimit;
+  // const memoryLimit = problem.memoryLimit;
 
   //Create new file in codeFiles directory from submitted code
   const filename = `${submission.submissionId}.${language}`;
@@ -96,7 +96,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
       (data, type, pid) => {
         // console.log(`[${pid}] ${type}: ${data}`);
       },
-      100,
+      timeLimit,
     );
 
     if (result.verdict === "OK") {
@@ -111,7 +111,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
         submissionId: submission.submissionId,
         testcaseId: testcases[index].testcaseId,
         output: result.stdout,
-        verdict: submission.verdict,
+        verdict: result.verdict,
         time: 0,
         memory: 0,
       },
