@@ -58,3 +58,9 @@ export class FindProblemByIdError extends CustomError {
     this.problemId = problemId;
   }
 }
+
+export class GetContainerIdError extends CustomError {
+  constructor(message: string) {
+    super(message, STATUS_CODE.SERVICE_UNAVAILABLE);
+  }
+}

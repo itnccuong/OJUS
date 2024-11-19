@@ -3,8 +3,10 @@ import {
   ConvertLanguageError,
   FindProblemByIdError,
   FindTestByProblemIdError,
+  GetContainerIdError,
 } from "../utils/error";
 import { languageDetails } from "./code-executor/executor-utils";
+import { ContainerConfig } from "../interfaces/code-executor-interface";
 
 const prisma = new PrismaClient();
 
@@ -47,4 +49,12 @@ export const convertLanguage = (language: string) => {
     throw new ConvertLanguageError("Invalid language", language);
   }
   return convertedLanguage;
+};
+
+export const getContainerId = (container: ContainerConfig) => {
+  const containerId = container.id;
+  if (!containerId) {
+    throw new GetContainerIdError("Fail to get container id");
+  }
+  return containerId;
 };

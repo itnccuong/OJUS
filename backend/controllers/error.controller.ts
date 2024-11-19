@@ -5,6 +5,7 @@ import {
   CustomError,
   FindProblemByIdError,
   FindTestByProblemIdError,
+  GetContainerIdError,
   RuntimeError,
 } from "../utils/error";
 import { formatResponse } from "../utils/formatResponse";
@@ -46,6 +47,10 @@ const FindProblemByIdErrorHandler = (err: FindProblemByIdError) => {
   return err;
 };
 
+const GetContainerIdErrorHandler = (err: GetContainerIdError) => {
+  return err;
+};
+
 const globalErrorHandler = (
   err: Error,
   req: Request,
@@ -67,6 +72,9 @@ const globalErrorHandler = (
   }
   if (err instanceof FindProblemByIdError) {
     err = FindProblemByIdErrorHandler(err);
+  }
+  if (err instanceof GetContainerIdError) {
+    err = GetContainerIdErrorHandler(err);
   }
   return responseError(res, err);
 };

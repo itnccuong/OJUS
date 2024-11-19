@@ -16,6 +16,7 @@ import {
   convertLanguage,
   findProblemById,
   findTestsByProblemId,
+  getContainerId,
 } from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
 
@@ -68,15 +69,9 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const filePath = path.join(codeDirectory, filename);
   fs.writeFileSync(filePath, code, { encoding: "utf-8" });
 
-  const containerId = languageDetails[language].container.id;
-  if (!containerId) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.BAD_REQUEST,
-      "Container not found",
-    );
-  }
+  const container = languageDetails[language].container;
+  // const containerId = languageDetails[language].container.id;
+  const containerId = getContainerId(container);
 
   const compiledId = await compile(containerId, filename, language);
   await prisma.submission.update({
