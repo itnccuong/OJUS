@@ -49,3 +49,12 @@ export class ConvertLanguageError extends CustomError {
     this.language = language;
   }
 }
+
+export class FindProblemByIdError extends CustomError {
+  public problemId: number;
+
+  constructor(message: string, problemId: number) {
+    super(message, STATUS_CODE.NOT_FOUND);
+    this.problemId = problemId;
+  }
+}

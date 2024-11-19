@@ -3,6 +3,7 @@ import {
   CompilationError,
   ConvertLanguageError,
   CustomError,
+  FindProblemByIdError,
   FindTestByProblemIdError,
   RuntimeError,
 } from "../utils/error";
@@ -40,6 +41,11 @@ const ConvertLanguageErrorHandler = (err: ConvertLanguageError) => {
   return err;
 };
 
+const FindProblemByIdErrorHandler = (err: FindProblemByIdError) => {
+  err.message = `Problem with id ${err.problemId} not found`;
+  return err;
+};
+
 const globalErrorHandler = (
   err: Error,
   req: Request,
@@ -59,7 +65,9 @@ const globalErrorHandler = (
   if (err instanceof ConvertLanguageError) {
     err = ConvertLanguageErrorHandler(err);
   }
-
+  if (err instanceof FindProblemByIdError) {
+    err = FindProblemByIdErrorHandler(err);
+  }
   return responseError(res, err);
 };
 

@@ -12,9 +12,12 @@ import {
   languageDetails,
 } from "../services/code-executor/executor-utils";
 import fs from "fs";
-import { findTestsByProblemId } from "../services/database-queries/testcase";
+import {
+  convertLanguage,
+  findProblemById,
+  findTestsByProblemId,
+} from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
-import { convertLanguage } from "../services/general";
 
 dotenv.config();
 
@@ -51,15 +54,11 @@ const submit = async (req: SubmitRequest, res: Response) => {
 
   const testcases = await findTestsByProblemId(problem_id);
 
-  const problem = await prisma.problem.findUnique({
-    where: {
-      problemId: problem_id,
-    },
-  });
+  const problem = await findProblemById(problem_id);
 
-  if (!problem) {
-    return formatResponse(res, {}, STATUS_CODE.NOT_FOUND, "Problem not found");
-  }
+  const timeLimit = problem.timeLimit;
+  const memoryLimit = problem.memoryLimit;
+
   //Create new file in codeFiles directory from submitted code
   const filename = `${submission.submissionId}.${language}`;
   //If code directory not exist, create it
