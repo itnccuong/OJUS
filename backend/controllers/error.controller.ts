@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import {
   CompilationError,
+  ConvertLanguageError,
   CustomError,
   FindTestByProblemIdError,
   RuntimeError,
@@ -34,6 +35,11 @@ const FindTestByProblemIdErrorHandler = (err: FindTestByProblemIdError) => {
   return err;
 };
 
+const ConvertLanguageErrorHandler = (err: ConvertLanguageError) => {
+  err.message = `${err.language} is not a valid language`;
+  return err;
+};
+
 const globalErrorHandler = (
   err: Error,
   req: Request,
@@ -49,6 +55,9 @@ const globalErrorHandler = (
   }
   if (err instanceof FindTestByProblemIdError) {
     err = FindTestByProblemIdErrorHandler(err);
+  }
+  if (err instanceof ConvertLanguageError) {
+    err = ConvertLanguageErrorHandler(err);
   }
 
   return responseError(res, err);

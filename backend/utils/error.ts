@@ -33,10 +33,19 @@ export class RuntimeError extends CustomError {
 }
 
 export class FindTestByProblemIdError extends CustomError {
-  problemId: number;
+  public problemId: number;
 
   constructor(message: string, problemId: number) {
     super(message, STATUS_CODE.NOT_FOUND);
     this.problemId = problemId;
+  }
+}
+
+export class ConvertLanguageError extends CustomError {
+  public language: string;
+
+  constructor(message: string, language: string) {
+    super(message, STATUS_CODE.BAD_REQUEST);
+    this.language = language;
   }
 }

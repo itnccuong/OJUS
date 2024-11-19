@@ -67,7 +67,7 @@ model Submission {
   code          String   @db.Text
   language      String
   verdict       String
-  numTestPassed Int
+  numTestPassed Int      @default(0)
   createdAt     DateTime @default(now())
   Result        Result[]
 }

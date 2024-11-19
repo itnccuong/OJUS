@@ -14,6 +14,7 @@ import {
 import fs from "fs";
 import { findTestsByProblemId } from "../services/database-queries/testcase";
 import { STATUS_CODE } from "../utils/constants";
+import { convertLanguage } from "../services/general";
 
 dotenv.config();
 
@@ -30,22 +31,13 @@ export interface SubmitRequest extends Request {
   user?: UserConfig;
 }
 
-const extensionMap: Record<string, string> = {
-  Python: "py",
-  "C++": "cpp",
-  C: "c",
-  Java: "java",
-  Javascript: "js",
-};
-
 const submit = async (req: SubmitRequest, res: Response) => {
   const problem_id = parseInt(req.params.problem_id);
   const user = req.user;
   const { code } = req.body;
-  const language = extensionMap[req.body.language];
-  if (!languageDetails[language]) {
-    return formatResponse(res, {}, STATUS_CODE.BAD_REQUEST, "Invalid language");
-  }
+  // const language = extensionMap[req.body.language];
+  const language = convertLanguage(req.body.language);
+
   //Create a new submission
   const submission = await prisma.submission.create({
     data: {
@@ -53,8 +45,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
       userId: user!.userId,
       code: code,
       language: language,
-      verdict: "OK",
-      numTestPassed: 0,
+      verdict: "COMPILE_ERROR",
     },
   });
 
@@ -89,8 +80,16 @@ const submit = async (req: SubmitRequest, res: Response) => {
   }
 
   const compiledId = await compile(containerId, filename, language);
+  await prisma.submission.update({
+    where: {
+      submissionId: submission.submissionId,
+    },
+    data: {
+      verdict: "RUNTIME_ERROR",
+    },
+  });
 
-  var is_ok = true;
+  var is_correcting = true;
   for (let index = 0; index < testcases.length; ++index) {
     let verdict = "OK";
     const exOut = await execute(
@@ -113,11 +112,12 @@ const submit = async (req: SubmitRequest, res: Response) => {
       submission.numTestPassed += 1;
     } else {
       verdict = "WRONG_ANSWER";
-      if (is_ok) {
-        is_ok = false;
+      if (is_correcting) {
+        is_correcting = false;
         submission.verdict = verdict;
       }
     }
+
     await prisma.result.create({
       data: {
         submissionId: submission.submissionId,
@@ -129,6 +129,21 @@ const submit = async (req: SubmitRequest, res: Response) => {
       },
     });
   }
+
+  if (submission.numTestPassed === testcases.length) {
+    submission.verdict = "OK";
+  }
+
+  await prisma.submission.update({
+    where: {
+      submissionId: submission.submissionId,
+    },
+    data: {
+      numTestPassed: submission.numTestPassed,
+      verdict: submission.verdict,
+    },
+  });
+
   const results = await prisma.result.findMany({
     where: {
       submissionId: submission.submissionId,
