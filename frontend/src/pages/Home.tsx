@@ -1,13 +1,12 @@
 // import { useNavigate } from "react-router-dom";
-import getStorage from "../../utils/getStorage";
-import { StorageConfig } from "../../interfaces/interface";
 import NavBar from "../components/NavBar";
+import getToken from "../../utils/getToken.ts";
 // import { useEffect } from "react";
 
 export default function Home() {
   // const navigate = useNavigate(); // Initialize navigate
 
-  const storage: StorageConfig | null = getStorage(); // Get token from localStorage
+  const token = getToken(); // Get token from localStorage
 
   // useEffect(() => {
   //   if (!storage) {
@@ -15,7 +14,7 @@ export default function Home() {
   //   }
   // }, [storage, navigate]);
 
-  if (storage) {
+  if (token) {
     return (
       <>
         <NavBar />

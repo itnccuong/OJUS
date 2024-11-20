@@ -1,26 +1,23 @@
 import { jwtDecode } from "jwt-decode";
-import { StorageConfig } from "../interfaces/interface";
+import storageKeyMap from "./storageKeyMap.ts";
 
-const getToken = (): string | null => {
-  const user = localStorage.getItem("user");
-  if (!user) {
-    return null; // Không có dữ liệu trong localStorage
-  }
-
+const getToken = () => {
   try {
-    const parsedUser: StorageConfig = JSON.parse(user);
-    const decode = jwtDecode(parsedUser.token);
-
-    // Kiểm tra token đã hết hạn hay chưa
-    if (!decode.exp || decode.exp * 1000 < Date.now()) {
-      localStorage.removeItem("user");
-      return null; // Token đã hết hạn
+    const key = storageKeyMap.token;
+    const token = localStorage.getItem(key);
+    if (!token) {
+      return null;
     }
 
-    return parsedUser.token; // Trả về token hợp lệ
+    const decode = jwtDecode(token);
+    if (!decode || !decode.exp || decode.exp * 1000 < Date.now()) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return token;
   } catch (error) {
-    console.error("Error decoding token:", error);
-    localStorage.removeItem("user"); // Xóa dữ liệu hỏng
+    console.error(error);
     return null;
   }
 };
