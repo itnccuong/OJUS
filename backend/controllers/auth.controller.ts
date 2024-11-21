@@ -9,6 +9,12 @@ import nodemailer from "nodemailer";
 
 import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
+import { readFileSync } from "fs";
+
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const AdmZip = require("adm-zip");
 const prisma = new PrismaClient();
 
 const register = async (req: Request, res: Response) => {
@@ -82,63 +88,131 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
+function parseFilename(filename: string) {
+  let type = "";
+  let number = 0;
+  let i = 0;
+
+  // Extract type (e.g., "input" or "output")
+  while (i < filename.length && isNaN(Number(filename[i]))) {
+    type += filename[i];
+    i++;
+  }
+
+  // Extract number
+  while (i < filename.length && !isNaN(Number(filename[i]))) {
+    number = number * 10 + Number(filename[i]);
+    i++;
+  }
+
+  return { type, number };
+}
+
+interface Test {
+  inputs: string[];
+  outputs: string[];
+}
 const login = async (req: Request, res: Response) => {
   try {
-    const { usernameOrEmail, password } = req.body;
+    const test: Test = { inputs: [], outputs: [] };
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            username: usernameOrEmail,
-          },
-          {
-            email: usernameOrEmail,
-          },
-        ],
-      },
+    const extractPath = path.join(__dirname, "extracted");
+
+    const files = fs.readdirSync(extractPath, "utf8");
+    console.log("DIR", files);
+    files.forEach((fileName: string) => {
+      const filePath = path.join(extractPath, fileName);
+      const parsedFilename = parseFilename(fileName);
+      const file = readFileSync(filePath, "utf-8");
+      if (parsedFilename.type === "input") {
+        test.inputs[parsedFilename.number - 1] = file;
+      }
+      if (parsedFilename.type === "output") {
+        test.outputs[parsedFilename.number - 1] = file;
+      }
     });
-
-    if (!user) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid email or username",
-      );
-    }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid password",
-      );
-    }
-
-    // Generate token
-    const token = jwt.sign(
-      user,
-      process.env.JWT_SECRET as string, // Secret
-      { expiresIn: "3d" }, // Token expiration
-    );
-
-    return formatResponse(
-      res,
-      {
-        token: token,
-        // user: {
-        //   id: user.userId,
-        //   email: user.email,
-        //   username: user.username,
-        // },
-      },
-      STATUS_CODE.SUCCESS,
-      "Login successfully!",
-    );
+    console.log(test);
+    // const fileUrl =
+    //   "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip"; // Replace with your ZIP file URL
+    // const tempZipPath = path.join(__dirname, "temp.zip");
+    // const extractPath = path.join(__dirname, "extracted");
+    //
+    // // Step 1: Download the ZIP file
+    // const response = await axios.get({
+    //   url: fileUrl,
+    //   responseType: "stream",
+    // });
+    //
+    // const writer = fs.createWriteStream(tempZipPath);
+    // response.data.pipe(writer);
+    //
+    // await new Promise((resolve, reject) => {
+    //   writer.on("finish", resolve);
+    //   writer.on("error", reject);
+    // });
+    //
+    // console.log("ZIP file downloaded.");
+    //
+    // // Step 2: Unzip the file
+    // const zip = new AdmZip(tempZipPath);
+    // zip.extractAllTo(extractPath, true);
+    //
+    // console.log(`Files extracted to ${extractPath}.`);
+    // const { usernameOrEmail, password } = req.body;
+    //
+    // const user = await prisma.user.findFirst({
+    //   where: {
+    //     OR: [
+    //       {
+    //         username: usernameOrEmail,
+    //       },
+    //       {
+    //         email: usernameOrEmail,
+    //       },
+    //     ],
+    //   },
+    // });
+    //
+    // if (!user) {
+    //   return formatResponse(
+    //     res,
+    //     {},
+    //     STATUS_CODE.BAD_REQUEST,
+    //     "Invalid email or username",
+    //   );
+    // }
+    //
+    // // Verify password
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
+    // if (!isPasswordValid) {
+    //   return formatResponse(
+    //     res,
+    //     {},
+    //     STATUS_CODE.BAD_REQUEST,
+    //     "Invalid password",
+    //   );
+    // }
+    //
+    // // Generate token
+    // const token = jwt.sign(
+    //   user,
+    //   process.env.JWT_SECRET as string, // Secret
+    //   { expiresIn: "3d" }, // Token expiration
+    // );
+    //
+    // return formatResponse(
+    //   res,
+    //   {
+    //     token: token,
+    //     // user: {
+    //     //   id: user.userId,
+    //     //   email: user.email,
+    //     //   username: user.username,
+    //     // },
+    //   },
+    //   STATUS_CODE.SUCCESS,
+    //   "Login successfully!",
+    // );
   } catch (err: any) {
     return formatResponse(
       res,
