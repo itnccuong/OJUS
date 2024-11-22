@@ -6,7 +6,13 @@ import {
   GetContainerIdError,
 } from "../utils/error";
 import { languageDetails } from "./code-executor/executor-utils";
-import { ContainerConfig } from "../interfaces";
+import { ContainerConfig, testcaseInterface } from "../interfaces";
+import fs, { readFileSync } from "fs";
+import axios from "axios";
+import AdmZip from "adm-zip";
+
+import path from "path";
+import { parseFilename } from "../utils/general";
 
 const prisma = new PrismaClient();
 
@@ -57,4 +63,48 @@ export const getContainerId = (container: ContainerConfig) => {
     throw new GetContainerIdError("Fail to get container id");
   }
   return containerId;
+};
+
+export const downloadTestcase = async (fileUrl: string) => {
+  //Get file's name from url. Example: http://myDir/abc.cpp -> abc.cpp
+  const filename = fileUrl.replace(/^.*[\\/]/, "");
+
+  const dirPath = path.join(__dirname, filename);
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
+  const zipPath = path.join(dirPath, "testcase.zip");
+  const extractedPath = path.join(dirPath, "extracted");
+
+  //Download the ZIP file
+  const response = await axios.get(fileUrl, {
+    responseType: "stream",
+  });
+
+  const writer = fs.createWriteStream(zipPath);
+  response.data.pipe(writer);
+
+  await new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+
+  //Unzip the file
+  const zip = new AdmZip(zipPath);
+  zip.extractAllTo(extractedPath, true);
+
+  const testcase: testcaseInterface = { input: [], output: [] };
+  const files = fs.readdirSync(extractedPath, "utf8");
+  files.forEach((fileName: string) => {
+    const filePath = path.join(extractedPath, fileName);
+    const parsedFilename = parseFilename(fileName);
+    const file = readFileSync(filePath, "utf-8");
+    if (parsedFilename.type === "input") {
+      testcase["input"][parsedFilename.number - 1] = file;
+    }
+    if (parsedFilename.type === "output") {
+      testcase.output[parsedFilename.number - 1] = file;
+    }
+  });
+  return testcase;
 };

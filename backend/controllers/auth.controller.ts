@@ -9,12 +9,8 @@ import nodemailer from "nodemailer";
 
 import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
-import { readFileSync } from "fs";
+import { downloadTestcase } from "../services/problem.services";
 
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const AdmZip = require("adm-zip");
 const prisma = new PrismaClient();
 
 const register = async (req: Request, res: Response) => {
@@ -88,79 +84,12 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-function parseFilename(filename: string) {
-  let type = "";
-  let number = 0;
-  let i = 0;
-
-  // Extract type (e.g., "input" or "output")
-  while (i < filename.length && isNaN(Number(filename[i]))) {
-    type += filename[i];
-    i++;
-  }
-
-  // Extract number
-  while (i < filename.length && !isNaN(Number(filename[i]))) {
-    number = number * 10 + Number(filename[i]);
-    i++;
-  }
-
-  return { type, number };
-}
-
-interface Test {
-  inputs: string[];
-  outputs: string[];
-}
 const login = async (req: Request, res: Response) => {
   try {
     const fileUrl =
       "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip";
-    const filename = fileUrl.replace(/^.*[\\/]/, "");
-
-    const dirPath = path.join(__dirname, filename);
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
-    }
-    const zipPath = path.join(dirPath, "testcase.zip");
-    const extractedPath = path.join(dirPath, "extracted");
-
-    // Step 1: Download the ZIP file
-    const response = await axios.get(fileUrl, {
-      responseType: "stream",
-    });
-
-    const writer = fs.createWriteStream(zipPath);
-    response.data.pipe(writer);
-
-    await new Promise((resolve, reject) => {
-      writer.on("finish", resolve);
-      writer.on("error", reject);
-    });
-
-    console.log("ZIP file downloaded.");
-
-    // Step 2: Unzip the file
-    const zip = new AdmZip(zipPath);
-    zip.extractAllTo(extractedPath, true);
-
-    console.log(`Files extracted to ${extractedPath}.`);
-
-    const test: Test = { inputs: [], outputs: [] };
-    const files = fs.readdirSync(extractedPath, "utf8");
-    console.log("DIR", files);
-    files.forEach((fileName: string) => {
-      const filePath = path.join(extractedPath, fileName);
-      const parsedFilename = parseFilename(fileName);
-      const file = readFileSync(filePath, "utf-8");
-      if (parsedFilename.type === "input") {
-        test.inputs[parsedFilename.number - 1] = file;
-      }
-      if (parsedFilename.type === "output") {
-        test.outputs[parsedFilename.number - 1] = file;
-      }
-    });
-    console.log(test);
+    const testcase = await downloadTestcase(fileUrl);
+    console.log("TEST", testcase);
 
     // const { usernameOrEmail, password } = req.body;
     //

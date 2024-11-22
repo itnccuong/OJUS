@@ -31,3 +31,8 @@ export interface UserConfig {
   fullname: string;
   password: string;
 }
+
+export interface testcaseInterface {
+  input: string[];
+  output: string[];
+}
