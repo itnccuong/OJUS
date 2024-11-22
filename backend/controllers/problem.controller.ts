@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
 
-import { UserConfig } from "../interfaces/user-interface";
 import path from "path";
 import {
   codeDirectory,
@@ -19,6 +18,7 @@ import {
   getContainerId,
 } from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
+import { UserConfig } from "../interfaces";
 
 dotenv.config();
 

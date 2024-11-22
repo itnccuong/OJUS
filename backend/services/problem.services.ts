@@ -6,7 +6,7 @@ import {
   GetContainerIdError,
 } from "../utils/error";
 import { languageDetails } from "./code-executor/executor-utils";
-import { ContainerConfig } from "../interfaces/code-executor-interface";
+import { ContainerConfig } from "../interfaces";
 
 const prisma = new PrismaClient();
 

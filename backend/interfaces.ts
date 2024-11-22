@@ -1,13 +1,13 @@
-interface ContainerConfig {
+export interface ContainerConfig {
   name: string;
   image: string;
   id: string;
 }
 
-type CompExecCmd = (id: string) => string;
-type InputFunc = (id: string) => string;
+export type CompExecCmd = (id: string) => string;
+export type InputFunc = (id: string) => string;
 
-interface LanguageDetail {
+export interface LanguageDetail {
   compiledExtension: string;
   inputFunction: InputFunc | null;
   compilerCmd: CompExecCmd | null;
@@ -15,7 +15,7 @@ interface LanguageDetail {
   container: ContainerConfig;
 }
 
-interface ExecuteInterface {
+export interface ExecuteInterface {
   stdout: string;
   verdict:
     | "WRONG_ANSWER"
@@ -24,10 +24,10 @@ interface ExecuteInterface {
     | "MEMORY_LIMIT_EXCEEDED";
 }
 
-export {
-  ContainerConfig,
-  CompExecCmd,
-  InputFunc,
-  LanguageDetail,
-  ExecuteInterface,
-};
+export interface UserConfig {
+  userId: number;
+  username: string;
+  email: string;
+  fullname: string;
+  password: string;
+}

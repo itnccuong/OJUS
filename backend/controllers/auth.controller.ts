@@ -114,24 +114,24 @@ interface Test {
 }
 const login = async (req: Request, res: Response) => {
   try {
-    const test: Test = { inputs: [], outputs: [] };
-
-    const extractPath = path.join(__dirname, "extracted");
-
-    const files = fs.readdirSync(extractPath, "utf8");
-    console.log("DIR", files);
-    files.forEach((fileName: string) => {
-      const filePath = path.join(extractPath, fileName);
-      const parsedFilename = parseFilename(fileName);
-      const file = readFileSync(filePath, "utf-8");
-      if (parsedFilename.type === "input") {
-        test.inputs[parsedFilename.number - 1] = file;
-      }
-      if (parsedFilename.type === "output") {
-        test.outputs[parsedFilename.number - 1] = file;
-      }
-    });
-    console.log(test);
+    // const test: Test = { inputs: [], outputs: [] };
+    //
+    // const extractPath = path.join(__dirname, "extracted");
+    //
+    // const files = fs.readdirSync(extractPath, "utf8");
+    // console.log("DIR", files);
+    // files.forEach((fileName: string) => {
+    //   const filePath = path.join(extractPath, fileName);
+    //   const parsedFilename = parseFilename(fileName);
+    //   const file = readFileSync(filePath, "utf-8");
+    //   if (parsedFilename.type === "input") {
+    //     test.inputs[parsedFilename.number - 1] = file;
+    //   }
+    //   if (parsedFilename.type === "output") {
+    //     test.outputs[parsedFilename.number - 1] = file;
+    //   }
+    // });
+    // console.log(test);
     // const fileUrl =
     //   "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip"; // Replace with your ZIP file URL
     // const tempZipPath = path.join(__dirname, "temp.zip");
@@ -158,61 +158,62 @@ const login = async (req: Request, res: Response) => {
     // zip.extractAllTo(extractPath, true);
     //
     // console.log(`Files extracted to ${extractPath}.`);
-    // const { usernameOrEmail, password } = req.body;
-    //
-    // const user = await prisma.user.findFirst({
-    //   where: {
-    //     OR: [
-    //       {
-    //         username: usernameOrEmail,
-    //       },
-    //       {
-    //         email: usernameOrEmail,
-    //       },
-    //     ],
-    //   },
-    // });
-    //
-    // if (!user) {
-    //   return formatResponse(
-    //     res,
-    //     {},
-    //     STATUS_CODE.BAD_REQUEST,
-    //     "Invalid email or username",
-    //   );
-    // }
-    //
-    // // Verify password
-    // const isPasswordValid = await bcrypt.compare(password, user.password);
-    // if (!isPasswordValid) {
-    //   return formatResponse(
-    //     res,
-    //     {},
-    //     STATUS_CODE.BAD_REQUEST,
-    //     "Invalid password",
-    //   );
-    // }
-    //
-    // // Generate token
-    // const token = jwt.sign(
-    //   user,
-    //   process.env.JWT_SECRET as string, // Secret
-    //   { expiresIn: "3d" }, // Token expiration
-    // );
-    //
-    // return formatResponse(
-    //   res,
-    //   {
-    //     token: token,
-    //     // user: {
-    //     //   id: user.userId,
-    //     //   email: user.email,
-    //     //   username: user.username,
-    //     // },
-    //   },
-    //   STATUS_CODE.SUCCESS,
-    //   "Login successfully!",
-    // );
+
+    const { usernameOrEmail, password } = req.body;
+
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            username: usernameOrEmail,
+          },
+          {
+            email: usernameOrEmail,
+          },
+        ],
+      },
+    });
+
+    if (!user) {
+      return formatResponse(
+        res,
+        {},
+        STATUS_CODE.BAD_REQUEST,
+        "Invalid email or username",
+      );
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return formatResponse(
+        res,
+        {},
+        STATUS_CODE.BAD_REQUEST,
+        "Invalid password",
+      );
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      user,
+      process.env.JWT_SECRET as string, // Secret
+      { expiresIn: "3d" }, // Token expiration
+    );
+
+    return formatResponse(
+      res,
+      {
+        token: token,
+        // user: {
+        //   id: user.userId,
+        //   email: user.email,
+        //   username: user.username,
+        // },
+      },
+      STATUS_CODE.SUCCESS,
+      "Login successfully!",
+    );
   } catch (err: any) {
     return formatResponse(
       res,
