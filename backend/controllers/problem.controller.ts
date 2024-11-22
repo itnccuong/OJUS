@@ -13,8 +13,9 @@ import {
 import fs from "fs";
 import {
   convertLanguage,
+  downloadTestcase,
+  findFileById,
   findProblemById,
-  findTestsByProblemId,
   getContainerId,
 } from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
@@ -39,7 +40,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const problem_id = parseInt(req.params.problem_id);
   const user = req.user;
   const { code } = req.body;
-  // const language = extensionMap[req.body.language];
   const language = convertLanguage(req.body.language);
 
   let submission = await prisma.submission.create({
@@ -52,9 +52,13 @@ const submit = async (req: SubmitRequest, res: Response) => {
     },
   });
 
-  const testcases = await findTestsByProblemId(problem_id);
-
   const problem = await findProblemById(problem_id);
+
+  const file = await findFileById(problem.fileId);
+  const fileUrl = file.location;
+  const testcase = await downloadTestcase(fileUrl);
+
+  console.log("testcase", testcase);
 
   const timeLimit = problem.timeLimit;
   // const memoryLimit = problem.memoryLimit;
@@ -83,15 +87,16 @@ const submit = async (req: SubmitRequest, res: Response) => {
 
   //Used to identify verdict of submission (first 'not ok' verdict in testcases)
   let is_correcting = true;
+  const testcaseLength = testcase.input.length;
 
-  for (let index = 0; index < testcases.length; ++index) {
+  for (let index = 0; index < testcaseLength; ++index) {
     const result = await executeAgainstTestcase(
       containerId,
       compiledId,
       languageDetails[language].inputFunction
-        ? languageDetails[language].inputFunction(testcases[index].input)
-        : testcases[index].input,
-      testcases[index].output,
+        ? languageDetails[language].inputFunction(testcase.input[index])
+        : testcase.input[index],
+      testcase.output[index],
       language,
       (data, type, pid) => {
         // console.log(`[${pid}] ${type}: ${data}`);
@@ -109,7 +114,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
     await prisma.result.create({
       data: {
         submissionId: submission.submissionId,
-        testcaseId: testcases[index].testcaseId,
+        testcaseIndex: index,
         output: result.stdout,
         verdict: result.verdict,
         time: 0,
@@ -118,7 +123,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
     });
   }
 
-  if (submission.numTestPassed === testcases.length) {
+  if (submission.numTestPassed === testcaseLength) {
     submission.verdict = "OK";
   }
 
@@ -143,7 +148,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
       {
         submission: submission,
         result: results,
-        testcases: testcases,
+        testcase: testcase,
       },
       STATUS_CODE.SUCCESS,
       "All testcases passed!",
@@ -154,10 +159,10 @@ const submit = async (req: SubmitRequest, res: Response) => {
     {
       submission: submission,
       result: results,
-      testcases: testcases,
+      testcase: testcase,
     },
     STATUS_CODE.BAD_REQUEST,
-    `${submission.verdict}, ${submission.numTestPassed}/${testcases.length} testcases passed`,
+    `${submission.verdict}, ${submission.numTestPassed}/${testcaseLength} testcases passed`,
   );
 };
 

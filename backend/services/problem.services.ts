@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import {
   ConvertLanguageError,
-  FindProblemByIdError,
+  FindByIdError,
   FindTestByProblemIdError,
   GetContainerIdError,
 } from "../utils/error";
@@ -16,18 +16,6 @@ import { parseFilename } from "../utils/general";
 
 const prisma = new PrismaClient();
 
-export const findTestsByProblemId = async (problem_id: number) => {
-  const testcases = await prisma.testCase.findMany({
-    where: {
-      problemId: problem_id,
-    },
-  });
-  if (!testcases.length) {
-    throw new FindTestByProblemIdError("Testcase not found", problem_id);
-  }
-  return testcases;
-};
-
 export const findProblemById = async (problem_id: number) => {
   const problem = await prisma.problem.findUnique({
     where: {
@@ -35,7 +23,7 @@ export const findProblemById = async (problem_id: number) => {
     },
   });
   if (!problem) {
-    throw new FindProblemByIdError("Problem not found", problem_id);
+    throw new FindByIdError("Problem not found", problem_id, "Problem");
   }
   return problem;
 };
@@ -65,16 +53,32 @@ export const getContainerId = (container: ContainerConfig) => {
   return containerId;
 };
 
+export const findFileById = async (fileId: number) => {
+  const file = await prisma.files.findUnique({
+    where: {
+      fileId: fileId,
+    },
+  });
+  if (!file) {
+    throw new FindByIdError("File not found", fileId, "File");
+  }
+  return file;
+};
+
 export const downloadTestcase = async (fileUrl: string) => {
   //Get file's name from url. Example: http://myDir/abc.cpp -> abc.cpp
   const filename = fileUrl.replace(/^.*[\\/]/, "");
-
-  const dirPath = path.join(__dirname, filename);
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
+  const testsDir = path.join(__dirname, "testcases");
+  if (!fs.existsSync(testsDir)) {
+    fs.mkdirSync(testsDir);
   }
-  const zipPath = path.join(dirPath, "testcase.zip");
-  const extractedPath = path.join(dirPath, "extracted");
+
+  const testDir = path.join(testsDir, filename);
+  if (!fs.existsSync(testDir)) {
+    fs.mkdirSync(testDir);
+  }
+  const zipPath = path.join(testDir, "testcase.zip");
+  const extractedPath = path.join(testDir, "extracted");
 
   //Download the ZIP file
   const response = await axios.get(fileUrl, {

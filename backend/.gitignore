@@ -3,3 +3,4 @@ node_modules/
 mysql
 .env
 services/code-executor/codeFiles
+services/testcases

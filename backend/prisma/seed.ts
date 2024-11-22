@@ -7,10 +7,11 @@ async function main() {
 
   const fileData = {
     fileId: 1,
-    filename: "1",
-    filesize: 1,
-    fileType: "1",
-    location: "1",
+    filename: "testcase_1732092562978",
+    filesize: 1057,
+    fileType: "application/x-zip-compressed",
+    location:
+      "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip",
   };
   const userData = {
     userId: 1,

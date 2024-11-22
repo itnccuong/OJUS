@@ -14,9 +14,9 @@ import upload from "../upload/upload.route";
 import globalErrorHandler from "../controllers/error.controller";
 import { initAllDockerContainers } from "../services/code-executor/executor-utils";
 
-// initAllDockerContainers().catch((err) => {
-//   console.log(err);
-// });
+initAllDockerContainers().catch((err) => {
+  console.log(err);
+});
 
 // middlewares
 app.use(express.json());

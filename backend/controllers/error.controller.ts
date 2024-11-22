@@ -3,7 +3,7 @@ import {
   CompileError,
   ConvertLanguageError,
   CustomError,
-  FindProblemByIdError,
+  FindByIdError,
   FindTestByProblemIdError,
   GetContainerIdError,
   RuntimeError,
@@ -13,7 +13,14 @@ import { STATUS_CODE } from "../utils/constants";
 
 const responseError = (res: Response, err: any) => {
   if (err instanceof CustomError) {
-    return formatResponse(res, {}, err.statusCode, err.message, err.name);
+    return formatResponse(
+      res,
+      {},
+      err.statusCode,
+      err.message,
+      err.stack,
+      err.name,
+    );
   }
   return formatResponse(
     res,
@@ -42,8 +49,8 @@ const ConvertLanguageErrorHandler = (err: ConvertLanguageError) => {
   return err;
 };
 
-const FindProblemByIdErrorHandler = (err: FindProblemByIdError) => {
-  err.message = `Problem with id ${err.problemId} not found`;
+const FindByIdErrorHandler = (err: FindByIdError) => {
+  err.message = `No data with id: ${err.id} found in ${err.tableName}`;
   return err;
 };
 
@@ -70,8 +77,8 @@ const globalErrorHandler = (
   if (err instanceof ConvertLanguageError) {
     err = ConvertLanguageErrorHandler(err);
   }
-  if (err instanceof FindProblemByIdError) {
-    err = FindProblemByIdErrorHandler(err);
+  if (err instanceof FindByIdError) {
+    err = FindByIdErrorHandler(err);
   }
   if (err instanceof GetContainerIdError) {
     err = GetContainerIdErrorHandler(err);
