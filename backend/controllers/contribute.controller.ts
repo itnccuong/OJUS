@@ -4,8 +4,8 @@ dotenv.config();
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
-import { UserConfig } from "../interfaces/user-interface";
 import { STATUS_CODE } from "../utils/constants";
+import { UserConfig } from "../interfaces";
 
 const prisma = new PrismaClient();
 

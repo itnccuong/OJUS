@@ -35,7 +35,7 @@ model Problem {
   fileId     Int          @unique
   file       Files        @relation(fields: [fileId], references: [fileId])
   Submission Submission[]
-  TestCase   TestCase[]
+  // TestCase   TestCase[]
 }
 
 model Files {
@@ -48,15 +48,15 @@ model Files {
   problem   Problem? // Optional link back to Problem
 }
 
-model TestCase {
-  testcaseId Int      @id @default(autoincrement())
-  problemId  Int
-  problem    Problem  @relation(fields: [problemId], references: [problemId])
-  input      String   @db.LongText
-  output     String   @db.LongText
-  createdAt  DateTime @default(now())
-  Result     Result[]
-}
+// model TestCase {
+//   testcaseId Int      @id @default(autoincrement())
+//   problemId  Int
+//   problem    Problem  @relation(fields: [problemId], references: [problemId])
+//   input      String   @db.LongText
+//   output     String   @db.LongText
+//   createdAt  DateTime @default(now())
+//   Result     Result[]
+// }
 
 model Submission {
   submissionId  Int      @id @default(autoincrement())
@@ -73,14 +73,14 @@ model Submission {
 }
 
 model Result {
-  resultId     Int        @id @default(autoincrement())
-  submissionId Int
-  submission   Submission @relation(fields: [submissionId], references: [submissionId])
-  output       String     @db.LongText
-  testcaseId   Int
-  testcase     TestCase   @relation(fields: [testcaseId], references: [testcaseId])
-  verdict      String
-  time         Float
-  memory       Int
-  createdAt    DateTime   @default(now())
+  resultId      Int        @id @default(autoincrement())
+  submissionId  Int
+  submission    Submission @relation(fields: [submissionId], references: [submissionId])
+  output        String     @db.LongText
+  // testcase     TestCase   @relation(fields: [testcaseId], references: [testcaseId])
+  testcaseIndex Int
+  verdict       String
+  time          Float
+  memory        Int
+  createdAt     DateTime   @default(now())
 }

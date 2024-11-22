@@ -50,12 +50,14 @@ export class ConvertLanguageError extends CustomError {
   }
 }
 
-export class FindProblemByIdError extends CustomError {
-  public problemId: number;
+export class FindByIdError extends CustomError {
+  public id: number;
+  public tableName: string;
 
-  constructor(message: string, problemId: number) {
+  constructor(message: string, id: number, tableName: string) {
     super(message, STATUS_CODE.NOT_FOUND);
-    this.problemId = problemId;
+    this.id = id;
+    this.tableName = tableName;
   }
 }
 

@@ -6,7 +6,7 @@ import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
-} from "../../interfaces/code-executor-interface";
+} from "../../interfaces";
 
 const codeFiles = "codeFiles";
 const STDOUT = "stdout";
