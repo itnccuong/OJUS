@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 export const parseFilename = (filename: string) => {
   let type = "";
   let number = 0;
@@ -16,4 +18,8 @@ export const parseFilename = (filename: string) => {
   }
 
   return { type, number };
+};
+
+export const getURL = (api: string) => {
+  return "http://localhost:" + process.env.PORT + api;
 };

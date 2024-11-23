@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface ContainerConfig {
   name: string;
   image: string;
@@ -35,4 +37,11 @@ export interface UserConfig {
 export interface testcaseInterface {
   input: string[];
   output: string[];
+}
+
+export interface LoginRequest extends Request {
+  body: {
+    usernameOrEmail: string;
+    password: string;
+  };
 }
