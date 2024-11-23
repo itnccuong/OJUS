@@ -7,7 +7,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import nodemailer from "nodemailer";
 
-import { formatResponse } from "../utils/formatResponse";
+import { formatResponse, successResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 import { downloadTestcase } from "../services/problem.services";
 import { LoginRequest } from "../interfaces";
@@ -129,19 +129,20 @@ const login = async (req: LoginRequest, res: Response) => {
       { expiresIn: "3d" }, // Token expiration
     );
 
-    return formatResponse(
-      res,
-      {
-        token: token,
-        // user: {
-        //   id: user.userId,
-        //   email: user.email,
-        //   username: user.username,
-        // },
-      },
-      STATUS_CODE.SUCCESS,
-      "Login successfully!",
-    );
+    // return formatResponse(
+    //   res,
+    //   {
+    //     token: token,
+    //     // user: {
+    //     //   id: user.userId,
+    //     //   email: user.email,
+    //     //   username: user.username,
+    //     // },
+    //   },
+    //   STATUS_CODE.SUCCESS,
+    //   "Login successfully!",
+    // );
+    return successResponse(res, { token: token });
   } catch (err: any) {
     console.log(err);
     return formatResponse(

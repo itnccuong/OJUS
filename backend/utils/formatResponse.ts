@@ -36,7 +36,6 @@ export const errorResponse = (
   return res.status(status).json({
     name,
     message,
-    status,
     data,
   });
 };
