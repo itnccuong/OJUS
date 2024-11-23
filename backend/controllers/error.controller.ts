@@ -1,62 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import {
-  CompileError,
-  ConvertLanguageError,
-  CustomError,
-  FindByIdError,
-  FindTestByProblemIdError,
-  GetContainerIdError,
-  RuntimeError,
-} from "../utils/error";
-import { formatResponse } from "../utils/formatResponse";
+import { CustomError } from "../utils/error";
+import { errorResponse, formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
-
-const responseError = (res: Response, err: any) => {
-  if (err instanceof CustomError) {
-    return formatResponse(
-      res,
-      {},
-      err.statusCode,
-      err.message,
-      err.stack,
-      err.name,
-    );
-  }
-  return formatResponse(
-    res,
-    {},
-    STATUS_CODE.INTERNAL_SERVER_ERROR,
-    err.message,
-  );
-};
-
-const CompileErrorHandler = (err: CompileError) => {
-  return err;
-};
-
-const runTimeErrorHandler = (err: RuntimeError) => {
-  err.message = `Runtime error: process ${err.pid} exited with code ${err.exitCode}`;
-  return err;
-};
-
-const FindTestByProblemIdErrorHandler = (err: FindTestByProblemIdError) => {
-  err.message = `Testcases for problem with id ${err.problemId} not found`;
-  return err;
-};
-
-const ConvertLanguageErrorHandler = (err: ConvertLanguageError) => {
-  err.message = `${err.language} is not a valid language`;
-  return err;
-};
-
-const FindByIdErrorHandler = (err: FindByIdError) => {
-  err.message = `No data with id: ${err.id} found in ${err.tableName}`;
-  return err;
-};
-
-const GetContainerIdErrorHandler = (err: GetContainerIdError) => {
-  return err;
-};
 
 const globalErrorHandler = (
   err: Error,
@@ -65,25 +10,16 @@ const globalErrorHandler = (
   next: NextFunction,
 ) => {
   console.log("Error in global error handler:", err);
-  if (err instanceof CompileError) {
-    err = CompileErrorHandler(err);
+  if (err instanceof CustomError) {
+    return errorResponse(res, err.name, err.message, err.status, err.data);
   }
-  if (err instanceof RuntimeError) {
-    err = runTimeErrorHandler(err);
-  }
-  if (err instanceof FindTestByProblemIdError) {
-    err = FindTestByProblemIdErrorHandler(err);
-  }
-  if (err instanceof ConvertLanguageError) {
-    err = ConvertLanguageErrorHandler(err);
-  }
-  if (err instanceof FindByIdError) {
-    err = FindByIdErrorHandler(err);
-  }
-  if (err instanceof GetContainerIdError) {
-    err = GetContainerIdErrorHandler(err);
-  }
-  return responseError(res, err);
+  return errorResponse(
+    res,
+    "INTERNAL_SERVER_ERROR",
+    "Internal server error",
+    STATUS_CODE.INTERNAL_SERVER_ERROR,
+    {},
+  );
 };
 
 export default globalErrorHandler;

@@ -1,10 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import {
-  ConvertLanguageError,
-  FindByIdError,
-  FindTestByProblemIdError,
-  GetContainerIdError,
-} from "../utils/error";
+import { CustomError } from "../utils/error";
 import { languageDetails } from "./code-executor/executor-utils";
 import { ContainerConfig, testcaseInterface } from "../interfaces";
 import fs, { readFileSync } from "fs";
@@ -13,6 +8,7 @@ import AdmZip from "adm-zip";
 
 import path from "path";
 import { parseFilename } from "../utils/general";
+import { STATUS_CODE } from "../utils/constants";
 
 const prisma = new PrismaClient();
 
@@ -23,7 +19,15 @@ export const findProblemById = async (problem_id: number) => {
     },
   });
   if (!problem) {
-    throw new FindByIdError("Problem not found", problem_id, "Problem");
+    // throw new FindByIdError("Problem not found", problem_id, "Problem");
+    throw new CustomError(
+      "PROBLEM_NOT_FOUND",
+      "Problem not found in database!",
+      STATUS_CODE.NOT_FOUND,
+      {
+        problemId: problem_id,
+      },
+    );
   }
   return problem;
 };
@@ -40,7 +44,7 @@ export const convertLanguage = (language: string) => {
 
   const convertedLanguage = convertMap[language];
   if (!languageDetails[convertedLanguage]) {
-    throw new ConvertLanguageError("Invalid language", language);
+    // throw new ConvertLanguageError("Invalid language", language);
   }
   return convertedLanguage;
 };
@@ -48,7 +52,7 @@ export const convertLanguage = (language: string) => {
 export const getContainerId = (container: ContainerConfig) => {
   const containerId = container.id;
   if (!containerId) {
-    throw new GetContainerIdError("Fail to get container id");
+    // throw new GetContainerIdError("Fail to get container id");
   }
   return containerId;
 };
@@ -60,7 +64,14 @@ export const findFileById = async (fileId: number) => {
     },
   });
   if (!file) {
-    throw new FindByIdError("File not found", fileId, "File");
+    throw new CustomError(
+      "FILE_NOT_FOUND",
+      "File not found in database!",
+      STATUS_CODE.NOT_FOUND,
+      {
+        fileId: fileId,
+      },
+    );
   }
   return file;
 };

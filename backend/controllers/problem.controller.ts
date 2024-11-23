@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse } from "../utils/formatResponse";
+import {
+  errorResponse,
+  formatResponse,
+  successResponse,
+} from "../utils/formatResponse";
 
 import path from "path";
 import {
@@ -20,6 +24,7 @@ import {
 } from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
 import { UserConfig } from "../interfaces";
+import { CustomError } from "../utils/error";
 
 dotenv.config();
 
@@ -58,9 +63,17 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const fileUrl = file.location;
   const testcase = await downloadTestcase(fileUrl);
 
-  console.log("testcase", testcase);
-
   const timeLimit = problem.timeLimit;
+
+  /////////////////////////////////
+  // const file = await findFileById(problem!.fileId);
+  // const fileUrl = file!.location;
+  // const testcase = await downloadTestcase(fileUrl);
+
+  // console.log("testcase", testcase);
+  //
+  // const timeLimit = problem!.timeLimit;
+  ////////////////////////////////
   // const memoryLimit = problem.memoryLimit;
 
   //Create new file in codeFiles directory from submitted code
@@ -143,27 +156,36 @@ const submit = async (req: SubmitRequest, res: Response) => {
     },
   });
   if (submission.verdict === "OK") {
-    return formatResponse(
-      res,
+    return successResponse(res, {
+      submission: submission,
+      result: results,
+      testcase: testcase,
+    });
+  }
+  if (submission.verdict === "WRONG_ANSWER") {
+    throw new CustomError(
+      "WRONG_ANSWER",
+      "Wrong answer",
+      STATUS_CODE.BAD_REQUEST,
       {
         submission: submission,
         result: results,
         testcase: testcase,
       },
-      STATUS_CODE.SUCCESS,
-      "All testcases passed!",
     );
   }
-  return formatResponse(
-    res,
-    {
-      submission: submission,
-      result: results,
-      testcase: testcase,
-    },
-    STATUS_CODE.BAD_REQUEST,
-    `${submission.verdict}, ${submission.numTestPassed}/${testcaseLength} testcases passed`,
-  );
+  if (submission.verdict === "TIME_LIMIT_EXCEEDED") {
+    throw new CustomError(
+      "TIME_LIMIT_EXCEEDED",
+      "Time limit exceeded!",
+      STATUS_CODE.BAD_REQUEST,
+      {
+        submission: submission,
+        result: results,
+        testcase: testcase,
+      },
+    );
+  }
 };
 
 export { submit };

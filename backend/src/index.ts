@@ -43,11 +43,11 @@ if (!fs.existsSync(uploadDir)) {
 app.use("/api", router);
 
 // temorary route for upload
-app.get("/upload", (req, res) => {
-  res.sendFile(path.join(__dirname, "../upload/test.html"));
-});
+// app.get("/upload", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../upload/test.html"));
+// });
 
-app.use("/upload", upload);
+// app.use("/upload", upload);
 
 app.use(globalErrorHandler);
 

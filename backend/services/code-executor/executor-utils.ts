@@ -1,12 +1,13 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
-import { CompileError, RuntimeError } from "../../utils/error";
 import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
 } from "../../interfaces";
+import { CustomError } from "../../utils/error";
+import { STATUS_CODE } from "../../utils/constants";
 
 const codeFiles = "codeFiles";
 const STDOUT = "stdout";
@@ -167,7 +168,15 @@ const compile = async (
     await execAsync(`docker exec ${containerId} ${command}`);
     return id;
   } catch (error: any) {
-    throw new CompileError(error.stderr);
+    // throw new CompileError(error.stderr);
+    throw new CustomError(
+      "COMPILE_ERROR",
+      "Compile error!",
+      STATUS_CODE.BAD_REQUEST,
+      {
+        stderr: error.stderr,
+      },
+    );
   }
 };
 
@@ -216,7 +225,7 @@ const executeAgainstTestcase = async (
     }, timeLimit);
 
     cmd.stdin.on("error", (err) => {
-      reject(new RuntimeError(err.message, cmd.pid));
+      reject(new Error(err.message));
     });
 
     cmd.stdout.on("data", (data) => {
@@ -234,13 +243,12 @@ const executeAgainstTestcase = async (
     });
 
     cmd.on("error", (err) => {
-      reject(new RuntimeError(err.message, cmd.pid));
+      reject(new Error(err.message));
     });
 
     //Can also use close instead of exit?
     cmd.on("exit", (exitCode) => {
       clearTimeout(timeoutId);
-      // console.log("Stdout on exit", stdout);
       if (isTimeout) {
         resolve({
           stdout: stdout,
@@ -249,7 +257,15 @@ const executeAgainstTestcase = async (
       }
       if (exitCode !== 0) {
         reject(
-          new RuntimeError(`Error while executing command`, cmd.pid, exitCode),
+          new CustomError(
+            "RUNTIME_ERROR",
+            `Process ${cmd.pid} exited with code ${exitCode}`,
+            STATUS_CODE.BAD_REQUEST,
+            {
+              pid: cmd.pid,
+              exitCode: exitCode,
+            },
+          ),
         );
       }
       if (stdout !== expectedOutput) {
