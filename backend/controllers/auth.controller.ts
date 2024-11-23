@@ -87,11 +87,6 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: LoginRequest, res: Response) => {
   try {
-    // const fileUrl =
-    //   "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip";
-    // const testcase = await downloadTestcase(fileUrl);
-    // console.log("TEST", testcase);
-
     const { usernameOrEmail, password } = req.body;
 
     const user = await prisma.user.findFirst({
