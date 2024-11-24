@@ -1,11 +1,7 @@
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
-import {
-  errorResponse,
-  formatResponse,
-  successResponse,
-} from "../utils/formatResponse";
+import { Response } from "express";
+import { successResponse } from "../utils/formatResponse";
 
 import path from "path";
 import {
@@ -23,25 +19,32 @@ import {
   getContainerId,
 } from "../services/problem.services";
 import { STATUS_CODE } from "../utils/constants";
-import { UserConfig } from "../interfaces";
 import { CustomError } from "../utils/error";
+import {
+  CustomRequest,
+  SubmitCodeConfig,
+  SubmitParamsConfig,
+} from "../interfaces/api-interface";
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 
-export interface SubmitRequest extends Request {
-  params: {
-    problem_id: string;
-  };
-  body: {
-    code: string;
-    language: string;
-  };
-  userId: number;
-}
+// export interface SubmitRequest extends Request {
+//   params: {
+//     problem_id: string;
+//   };
+//   body: {
+//     code: string;
+//     language: string;
+//   };
+//   userId: number;
+// }
 
-const submit = async (req: SubmitRequest, res: Response) => {
+const submit = async (
+  req: CustomRequest<SubmitCodeConfig, SubmitParamsConfig>,
+  res: Response,
+) => {
   const problem_id = parseInt(req.params.problem_id);
   const userId = req.userId;
   const { code } = req.body;
@@ -50,7 +53,7 @@ const submit = async (req: SubmitRequest, res: Response) => {
   let submission = await prisma.submission.create({
     data: {
       problemId: problem_id,
-      userId: userId,
+      userId: userId!,
       code: code,
       language: language,
       verdict: "COMPILE_ERROR",
@@ -64,17 +67,6 @@ const submit = async (req: SubmitRequest, res: Response) => {
   const testcase = await downloadTestcase(fileUrl);
 
   const timeLimit = problem.timeLimit;
-
-  /////////////////////////////////
-  // const file = await findFileById(problem!.fileId);
-  // const fileUrl = file!.location;
-  // const testcase = await downloadTestcase(fileUrl);
-
-  // console.log("testcase", testcase);
-  //
-  // const timeLimit = problem!.timeLimit;
-  ////////////////////////////////
-  // const memoryLimit = problem.memoryLimit;
 
   //Create new file in codeFiles directory from submitted code
   const filename = `${submission.submissionId}.${language}`;
@@ -156,11 +148,15 @@ const submit = async (req: SubmitRequest, res: Response) => {
     },
   });
   if (submission.verdict === "OK") {
-    return successResponse(res, {
-      submission: submission,
-      result: results,
-      testcase: testcase,
-    });
+    return successResponse(
+      res,
+      {
+        submission: submission,
+        result: results,
+        testcase: testcase,
+      },
+      STATUS_CODE.SUCCESS,
+    );
   }
   if (submission.verdict === "WRONG_ANSWER") {
     throw new CustomError(

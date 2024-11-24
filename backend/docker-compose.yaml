@@ -9,3 +9,14 @@ services:
     volumes:
       - ./mysql:/var/lib/mysql
       - ./init.sql:/code-executor-entrypoint-initdb.d/init.sql
+
+  mysql_test:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./mysql_test:/var/lib/mysql
+      - ./init_test.sql:/docker-entrypoint-initdb.d/init_test.sql

@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { CustomError } from "../utils/error";
 import { languageDetails } from "./code-executor/executor-utils";
-import { ContainerConfig, testcaseInterface } from "../interfaces";
 import fs, { readFileSync } from "fs";
 import axios from "axios";
 import AdmZip from "adm-zip";
@@ -9,6 +8,10 @@ import AdmZip from "adm-zip";
 import path from "path";
 import { parseFilename } from "../utils/general";
 import { STATUS_CODE } from "../utils/constants";
+import {
+  ContainerConfig,
+  testcaseInterface,
+} from "../interfaces/code-executor-interface";
 
 const prisma = new PrismaClient();
 

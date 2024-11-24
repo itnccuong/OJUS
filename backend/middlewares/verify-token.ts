@@ -3,18 +3,20 @@ import { STATUS_CODE } from "../utils/constants";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-interface AuthRequest extends Request {
-  userId?: number;
-}
-
 interface DecodeToken {
   userId: number;
   iat: number;
   exp: number;
 }
 
+declare module "express-serve-static-core" {
+  export interface Request {
+    userId: number;
+  }
+}
+
 export const verifyToken = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): void => {

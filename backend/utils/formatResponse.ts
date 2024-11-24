@@ -20,8 +20,8 @@ export const formatResponse = (
   });
 };
 
-export const successResponse = (res: any, data: any) => {
-  return res.status(STATUS_CODE.SUCCESS).json({
+export const successResponse = (res: any, data: any, status: number) => {
+  return res.status(status).json({
     data,
   });
 };

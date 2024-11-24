@@ -1,23 +1,30 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-dotenv.config();
-
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { Response } from "express";
 import nodemailer from "nodemailer";
 
 import { formatResponse, successResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
-import { downloadTestcase } from "../services/problem.services";
-import { LoginRequest } from "../interfaces";
+import {
+  ChangePasswordConfig,
+  CustomRequest,
+  LoginInterface,
+  RegisterConfig,
+  SendResetLinkConfig,
+} from "../interfaces/api-interface";
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 
-const register = async (req: Request, res: Response) => {
+const register = async (
+  req: CustomRequest<RegisterConfig, any>,
+  res: Response,
+) => {
   try {
     const { email, fullname, password, username } = req.body;
-
     if (!email || !fullname || !password || !username) {
       return formatResponse(
         res,
@@ -69,12 +76,7 @@ const register = async (req: Request, res: Response) => {
       },
     });
 
-    return formatResponse(
-      res,
-      { user },
-      STATUS_CODE.SUCCESS,
-      "Create account successfully!",
-    );
+    return successResponse(res, { user }, STATUS_CODE.CREATED);
   } catch (err: any) {
     return formatResponse(
       res,
@@ -85,7 +87,10 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-const login = async (req: LoginRequest, res: Response) => {
+const login = async (
+  req: CustomRequest<LoginInterface, any>,
+  res: Response,
+) => {
   try {
     const { usernameOrEmail, password } = req.body;
 
@@ -129,7 +134,7 @@ const login = async (req: LoginRequest, res: Response) => {
       { expiresIn: "3d" }, // Token expiration
     );
 
-    return successResponse(res, { token: token });
+    return successResponse(res, { token: token }, STATUS_CODE.SUCCESS);
   } catch (err: any) {
     console.log(err);
     return formatResponse(
@@ -141,7 +146,10 @@ const login = async (req: LoginRequest, res: Response) => {
   }
 };
 
-const sendResetLink = async (req: Request, res: Response) => {
+const sendResetLink = async (
+  req: CustomRequest<SendResetLinkConfig, any>,
+  res: Response,
+) => {
   const { email } = req.body;
 
   try {
@@ -174,7 +182,7 @@ const sendResetLink = async (req: Request, res: Response) => {
 
     // Set up email data
     const mailOptions = {
-      from: '"Vua Leetcode" <no-reply@vualeetcode.com>', // Sender address
+      from: '"OJUS" <no-reply@ojus.com>', // Sender address
       to: email, // Receiver's email
       subject: "Password Reset E-mail",
       // text: `You're receiving this e-mail because you or someone else has requested a password reset for your user account at.
@@ -207,7 +215,10 @@ const sendResetLink = async (req: Request, res: Response) => {
   }
 };
 
-const changePassword = async (req: Request, res: Response) => {
+const changePassword = async (
+  req: CustomRequest<ChangePasswordConfig, any>,
+  res: Response,
+) => {
   const { token, newPassword } = req.body;
 
   try {

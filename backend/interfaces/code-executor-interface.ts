@@ -1,5 +1,3 @@
-import { Request } from "express";
-
 export interface ContainerConfig {
   name: string;
   image: string;
@@ -26,22 +24,7 @@ export interface ExecuteInterface {
     | "MEMORY_LIMIT_EXCEEDED";
 }
 
-export interface UserConfig {
-  userId: number;
-  username: string;
-  email: string;
-  fullname: string;
-  password: string;
-}
-
 export interface testcaseInterface {
   input: string[];
   output: string[];
-}
-
-export interface LoginRequest extends Request {
-  body: {
-    usernameOrEmail: string;
-    password: string;
-  };
 }

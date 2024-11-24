@@ -1,13 +1,13 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
+import { CustomError } from "../../utils/error";
+import { STATUS_CODE } from "../../utils/constants";
 import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
-} from "../../interfaces";
-import { CustomError } from "../../utils/error";
-import { STATUS_CODE } from "../../utils/constants";
+} from "../../interfaces/code-executor-interface";
 
 const codeFiles = "codeFiles";
 const STDOUT = "stdout";
