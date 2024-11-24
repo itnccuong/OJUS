@@ -38,19 +38,19 @@ export interface SubmitRequest extends Request {
     code: string;
     language: string;
   };
-  user?: UserConfig;
+  userId: number;
 }
 
 const submit = async (req: SubmitRequest, res: Response) => {
   const problem_id = parseInt(req.params.problem_id);
-  const user = req.user;
+  const userId = req.userId;
   const { code } = req.body;
   const language = convertLanguage(req.body.language);
 
   let submission = await prisma.submission.create({
     data: {
       problemId: problem_id,
-      userId: user!.userId,
+      userId: userId,
       code: code,
       language: language,
       verdict: "COMPILE_ERROR",

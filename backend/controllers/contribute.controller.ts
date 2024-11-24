@@ -10,7 +10,7 @@ import { UserConfig } from "../interfaces";
 const prisma = new PrismaClient();
 
 interface CustomRequest extends Request {
-  user?: UserConfig;
+  userId?: number;
   file?: any;
 }
 
@@ -43,7 +43,7 @@ const submitContribute = async (req: CustomRequest, res: Response) => {
         tags: tags,
         timeLimit: timelimit,
         memoryLimit: memorylimit,
-        authorId: req.user!.userId,
+        authorId: req.userId!,
         fileId: req.file.fileId,
       },
     });

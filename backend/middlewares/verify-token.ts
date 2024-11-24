@@ -4,7 +4,13 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface AuthRequest extends Request {
-  user?: jwt.JwtPayload;
+  userId?: number;
+}
+
+interface DecodeToken {
+  userId: number;
+  iat: number;
+  exp: number;
 }
 
 export const verifyToken = (
@@ -29,7 +35,7 @@ export const verifyToken = (
         return formatResponse(res, {}, STATUS_CODE.UNAUTHORIZED, err.message);
       }
     } else {
-      req.user = decoded as jwt.JwtPayload;
+      req.userId = (decoded as DecodeToken).userId;
       next();
     }
   });

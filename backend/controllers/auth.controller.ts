@@ -124,24 +124,11 @@ const login = async (req: LoginRequest, res: Response) => {
 
     // Generate token
     const token = jwt.sign(
-      user,
+      { userId: user.userId }, // Payload
       process.env.JWT_SECRET as string, // Secret
       { expiresIn: "3d" }, // Token expiration
     );
 
-    // return formatResponse(
-    //   res,
-    //   {
-    //     token: token,
-    //     // user: {
-    //     //   id: user.userId,
-    //     //   email: user.email,
-    //     //   username: user.username,
-    //     // },
-    //   },
-    //   STATUS_CODE.SUCCESS,
-    //   "Login successfully!",
-    // );
     return successResponse(res, { token: token });
   } catch (err: any) {
     console.log(err);
