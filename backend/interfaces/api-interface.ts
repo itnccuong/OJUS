@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
+import { TestcaseInterface } from "./code-executor-interface";
 
 export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
   body: T;
@@ -13,7 +14,7 @@ export interface SuccessResponse<T> {
   };
 }
 
-interface ErrorResponse<T> {
+export interface ErrorResponse<T> {
   status: number;
   body: {
     name: string;
@@ -66,4 +67,38 @@ export interface ChangePasswordConfig {
 
 export interface SendResetLinkConfig {
   email: string;
+}
+
+export interface SubmissionConfig {
+  submissionId: number;
+  problemId: number;
+  userId: number;
+  code: string;
+  language: string;
+  verdict: string;
+  numTestPassed: number;
+  createdAt: Date;
+}
+
+export interface ResultConfig {
+  submissionId: number;
+  verdict: string;
+  resultId: number;
+  output: string;
+  testcaseIndex: number;
+  time: number;
+  memory: number;
+  createdAt: Date;
+}
+
+export interface SubmitCorrectAnswerData {
+  submission: SubmissionConfig;
+  results: ResultConfig[];
+  testcase: TestcaseInterface;
+}
+
+export interface SubmitWrongAnswerData {
+  submission: SubmissionConfig;
+  results: ResultConfig[];
+  testcase: TestcaseInterface;
 }

@@ -24,7 +24,7 @@ export interface ExecuteInterface {
     | "MEMORY_LIMIT_EXCEEDED";
 }
 
-export interface testcaseInterface {
+export interface TestcaseInterface {
   input: string[];
   output: string[];
 }

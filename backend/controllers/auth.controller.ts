@@ -14,10 +14,9 @@ import {
   RegisterConfig,
   SendResetLinkConfig,
 } from "../interfaces/api-interface";
+import prisma from "../prisma/client";
 
 dotenv.config();
-
-const prisma = new PrismaClient();
 
 const register = async (
   req: CustomRequest<RegisterConfig, any>,
@@ -65,7 +64,7 @@ const register = async (
     }
 
     const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
     const user = await prisma.user.create({
       data: {

@@ -2,7 +2,7 @@
   "scripts": {
     "clean": "rm -rf coverage dist",
     "lint": "eslint ./src/*.ts",
-    "test": "dotenv -e .env.test -- prisma migrate dev && dotenv -e .env.test -- jest -i",
+    "test": "dotenv -e .env.test -- prisma migrate dev && dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "dev": "nodemon --config nodemon.json src/index.ts",

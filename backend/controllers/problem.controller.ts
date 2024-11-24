@@ -25,10 +25,9 @@ import {
   SubmitCodeConfig,
   SubmitParamsConfig,
 } from "../interfaces/api-interface";
+import prisma from "../prisma/client";
 
 dotenv.config();
-
-const prisma = new PrismaClient();
 
 // export interface SubmitRequest extends Request {
 //   params: {
@@ -152,7 +151,7 @@ const submit = async (
       res,
       {
         submission: submission,
-        result: results,
+        results: results,
         testcase: testcase,
       },
       STATUS_CODE.SUCCESS,
@@ -165,7 +164,7 @@ const submit = async (
       STATUS_CODE.BAD_REQUEST,
       {
         submission: submission,
-        result: results,
+        results: results,
         testcase: testcase,
       },
     );
@@ -177,7 +176,7 @@ const submit = async (
       STATUS_CODE.BAD_REQUEST,
       {
         submission: submission,
-        result: results,
+        results: results,
         testcase: testcase,
       },
     );

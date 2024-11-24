@@ -10,10 +10,9 @@ import { parseFilename } from "../utils/general";
 import { STATUS_CODE } from "../utils/constants";
 import {
   ContainerConfig,
-  testcaseInterface,
+  TestcaseInterface,
 } from "../interfaces/code-executor-interface";
-
-const prisma = new PrismaClient();
+import prisma from "../prisma/client";
 
 export const findProblemById = async (problem_id: number) => {
   const problem = await prisma.problem.findUnique({
@@ -111,7 +110,7 @@ export const downloadTestcase = async (fileUrl: string) => {
   const zip = new AdmZip(zipPath);
   zip.extractAllTo(extractedPath, true);
 
-  const testcase: testcaseInterface = { input: [], output: [] };
+  const testcase: TestcaseInterface = { input: [], output: [] };
   const files = fs.readdirSync(extractedPath, "utf8");
   files.forEach((fileName: string) => {
     const filePath = path.join(extractedPath, fileName);
