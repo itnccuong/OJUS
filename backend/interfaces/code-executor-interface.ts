@@ -21,7 +21,8 @@ export interface ExecuteInterface {
     | "WRONG_ANSWER"
     | "OK"
     | "TIME_LIMIT_EXCEEDED"
-    | "MEMORY_LIMIT_EXCEEDED";
+    | "MEMORY_LIMIT_EXCEEDED"
+    | "RUNTIME_ERROR";
 }
 
 export interface TestcaseInterface {

@@ -1,18 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-import { CustomError } from "../utils/error";
-import { languageDetails } from "./code-executor/executor-utils";
+import { CustomError } from "../../utils/error";
+import {
+  codeDirectory,
+  languageDetails,
+} from "../code-executor/executor-utils";
 import fs, { readFileSync } from "fs";
 import axios from "axios";
 import AdmZip from "adm-zip";
 
 import path from "path";
-import { parseFilename } from "../utils/general";
-import { STATUS_CODE } from "../utils/constants";
+import { parseFilename } from "../../utils/general";
+import { STATUS_CODE } from "../../utils/constants";
 import {
   ContainerConfig,
   TestcaseInterface,
-} from "../interfaces/code-executor-interface";
-import prisma from "../prisma/client";
+} from "../../interfaces/code-executor-interface";
+import prisma from "../../prisma/client";
+
+export const createSubmission = async (
+  problem_id: number,
+  userId: number,
+  code: string,
+  language: string,
+) => {
+  const submission = await prisma.submission.create({
+    data: {
+      problemId: problem_id,
+      userId: userId!,
+      code: code,
+      language: language,
+      verdict: "",
+    },
+  });
+  return submission;
+};
 
 export const findProblemById = async (problem_id: number) => {
   const problem = await prisma.problem.findUnique({
@@ -54,7 +75,12 @@ export const convertLanguage = (language: string) => {
 export const getContainerId = (container: ContainerConfig) => {
   const containerId = container.id;
   if (!containerId) {
-    // throw new GetContainerIdError("Fail to get container id");
+    throw new CustomError(
+      "NOT_FOUND",
+      "Container id not found",
+      STATUS_CODE.BAD_REQUEST,
+      {},
+    );
   }
   return containerId;
 };
@@ -124,4 +150,56 @@ export const downloadTestcase = async (fileUrl: string) => {
     }
   });
   return testcase;
+};
+
+//Create new file in codeFiles directory from submitted code
+export const saveCodeToFile = (
+  submissionId: number,
+  code: string,
+  language: string,
+) => {
+  //Use submissionId to generate unique filename
+  const filename = `${submissionId}.${language}`;
+  //If code directory not exist, create it
+  if (!fs.existsSync(codeDirectory)) {
+    fs.mkdirSync(codeDirectory);
+  }
+  const filePath = path.join(codeDirectory, filename);
+  fs.writeFileSync(filePath, code, { encoding: "utf-8" });
+  return filename;
+};
+
+export const updateSubmissionVerdict = async (
+  submissionId: number,
+  verdict: string,
+) => {
+  const submission = await prisma.submission.update({
+    where: {
+      submissionId: submissionId,
+    },
+    data: {
+      verdict: verdict,
+    },
+  });
+  return submission;
+};
+
+export const createResult = async (
+  submissionId: number,
+  testcaseIndex: number,
+  output: string,
+  verdict: string,
+  time: number,
+  memory: number,
+) => {
+  await prisma.result.create({
+    data: {
+      submissionId: submissionId,
+      testcaseIndex: testcaseIndex,
+      output: output,
+      verdict: verdict,
+      time: time,
+      memory: memory,
+    },
+  });
 };

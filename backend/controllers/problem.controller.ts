@@ -1,44 +1,30 @@
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
-import { successResponse } from "../utils/formatResponse";
+import { errorResponse, successResponse } from "../utils/formatResponse";
 
-import path from "path";
 import {
-  codeDirectory,
   compile,
   executeAgainstTestcase,
   languageDetails,
 } from "../services/code-executor/executor-utils";
-import fs from "fs";
 import {
   convertLanguage,
+  createResult,
+  createSubmission,
   downloadTestcase,
   findFileById,
   findProblemById,
-  getContainerId,
-} from "../services/problem.services";
+  saveCodeToFile,
+  updateSubmissionVerdict,
+} from "../services/problem.services/submit.services";
 import { STATUS_CODE } from "../utils/constants";
-import { CustomError } from "../utils/error";
 import {
   CustomRequest,
   SubmitCodeConfig,
   SubmitParamsConfig,
 } from "../interfaces/api-interface";
-import prisma from "../prisma/client";
 
 dotenv.config();
-
-// export interface SubmitRequest extends Request {
-//   params: {
-//     problem_id: string;
-//   };
-//   body: {
-//     code: string;
-//     language: string;
-//   };
-//   userId: number;
-// }
 
 const submit = async (
   req: CustomRequest<SubmitCodeConfig, SubmitParamsConfig>,
@@ -49,54 +35,43 @@ const submit = async (
   const { code } = req.body;
   const language = convertLanguage(req.body.language);
 
-  let submission = await prisma.submission.create({
-    data: {
-      problemId: problem_id,
-      userId: userId!,
-      code: code,
-      language: language,
-      verdict: "COMPILE_ERROR",
-    },
-  });
-
+  let submission = await createSubmission(problem_id, userId, code, language);
   const problem = await findProblemById(problem_id);
-
   const file = await findFileById(problem.fileId);
+
   const fileUrl = file.location;
   const testcase = await downloadTestcase(fileUrl);
 
-  const timeLimit = problem.timeLimit;
+  const filenameWithExtension = saveCodeToFile(
+    submission.submissionId,
+    code,
+    language,
+  );
 
-  //Create new file in codeFiles directory from submitted code
-  const filename = `${submission.submissionId}.${language}`;
-  //If code directory not exist, create it
-  if (!fs.existsSync(codeDirectory)) {
-    fs.mkdirSync(codeDirectory);
+  const filename = await compile(filenameWithExtension, language);
+  if (!filename) {
+    submission = await updateSubmissionVerdict(
+      submission.submissionId,
+      "COMPILE_ERROR",
+    );
+
+    return errorResponse(
+      res,
+      "COMPILE_ERROR",
+      "Compile error",
+      STATUS_CODE.BAD_REQUEST,
+      {
+        submission: submission,
+      },
+    );
   }
-  const filePath = path.join(codeDirectory, filename);
-  fs.writeFileSync(filePath, code, { encoding: "utf-8" });
-
-  const container = languageDetails[language].container;
-  const containerId = getContainerId(container);
-
-  const compiledId = await compile(containerId, filename, language);
-  submission = await prisma.submission.update({
-    where: {
-      submissionId: submission.submissionId,
-    },
-    data: {
-      verdict: "RUNTIME_ERROR",
-    },
-  });
-
-  //Used to identify verdict of submission (first 'not ok' verdict in testcases)
-  let is_correcting = true;
   const testcaseLength = testcase.input.length;
+
+  const timeLimit = problem.timeLimit;
 
   for (let index = 0; index < testcaseLength; ++index) {
     const result = await executeAgainstTestcase(
-      containerId,
-      compiledId,
+      filename,
       languageDetails[language].inputFunction
         ? languageDetails[language].inputFunction(testcase.input[index])
         : testcase.input[index],
@@ -108,79 +83,46 @@ const submit = async (
       timeLimit,
     );
 
-    if (result.verdict === "OK") {
-      submission.numTestPassed += 1;
-    } else if (is_correcting) {
-      is_correcting = false;
-      submission.verdict = result.verdict;
+    await createResult(
+      submission.submissionId,
+      index,
+      result.stdout,
+      result.verdict,
+      0,
+      0,
+    );
+
+    if (result.verdict !== "OK") {
+      submission = await updateSubmissionVerdict(
+        submission.submissionId,
+        result.verdict,
+      );
+      return errorResponse(
+        res,
+        result.verdict,
+        result.verdict,
+        STATUS_CODE.BAD_REQUEST,
+        {
+          submission: submission,
+        },
+      );
     }
-
-    await prisma.result.create({
-      data: {
-        submissionId: submission.submissionId,
-        testcaseIndex: index,
-        output: result.stdout,
-        verdict: result.verdict,
-        time: 0,
-        memory: 0,
-      },
-    });
   }
 
-  if (submission.numTestPassed === testcaseLength) {
-    submission.verdict = "OK";
-  }
+  submission = await updateSubmissionVerdict(submission.submissionId, "OK");
 
-  submission = await prisma.submission.update({
-    where: {
-      submissionId: submission.submissionId,
+  // const results = await prisma.result.findMany({
+  //   where: {
+  //     submissionId: submission.submissionId,
+  //   },
+  // });
+  return successResponse(
+    res,
+    {
+      submission: submission,
     },
-    data: {
-      numTestPassed: submission.numTestPassed,
-      verdict: submission.verdict,
-    },
-  });
-
-  const results = await prisma.result.findMany({
-    where: {
-      submissionId: submission.submissionId,
-    },
-  });
-  if (submission.verdict === "OK") {
-    return successResponse(
-      res,
-      {
-        submission: submission,
-        results: results,
-        testcase: testcase,
-      },
-      STATUS_CODE.SUCCESS,
-    );
-  }
-  if (submission.verdict === "WRONG_ANSWER") {
-    throw new CustomError(
-      "WRONG_ANSWER",
-      "Wrong answer",
-      STATUS_CODE.BAD_REQUEST,
-      {
-        submission: submission,
-        results: results,
-        testcase: testcase,
-      },
-    );
-  }
-  if (submission.verdict === "TIME_LIMIT_EXCEEDED") {
-    throw new CustomError(
-      "TIME_LIMIT_EXCEEDED",
-      "Time limit exceeded!",
-      STATUS_CODE.BAD_REQUEST,
-      {
-        submission: submission,
-        results: results,
-        testcase: testcase,
-      },
-    );
-  }
+    STATUS_CODE.SUCCESS,
+  );
 };
 
 export { submit };

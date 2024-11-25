@@ -1,4 +1,4 @@
-import bcrypt, { hashSync } from "bcrypt";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Response } from "express";
@@ -18,11 +18,11 @@ import {
   createUser,
   hashPassword,
   validateRegisterBody,
-} from "../services/auth.service.ts/register.service";
+} from "../services/auth.services/register.service";
 import {
   signToken,
   validateLoginBody,
-} from "../services/auth.service.ts/login.service";
+} from "../services/auth.services/login.service";
 
 dotenv.config();
 
