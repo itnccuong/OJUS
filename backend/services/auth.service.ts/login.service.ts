@@ -6,9 +6,10 @@ import jwt from "jsonwebtoken";
 import { LoginInterface } from "../../interfaces/api-interface";
 import { CustomError } from "../../utils/error";
 
-export const loginUser = async (user: LoginInterface) => {
-  const { usernameOrEmail, password } = user;
-  const foundUser = await prisma.user.findFirst({
+//If the request body is valid, the function will return the user object
+export const validateLoginBody = async (data: LoginInterface) => {
+  const { usernameOrEmail, password } = data;
+  const user = await prisma.user.findFirst({
     where: {
       OR: [
         {
@@ -21,7 +22,7 @@ export const loginUser = async (user: LoginInterface) => {
     },
   });
 
-  if (!foundUser) {
+  if (!user) {
     throw new CustomError(
       "NOT_FOUND",
       "Your email or username is invalid",
@@ -31,7 +32,7 @@ export const loginUser = async (user: LoginInterface) => {
   }
 
   // Verify password
-  const isPasswordValid = await bcrypt.compare(password, foundUser.password);
+  const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new CustomError(
       "INVALID_PASSWORD",
@@ -41,9 +42,12 @@ export const loginUser = async (user: LoginInterface) => {
     );
   }
 
-  // Generate token
+  return user;
+};
+
+export const signToken = async (userId: number) => {
   const token = jwt.sign(
-    { userId: foundUser.userId }, // Payload
+    { userId: userId }, // Payload
     process.env.JWT_SECRET as string, // Secret
     { expiresIn: "3d" }, // Token expiration
   );

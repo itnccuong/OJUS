@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt, { hashSync } from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Response } from "express";
@@ -14,8 +14,15 @@ import {
   SendResetLinkConfig,
 } from "../interfaces/api-interface";
 import prisma from "../prisma/client";
-import { registerUser } from "../services/auth.service.ts/register.service";
-import { loginUser } from "../services/auth.service.ts/login.service";
+import {
+  createUser,
+  hashPassword,
+  validateRegisterBody,
+} from "../services/auth.service.ts/register.service";
+import {
+  signToken,
+  validateLoginBody,
+} from "../services/auth.service.ts/login.service";
 
 dotenv.config();
 
@@ -23,9 +30,11 @@ const register = async (
   req: CustomRequest<RegisterConfig, any>,
   res: Response,
 ) => {
-  const registerBody = req.body;
-  const user = await registerUser(registerBody);
+  const { email, fullname, password, username } = req.body;
+  await validateRegisterBody(req.body);
 
+  const hashedPassword = hashPassword(password);
+  const user = await createUser(email, fullname, hashedPassword, username);
   return successResponse(res, { user }, STATUS_CODE.CREATED);
 };
 
@@ -33,9 +42,14 @@ const login = async (
   req: CustomRequest<LoginInterface, any>,
   res: Response,
 ) => {
-  const token = await loginUser(req.body);
+  const user = await validateLoginBody(req.body);
+  const token = await signToken(user.userId);
 
-  return successResponse(res, { token: token }, STATUS_CODE.SUCCESS);
+  return successResponse(
+    res,
+    { user: user, token: token },
+    STATUS_CODE.SUCCESS,
+  );
 };
 
 const sendResetLink = async (

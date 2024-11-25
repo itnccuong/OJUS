@@ -4,8 +4,8 @@ import { CustomError } from "../../utils/error";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcrypt";
 
-export const registerUser = async (user: RegisterConfig) => {
-  const { email, fullname, password, username } = user;
+export const validateRegisterBody = async (data: RegisterConfig) => {
+  const { email, fullname, password, username } = data;
   if (!email || !fullname || !password || !username) {
     throw new CustomError(
       "VALIDATION_ERROR",
@@ -31,11 +31,20 @@ export const registerUser = async (user: RegisterConfig) => {
       {},
     );
   }
+};
 
+export const hashPassword = (password: string) => {
   const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
+  return bcrypt.hashSync(password, salt);
+};
 
-  const res = await prisma.user.create({
+export const createUser = async (
+  email: string,
+  fullname: string,
+  hashedPassword: string,
+  username: string,
+) => {
+  const user = await prisma.user.create({
     data: {
       email: email,
       fullname: fullname,
@@ -43,5 +52,5 @@ export const registerUser = async (user: RegisterConfig) => {
       username: username,
     },
   });
-  return res;
+  return user;
 };
