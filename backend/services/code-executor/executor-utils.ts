@@ -185,7 +185,6 @@ const compile = async (filenameWithExtension: string, language: string) => {
  * @param input - The input to pass to the program.
  * @param expectedOutput - Expected output
  * @param language - The language of the file.
- * @param onProgress - Callback for progress events.
  * @param timeLimit - Time limit
  * @returns Promise<string> - Returns the verdict
  */
@@ -194,7 +193,6 @@ const executeAgainstTestcase = async (
   input: string,
   expectedOutput: string,
   language: string,
-  onProgress: (data: string, type: string, pid: number) => void | null,
   timeLimit: number,
 ): Promise<ExecuteInterface> => {
   const container = languageDetails[language].container;
@@ -230,16 +228,10 @@ const executeAgainstTestcase = async (
 
     cmd.stdout.on("data", (data) => {
       stdout += data.toString();
-      if (onProgress && cmd.pid !== undefined) {
-        onProgress(data.toString(), STDOUT, cmd.pid);
-      }
     });
 
     cmd.stderr.on("data", (data) => {
       stderr += data.toString();
-      if (onProgress && cmd.pid !== undefined) {
-        onProgress(data.toString(), STDERR, cmd.pid);
-      }
     });
 
     cmd.on("error", (err) => {

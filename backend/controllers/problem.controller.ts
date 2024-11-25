@@ -66,7 +66,6 @@ const submit = async (
     );
   }
   const testcaseLength = testcase.input.length;
-
   const timeLimit = problem.timeLimit;
 
   for (let index = 0; index < testcaseLength; ++index) {
@@ -77,9 +76,6 @@ const submit = async (
         : testcase.input[index],
       testcase.output[index],
       language,
-      (data, type, pid) => {
-        // console.log(`[${pid}] ${type}: ${data}`);
-      },
       timeLimit,
     );
 
