@@ -1,7 +1,7 @@
-import { RegisterConfig } from "../interfaces/api-interface";
-import prisma from "../prisma/client";
-import { CustomError } from "../utils/error";
-import { STATUS_CODE } from "../utils/constants";
+import { RegisterConfig } from "../../interfaces/api-interface";
+import prisma from "../../prisma/client";
+import { CustomError } from "../../utils/error";
+import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcrypt";
 
 export const registerUser = async (user: RegisterConfig) => {

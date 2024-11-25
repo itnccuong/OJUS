@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
 import nodemailer from "nodemailer";
 
@@ -15,7 +14,8 @@ import {
   SendResetLinkConfig,
 } from "../interfaces/api-interface";
 import prisma from "../prisma/client";
-import { registerUser } from "../services/auth.service";
+import { registerUser } from "../services/auth.service.ts/register.service";
+import { loginUser } from "../services/auth.service.ts/login.service";
 
 dotenv.config();
 
@@ -33,59 +33,9 @@ const login = async (
   req: CustomRequest<LoginInterface, any>,
   res: Response,
 ) => {
-  try {
-    const { usernameOrEmail, password } = req.body;
+  const token = await loginUser(req.body);
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            username: usernameOrEmail,
-          },
-          {
-            email: usernameOrEmail,
-          },
-        ],
-      },
-    });
-
-    if (!user) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid email or username",
-      );
-    }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid password",
-      );
-    }
-
-    // Generate token
-    const token = jwt.sign(
-      { userId: user.userId }, // Payload
-      process.env.JWT_SECRET as string, // Secret
-      { expiresIn: "3d" }, // Token expiration
-    );
-
-    return successResponse(res, { token: token }, STATUS_CODE.SUCCESS);
-  } catch (err: any) {
-    console.log(err);
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
-  }
+  return successResponse(res, { token: token }, STATUS_CODE.SUCCESS);
 };
 
 const sendResetLink = async (
