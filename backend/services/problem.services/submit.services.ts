@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { CustomError } from "../../utils/error";
 import {
   codeDirectory,
