@@ -15,6 +15,7 @@ import {
   SendResetLinkConfig,
 } from "../interfaces/api-interface";
 import prisma from "../prisma/client";
+import { registerUser } from "../services/auth.service";
 
 dotenv.config();
 
@@ -22,68 +23,10 @@ const register = async (
   req: CustomRequest<RegisterConfig, any>,
   res: Response,
 ) => {
-  try {
-    const { email, fullname, password, username } = req.body;
-    if (!email || !fullname || !password || !username) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Please fill all fields!",
-      );
-    }
+  const registerBody = req.body;
+  const user = await registerUser(registerBody);
 
-    const existingEmail = await prisma.user.findFirst({
-      where: {
-        email: email,
-      },
-    });
-
-    if (existingEmail) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "A user is already registered with this e-mail address.",
-      );
-    }
-
-    const existingUsername = await prisma.user.findFirst({
-      where: {
-        username: username,
-      },
-    });
-
-    if (existingUsername) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Username cannot be used. Please choose another username.",
-      );
-    }
-
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
-    const user = await prisma.user.create({
-      data: {
-        email: email,
-        username: username,
-        fullname: fullname,
-        password: hashedPassword,
-      },
-    });
-
-    return successResponse(res, { user }, STATUS_CODE.CREATED);
-  } catch (err: any) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
-  }
+  return successResponse(res, { user }, STATUS_CODE.CREATED);
 };
 
 const login = async (
