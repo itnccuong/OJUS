@@ -93,12 +93,8 @@ export interface ResultConfig {
 
 export interface SubmitCorrectAnswerData {
   submission: SubmissionConfig;
-  results: ResultConfig[];
-  testcase: TestcaseInterface;
 }
 
 export interface SubmitWrongAnswerData {
   submission: SubmissionConfig;
-  results: ResultConfig[];
-  testcase: TestcaseInterface;
 }

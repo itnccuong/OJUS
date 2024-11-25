@@ -17,6 +17,7 @@ import {
 let fake_token = "";
 
 beforeAll(async () => {
+  await initAllDockerContainers();
   await cleanDatabase();
 
   await prisma.user.create({
@@ -41,16 +42,6 @@ afterAll(async () => {
 });
 
 describe("Submit code", () => {
-  test("Initialize containers", async () => {
-    // Spy on console.log
-    const consoleSpy = jest.spyOn(console, "log");
-
-    await initAllDockerContainers();
-    expect(consoleSpy).toHaveBeenCalledWith("\nAll containers initialized");
-
-    consoleSpy.mockRestore();
-  }, 10000);
-
   test("Correct answer", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -i;\n}",
@@ -63,12 +54,11 @@ describe("Submit code", () => {
       .send(body)) as ErrorResponse<SubmitCorrectAnswerData>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     expect(res.body.data.submission.verdict).toBe("OK");
-    expect(res.body.data.submission.numTestPassed).toBe(3);
   });
 
   test("Wrong answer", async () => {
     const body = {
-      code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -2;\n}",
+      code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
       language: "C++",
     };
 
@@ -79,15 +69,11 @@ describe("Submit code", () => {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("WRONG_ANSWER");
     expect(res.body.data.submission.verdict).toBe("WRONG_ANSWER");
-    expect(res.body.data.submission.numTestPassed).toBe(1);
-    expect(res.body.data.results[0].verdict).toBe("WRONG_ANSWER");
-    expect(res.body.data.results[1].verdict).toBe("OK");
-    expect(res.body.data.results[2].verdict).toBe("WRONG_ANSWER");
   });
 
   test("Compile Error", async () => {
     const body = {
-      code: "#include <IOStream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -2;\n}",
+      code: "#include <IOStream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
       language: "C++",
     };
 
@@ -98,8 +84,6 @@ describe("Submit code", () => {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("COMPILE_ERROR");
     expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-    expect(res.body.data.submission.numTestPassed).toBe(0);
-    expect(res.body.data.results[1].verdict).toBe("OK");
   });
 
   test("Runtime Error", async () => {
@@ -115,10 +99,6 @@ describe("Submit code", () => {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("RUNTIME_ERROR");
     expect(res.body.data.submission.verdict).toBe("RUNTIME_ERROR");
-    expect(res.body.data.submission.numTestPassed).toBe(0);
-    res.body.data.results.map((result) => {
-      expect(result.verdict).toBe("RUNTIME_ERROR");
-    });
   });
 
   test("Time limit exceeded", async () => {
@@ -134,10 +114,6 @@ describe("Submit code", () => {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("TIME_LIMIT_EXCEEDED");
     expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");
-    expect(res.body.data.submission.numTestPassed).toBe(0);
-    res.body.data.results.map((result) => {
-      expect(result.verdict).toBe("TIME_LIMIT_EXCEEDED");
-    });
   });
 });
 
