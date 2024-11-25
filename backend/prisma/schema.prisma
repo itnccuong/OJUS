@@ -15,7 +15,7 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  problems   Problem[] // The problems list represents a one-to-many relationship between User and Problem (one user can author many problems).
+  problems   Problem[]
   Submission Submission[]
 }
 
@@ -35,7 +35,6 @@ model Problem {
   fileId     Int          @unique
   file       Files        @relation(fields: [fileId], references: [fileId])
   Submission Submission[]
-  // TestCase   TestCase[]
 }
 
 model Files {
@@ -48,28 +47,17 @@ model Files {
   problem   Problem? // Optional link back to Problem
 }
 
-// model TestCase {
-//   testcaseId Int      @id @default(autoincrement())
-//   problemId  Int
-//   problem    Problem  @relation(fields: [problemId], references: [problemId])
-//   input      String   @db.LongText
-//   output     String   @db.LongText
-//   createdAt  DateTime @default(now())
-//   Result     Result[]
-// }
-
 model Submission {
-  submissionId  Int      @id @default(autoincrement())
-  problemId     Int
-  problem       Problem  @relation(fields: [problemId], references: [problemId])
-  userId        Int
-  user          User     @relation(fields: [userId], references: [userId])
-  code          String   @db.Text
-  language      String
-  verdict       String
-  numTestPassed Int      @default(0)
-  createdAt     DateTime @default(now())
-  Result        Result[]
+  submissionId Int      @id @default(autoincrement())
+  problemId    Int
+  problem      Problem  @relation(fields: [problemId], references: [problemId])
+  userId       Int
+  user         User     @relation(fields: [userId], references: [userId])
+  code         String   @db.Text
+  language     String
+  verdict      String
+  createdAt    DateTime @default(now())
+  Result       Result[]
 }
 
 model Result {
@@ -77,7 +65,6 @@ model Result {
   submissionId  Int
   submission    Submission @relation(fields: [submissionId], references: [submissionId])
   output        String     @db.LongText
-  // testcase     TestCase   @relation(fields: [testcaseId], references: [testcaseId])
   testcaseIndex Int
   verdict       String
   time          Float

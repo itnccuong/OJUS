@@ -1,12 +1,14 @@
 import { exec, spawn } from "child_process";
 import path from "path";
 import { promisify } from "node:util";
-import { CompileError, RuntimeError } from "../../utils/error";
+import { CustomError } from "../../utils/error";
+import { STATUS_CODE } from "../../utils/constants";
 import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
-} from "../../interfaces";
+} from "../../interfaces/code-executor-interface";
+import { getContainerId } from "../problem.services/submit.services";
 
 const codeFiles = "codeFiles";
 const STDOUT = "stdout";
@@ -43,39 +45,40 @@ const languageDetails: Record<string, LanguageDetail> = {
   c: {
     compiledExtension: "out",
     inputFunction: null,
-    compilerCmd: (id) =>
-      `gcc ./${codeFiles}/${id}.c -o ./${codeFiles}/${id}.out -lpthread -lrt`,
-    executorCmd: (id) => `./${codeFiles}/${id}.out`,
+    compilerCmd: (filename) =>
+      `gcc ./${codeFiles}/${filename}.c -o ./${codeFiles}/${filename}.out -lpthread -lrt`,
+    executorCmd: (filename) => `./${codeFiles}/${filename}.out`,
     container: containers.gcc,
   },
   cpp: {
     compiledExtension: "out",
     inputFunction: null,
-    compilerCmd: (id) =>
-      `g++ ./${codeFiles}/${id}.cpp -o ./${codeFiles}/${id}.out`,
-    executorCmd: (id) => `./${codeFiles}/${id}.out`,
+    compilerCmd: (filename) =>
+      `g++ ./${codeFiles}/${filename}.cpp -o ./${codeFiles}/${filename}.out`,
+    executorCmd: (filename) => `./${codeFiles}/${filename}.out`,
     container: containers.gcc,
   },
   py: {
     compiledExtension: "",
     inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
     compilerCmd: null,
-    executorCmd: (id) => `python ./${codeFiles}/${id}`,
+    executorCmd: (filename) => `python ./${codeFiles}/${filename}`,
     container: containers.py,
   },
   js: {
     compiledExtension: "",
     inputFunction: null,
     compilerCmd: null,
-    executorCmd: (id) => `node ./${codeDirectory}/${id}`,
+    executorCmd: (filename) => `node ./${codeDirectory}/${filename}`,
     container: containers.js,
   },
   java: {
     compiledExtension: "class",
     inputFunction: null,
-    compilerCmd: (id) =>
-      `javac -d ./${codeDirectory}/${id} ./${codeDirectory}/${id}.java`,
-    executorCmd: (id) => `java -cp ./${codeDirectory}/${id} Solution`,
+    compilerCmd: (filename) =>
+      `javac -d ./${codeDirectory}/${filename} ./${codeDirectory}/${filename}.java`,
+    executorCmd: (filename) =>
+      `java -cp ./${codeDirectory}/${filename} Solution`,
     container: containers.java,
   },
 };
@@ -99,7 +102,7 @@ const createContainer = async (container: ContainerConfig) => {
  * @param container_name - The container ID or name.
  * @returns Promise<string> - Returns the container ID.
  */
-const getContainerId = async (container_name: string) => {
+const getContainerIdByName = async (container_name: string) => {
   const running = await execAsync(
     `docker container ps --filter "name=${container_name}" --format "{{.ID}}"`,
   );
@@ -120,7 +123,7 @@ const killContainer = async (container_name: string) => {
  */
 const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
-  const container_id = await getContainerId(name);
+  const container_id = await getContainerIdByName(name);
 
   if (container_id) {
     await killContainer(container_id);
@@ -144,36 +147,40 @@ const initAllDockerContainers = async () => {
 
 /**
  * Compiles the code inside a Docker container.
- * @param containerId - The container ID.
- * @param filename - The file name to compile.
+ * @param filenameWithExtension - The file name to compile.
  * @param language - The language of the file.
- * @returns Promise<string> - Returns the file ID.
+ * @returns Promise<string | null> - Returns the filename if compile successfully, otherwise null.
  */
-const compile = async (
-  containerId: string,
-  filename: string,
-  language: string,
-) => {
-  const id = filename.split(".")[0];
+const compile = async (filenameWithExtension: string, language: string) => {
+  const filename = filenameWithExtension.split(".")[0];
   const command = languageDetails[language].compilerCmd
-    ? languageDetails[language].compilerCmd(id)
+    ? languageDetails[language].compilerCmd(filename)
     : null;
 
   if (!command) {
-    return filename;
+    return null;
   }
 
   try {
+    const container = languageDetails[language].container;
+    const containerId = getContainerId(container);
     await execAsync(`docker exec ${containerId} ${command}`);
-    return id;
+    return filename;
   } catch (error: any) {
-    throw new CompileError(error.stderr);
+    // throw new CustomError(
+    //   "COMPILE_ERROR",
+    //   "Compile error!",
+    //   STATUS_CODE.BAD_REQUEST,
+    //   {
+    //     stderr: error.stderr,
+    //   },
+    // );
+    return null;
   }
 };
 
 /**
  * Executes the compiled code or code inside a Docker container.
- * @param containerId - The container ID.
  * @param filename - The file name to execute.
  * @param input - The input to pass to the program.
  * @param expectedOutput - Expected output
@@ -183,7 +190,6 @@ const compile = async (
  * @returns Promise<string> - Returns the verdict
  */
 const executeAgainstTestcase = async (
-  containerId: string,
   filename: string,
   input: string,
   expectedOutput: string,
@@ -191,6 +197,9 @@ const executeAgainstTestcase = async (
   onProgress: (data: string, type: string, pid: number) => void | null,
   timeLimit: number,
 ): Promise<ExecuteInterface> => {
+  const container = languageDetails[language].container;
+  const containerId = getContainerId(container);
+
   const command = languageDetails[language].executorCmd(filename);
 
   if (!command) throw new Error("Language Not Supported");
@@ -216,7 +225,7 @@ const executeAgainstTestcase = async (
     }, timeLimit);
 
     cmd.stdin.on("error", (err) => {
-      reject(new RuntimeError(err.message, cmd.pid));
+      reject(new Error(err.message));
     });
 
     cmd.stdout.on("data", (data) => {
@@ -234,13 +243,12 @@ const executeAgainstTestcase = async (
     });
 
     cmd.on("error", (err) => {
-      reject(new RuntimeError(err.message, cmd.pid));
+      reject(new Error(err.message));
     });
 
     //Can also use close instead of exit?
     cmd.on("exit", (exitCode) => {
       clearTimeout(timeoutId);
-      // console.log("Stdout on exit", stdout);
       if (isTimeout) {
         resolve({
           stdout: stdout,
@@ -248,9 +256,10 @@ const executeAgainstTestcase = async (
         });
       }
       if (exitCode !== 0) {
-        reject(
-          new RuntimeError(`Error while executing command`, cmd.pid, exitCode),
-        );
+        resolve({
+          stdout: "",
+          verdict: "RUNTIME_ERROR",
+        });
       }
       if (stdout !== expectedOutput) {
         resolve({

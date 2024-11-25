@@ -134,11 +134,10 @@ The matching should cover the **entire** input string (not partial).
         ),
         {
           pending: "Submitting...",
-          // success: "Submit successfully!",
+          success: "All test cases passed",
           // error: "Failed to submit",
         },
       );
-      toast.success(res.data.message);
       console.log("Submit response: ", res.data);
     } catch (error: any) {
       toast.error(error.response.data.message);

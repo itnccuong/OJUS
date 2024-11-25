@@ -21,18 +21,11 @@ export interface ExecuteInterface {
     | "WRONG_ANSWER"
     | "OK"
     | "TIME_LIMIT_EXCEEDED"
-    | "MEMORY_LIMIT_EXCEEDED";
+    | "MEMORY_LIMIT_EXCEEDED"
+    | "RUNTIME_ERROR";
 }
 
-export interface UserConfig {
-  userId: number;
-  username: string;
-  email: string;
-  fullname: string;
-  password: string;
-}
-
-export interface testcaseInterface {
+export interface TestcaseInterface {
   input: string[];
   output: string[];
 }
