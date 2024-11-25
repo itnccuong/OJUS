@@ -26,7 +26,7 @@ beforeAll(async () => {
   await prisma.files.create({
     data: fileData,
   });
-  const res = await prisma.problem.create({
+  await prisma.problem.create({
     data: problemData,
   });
   fake_token = jwt.sign(
@@ -37,7 +37,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await cleanDatabase();
+  // await cleanDatabase();
   await prisma.$disconnect();
 });
 
