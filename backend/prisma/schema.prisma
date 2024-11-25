@@ -48,17 +48,16 @@ model Files {
 }
 
 model Submission {
-  submissionId  Int      @id @default(autoincrement())
-  problemId     Int
-  problem       Problem  @relation(fields: [problemId], references: [problemId])
-  userId        Int
-  user          User     @relation(fields: [userId], references: [userId])
-  code          String   @db.Text
-  language      String
-  verdict       String
-  numTestPassed Int      @default(0)
-  createdAt     DateTime @default(now())
-  Result        Result[]
+  submissionId Int      @id @default(autoincrement())
+  problemId    Int
+  problem      Problem  @relation(fields: [problemId], references: [problemId])
+  userId       Int
+  user         User     @relation(fields: [userId], references: [userId])
+  code         String   @db.Text
+  language     String
+  verdict      String
+  createdAt    DateTime @default(now())
+  Result       Result[]
 }
 
 model Result {
