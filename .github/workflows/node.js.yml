@@ -53,6 +53,7 @@ jobs:
         touch ./backend/services/code-executor/codeFiles
         echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> ./backend/.env
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./backend/.env.test
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./backend/.env
     - run: npm run build --if-present
       working-directory: ./backend
     - run: npm test
