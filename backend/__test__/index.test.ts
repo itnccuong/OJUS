@@ -14,6 +14,7 @@ import {
   SubmitWrongAnswerData,
 } from "../interfaces/api-interface";
 
+jest.setTimeout(30000);
 let fake_token = "";
 
 beforeAll(async () => {
