@@ -52,7 +52,7 @@ const submit = async (
   if (!filename) {
     submission = await updateSubmissionVerdict(
       submission.submissionId,
-      "COMPILE_ERROR",
+      "COMPILE_ERROR_TEST",
     );
 
     return errorResponse(
