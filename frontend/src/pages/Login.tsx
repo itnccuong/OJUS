@@ -6,8 +6,8 @@ import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
+import storageKeyMap from "../../utils/storageKeyMap.ts";
 
-/* eslint-disable jsx-a11y/anchor-is-valid */
 export default function Login() {
   const navigate = useNavigate();
 
@@ -24,8 +24,7 @@ export default function Login() {
       });
       console.log(data);
       toast.success("Logged in successfully");
-      localStorage.setItem("user", JSON.stringify(data.data));
-      localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem(storageKeyMap.token, data.data.token);
       navigate("/");
     } catch (error: any) {
       toast.error(error.response.data.message);
@@ -118,7 +117,7 @@ export default function Login() {
           </div>
         </Form>
       </div>
-        <Footer />
+      <Footer />
     </div>
   );
 }

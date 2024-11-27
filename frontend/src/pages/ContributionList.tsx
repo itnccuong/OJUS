@@ -5,16 +5,38 @@ import Footer from "../components/Footer";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import getToken from "../../utils/getToken";
 
-// import { useEffect } from "react";
+
+import { useEffect } from "react";
+
+import axios from 'axios';
+import getURL from "../../utils/getURL";
 
 interface Tag {
   label: string;
   selected: boolean;
 }
 
+interface ProblemList {
+  id: number;
+  title: string;
+  tags: string;
+  difficulty: string;
+}
+
 export default function ContributionList() {
   const navigate = useNavigate();
+
+  //Check if user is logged in
+  const token = getToken();
+  useEffect(() => {
+    if (!token) {
+      console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
+
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
     { label: "String", selected: false },
@@ -45,134 +67,60 @@ export default function ContributionList() {
   const handleResetTags = () => {
     setTags(initialTags);
   };
-
+  
+  const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
+  const [contributes, setContributes] = useState([]);
+  
+  useEffect(() => {
+    const fetchContributes = async () => {
+      try {
+        const response = await fetch(getURL('/api/contributes/contribute_all'), {
+          headers: { Authorization: "Bearer " + token },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Lỗi khi tải dữ liệu');
+        }
+  
+        const data = await response.json();
+        if (!data.data.contributes) {
+          console.error("No contributes found");
+          return;
+        }
+  
+        setContributes(data.data.contributes);
+      } catch (error) {
+      } finally {
+      }
+    };
+  
+    fetchContributes();
+  }, []);
+  
+  // Chuyển đổi dữ liệu từ contribute thành problem
+  useEffect(() => {
+    const allProblems = contributes.map((contribute) => {
+      const difficultyMapping = { 1: "Easy", 2: "Medium", 3: "Hard" };
+  
+      return {
+        id: contribute.problemId,
+        title: contribute.title,
+        difficulty: difficultyMapping[contribute.difficulty] || "Unknown",
+        tags: splitString(contribute.tags),
+      };
+    });
+  
+    setProblems(allProblems); // Cập nhật state của Problems
+  }, [contributes]); // Khi contributes thay đổi, sẽ cập nhật lại Problems
+  
+  function splitString(inputString) {
+    return inputString.split(',');
+  }
+  
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
     navigate(`/contributions/${randomProblem.id}/description`);
   };
-
-  const Problems = [
-    {
-      id: 1,
-      title: "2689. Maximum Number of Moves in a Grid",
-      difficulty: "Medium",
-      tags: ["Array", "Dynamic Programming"],
-    },
-    {
-      id: 2,
-      title: "1. Two Sum",
-      difficulty: "Easy",
-      tags: ["Array", "Hash Table"],
-    },
-    {
-      id: 3,
-      title: "2. Add Two Numbers",
-      difficulty: "Medium",
-      tags: ["Linked List", "Math"],
-    },
-    {
-      id: 4,
-      title: "3. Longest Substring Without Repeating Characters",
-      difficulty: "Medium",
-      tags: ["String", "Sliding Window"],
-    },
-    {
-      id: 5,
-      title: "4. Median of Two Sorted Arrays",
-      difficulty: "Hard",
-      tags: ["Array", "Binary Search"],
-    },
-    {
-      id: 6,
-      title: "5. Longest Palindromic Substring",
-      difficulty: "Medium",
-      tags: ["String", "Dynamic Programming"],
-    },
-    {
-      id: 7,
-      title: "6. Zigzag Conversion",
-      difficulty: "Medium",
-      tags: ["String"],
-    },
-    {
-      id: 8,
-      title: "7. Reverse Integer",
-      difficulty: "Medium",
-      tags: ["Math"],
-    },
-    {
-      id: 9,
-      title: "8. String to Integer (atoi)",
-      difficulty: "Medium",
-      tags: ["String", "Math"],
-    },
-    {
-      id: 10,
-      title: "9. Palindrome Number",
-      difficulty: "Easy",
-      tags: ["Math"],
-    },
-    {
-      id: 11,
-      title: "10. Regular Expression Matching",
-      difficulty: "Hard",
-      tags: ["String", "Dynamic Programming"],
-    },
-    {
-      id: 12,
-      title: "11. Container With Most Water",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers"],
-    },
-    {
-      id: 13,
-      title: "12. Integer to Roman",
-      difficulty: "Medium",
-      tags: ["Math", "String"],
-    },
-    {
-      id: 14,
-      title: "13. Roman to Integer",
-      difficulty: "Easy",
-      tags: ["Math", "String"],
-    },
-    {
-      id: 15,
-      title: "14. Longest Common Prefix",
-      difficulty: "Easy",
-      tags: ["String"],
-    },
-    {
-      id: 16,
-      title: "15. 3Sum",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers", "Sorting"],
-    },
-    {
-      id: 17,
-      title: "16. 3Sum Closest",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers"],
-    },
-    {
-      id: 18,
-      title: "17. Letter Combinations of a Phone Number",
-      difficulty: "Medium",
-      tags: ["String", "Backtracking"],
-    },
-    {
-      id: 19,
-      title: "18. 4Sum",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers", "Sorting"],
-    },
-    {
-      id: 20,
-      title: "19. Remove Nth Node From End of List",
-      difficulty: "Medium",
-      tags: ["Linked List", "Two Pointers"],
-    },
-  ];
 
   const Difficulty = ["Easy", "Medium", "Hard"];
 
@@ -304,7 +252,6 @@ export default function ContributionList() {
           <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
-                {/* <div className="d-flex"> */}
                 <th style={{ width: "40%" }}>
                   <div
                     className="d-flex justify-content-between"
@@ -318,66 +265,66 @@ export default function ContributionList() {
                     <span>Title</span>
                     <img
                       src="/sort.svg"
-                      // width="30"
-                      // height="24"
                       alt="React Bootstrap logo"
                     />
                   </div>
                 </th>
-                {/* </div> */}
                 <th style={{ width: "40%" }}>Tags</th>
                 <th>Difficulty</th>
               </tr>
             </thead>
             <tbody>
-              {filteredProblems.map((problem) => (
-                <tr key={problem.id}>
-                  <td>
-                    <Link
-                      to={`/contributions/${problem.id}/description`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {problem.title}
-                    </Link>
-                  </td>
-
-                  <td>
-                    {problem.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="badge rounded-pill m-1 bg-secondary"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </td>
-
-                  <td>
-                    <span
-                      className={`badge ${
-                        problem.difficulty === "Easy"
-                          ? "text-success"
-                          : problem.difficulty === "Medium"
-                            ? "text-warning"
-                            : "text-danger"
-                      }`}
-                    >
-                      {problem.difficulty}
-                    </span>
+              {/* Kiểm tra nếu không có vấn đề nào trong Problems */}
+              {filteredProblems.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="text-center">
+                    <strong>No problems found</strong>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredProblems.map((problem) => (
+                  <tr key={problem.id}>
+                    <td>
+                      <Link
+                        to={`/contributions/${problem.id}/description`}
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "blue")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "black")}
+                      >
+                        {problem.title}
+                      </Link>
+                    </td>
+
+                    <td>
+                      {problem.tags.map((tag, index) => (
+                        <span key={index} className="badge rounded-pill m-1 bg-secondary">
+                          {tag}
+                        </span>
+                      ))}
+                    </td>
+
+                    <td>
+                      <span
+                        className={`badge ${
+                          problem.difficulty === "Easy"
+                            ? "text-success"
+                            : problem.difficulty === "Medium"
+                            ? "text-warning"
+                            : "text-danger"
+                        }`}
+                      >
+                        {problem.difficulty}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </Table>
+
         </div>
         <Footer />
       </div>

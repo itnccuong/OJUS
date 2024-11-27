@@ -1,36 +1,34 @@
 import { Accordion, Button, Container, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-// import {StorageConfig} from "../../interfaces/interface";
-// import getStorage from "../../utils/getStorage";
-// import {useNavigate} from "react-router-dom";
+import getURL from "../../utils/getURL";
 import { toast } from "react-toastify";
-import getStorage from "../../utils/getStorage";
+// import getStorage from "../../utils/getStorage";
 import getToken from "../../utils/getToken";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const getUserInfo = () => {
-  const userData = getStorage(); // Gọi hàm getStorage
-
-  if ( !userData) {
-    console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
-    return null;
-  }
-
-  const username = userData.user.username; // Lấy username từ user storage
-  return { username };
-};
-
-// Sử dụng
-const userInfo = getUserInfo();
-if (userInfo) {
-  console.log("Đã lấy thông tin người dùng:", userInfo);
-} else {
-  console.error("Không thể lấy thông tin người dùng.");
-}
-
+// const getUserInfo = () => {
+//   const userData = getStorage(); // Gọi hàm getStorage
+//
+//   if ( !userData) {
+//     console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+//     return null;
+//   }
+//
+//   const username = userData.user.username; // Lấy username từ user storage
+//   return { username };
+// };
+//
+// // Sử dụng
+// const userInfo = getUserInfo();
+// if (userInfo) {
+//   console.log("Đã lấy thông tin người dùng:", userInfo);
+// } else {
+//   console.error("Không thể lấy thông tin người dùng.");
+// }
 
 interface Tag {
   label: string;
@@ -38,6 +36,16 @@ interface Tag {
 }
 
 export default function Contribute() {
+  //Check if user is logged in
+  const navigate = useNavigate();
+  const token = getToken();
+  useEffect(() => {
+    if (!token) {
+      console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState(1);
@@ -75,13 +83,15 @@ export default function Contribute() {
     setTags(initialTags);
   };
 
-
   // const [outputFile, setOutputFile] = useState<File | null>(null);
 
   const [isMarkdown, setIsMarkdown] = useState(false);
 
-
-    const initializeUpload = async (fileName: string, fileSize: number, contentType: string) => {
+  const initializeUpload = async (
+    fileName: string,
+    fileSize: number,
+    contentType: string,
+  ) => {
     const response = await axios.post(getURL("/upload/start-upload"), {
       file_name: fileName,
       file_size: fileSize,
@@ -123,7 +133,11 @@ export default function Contribute() {
     return etags;
   };
 
-  const completeUpload = async (key: string, uploadId: string, etags: string[]) => {
+  const completeUpload = async (
+    key: string,
+    uploadId: string,
+    etags: string[],
+  ) => {
     const response = await axios.post(getURL("/upload/complete-upload"), {
       key,
       upload_id: uploadId,
@@ -142,19 +156,31 @@ export default function Contribute() {
 
     try {
       // Initialize upload
-      const uploadDetails = await initializeUpload(file.name, file.size, file.type);
+      const uploadDetails = await initializeUpload(
+        file.name,
+        file.size,
+        file.type,
+      );
 
       // Upload file chunks
-      const etags = await uploadToS3(file, uploadDetails.chunk_size, uploadDetails.urls);
+      const etags = await uploadToS3(
+        file,
+        uploadDetails.chunk_size,
+        uploadDetails.urls,
+      );
 
       // Complete the upload
-      const fileUrl = await completeUpload(uploadDetails.key, uploadDetails.upload_id, etags);
+      const fileUrl = await completeUpload(
+        uploadDetails.key,
+        uploadDetails.upload_id,
+        etags,
+      );
 
       // Prepare API payload
       const selectedTags = tags
-      .filter((tag) => tag.selected)
-      .map((tag) => tag.label)
-      .join(","); // Chuyển thành chuỗi với dấu phẩy
+        .filter((tag) => tag.selected)
+        .map((tag) => tag.label)
+        .join(","); // Chuyển thành chuỗi với dấu phẩy
       const payload = {
         title,
         description,
@@ -169,7 +195,7 @@ export default function Contribute() {
 
       // Submit the form
       const response = await axios.post(getURL("/api/contributes"), payload, {
-        headers: { Authorization: "Bearer " +  getToken()},
+        headers: { Authorization: "Bearer " + token },
       });
 
       toast.success("Your question has been submitted");

@@ -86,6 +86,28 @@ const getOneContribute = async (req: Request, res: Response) => {
   }
 };
 
+const getAllContribute = async (req: Request, res: Response) => {
+  try {
+    // Lấy tất cả các contribute với isActive = false
+    const contributes = await prisma.problem.findMany({
+      where: {
+        isActive: false,
+      },
+    });
+
+    // Kiểm tra nếu không có kết quả nào
+    if (!contributes || contributes.length === 0) {
+      return formatResponse(res, {}, STATUS_CODE.NOT_FOUND, "No contributes found!");
+    }
+
+    // Trả về kết quả
+    return formatResponse(res, { contributes }, STATUS_CODE.SUCCESS, "Contributes fetched successfully!");
+  } catch (err: any) {
+    // Xử lý lỗi nếu có
+    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+  }
+};
+
 
 
 const acceptContribute = async (req: Request, res: Response) => {
@@ -166,4 +188,4 @@ const rejectContribute = async (req: Request, res: Response) => {
   }
 };
 
-export { searchContribute, getOneContribute, submitContribute, acceptContribute, rejectContribute };
+export { searchContribute, getOneContribute, getAllContribute, submitContribute, acceptContribute, rejectContribute };
