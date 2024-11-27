@@ -10,26 +10,6 @@ import getToken from "../../utils/getToken";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// const getUserInfo = () => {
-//   const userData = getStorage(); // Gọi hàm getStorage
-//
-//   if ( !userData) {
-//     console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
-//     return null;
-//   }
-//
-//   const username = userData.user.username; // Lấy username từ user storage
-//   return { username };
-// };
-//
-// // Sử dụng
-// const userInfo = getUserInfo();
-// if (userInfo) {
-//   console.log("Đã lấy thông tin người dùng:", userInfo);
-// } else {
-//   console.error("Không thể lấy thông tin người dùng.");
-// }
-
 interface Tag {
   label: string;
   selected: boolean;
@@ -39,6 +19,7 @@ export default function Contribute() {
   //Check if user is logged in
   const navigate = useNavigate();
   const token = getToken();
+  console.log(token);
   useEffect(() => {
     if (!token) {
       console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");

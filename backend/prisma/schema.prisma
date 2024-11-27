@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  userId    Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
+  userId    Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
   fullname  String
   password  String
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  problems  Problem[] // The problems list represents a one-to-many relationship between User and Problem (one user can author many problems).
+  problems   Problem[]
+  Submission Submission[]
 }
 
 model Problem {
@@ -29,18 +30,44 @@ model Problem {
   memoryLimit Int
   createdAt   DateTime  @default(now())
   authorId    Int
-  author      User      @relation(fields: [authorId], references: [userId])
+  author      User     @relation(fields: [authorId], references: [userId])
 
-  fileId      Int       @unique
-  file        Files     @relation(fields: [fileId], references: [fileId])
+  fileId     Int          @unique
+  file       Files        @relation(fields: [fileId], references: [fileId])
+  Submission Submission[]
 }
 
 model Files {
-  fileId     Int        @id @default(autoincrement())
-  filename   String
-  filesize   Int
-  fileType   String
-  location   String
-  createdAt  DateTime   @default(now())
-  problem    Problem?   // Optional link back to Problem
+  fileId    Int      @id @default(autoincrement())
+  filename  String
+  filesize  Int
+  fileType  String
+  location  String
+  createdAt DateTime @default(now())
+  problem   Problem? // Optional link back to Problem
+}
+
+model Submission {
+  submissionId Int      @id @default(autoincrement())
+  problemId    Int
+  problem      Problem  @relation(fields: [problemId], references: [problemId])
+  userId       Int
+  user         User     @relation(fields: [userId], references: [userId])
+  code         String   @db.Text
+  language     String
+  verdict      String
+  createdAt    DateTime @default(now())
+  Result       Result[]
+}
+
+model Result {
+  resultId      Int        @id @default(autoincrement())
+  submissionId  Int
+  submission    Submission @relation(fields: [submissionId], references: [submissionId])
+  output        String     @db.LongText
+  testcaseIndex Int
+  verdict       String
+  time          Float
+  memory        Int
+  createdAt     DateTime   @default(now())
 }

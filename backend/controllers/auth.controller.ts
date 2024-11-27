@@ -1,154 +1,61 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-dotenv.config();
-
-import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { Response } from "express";
 import nodemailer from "nodemailer";
 
-import { formatResponse, STATUS_CODE } from "../utils/services";
-const prisma = new PrismaClient();
+import { formatResponse, successResponse } from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
+import {
+  ChangePasswordConfig,
+  CustomRequest,
+  LoginInterface,
+  RegisterConfig,
+  SendResetLinkConfig,
+} from "../interfaces/api-interface";
+import prisma from "../prisma/client";
+import {
+  createUser,
+  hashPassword,
+  validateRegisterBody,
+} from "../services/auth.services/register.service";
+import {
+  signToken,
+  validateLoginBody,
+} from "../services/auth.services/login.service";
 
-const register = async (req: Request, res: Response) => {
-  try {
-    const { email, fullname, password, username } = req.body;
+dotenv.config();
 
-    if (!email || !fullname || !password || !username) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Please fill all fields!",
-      );
-    }
+const register = async (
+  req: CustomRequest<RegisterConfig, any>,
+  res: Response,
+) => {
+  const { email, fullname, password, username } = req.body;
+  await validateRegisterBody(req.body);
 
-    const existingEmail = await prisma.user.findFirst({
-      where: {
-        email: email,
-      },
-    });
-
-    if (existingEmail) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "A user is already registered with this e-mail address.",
-      );
-    }
-
-    const existingUsername = await prisma.user.findFirst({
-      where: {
-        username: username,
-      },
-    });
-
-    if (existingUsername) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Username cannot be used. Please choose another username.",
-      );
-    }
-
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
-
-    const user = await prisma.user.create({
-      data: {
-        email: email,
-        username: username,
-        fullname: fullname,
-        password: hashedPassword,
-      },
-    });
-
-    return formatResponse(
-      res,
-      { user },
-      STATUS_CODE.SUCCESS,
-      "Create account successfully!",
-    );
-  } catch (err: any) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
-  }
+  const hashedPassword = hashPassword(password);
+  const user = await createUser(email, fullname, hashedPassword, username);
+  return successResponse(res, { user }, STATUS_CODE.CREATED);
 };
 
-const login = async (req: Request, res: Response) => {
-  try {
-    const { usernameOrEmail, password } = req.body;
+const login = async (
+  req: CustomRequest<LoginInterface, any>,
+  res: Response,
+) => {
+  const user = await validateLoginBody(req.body);
+  const token = await signToken(user.userId);
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            username: usernameOrEmail,
-          },
-          {
-            email: usernameOrEmail,
-          },
-        ],
-      },
-    });
-
-    if (!user) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid email or username",
-      );
-    }
-
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Invalid password",
-      );
-    }
-
-    // Generate token
-    const token = jwt.sign(
-      user,
-      process.env.JWT_SECRET as string, // Secret
-      { expiresIn: "3d" }, // Token expiration
-    );
-
-    return formatResponse(
-      res,
-      {
-        token: token,
-        // user: {
-        //   id: user.userId,
-        //   email: user.email,
-        //   username: user.username,
-        // },
-      },
-      STATUS_CODE.SUCCESS,
-      "Login successfully!",
-    );
-  } catch (err: any) {
-    return formatResponse(
-      res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-      err.message,
-    );
-  }
+  return successResponse(
+    res,
+    { user: user, token: token },
+    STATUS_CODE.SUCCESS,
+  );
 };
 
-const sendResetLink = async (req: Request, res: Response) => {
+const sendResetLink = async (
+  req: CustomRequest<SendResetLinkConfig, any>,
+  res: Response,
+) => {
   const { email } = req.body;
 
   try {
@@ -181,7 +88,7 @@ const sendResetLink = async (req: Request, res: Response) => {
 
     // Set up email data
     const mailOptions = {
-      from: '"Vua Leetcode" <no-reply@vualeetcode.com>', // Sender address
+      from: '"OJUS" <no-reply@ojus.com>', // Sender address
       to: email, // Receiver's email
       subject: "Password Reset E-mail",
       // text: `You're receiving this e-mail because you or someone else has requested a password reset for your user account at.
@@ -214,7 +121,10 @@ const sendResetLink = async (req: Request, res: Response) => {
   }
 };
 
-const changePassword = async (req: Request, res: Response) => {
+const changePassword = async (
+  req: CustomRequest<ChangePasswordConfig, any>,
+  res: Response,
+) => {
   const { token, newPassword } = req.body;
 
   try {

@@ -3,7 +3,8 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponse, STATUS_CODE } from "../utils/services";
+import {formatResponse} from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
 
 
 const prisma = new PrismaClient();
@@ -46,7 +47,7 @@ const submitContribute = async (req: SubmitContribute, res: Response) => {
       tags: tags,
       timeLimit: parseInt(timeLimit, 10),
       memoryLimit: parseInt(memoryLimit, 10),
-      authorId: req.user.userId,
+      authorId: req.userId,
       fileId: file.fileId
       },
     });

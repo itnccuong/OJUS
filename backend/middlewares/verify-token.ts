@@ -1,43 +1,43 @@
-import { formatResponse, STATUS_CODE } from '../utils/services';
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { formatResponse } from "../utils/formatResponse";
+import { STATUS_CODE } from "../utils/constants";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-interface AuthRequest extends Request {
-  user?: jwt.JwtPayload;
+interface DecodeToken {
+  userId: number;
+  iat: number;
+  exp: number;
 }
 
-export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  const token = req.headers['authorization']?.split(' ')[1];
+declare module "express-serve-static-core" {
+  export interface Request {
+    userId: number;
+  }
+}
 
-  // console.log(token);
+export const verifyToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  const token = req.headers["authorization"]?.split(" ")[1];
 
   if (!token) {
     res.status(401).json({
-      message: 'Access Denied: No token provided'
+      message: "Access Denied: No token provided",
     });
     return;
   }
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
     if (err) {
-      if (err.name === 'TokenExpiredError') {
-
-        return formatResponse(
-          res,
-          {},
-          STATUS_CODE.UNAUTHORIZED,
-          err.message,
-        );
+      if (err.name === "TokenExpiredError") {
+        return formatResponse(res, {}, STATUS_CODE.UNAUTHORIZED, err.message);
       } else {
-        return formatResponse(
-          res,
-          {},
-          STATUS_CODE.UNAUTHORIZED,
-          err.message,
-        );
+        return formatResponse(res, {}, STATUS_CODE.UNAUTHORIZED, err.message);
       }
     } else {
-      req.user = decoded as jwt.JwtPayload;
+      req.userId = (decoded as DecodeToken).userId;
       next();
     }
   });
