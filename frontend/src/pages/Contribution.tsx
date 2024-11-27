@@ -4,6 +4,10 @@ import NavBar from "../components/NavBar";
 import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import { useEffect } from "react";
+import getURL from "../../utils/getURL";
+import getToken from "../../utils/getToken";
+import axios from 'axios';
 
 // import SyntaxHighlighter from "react-syntax-highlighter";
 // import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -21,9 +25,18 @@ import CodeEditor from "@uiw/react-textarea-code-editor";
 import rehypePrism from "rehype-prism-plus";
 
 export default function Contribution() {
-  const { id } = useParams();
-  const { page } = useParams();
-  const difficulty: string = "Medium";
+
+  //Check if user is logged in
+  const token = getToken();
+
+
+  const { id, page } = useParams();
+
+  useEffect(() => {
+    console.log("Updated id:", id);
+    console.log("Updated page:", page);
+  }, [id, page]);
+
 
   const tags: string[] = [
     "Array",
@@ -63,6 +76,89 @@ export default function Contribution() {
   // const highlightCode = (code: string) =>
   //   Prism.highlight(code, Prism.languages.javascript, "javascript");
 
+  const [problem, setProblem] = useState(null);
+
+  useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        const response = await fetch(getURL(`/api/contributes/${id}`), {
+          headers: { Authorization: "Bearer " + token },
+        }); 
+        
+        // Gọi API lấy dữ liệu problem
+        if (!response.ok) {
+          throw new Error('Lỗi khi tải dữ liệu');
+        }
+        const data = await response.json();
+        setProblem(data.data.contribute); // Lưu dữ liệu vào state  
+      } catch (error) {
+      } finally {
+      }
+    };
+
+    fetchProblem();
+  }, [id]);
+
+  console.log(problem);
+
+  const Visible = {
+    title : "TITLE",
+    difficulty : "Easy",
+    description : "Description",
+    tags: ["Array", "Dynamic Programming"],
+  };
+
+  if(problem){
+    Visible.title = problem.title;
+    Visible.difficulty = 
+    problem.difficulty === 1 ? "Easy" : 
+    problem.difficulty === 2 ? "Medium" : 
+    problem.difficulty === 3 ? "Hard" : "Unknown";
+    Visible.tags = problem.tags.split(',');
+    Visible.description = problem.description;
+  };
+
+  const handleAccept = async () => {
+    try {
+      const response = await axios.post(
+        getURL(`/api/contributes/accept/${id}`), // URL
+        {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+        {   // Config object
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+  
+      console.log("Accept response:", response.data);
+      alert("Contribution accepted successfully!");
+    } catch (error) {
+      console.error("Error accepting contribution:", error);
+      alert("Failed to accept contribution. Please try again.");
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const response = await axios.post(
+        getURL(`/api/contributes/reject/${id}`), // URL
+        {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+        {   // Config object
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+  
+      console.log("Reject response:", response.data);
+      alert("Contribution rejected successfully!");
+    } catch (error) {
+      console.error("Error rejecting contribution:", error);
+      alert("Failed to reject contribution. Please try again.");
+    }
+  };
+
+  
   const markdown = `
 Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
 
@@ -107,9 +203,9 @@ The matching should cover the **entire** input string (not partial).
           zIndex: 10,
         }}
       >
-        <Button variant="danger">Reject</Button>
+        <Button variant="danger" onClick={handleReject}>Reject</Button>
         <Button>Submit</Button>
-        <Button variant="success">Accept</Button>
+        <Button variant="success" onClick={handleAccept}>Accept</Button>
       </div>
 
       <div className="bg-light">
@@ -152,18 +248,18 @@ The matching should cover the **entire** input string (not partial).
                   }}
                 >
                   <h3 className="mb-3">
-                    3. Longest Substring Without Repeating Characters
+                    {id}. {Visible.title}
                   </h3>
                   <span
                     className={`badge bg-grey me-2 ${
-                      difficulty === "Easy"
+                      Visible.difficulty === "Easy"
                         ? "text-success"
-                        : difficulty === "Medium"
+                        : Visible.difficulty === "Medium"
                           ? "text-warning"
                           : "text-danger"
                     }`}
                   >
-                    {difficulty}
+                    {Visible.difficulty}
                   </span>
 
                   <OverlayTrigger
@@ -181,7 +277,7 @@ The matching should cover the **entire** input string (not partial).
                     </span>
                   </OverlayTrigger>
 
-                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
+                  <ReactMarkdown className="mt-3">{Visible.description}</ReactMarkdown>
                 </div>
               ) : (
                 <div
