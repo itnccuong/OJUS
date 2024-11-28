@@ -27,7 +27,7 @@ function NavBar() {
 
   const getUser = async () => {
     try {
-      const { data } = await axios.get(getURL(`/api/user/${ID}`));
+      const { data } = await axios.get(getURL(`/api/user/id/${ID}`));
       setUsername(data.data.user.username);
       console.log("getprofile", data);
     } catch (error: any) {
