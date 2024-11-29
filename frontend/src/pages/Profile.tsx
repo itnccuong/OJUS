@@ -1,10 +1,11 @@
 // Profile.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import getURL from "../../utils/getURL";
 import getToken from "../../utils/getToken.ts";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import NavBar from "../components/NavBar";
 
 // Import the CSS file
@@ -20,8 +21,7 @@ interface Submission {
 export default function Profile() {
   const navigate = useNavigate();
   const { username } = useParams();
-  const token = getToken();
-
+  
   // State variables for profile data and recent submissions
   const [fullname, setFullname] = useState("");
   const [profilePic, setProfilePic] = useState(""); // Assuming profile picture is part of the response
@@ -29,7 +29,7 @@ export default function Profile() {
   const [mediumSolved, setMediumSolved] = useState(0);
   const [hardSolved, setHardSolved] = useState(0);
   const [totalSolved, setTotalSolved] = useState(0);
-  const [recentSubmissions, setRecentSubmissions] = useState<Submission[]>([
+  const recentSubmissions:Submission[] = ([
     {
       title: "Binary Tree Traversal",
       difficulty: "Medium",
@@ -109,7 +109,7 @@ export default function Profile() {
       date: "10d ago",
     },
   ]);
-
+  
   // Function to fetch profile data
   const getProfile = async () => {
     try {
@@ -126,9 +126,44 @@ export default function Profile() {
     }
   };
 
+  const [usernameFromToken, SetUsernameFromToken] = useState("");
+  const token = getToken();
+  let ID = null;
+  if (token) {
+    try {
+      const decoded = jwtDecode(token) as JwtPayload & { userId: number };  // Cast the type
+
+      // Log all the decoded data to the console
+      ID = decoded.userId;
+    } catch (error) {
+      console.log("Error decoding token:", error);
+    }
+  }
+
+  const getUser = async () => {
+    try {
+      const response = await axios.get(getURL("/api/user"), {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in the Authorization header
+        },
+      });
+      console.log("res get profile", response);
+      SetUsernameFromToken(response.data.data.user.username);
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    getUser();
+  }, []);
+
   useEffect(() => {
     getProfile();
   }, []);
+
+
+  // Only show the "Edit Profile" button if the usernames match
+  const shouldShowEditButton = usernameFromToken == username;
 
   return (
     <div>
@@ -146,32 +181,36 @@ export default function Profile() {
                 <h3 className="profile-name">{fullname}</h3>
                 <p className="profile-username">@{username}</p>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  marginBottom: "10px",
-                }}
-              >
-                <Button
-                  variant="primary"
-                  onClick={() => navigate("/profile")}
+
+              {shouldShowEditButton && (
+                <div
                   style={{
-                    backgroundColor: "#e4dff0",
-                    color: "#0b665e",
+                    display: "flex",
+                    justifyContent: "center",
                     width: "100%",
-                    fontSize: "20px",
-                    padding: "5px 20px", 
-                    border: "none", 
-                    borderRadius: "5px", 
-                    cursor: "pointer",
-                    fontWeight: "bold",
+                    marginBottom: "10px",
                   }}
                 >
-                  Edit Profile
-                </Button>
-              </div>
+                  <Button
+                    variant="primary"
+                    onClick={() => navigate("/profile")}
+                    style={{
+                      backgroundColor: "#e4dff0",
+                      color: "#0b665e",
+                      width: "100%",
+                      fontSize: "20px",
+                      padding: "5px 20px",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                </div>
+              )}
+
               {/* Problem Solving Stats */}
               <div className="stats-box">
                 <div className="stat-item">

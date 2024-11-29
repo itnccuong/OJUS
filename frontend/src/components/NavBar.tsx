@@ -6,45 +6,37 @@ import { NavLink, useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
 import getURL from "../../utils/getURL";
 import storageKeyMap from "../../utils/storageKeyMap.ts";
-import { jwtDecode, JwtPayload } from "jwt-decode";
 
 function NavBar() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const token = getToken();
 
-  let ID = null;
-  if (token) {
-    try {
-      const decoded = jwtDecode(token) as JwtPayload & { userId: number };  // Cast the type
-
-      // Log all the decoded data to the console
-      ID = decoded.userId;
-    } catch (error) {
-      console.log("Error decoding token:", error);
-    }
-  }
-
-  const getUser = async () => {
-    try {
-      const { data } = await axios.get(getURL(`/api/user/id/${ID}`));
-      setUsername(data.data.user.username);
-      console.log("getprofile", data);
-    } catch (error: any) {
-      console.error(error);
-    }
-  };
-
   // Initialize navigate
   const handleSignOut = () => {
     localStorage.removeItem(storageKeyMap.token); // Remove token from localStorage
     navigate("/accounts/login"); // Redirect to login
   };
-
   useEffect(() => {
-    getUser();
-    console.log("Just console to get rid of warning", token);
-  }, []);
+    if (token) {
+      getUserProfile(); // Retrieve profile using userId from the token
+    }
+  }, [token]);
+
+  const getUserProfile = async () => {
+    try {
+      const response = await axios.get(getURL("/api/user"), {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in the Authorization header
+        },
+      });
+      console.log("res get profile", response);
+      setUsername(response.data.data.user.username); // Assuming response structure has data -> user -> username
+      console.log("User Profile:", response.data);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
 
   return (
     <Navbar className="bg-body-tertiary border-bottom d-flex">

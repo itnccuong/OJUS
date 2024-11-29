@@ -7,7 +7,7 @@ import userRoute from "./user.route";
 import problemRoute from "./problem.route";
 
 router.use("/auth", authRoute);
-router.use("/users", userRoute);
+router.use("/user", userRoute);
 // router.use("/contributes", contributeRoute);
 router.use("/problems", problemRoute);
 
