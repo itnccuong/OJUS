@@ -64,8 +64,6 @@ export default function Contribute() {
     setTags(initialTags);
   };
 
-  // const [outputFile, setOutputFile] = useState<File | null>(null);
-
   const [isMarkdown, setIsMarkdown] = useState(false);
 
   const initializeUpload = async (
