@@ -42,14 +42,14 @@ const submit = async (
   const fileUrl = file.location;
   const testcase = await downloadTestcase(fileUrl);
 
-  const filenameWithExtension = saveCodeToFile(
+  let filename = saveCodeToFile(
     submission.submissionId,
     code,
     language,
   );
 
-  const filename = await compile(filenameWithExtension, language);
-  if (!filename) {
+  const filenameAfterCompile = await compile(filename, language);
+  if (!filenameAfterCompile) {
     submission = await updateSubmissionVerdict(
       submission.submissionId,
       "COMPILE_ERROR",
@@ -65,6 +65,8 @@ const submit = async (
       },
     );
   }
+  filename = filenameAfterCompile;
+
   const testcaseLength = testcase.input.length;
   const timeLimit = problem.timeLimit;
 

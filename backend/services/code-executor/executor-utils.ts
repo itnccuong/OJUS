@@ -41,7 +41,6 @@ const containers: Record<string, ContainerConfig> = {
 
 const languageDetails: Record<string, LanguageDetail> = {
   c: {
-    compiledExtension: "out",
     inputFunction: null,
     compilerCmd: (filename) =>
       `gcc ./${codeFiles}/${filename}.c -o ./${codeFiles}/${filename}.out -lpthread -lrt`,
@@ -49,7 +48,6 @@ const languageDetails: Record<string, LanguageDetail> = {
     container: containers.gcc,
   },
   cpp: {
-    compiledExtension: "out",
     inputFunction: null,
     compilerCmd: (filename) =>
       `g++ ./${codeFiles}/${filename}.cpp -o ./${codeFiles}/${filename}.out`,
@@ -57,26 +55,23 @@ const languageDetails: Record<string, LanguageDetail> = {
     container: containers.gcc,
   },
   py: {
-    compiledExtension: "",
     inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
     compilerCmd: null,
-    executorCmd: (filename) => `python ./${codeFiles}/${filename}`,
+    executorCmd: (filename) => `python ./${codeFiles}/${filename}.py`,
     container: containers.py,
   },
   js: {
-    compiledExtension: "",
     inputFunction: null,
     compilerCmd: null,
-    executorCmd: (filename) => `node ./${codeDirectory}/${filename}`,
+    executorCmd: (filename) => `node ./${codeFiles}/${filename}.js`,
     container: containers.js,
   },
   java: {
-    compiledExtension: "class",
     inputFunction: null,
     compilerCmd: (filename) =>
-      `javac -d ./${codeDirectory}/${filename} ./${codeDirectory}/${filename}.java`,
+      `javac -d ./${codeFiles}/${filename} ./${codeFiles}/${filename}.java`,
     executorCmd: (filename) =>
-      `java -cp ./${codeDirectory}/${filename} Solution`,
+      `java -cp ./${codeFiles}/${filename} Solution`,
     container: containers.java,
   },
 };
@@ -156,7 +151,7 @@ const compile = async (filenameWithExtension: string, language: string) => {
     : null;
 
   if (!command) {
-    return null;
+    return filename;
   }
 
   try {
@@ -165,14 +160,7 @@ const compile = async (filenameWithExtension: string, language: string) => {
     await execAsync(`docker exec ${containerId} ${command}`);
     return filename;
   } catch (error: any) {
-    // throw new CustomError(
-    //   "COMPILE_ERROR",
-    //   "Compile error!",
-    //   STATUS_CODE.BAD_REQUEST,
-    //   {
-    //     stderr: error.stderr,
-    //   },
-    // );
+    console.log("Err in compile: ", error);
     return null;
   }
 };
