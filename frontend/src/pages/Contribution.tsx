@@ -1,42 +1,41 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import { Button, OverlayTrigger, Popover } from "react-bootstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownButton,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
-import { useEffect } from "react";
-import getURL from "../../utils/getURL";
-import getToken from "../../utils/getToken";
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
 
-// import SyntaxHighlighter from "react-syntax-highlighter";
-// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-// import Editor from "react-simple-code-editor";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism.css"; // Choose a Prism theme you like
-
-// // Load the language you need
-// import "prismjs/components/prism-javascript";
-
-// import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 // import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-
-import CodeEditor from "@uiw/react-textarea-code-editor";
-import rehypePrism from "rehype-prism-plus";
+import { vscodeLight } from "@uiw/codemirror-theme-vscode";
+// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
+import { javascript } from "@codemirror/lang-javascript";
+import axios from "axios";
+import getURL from "../../utils/getURL.ts";
+import { toast } from "react-toastify";
+import getToken from "../../utils/getToken.ts";
 
 export default function Contribution() {
-
-  //Check if user is logged in
-  const token = getToken();
-
+  const navigate = useNavigate(); // Initialize navigate
+  const token = getToken(); // Get token from localStorage
+  useEffect(() => {
+    if (!token) {
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
 
   const { id, page } = useParams();
+  const difficulty: string = "Medium";
 
-  useEffect(() => {
-    console.log("Updated id:", id);
-    console.log("Updated page:", page);
-  }, [id, page]);
+  const Language = ["C++", "C", "Java", "Python", "Javascript"];
 
+  const [language, setLanguage] = useState("Python");
 
   const tags: string[] = [
     "Array",
@@ -72,64 +71,19 @@ export default function Contribution() {
     </Popover>
   );
 
-  const [code, setCode] = useState("");
-  // const highlightCode = (code: string) =>
-  //   Prism.highlight(code, Prism.languages.javascript, "javascript");
-
-  const [problem, setProblem] = useState(null);
-
-  useEffect(() => {
-    const fetchProblem = async () => {
-      try {
-        const response = await fetch(getURL(`/api/contributes/${id}`), {
-          headers: { Authorization: "Bearer " + token },
-        }); 
-        
-        // Gọi API lấy dữ liệu problem
-        if (!response.ok) {
-          throw new Error('Lỗi khi tải dữ liệu');
-        }
-        const data = await response.json();
-        setProblem(data.data.contribute); // Lưu dữ liệu vào state  
-      } catch (error) {
-      } finally {
-      }
-    };
-
-    fetchProblem();
-  }, [id]);
-
-  console.log(problem);
-
-  const Visible = {
-    title : "TITLE",
-    difficulty : "Easy",
-    description : "Description",
-    tags: ["Array", "Dynamic Programming"],
-  };
-
-  if(problem){
-    Visible.title = problem.title;
-    Visible.difficulty = 
-    problem.difficulty === 1 ? "Easy" : 
-    problem.difficulty === 2 ? "Medium" : 
-    problem.difficulty === 3 ? "Hard" : "Unknown";
-    Visible.tags = problem.tags.split(',');
-    Visible.description = problem.description;
-  };
-
   const handleAccept = async () => {
     try {
       const response = await axios.post(
         getURL(`/api/contributes/accept/${id}`), // URL
         {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
-        {   // Config object
+        {
+          // Config object
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       );
-  
+
       console.log("Accept response:", response.data);
       alert("Contribution accepted successfully!");
     } catch (error) {
@@ -143,13 +97,14 @@ export default function Contribution() {
       const response = await axios.post(
         getURL(`/api/contributes/reject/${id}`), // URL
         {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
-        {   // Config object
+        {
+          // Config object
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       );
-  
+
       console.log("Reject response:", response.data);
       alert("Contribution rejected successfully!");
     } catch (error) {
@@ -158,7 +113,11 @@ export default function Contribution() {
     }
   };
 
-  
+  const [code, setCode] = useState("");
+  const onChange = React.useCallback((val: string) => {
+    setCode(val);
+  }, []);
+
   const markdown = `
 Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
 
@@ -190,6 +149,42 @@ The matching should cover the **entire** input string (not partial).
 - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
 
+  const languageMap: Record<string, string> = {
+    Python: "py",
+    "C++": "cpp",
+    C: "c",
+    Java: "java",
+    Javascript: "js",
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const res = await toast.promise(
+        axios.post(
+          getURL(`/api/problems/${id}/submit`),
+          {
+            code: code,
+            language: languageMap[language],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
+        {
+          pending: "Submitting...",
+          success: "All test cases passed",
+          // error: "Failed to submit",
+        },
+      );
+      console.log("Submit response: ", res.data);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.error(error);
+    }
+  };
+
   return (
     <div className="d-flex-flex-column">
       <NavBar />
@@ -203,9 +198,13 @@ The matching should cover the **entire** input string (not partial).
           zIndex: 10,
         }}
       >
-        <Button variant="danger" onClick={handleReject}>Reject</Button>
-        <Button>Submit</Button>
-        <Button variant="success" onClick={handleAccept}>Accept</Button>
+        <Button variant="danger" onClick={handleReject}>
+          Reject
+        </Button>
+        <Button onClick={() => handleSubmit()}>Submit</Button>
+        <Button variant="success" onClick={handleAccept}>
+          Accept
+        </Button>
       </div>
 
       <div className="bg-light">
@@ -219,7 +218,7 @@ The matching should cover the **entire** input string (not partial).
             <div className="border rounded bg-white mt-2">
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
                 <Link
-                  to={`/contributions/${id}/description`}
+                  to={`/problems/${id}/description`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -229,7 +228,7 @@ The matching should cover the **entire** input string (not partial).
                 </Link>
                 <span className="text-body-tertiary ">|</span>
                 <Link
-                  to={`/contributions/${id}/submissions`}
+                  to={`/problems/${id}/submissions`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -248,18 +247,18 @@ The matching should cover the **entire** input string (not partial).
                   }}
                 >
                   <h3 className="mb-3">
-                    {id}. {Visible.title}
+                    3. Longest Substring Without Repeating Characters
                   </h3>
                   <span
                     className={`badge bg-grey me-2 ${
-                      Visible.difficulty === "Easy"
+                      difficulty === "Easy"
                         ? "text-success"
-                        : Visible.difficulty === "Medium"
+                        : difficulty === "Medium"
                           ? "text-warning"
                           : "text-danger"
                     }`}
                   >
-                    {Visible.difficulty}
+                    {difficulty}
                   </span>
 
                   <OverlayTrigger
@@ -277,7 +276,7 @@ The matching should cover the **entire** input string (not partial).
                     </span>
                   </OverlayTrigger>
 
-                  <ReactMarkdown className="mt-3">{Visible.description}</ReactMarkdown>
+                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
                 </div>
               ) : (
                 <div
@@ -295,7 +294,30 @@ The matching should cover the **entire** input string (not partial).
           <div className="container">
             <div className="border rounded bg-white mt-2">
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <span>Code</span>
+                <DropdownButton variant="light" title={language}>
+                  <div className="d-flex flex-column">
+                    {Language.map((lang, index) => (
+                      <Dropdown.Item
+                        key={index}
+                        onClick={() => {
+                          setLanguage(lang);
+                        }}
+                      >
+                        <Button variant="white">{lang}</Button>
+                        <span className="ms-4">
+                          {language === lang ? (
+                            <img
+                              src="/done.svg"
+                              width="30"
+                              height="24"
+                              alt="React Bootstrap logo"
+                            />
+                          ) : null}
+                        </span>
+                      </Dropdown.Item>
+                    ))}
+                  </div>
+                </DropdownButton>
               </div>
               <div
                 className="container p-3"
@@ -304,70 +326,15 @@ The matching should cover the **entire** input string (not partial).
                   overflowY: "auto",
                 }}
               >
-                {/* <Form.Control
-                  style={{
-                    border: "none",
-                    boxShadow: "none",
-                    resize: "none",
-                  }}
-                  //   placeholder="Write your description in markdown"
-                  className=""
-                  as="textarea"
-                  rows={26}
-                  //   value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                /> */}
-                {/* <Editor
+                <CodeMirror
                   value={code}
-                  onValueChange={(code) => setCode(code)}
-                  highlight={highlightCode}
-                  className="custom-editor"
-                  padding={10}
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 14,
-                    // backgroundColor: "#f5f5f5",
-                    // borderRadius: "5px",
-                    // border: "none",
-                    // outline: "none",
-                    height: "100%",
-                    // maxWidth: "90%",
-                  }}
-                /> */}
-                <CodeEditor
-                  value={code}
-                  language="js"
-                  // placeholder="Please enter JS code."
-                  onChange={(evn) => setCode(evn.target.value)}
-                  rehypePlugins={[
-                    [
-                      rehypePrism,
-                      { ignoreMissing: true, showLineNumbers: true },
-                    ],
-                  ]}
-                  style={{
-                    // overflowY: "auto",
-                    minHeight: "100%",
-                    backgroundColor: "white",
-                    fontSize: 16,
-                    fontFamily:
-                      "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
-                  }}
+                  theme={vscodeLight}
+                  extensions={[javascript()]}
+                  style={{ fontSize: "16px" }}
+                  onChange={onChange}
                 />
               </div>
             </div>
-
-            {/* <SyntaxHighlighter language="javascript" style={docco}>
-              {code}
-            </SyntaxHighlighter> */}
-            {/* <SyntaxHighlighter
-              language="javascript"
-              style={docco}
-              showLineNumbers
-              wrapLongLines
-            >
-              {code}
-            </SyntaxHighlighter> */}
           </div>
         </div>
       </div>

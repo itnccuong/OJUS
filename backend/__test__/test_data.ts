@@ -31,8 +31,8 @@ export const problemData = {
   isActive: true,
   difficulty: 1,
   tags: "1",
-  timeLimit: 100,
-  memoryLimit: 100,
+  timeLimit: 1000,
+  memoryLimit: 1000,
   authorId: 1,
   fileId: 1,
 };

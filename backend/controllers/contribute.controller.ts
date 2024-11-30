@@ -125,26 +125,26 @@ const getOneContribute = async (req: Request, res: Response) => {
 const getAllContribute = async (req: Request, res: Response) => {
   try {
     // Lấy tất cả các contribute với isActive = false
-    const contributes = await prisma.problem.findMany({
+    const contributions = await prisma.problem.findMany({
       where: {
         isActive: false,
       },
     });
 
     // Kiểm tra nếu không có kết quả nào
-    if (!contributes || contributes.length === 0) {
+    if (!contributions || contributions.length === 0) {
       return formatResponse(
         res,
         {},
         STATUS_CODE.NOT_FOUND,
-        "No contributes found!",
+        "No contributions found!",
       );
     }
 
     // Trả về kết quả
     return formatResponse(
       res,
-      { contributes },
+      { contributions },
       STATUS_CODE.SUCCESS,
       "Contributes fetched successfully!",
     );

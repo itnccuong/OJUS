@@ -146,12 +146,18 @@ export default function Contribute() {
       // Prepare API payload
 
       // Submit the form
-      const response = await axios.post(getURL("/api/contributes"), formdata, {
-        headers: { Authorization: "Bearer " + token },
-      });
-      console.log("Submit contribute response: ", response.data);
+      const res = await toast.promise(
+        axios.post(getURL("/api/contributes"), formdata, {
+          headers: { Authorization: "Bearer " + token },
+        }),
+        {
+          pending: "Submitting...",
+          success: "Your question has been submitted",
+          // error: "Failed to submit",
+        },
+      );
 
-      toast.success("Your question has been submitted");
+      console.log("Submit contribute response: ", res.data);
     } catch (error: any) {
       console.error("Error submitting the form:", error);
       toast.error("An error occurred while submitting your question.");
