@@ -73,43 +73,57 @@ export default function Contribution() {
 
   const handleAccept = async () => {
     try {
-      const response = await axios.post(
-        getURL(`/api/contributes/accept/${id}`), // URL
-        {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
-        {
-          // Config object
-          headers: {
-            Authorization: "Bearer " + token,
+      const response = await toast.promise(
+        axios.post(
+          getURL(`/api/contributes/accept/${id}`), // URL
+          {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
           },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution accepted",
+          // error: "Failed to submit",
         },
       );
+      navigate("/contributions");
 
       console.log("Accept response:", response.data);
-      alert("Contribution accepted successfully!");
     } catch (error) {
       console.error("Error accepting contribution:", error);
-      alert("Failed to accept contribution. Please try again.");
+      toast.error("Failed to accept contribution. Please try again.");
     }
   };
 
   const handleReject = async () => {
     try {
-      const response = await axios.post(
-        getURL(`/api/contributes/reject/${id}`), // URL
-        {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
-        {
-          // Config object
-          headers: {
-            Authorization: "Bearer " + token,
+      const response = await toast.promise(
+        axios.post(
+          getURL(`/api/contributes/reject/${id}`), // URL
+          {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
           },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution rejected",
+          // error: "Failed to submit",
         },
       );
+      navigate("/contributions");
 
-      console.log("Reject response:", response.data);
-      alert("Contribution rejected successfully!");
+      console.log("Accept response:", response.data);
     } catch (error) {
-      console.error("Error rejecting contribution:", error);
-      alert("Failed to reject contribution. Please try again.");
+      console.error("Error accepting contribution:", error);
+      toast.error("Failed to accept contribution. Please try again.");
     }
   };
 
