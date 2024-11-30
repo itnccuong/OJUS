@@ -7,14 +7,23 @@ export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
   params: P;
 }
 
-export interface SuccessResponse<T> {
-  status: number;
-  body: {
-    data: T;
-  };
-}
+// export interface SuccessResponse<T> {
+//   status: number;
+//   body: {
+//     data: T;
+//   };
+// }
+//
+// export interface ErrorResponse<T> {
+//   status: number;
+//   body: {
+//     name: string;
+//     message: string;
+//     data: T;
+//   };
+// }
 
-export interface ErrorResponse<T> {
+export interface ResponseInterface<T> {
   status: number;
   body: {
     name: string;
@@ -91,10 +100,15 @@ export interface ResultConfig {
   createdAt: Date;
 }
 
-export interface SubmitCorrectAnswerData {
-  submission: SubmissionConfig;
-}
+// export interface SubmitCorrectAnswerData {
+//   submission: SubmissionConfig;
+// }
+//
+// export interface SubmitWrongAnswerData {
+//   submission: SubmissionConfig;
+// }
 
-export interface SubmitWrongAnswerData {
+export interface SubmitCodeResponseDataInterface {
   submission: SubmissionConfig;
+  stderr?: string;
 }

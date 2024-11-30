@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Response } from "express";
-import { errorResponse, successResponse } from "../utils/formatResponse";
+import { formatResponseNew } from "../utils/formatResponse";
 
 import {
   compile,
@@ -8,7 +8,6 @@ import {
   languageDetails,
 } from "../services/code-executor/executor-utils";
 import {
-  convertLanguage,
   createResult,
   createSubmission,
   downloadTestcase,
@@ -32,8 +31,8 @@ const submit = async (
 ) => {
   const problem_id = parseInt(req.params.problem_id);
   const userId = req.userId;
-  const { code } = req.body;
-  const language = convertLanguage(req.body.language);
+  const { code, language } = req.body;
+  // const language = convertLanguage(req.body.language);
 
   let submission = await createSubmission(problem_id, userId, code, language);
   const problem = await findProblemById(problem_id);
@@ -42,30 +41,27 @@ const submit = async (
   const fileUrl = file.location;
   const testcase = await downloadTestcase(fileUrl);
 
-  let filename = saveCodeToFile(
-    submission.submissionId,
-    code,
-    language,
-  );
+  let filename = saveCodeToFile(submission.submissionId, code, language);
 
-  const filenameAfterCompile = await compile(filename, language);
-  if (!filenameAfterCompile) {
+  const compileResult = await compile(filename, language);
+  if (compileResult.stderr) {
     submission = await updateSubmissionVerdict(
       submission.submissionId,
       "COMPILE_ERROR",
     );
 
-    return errorResponse(
+    return formatResponseNew(
       res,
       "COMPILE_ERROR",
       "Compile error",
       STATUS_CODE.BAD_REQUEST,
       {
         submission: submission,
+        stderr: compileResult.stderr,
       },
     );
   }
-  filename = filenameAfterCompile;
+  filename = compileResult.filenameWithoutExtension;
 
   const testcaseLength = testcase.input.length;
   const timeLimit = problem.timeLimit;
@@ -95,7 +91,7 @@ const submit = async (
         submission.submissionId,
         result.verdict,
       );
-      return errorResponse(
+      return formatResponseNew(
         res,
         result.verdict,
         result.verdict,
@@ -114,12 +110,14 @@ const submit = async (
   //     submissionId: submission.submissionId,
   //   },
   // });
-  return successResponse(
+  return formatResponseNew(
     res,
+    "ALL_TEST_PASSED",
+    "All testcases passed",
+    STATUS_CODE.SUCCESS,
     {
       submission: submission,
     },
-    STATUS_CODE.SUCCESS,
   );
 };
 

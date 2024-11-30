@@ -9,9 +9,8 @@ import { fileData, problemData, registerData } from "./test_data";
 import { cleanDatabase } from "./test_utils";
 import prisma from "../prisma/client";
 import {
-  ErrorResponse,
-  SubmitCorrectAnswerData,
-  SubmitWrongAnswerData,
+  ResponseInterface,
+  SubmitCodeResponseDataInterface,
 } from "../interfaces/api-interface";
 
 jest.setTimeout(30000);
@@ -42,17 +41,52 @@ afterAll(async () => {
   await prisma.$disconnect();
 });
 
+describe("Test compile code", () => {
+  describe("Fail to compile code", () => {
+    test("Java", async () => {
+      const body = {
+        code: 'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Random string to test compile error")  \n    }  \n}',
+        language: "java",
+      };
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).toBeTruthy();
+    });
+
+    test("cpp", async () => {
+      const body = {
+        code: "#include <IOStream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
+        language: "cpp",
+      };
+
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).toBeTruthy();
+    });
+  });
+});
+
 describe("Submit code", () => {
   test("Correct answer", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -i;\n}",
-      language: "C++",
+      language: "cpp",
     };
 
     const res = (await request(app)
       .post(`/api/problems/1/submit`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ErrorResponse<SubmitCorrectAnswerData>;
+      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     expect(res.body.data.submission.verdict).toBe("OK");
   });
@@ -60,43 +94,28 @@ describe("Submit code", () => {
   test("Wrong answer", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
-      language: "C++",
+      language: "cpp",
     };
 
     const res = (await request(app)
       .post(`/api/problems/1/submit`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ErrorResponse<SubmitWrongAnswerData>;
+      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("WRONG_ANSWER");
     expect(res.body.data.submission.verdict).toBe("WRONG_ANSWER");
   });
 
-  test("Compile Error", async () => {
-    const body = {
-      code: "#include <IOStream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
-      language: "C++",
-    };
-
-    const res = (await request(app)
-      .post(`/api/problems/1/submit`)
-      .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ErrorResponse<SubmitWrongAnswerData>;
-    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-    expect(res.body.name).toBe("COMPILE_ERROR");
-    expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-  });
-
   test("Runtime Error", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -2/0;\n}",
-      language: "C++",
+      language: "cpp",
     };
 
     const res = (await request(app)
       .post(`/api/problems/1/submit`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ErrorResponse<SubmitWrongAnswerData>;
+      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("RUNTIME_ERROR");
     expect(res.body.data.submission.verdict).toBe("RUNTIME_ERROR");
@@ -105,13 +124,13 @@ describe("Submit code", () => {
   test("Time limit exceeded", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -2; while(1);\n}",
-      language: "C++",
+      language: "cpp",
     };
 
     const res = (await request(app)
       .post(`/api/problems/1/submit`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ErrorResponse<SubmitWrongAnswerData>;
+      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("TIME_LIMIT_EXCEEDED");
     expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");

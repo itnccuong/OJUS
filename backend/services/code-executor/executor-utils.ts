@@ -70,8 +70,7 @@ const languageDetails: Record<string, LanguageDetail> = {
     inputFunction: null,
     compilerCmd: (filename) =>
       `javac -d ./${codeFiles}/${filename} ./${codeFiles}/${filename}.java`,
-    executorCmd: (filename) =>
-      `java -cp ./${codeFiles}/${filename} Solution`,
+    executorCmd: (filename) => `java -cp ./${codeFiles}/${filename} Solution`,
     container: containers.java,
   },
 };
@@ -139,29 +138,31 @@ const initAllDockerContainers = async () => {
 };
 
 /**
- * Compiles the code inside a Docker container.
- * @param filenameWithExtension - The file name to compile.
+ * Compiles the code inside a Docker container. Return new filename that removed the extension. Ex: main.cpp -> main
+ * @param filename - The file name to compile.
  * @param language - The language of the file.
  * @returns Promise<string | null> - Returns the filename if compile successfully, otherwise null.
  */
-const compile = async (filenameWithExtension: string, language: string) => {
-  const filename = filenameWithExtension.split(".")[0];
+const compile = async (filename: string, language: string) => {
+  const filenameWithoutExtension = filename.split(".")[0];
   const command = languageDetails[language].compilerCmd
-    ? languageDetails[language].compilerCmd(filename)
+    ? languageDetails[language].compilerCmd(filenameWithoutExtension)
     : null;
 
   if (!command) {
-    return filename;
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
   }
 
   try {
     const container = languageDetails[language].container;
     const containerId = getContainerId(container);
     await execAsync(`docker exec ${containerId} ${command}`);
-    return filename;
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
   } catch (error: any) {
-    console.log("Err in compile: ", error);
-    return null;
+    return {
+      filenameWithoutExtension: filenameWithoutExtension,
+      stderr: error.stderr,
+    };
   }
 };
 

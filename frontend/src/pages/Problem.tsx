@@ -117,6 +117,14 @@ The matching should cover the **entire** input string (not partial).
 - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
 
+  const languageMap = {
+    Python: "py",
+    "C++": "cpp",
+    C: "c",
+    Java: "java",
+    Javascript: "js",
+  };
+
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
@@ -124,7 +132,7 @@ The matching should cover the **entire** input string (not partial).
           getURL(`/api/problems/${id}/submit`),
           {
             code: code,
-            language: language,
+            language: languageMap[language],
           },
           {
             headers: {
