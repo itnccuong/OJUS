@@ -42,7 +42,39 @@ afterAll(async () => {
 });
 
 describe("Test compile code", () => {
-  describe("Fail to compile code", () => {
+  describe("Compile fail", () => {
+    test("C", async () => {
+      const body = {
+        code: '#include "studio.h"',
+        language: "c",
+      };
+
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).toBeTruthy();
+    });
+
+    test("C++", async () => {
+      const body = {
+        code: '#include "IOStream"',
+        language: "cpp",
+      };
+
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).toBeTruthy();
+    });
+
     test("Java", async () => {
       const body = {
         code: 'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Random string to test compile error")  \n    }  \n}',
@@ -57,10 +89,27 @@ describe("Test compile code", () => {
       expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
       expect(res.body.data.stderr).toBeTruthy();
     });
-
-    test("cpp", async () => {
+  });
+  describe("Compile success", () => {
+    test("C", async () => {
       const body = {
-        code: "#include <IOStream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
+        code: '#include "stdio.h"\n\nint main() {\n  printf("Random");\n}',
+        language: "c",
+      };
+
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).not.toBeTruthy();
+    });
+
+    test("C++", async () => {
+      const body = {
+        code: '#include <iostream>\n\nint main() {\n  std::cout << "Random";\n}',
         language: "cpp",
       };
 
@@ -69,9 +118,24 @@ describe("Test compile code", () => {
         .set("Authorization", `Bearer ${fake_token}`)
         .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
       expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).toBeTruthy();
+      expect(res.body.name).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).not.toBeTruthy();
+    });
+
+    test("Java", async () => {
+      const body = {
+        code: 'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Hello Java");\n    }  \n}  ',
+        language: "java",
+      };
+      const res = (await request(app)
+        .post(`/api/problems/1/submit`)
+        .set("Authorization", `Bearer ${fake_token}`)
+        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      expect(res.body.name).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
+      expect(res.body.data.stderr).not.toBeTruthy();
     });
   });
 });
