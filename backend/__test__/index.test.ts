@@ -5,8 +5,13 @@ import { STATUS_CODE } from "../utils/constants";
 import { initAllDockerContainers } from "../services/code-executor/executor-utils";
 import jwt from "jsonwebtoken";
 
-import { fileData, problemData, registerData } from "./test_data";
-import { cleanDatabase } from "./test_utils";
+import {
+  fileData,
+  problemData,
+  registerData,
+  compileTestCases,
+} from "./test_data";
+import { cleanDatabase, testCompile } from "./test_utils";
 import prisma from "../prisma/client";
 import {
   ResponseInterface,
@@ -43,99 +48,18 @@ afterAll(async () => {
 
 describe("Test compile code", () => {
   describe("Compile fail", () => {
-    test("C", async () => {
-      const body = {
-        code: '#include "studio.h"',
-        language: "c",
-      };
-
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).toBeTruthy();
-    });
-
-    test("C++", async () => {
-      const body = {
-        code: '#include "IOStream"',
-        language: "cpp",
-      };
-
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).toBeTruthy();
-    });
-
-    test("Java", async () => {
-      const body = {
-        code: 'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Random string to test compile error")  \n    }  \n}',
-        language: "java",
-      };
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).toBeTruthy();
+    compileTestCases.forEach(({ language, invalidCode }) => {
+      test(`${language} - Compile Error`, async () => {
+        await testCompile(invalidCode, language, true, fake_token);
+      });
     });
   });
+
   describe("Compile success", () => {
-    test("C", async () => {
-      const body = {
-        code: '#include "stdio.h"\n\nint main() {\n  printf("Random");\n}',
-        language: "c",
-      };
-
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).not.toBeTruthy();
-    });
-
-    test("C++", async () => {
-      const body = {
-        code: '#include <iostream>\n\nint main() {\n  std::cout << "Random";\n}',
-        language: "cpp",
-      };
-
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).not.toBeTruthy();
-    });
-
-    test("Java", async () => {
-      const body = {
-        code: 'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Hello Java");\n    }  \n}  ',
-        language: "java",
-      };
-      const res = (await request(app)
-        .post(`/api/problems/1/submit`)
-        .set("Authorization", `Bearer ${fake_token}`)
-        .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-      expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
-      expect(res.body.name).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
-      expect(res.body.data.stderr).not.toBeTruthy();
+    compileTestCases.forEach(({ language, validCode }) => {
+      test(`${language} - Successful Compilation`, async () => {
+        await testCompile(validCode, language, false, fake_token);
+      });
     });
   });
 });
