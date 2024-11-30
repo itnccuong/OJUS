@@ -46,7 +46,7 @@ afterAll(async () => {
   await prisma.$disconnect();
 });
 
-describe("Test compile code", () => {
+describe("Compile code", () => {
   describe("Compile fail", () => {
     compileTestCases.forEach(({ language, invalidCode }) => {
       test(`${language} - Compile Error`, async () => {
@@ -64,7 +64,7 @@ describe("Test compile code", () => {
   });
 });
 
-describe("Submit code", () => {
+describe("Submit code (C++)", () => {
   test("Correct answer", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -i;\n}",

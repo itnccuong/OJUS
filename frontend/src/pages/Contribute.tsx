@@ -66,116 +66,90 @@ export default function Contribute() {
 
   const [isMarkdown, setIsMarkdown] = useState(false);
 
-  const initializeUpload = async (
-    fileName: string,
-    fileSize: number,
-    contentType: string,
-  ) => {
-    const response = await axios.post(getURL("/upload/start-upload"), {
-      file_name: fileName,
-      file_size: fileSize,
-      content_type: contentType,
-    });
-    return response.data;
-  };
-
-  const uploadChunk = async (url: string, chunk: Blob) => {
-    const response = await axios.put(url, chunk);
-    if (response.status === 200) {
-      return response.headers["etag"];
-    }
-    throw new Error("Failed to upload chunk.");
-  };
-
-  const splitFileIntoChunks = (file: File, chunkSize: number) => {
-    const chunks = [];
-    let start = 0;
-
-    while (start < file.size) {
-      const end = Math.min(start + chunkSize, file.size);
-      chunks.push(file.slice(start, end));
-      start = end;
-    }
-
-    return chunks;
-  };
-
-  const uploadToS3 = async (file: File, chunkSize: number, urls: string[]) => {
-    const chunks = splitFileIntoChunks(file, chunkSize);
-    const etags = [];
-
-    for (let i = 0; i < chunks.length; i++) {
-      const etag = await uploadChunk(urls[i], chunks[i]);
-      etags.push(etag);
-    }
-
-    return etags;
-  };
-
-  const completeUpload = async (
-    key: string,
-    uploadId: string,
-    etags: string[],
-  ) => {
-    const response = await axios.post(getURL("/upload/complete-upload"), {
-      key,
-      upload_id: uploadId,
-      etags: etags.join(","),
-    });
-    return response.data.url;
-  };
+  // const initializeUpload = async (
+  //   fileName: string,
+  //   fileSize: number,
+  //   contentType: string,
+  // ) => {
+  //   const response = await axios.post(getURL("/upload/start-upload"), {
+  //     file_name: fileName,
+  //     file_size: fileSize,
+  //     content_type: contentType,
+  //   });
+  //   return response.data;
+  // };
+  //
+  // const uploadChunk = async (url: string, chunk: Blob) => {
+  //   const response = await axios.put(url, chunk);
+  //   if (response.status === 200) {
+  //     return response.headers["etag"];
+  //   }
+  //   throw new Error("Failed to upload chunk.");
+  // };
+  //
+  // const splitFileIntoChunks = (file: File, chunkSize: number) => {
+  //   const chunks = [];
+  //   let start = 0;
+  //
+  //   while (start < file.size) {
+  //     const end = Math.min(start + chunkSize, file.size);
+  //     chunks.push(file.slice(start, end));
+  //     start = end;
+  //   }
+  //
+  //   return chunks;
+  // };
+  //
+  // const uploadToS3 = async (file: File, chunkSize: number, urls: string[]) => {
+  //   const chunks = splitFileIntoChunks(file, chunkSize);
+  //   const etags = [];
+  //
+  //   for (let i = 0; i < chunks.length; i++) {
+  //     const etag = await uploadChunk(urls[i], chunks[i]);
+  //     etags.push(etag);
+  //   }
+  //
+  //   return etags;
+  // };
+  //
+  // const completeUpload = async (
+  //   key: string,
+  //   uploadId: string,
+  //   etags: string[],
+  // ) => {
+  //   const response = await axios.post(getURL("/upload/complete-upload"), {
+  //     key,
+  //     upload_id: uploadId,
+  //     etags: etags.join(","),
+  //   });
+  //   return response.data.url;
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!file) {
-      toast.error("Please select a file.");
-      return;
-    }
-
     try {
-      // Initialize upload
-      const uploadDetails = await initializeUpload(
-        file.name,
-        file.size,
-        file.type,
-      );
-
-      // Upload file chunks
-      const etags = await uploadToS3(
-        file,
-        uploadDetails.chunk_size,
-        uploadDetails.urls,
-      );
-
-      // Complete the upload
-      const fileUrl = await completeUpload(
-        uploadDetails.key,
-        uploadDetails.upload_id,
-        etags,
-      );
-
-      // Prepare API payload
       const selectedTags = tags
         .filter((tag) => tag.selected)
         .map((tag) => tag.label)
         .join(","); // Chuyển thành chuỗi với dấu phẩy
-      const payload = {
-        title,
-        description,
-        difficulty,
-        tags: selectedTags,
-        timeLimit,
-        memoryLimit,
-        fileUrl,
-        fileSize: file.size,
-        fileType: file.type,
-      };
+
+      const formdata = new FormData();
+      formdata.append("title", title);
+      formdata.append("description", description);
+      formdata.append("difficulty", difficulty.toString());
+      formdata.append("timeLimit", timeLimit.toString());
+      formdata.append("memoryLimit", memoryLimit.toString());
+      formdata.append("tags", selectedTags);
+      formdata.append("file", file as Blob);
+
+      // Prepare API payload
 
       // Submit the form
-      const response = await axios.post(getURL("/api/contributes"), payload, {
+      const response = await axios.post(getURL("/api/contributes"), formdata, {
         headers: { Authorization: "Bearer " + token },
       });
+      console.log("Submit contribute response: ", response.data);
 
       toast.success("Your question has been submitted");
     } catch (error: any) {
@@ -245,7 +219,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               <Form.Select
                 required
                 aria-label="Default select example"
-                onChange={(e) => setDifficulty(e.target.value)}
+                onChange={(e) => setDifficulty(Number(e.target.value))}
                 className="w-50 mb-2"
               >
                 <option value={1}>Easy</option>

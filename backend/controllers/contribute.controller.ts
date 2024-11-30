@@ -3,52 +3,68 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import {formatResponse} from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
-
+import {
+  completeUpload,
+  startUpload,
+  uploadToS3,
+} from "../services/contribute.services/uploadFile.service";
+import uploadRoute from "../upload/upload.route";
 
 const prisma = new PrismaClient();
 
-interface SubmitContribute extends Request {
-  user?: any;
-  file?: any;
+interface SubmitContributeRequest extends Request {
+  body: {
+    title: string;
+    description: string;
+    difficulty: string;
+    tags: string;
+    timeLimit: string;
+    memoryLimit: string;
+  };
 }
 
-const submitContribute = async (req: SubmitContribute, res: Response) => {
+const submitContribute = async (
+  req: SubmitContributeRequest,
+  res: Response,
+) => {
   try {
-    const { title, description, difficulty, tags, timeLimit, memoryLimit, fileUrl, fileSize, fileType} = req.body;
-
-    if (!title || !description || !difficulty || !tags || !timeLimit || !memoryLimit || !fileUrl || !fileSize || !fileType) {
-      return formatResponse(
-        res,
-        {},
-        STATUS_CODE.BAD_REQUEST,
-        "Please fill all fields!",
-      );
+    const { title, description, difficulty, tags, timeLimit, memoryLimit } =
+      req.body;
+    const file = req.file;
+    if (!file) {
+      console.log("No file");
+      return null;
     }
+    const details = await startUpload(file);
+    console.log("Details", details);
 
-    const filename = `${title.replace(/\s+/g, '_')}_${Date.now()}`;
+    const etags = await uploadToS3(file, details.chunk_size, details.urls);
 
-    const file = await prisma.files.create({
+    const url = await completeUpload(details.key, details.upload_id!, etags);
+
+    const filename = `${title.replace(/\s+/g, "_")}_${Date.now()}`;
+
+    const createFile = await prisma.files.create({
       data: {
         filename: filename,
-        location: fileUrl,
-        filesize: fileSize,
-        fileType: fileType
-      }
+        location: url,
+        filesize: file.size,
+        fileType: file.mimetype,
+      },
     });
 
-    
     const contribute = await prisma.problem.create({
       data: {
-      title: title,
-      description: description,
-      difficulty: parseInt(difficulty, 10),
-      tags: tags,
-      timeLimit: parseInt(timeLimit, 10),
-      memoryLimit: parseInt(memoryLimit, 10),
-      authorId: req.userId,
-      fileId: file.fileId
+        title: title,
+        description: description,
+        difficulty: parseInt(difficulty, 10),
+        tags: tags,
+        timeLimit: parseInt(timeLimit, 10),
+        memoryLimit: parseInt(memoryLimit, 10),
+        authorId: req.userId,
+        fileId: createFile.fileId,
       },
     });
 
@@ -59,12 +75,16 @@ const submitContribute = async (req: SubmitContribute, res: Response) => {
       "Contribute submitted successfully!",
     );
   } catch (err: any) {
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
 
-const searchContribute = async (req: Request, res: Response) => {
-};
+const searchContribute = async (req: Request, res: Response) => {};
 
 const getOneContribute = async (req: Request, res: Response) => {
   try {
@@ -78,12 +98,27 @@ const getOneContribute = async (req: Request, res: Response) => {
     });
 
     if (!contribute) {
-      return formatResponse(res, {}, STATUS_CODE.NOT_FOUND, "Contribute not found!");
+      return formatResponse(
+        res,
+        {},
+        STATUS_CODE.NOT_FOUND,
+        "Contribute not found!",
+      );
     }
 
-    return formatResponse(res, { contribute }, STATUS_CODE.SUCCESS, "Contribute fetch successfully!");
+    return formatResponse(
+      res,
+      { contribute },
+      STATUS_CODE.SUCCESS,
+      "Contribute fetch successfully!",
+    );
   } catch (err: any) {
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
 
@@ -98,18 +133,31 @@ const getAllContribute = async (req: Request, res: Response) => {
 
     // Kiểm tra nếu không có kết quả nào
     if (!contributes || contributes.length === 0) {
-      return formatResponse(res, {}, STATUS_CODE.NOT_FOUND, "No contributes found!");
+      return formatResponse(
+        res,
+        {},
+        STATUS_CODE.NOT_FOUND,
+        "No contributes found!",
+      );
     }
 
     // Trả về kết quả
-    return formatResponse(res, { contributes }, STATUS_CODE.SUCCESS, "Contributes fetched successfully!");
+    return formatResponse(
+      res,
+      { contributes },
+      STATUS_CODE.SUCCESS,
+      "Contributes fetched successfully!",
+    );
   } catch (err: any) {
     // Xử lý lỗi nếu có
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
-
-
 
 const acceptContribute = async (req: Request, res: Response) => {
   try {
@@ -146,7 +194,12 @@ const acceptContribute = async (req: Request, res: Response) => {
       "Contribute accepted successfully!",
     );
   } catch (err: any) {
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
 
@@ -185,8 +238,20 @@ const rejectContribute = async (req: Request, res: Response) => {
       "Contribute rejected successfully!",
     );
   } catch (err: any) {
-    return formatResponse(res, {}, STATUS_CODE.SERVICE_UNAVAILABLE, err.message);
+    return formatResponse(
+      res,
+      {},
+      STATUS_CODE.SERVICE_UNAVAILABLE,
+      err.message,
+    );
   }
 };
 
-export { searchContribute, getOneContribute, getAllContribute, submitContribute, acceptContribute, rejectContribute };
+export {
+  searchContribute,
+  getOneContribute,
+  getAllContribute,
+  submitContribute,
+  acceptContribute,
+  rejectContribute,
+};

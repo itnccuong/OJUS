@@ -117,7 +117,7 @@ The matching should cover the **entire** input string (not partial).
 - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
 `;
 
-  const languageMap = {
+  const languageMap: Record<string, string> = {
     Python: "py",
     "C++": "cpp",
     C: "c",
