@@ -12,8 +12,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import getURL from "../../utils/getURL";
 import {
-  ContributionInterface,
-  GetAllContributionInterface,
+  ProblemInterface,
+  GetAllContributionsInterface,
 } from "../../interfaces/interface.ts";
 
 interface Tag {
@@ -65,12 +65,12 @@ export default function ContributionList() {
   };
 
   // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
-  const [contributes, setContributes] = useState<ContributionInterface[]>([]);
+  const [contributes, setContributes] = useState<ProblemInterface[]>([]);
 
   useEffect(() => {
     const fetchContributes = async () => {
       try {
-        const { data } = await axios.get<GetAllContributionInterface>(
+        const { data } = await axios.get<GetAllContributionsInterface>(
           getURL("/api/contributes/"),
           {
             headers: { Authorization: "Bearer " + token },

@@ -35,7 +35,6 @@ import {
 
 export default function Problem() {
   const { page, id } = useParams();
-  const navigate = useNavigate(); // Initialize navigate
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] = useState<ProblemInterface>();
   const [language, setLanguage] = useState("Python");
@@ -138,8 +137,6 @@ export default function Problem() {
   // - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
   // - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
   // `;
-
-  const markdown = fetchProblem?.description;
 
   const languageMap: Record<string, string> = {
     Python: "py",
@@ -260,7 +257,9 @@ export default function Problem() {
                     </span>
                   </OverlayTrigger>
 
-                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
+                  <ReactMarkdown className="mt-3">
+                    {problem.description}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <div

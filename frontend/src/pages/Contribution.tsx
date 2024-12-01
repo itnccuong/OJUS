@@ -20,45 +20,76 @@ import axios from "axios";
 import getURL from "../../utils/getURL.ts";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
+import {
+  GetOneContributionInterface,
+  ProblemInterface,
+} from "../../interfaces/interface.ts";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
   const token = getToken(); // Get token from localStorage
+  const { id, page } = useParams();
+  const [code, setCode] = useState("");
+  const onChange = React.useCallback((val: string) => {
+    setCode(val);
+  }, []);
+
+  const Language = ["C++", "C", "Java", "Python", "Javascript"];
+
+  const [language, setLanguage] = useState("Python");
+
   useEffect(() => {
     if (!token) {
       navigate("/accounts/login");
     }
   }, [token, navigate]);
 
-  const { id, page } = useParams();
-  const difficulty: string = "Medium";
+  const [fetchContribution, setFetchContribution] =
+    useState<ProblemInterface>();
 
-  const Language = ["C++", "C", "Java", "Python", "Javascript"];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get<GetOneContributionInterface>(
+          getURL(`/api/contributes/${id}`),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-  const [language, setLanguage] = useState("Python");
+        console.log(res.data);
+        setFetchContribution(res.data.data.contribute);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const tags: string[] = [
-    "Array",
-    "String",
-    "Hash Table",
-    "Dynamic Programming",
-    "Math",
-    "Sorting",
-    "Greedy",
-    "Depth-First Search",
-    "Database",
-    "Binary Search",
-    "Matrix",
-    "Tree",
-    "Breadth-First Search",
-  ];
+  if (!fetchContribution) {
+    return <div>Loading...</div>;
+  }
+
+  const difficultyMapping: Record<number, string> = {
+    1: "Easy",
+    2: "Medium",
+    3: "Hard",
+  };
+
+  const contribution = {
+    ...fetchContribution,
+    difficulty: difficultyMapping[fetchContribution.difficulty],
+    tags: fetchContribution.tags.split(","),
+  };
 
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">Topics</Popover.Header>
       <Popover.Body>
         <div className="mb-3">
-          {tags.map((tag, index) => (
+          {contribution.tags.map((tag, index) => (
             <span
               key={index}
               className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
@@ -154,11 +185,6 @@ export default function Contribution() {
       toast.error("Failed to accept contribution. Please try again.");
     }
   };
-
-  const [code, setCode] = useState("");
-  const onChange = React.useCallback((val: string) => {
-    setCode(val);
-  }, []);
 
   const markdown = `
 Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
@@ -260,19 +286,17 @@ The matching should cover the **entire** input string (not partial).
                     overflowY: "auto",
                   }}
                 >
-                  <h3 className="mb-3">
-                    3. Longest Substring Without Repeating Characters
-                  </h3>
+                  <h3 className="mb-3">{contribution.title}</h3>
                   <span
                     className={`badge bg-grey me-2 ${
-                      difficulty === "Easy"
+                      contribution.difficulty === "Easy"
                         ? "text-success"
-                        : difficulty === "Medium"
+                        : contribution.difficulty === "Medium"
                           ? "text-warning"
                           : "text-danger"
                     }`}
                   >
-                    {difficulty}
+                    {contribution.difficulty}
                   </span>
 
                   <OverlayTrigger
@@ -290,7 +314,9 @@ The matching should cover the **entire** input string (not partial).
                     </span>
                   </OverlayTrigger>
 
-                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
+                  <ReactMarkdown className="mt-3">
+                    {contribution.description}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <div

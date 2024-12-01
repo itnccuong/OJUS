@@ -5,26 +5,9 @@ export interface UserInterface {
   username: string;
 }
 
-export interface ContributionInterface {
-  problemId: number;
-  title: string;
-  description: string;
-  isActive: boolean;
-  difficulty: number;
-  tags: string;
-  timeLimit: number;
-  memoryLimit: number;
-}
-
 export interface ResponseInterface {
   name: string;
   message: string;
-}
-
-export interface GetAllContributionInterface extends ResponseInterface {
-  data: {
-    contributions: ContributionInterface[];
-  };
 }
 
 export interface ProblemInterface {
@@ -47,8 +30,20 @@ export interface GetAllProblemsInterface extends ResponseInterface {
   };
 }
 
+export interface GetAllContributionsInterface extends ResponseInterface {
+  data: {
+    contributions: ProblemInterface[];
+  };
+}
+
 export interface GetOneProblemInterface extends ResponseInterface {
   data: {
     problem: ProblemInterface;
+  };
+}
+
+export interface GetOneContributionInterface extends ResponseInterface {
+  data: {
+    contribute: ProblemInterface;
   };
 }
