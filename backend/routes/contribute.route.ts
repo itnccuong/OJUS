@@ -16,8 +16,8 @@ import {
 
 router.use(verifyToken);
 
-router.get("/search", searchContribute);
-router.get("/contribute_all", getAllContribute);
+// router.get("/search", searchContribute);
+router.get("/", getAllContribute);
 router.get("/:contribute_id", getOneContribute);
 router.post("/", upload.single("file"), submitContribute);
 router.post("/accept/:contribute_id", acceptContribute);

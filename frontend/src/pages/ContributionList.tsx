@@ -21,13 +21,6 @@ interface Tag {
   selected: boolean;
 }
 
-// interface ProblemList {
-//   id: number;
-//   title: string;
-//   tags: string;
-//   difficulty: string;
-// }
-
 export default function ContributionList() {
   const navigate = useNavigate();
 
@@ -78,7 +71,7 @@ export default function ContributionList() {
     const fetchContributes = async () => {
       try {
         const { data } = await axios.get<GetAllContributionInterface>(
-          getURL("/api/contributes/contribute_all"),
+          getURL("/api/contributes/"),
           {
             headers: { Authorization: "Bearer " + token },
           },
@@ -176,15 +169,6 @@ export default function ContributionList() {
                 ))}
               </div>
             </DropdownButton>
-
-            {/* <DropdownButton
-              // key="2"
-              variant="secondary"
-              title="Status"
-            >
-              <Dropdown.Item eventKey="1">Solved</Dropdown.Item>
-              <Dropdown.Item eventKey="2">Attempted</Dropdown.Item>
-            </DropdownButton> */}
 
             <DropdownButton
               // key="2"

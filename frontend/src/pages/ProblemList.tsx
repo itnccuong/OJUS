@@ -221,6 +221,7 @@ export default function ProblemList() {
                   <Dropdown.Item
                     key={index}
                     onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                       difficulty === diff
                         ? setDifficulty("All")
                         : setDifficulty(diff);
@@ -257,6 +258,7 @@ export default function ProblemList() {
               <div className="d-flex flex-column">
                 <Dropdown.Item
                   onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                     status === "Solved"
                       ? setStatus("All")
                       : setStatus("Solved");
@@ -282,6 +284,7 @@ export default function ProblemList() {
 
                 <Dropdown.Item
                   onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                     status === "Attempted"
                       ? setStatus("All")
                       : setStatus("Attempted");

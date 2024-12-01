@@ -71,6 +71,34 @@ export default function Contribution() {
     </Popover>
   );
 
+  const handleSubmit = async () => {
+    try {
+      const res = await toast.promise(
+        axios.post(
+          getURL(`/api/problems/${id}`),
+          {
+            code: code,
+            language: languageMap[language],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
+        {
+          pending: "Submitting...",
+          success: "All test cases passed",
+          // error: "Failed to submit",
+        },
+      );
+      console.log("Submit response: ", res.data);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.error(error);
+    }
+  };
+
   const handleAccept = async () => {
     try {
       const response = await toast.promise(
@@ -169,34 +197,6 @@ The matching should cover the **entire** input string (not partial).
     C: "c",
     Java: "java",
     Javascript: "js",
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const res = await toast.promise(
-        axios.post(
-          getURL(`/api/problems/${id}/submit`),
-          {
-            code: code,
-            language: languageMap[language],
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        ),
-        {
-          pending: "Submitting...",
-          success: "All test cases passed",
-          // error: "Failed to submit",
-        },
-      );
-      console.log("Submit response: ", res.data);
-    } catch (error: any) {
-      toast.error(error.response.data.message);
-      console.error(error);
-    }
   };
 
   return (

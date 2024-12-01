@@ -33,7 +33,7 @@ export const testCompile = async (
   token: string,
 ) => {
   const res = (await request(app)
-    .post(`/api/problems/1/submit`)
+    .post(`/api/problems/1`)
     .set("Authorization", `Bearer ${token}`)
     .send({
       code,

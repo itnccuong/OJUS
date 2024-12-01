@@ -72,7 +72,7 @@ describe("Submit code (C++)", () => {
     };
 
     const res = (await request(app)
-      .post(`/api/problems/1/submit`)
+      .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
       .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
@@ -86,7 +86,7 @@ describe("Submit code (C++)", () => {
     };
 
     const res = (await request(app)
-      .post(`/api/problems/1/submit`)
+      .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
       .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
@@ -101,7 +101,7 @@ describe("Submit code (C++)", () => {
     };
 
     const res = (await request(app)
-      .post(`/api/problems/1/submit`)
+      .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
       .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
@@ -116,7 +116,7 @@ describe("Submit code (C++)", () => {
     };
 
     const res = (await request(app)
-      .post(`/api/problems/1/submit`)
+      .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
       .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);

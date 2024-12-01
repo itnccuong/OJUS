@@ -129,7 +129,7 @@ The matching should cover the **entire** input string (not partial).
     try {
       const res = await toast.promise(
         axios.post(
-          getURL(`/api/problems/${id}/submit`),
+          getURL(`/api/problems/${id}`),
           {
             code: code,
             language: languageMap[language],
