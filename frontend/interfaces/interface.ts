@@ -46,3 +46,9 @@ export interface GetAllProblemsInterface extends ResponseInterface {
     problems: ProblemInterface[];
   };
 }
+
+export interface GetOneProblemInterface extends ResponseInterface {
+  data: {
+    problem: ProblemInterface;
+  };
+}

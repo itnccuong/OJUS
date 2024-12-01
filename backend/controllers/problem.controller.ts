@@ -165,11 +165,12 @@ export const getOneProblemNoAccount = async (
   const problem = await findProblemById(problem_id);
   const resProblem = { ...problem, userStatus: false };
 
-  return formatResponse(
+  return formatResponseNew(
     res,
-    { problem: resProblem },
+    "SUCCESS",
+    "Problem fetch successfully!",
     STATUS_CODE.SUCCESS,
-    "Contribute fetch successfully!",
+    { problem: resProblem },
   );
 };
 
@@ -183,10 +184,11 @@ export const getOneProblemWithAccount = async (
   const userStatus = await getUserStatus(userId, problem.problemId);
   const resProblem = { ...problem, userStatus: userStatus.userStatus };
 
-  return formatResponse(
+  return formatResponseNew(
     res,
-    { problem: resProblem },
+    "SUCCESS",
+    "Problem fetch successfully!",
     STATUS_CODE.SUCCESS,
-    "Contribute fetch successfully!",
+    { problem: resProblem },
   );
 };
