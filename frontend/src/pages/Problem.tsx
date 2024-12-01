@@ -39,8 +39,7 @@ export default function Problem() {
   }, [token, navigate]);
 
   // const { id } = useParams();
-  const id = 1;
-  const { page } = useParams();
+  const { page, id } = useParams();
   const difficulty: string = "Medium";
 
   const Language = ["C++", "C", "Java", "Python", "Javascript"];

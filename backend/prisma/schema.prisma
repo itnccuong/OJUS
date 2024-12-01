@@ -43,7 +43,6 @@ model UserProblemStatus {
   userProblemStatusId Int      @id @default(autoincrement())
   userId              Int
   problemId           Int
-  status              Boolean
   problem             Problem  @relation(fields: [problemId], references: [problemId])
   user                User     @relation(fields: [userId], references: [userId])
   createdAt           DateTime @default(now())

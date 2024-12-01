@@ -16,8 +16,33 @@ export interface ContributionInterface {
   memoryLimit: number;
 }
 
-export interface GetAllContributionInterface {
+export interface ResponseInterface {
+  name: string;
+  message: string;
+}
+
+export interface GetAllContributionInterface extends ResponseInterface {
   data: {
     contributions: ContributionInterface[];
+  };
+}
+
+export interface ProblemInterface {
+  problemId: number;
+  title: string;
+  description: string;
+  status: number;
+  userStatus: boolean;
+  difficulty: number;
+  tags: string;
+  timeLimit: number;
+  memoryLimit: number;
+  authorId: number;
+  fileId: number;
+}
+
+export interface GetAllProblemsInterface extends ResponseInterface {
+  data: {
+    problems: ProblemInterface[];
   };
 }

@@ -3,8 +3,15 @@
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  GetAllProblemsInterface,
+  ProblemInterface,
+} from "../../interfaces/interface.ts";
+import axios from "axios";
+import getURL from "../../utils/getURL.ts";
+import getToken from "../../utils/getToken.ts";
 // import { useEffect } from "react";
 
 interface Tag {
@@ -14,6 +21,8 @@ interface Tag {
 
 export default function ProblemList() {
   const navigate = useNavigate();
+
+  const token = getToken();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
     { label: "String", selected: false },
@@ -45,153 +54,207 @@ export default function ProblemList() {
     setTags(initialTags);
   };
 
-  const pickRandom = () => {
-    const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
-    navigate(`/problems/${randomProblem.id}/description`);
-  };
+  // const pickRandom = () => {
+  //   const randomProblem = problems[Math.floor(Math.random() * problems.length)];
+  //   navigate(`/problems/${randomProblem.id}/description`);
+  // };
 
-  const Problems = [
-    {
-      id: 1,
-      title: "2684. Maximum Number of Moves in a Grid",
-      difficulty: "Medium",
-      tags: ["Array", "Dynamic Programming"],
-      status: "Solved",
-    },
-    {
-      id: 2,
-      title: "1. Two Sum",
-      difficulty: "Easy",
-      tags: ["Array", "Hash Table"],
-      status: "Solved",
-    },
-    {
-      id: 3,
-      title: "2. Add Two Numbers",
-      difficulty: "Medium",
-      tags: ["Linked List", "Math"],
-      status: "Attempted",
-    },
-    {
-      id: 4,
-      title: "3. Longest Substring Without Repeating Characters",
-      difficulty: "Medium",
-      tags: ["String", "Sliding Window"],
-      status: "",
-    },
-    {
-      id: 5,
-      title: "4. Median of Two Sorted Arrays",
-      difficulty: "Hard",
-      tags: ["Array", "Binary Search"],
-      status: "Attempted",
-    },
-    {
-      id: 6,
-      title: "5. Longest Palindromic Substring",
-      difficulty: "Medium",
-      tags: ["String", "Dynamic Programming"],
-      status: "",
-    },
-    {
-      id: 7,
-      title: "6. Zigzag Conversion",
-      difficulty: "Medium",
-      tags: ["String"],
-      status: "Solved",
-    },
-    {
-      id: 8,
-      title: "7. Reverse Integer",
-      difficulty: "Medium",
-      tags: ["Math"],
-      status: "Attempted",
-    },
-    {
-      id: 9,
-      title: "8. String to Integer (atoi)",
-      difficulty: "Medium",
-      tags: ["String", "Math"],
-      status: "",
-    },
-    {
-      id: 10,
-      title: "9. Palindrome Number",
-      difficulty: "Easy",
-      tags: ["Math"],
-      status: "Solved",
-    },
-    {
-      id: 11,
-      title: "10. Regular Expression Matching",
-      difficulty: "Hard",
-      tags: ["String", "Dynamic Programming"],
-      status: "Attempted",
-    },
-    {
-      id: 12,
-      title: "11. Container With Most Water",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers"],
-      status: "",
-    },
-    {
-      id: 13,
-      title: "12. Integer to Roman",
-      difficulty: "Medium",
-      tags: ["Math", "String"],
-      status: "Attempted",
-    },
-    {
-      id: 14,
-      title: "13. Roman to Integer",
-      difficulty: "Easy",
-      tags: ["Math", "String"],
-      status: "Solved",
-    },
-    {
-      id: 15,
-      title: "14. Longest Common Prefix",
-      difficulty: "Easy",
-      tags: ["String"],
-      status: "Solved",
-    },
-    {
-      id: 16,
-      title: "15. 3Sum",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers", "Sorting"],
-      status: "Attempted",
-    },
-    {
-      id: 17,
-      title: "16. 3Sum Closest",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers"],
-      status: "",
-    },
-    {
-      id: 18,
-      title: "17. Letter Combinations of a Phone Number",
-      difficulty: "Medium",
-      tags: ["String", "Backtracking"],
-      status: "",
-    },
-    {
-      id: 19,
-      title: "18. 4Sum",
-      difficulty: "Medium",
-      tags: ["Array", "Two Pointers", "Sorting"],
-      status: "Attempted",
-    },
-    {
-      id: 20,
-      title: "19. Remove Nth Node From End of List",
-      difficulty: "Medium",
-      tags: ["Linked List", "Two Pointers"],
-      status: "Solved",
-    },
-  ];
+  const [fetchProblems, setFetchProblems] = useState<ProblemInterface[]>([]);
+
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        let response;
+        if (!token) {
+          response = await axios.get<GetAllProblemsInterface>(
+            getURL("/api/problems/no-account"),
+          );
+        } else {
+          response = await axios.get<GetAllProblemsInterface>(
+            getURL("/api/problems/with-account"),
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+        }
+        setFetchProblems(response.data.data.problems);
+        console.log("Problems", response.data);
+        console.log(response.data.data.problems[0].status.toString());
+      } catch (error: any) {
+        console.error(error);
+      }
+    };
+    fetchProblems();
+  }, []);
+
+  const problems = fetchProblems.map((fetchProblem) => {
+    const difficultyMapping: Record<number, string> = {
+      1: "Easy",
+      2: "Medium",
+      3: "Hard",
+    };
+
+    const statusMapping: Record<string, string> = {
+      false: "Todo",
+      true: "Solved",
+    };
+
+    return {
+      ...fetchProblem,
+      userStatus:
+        statusMapping[fetchProblem.userStatus.toString()] || "Unknown",
+      difficulty: difficultyMapping[fetchProblem.difficulty] || "Unknown",
+      tags: splitString(fetchProblem.tags),
+    };
+  });
+  function splitString(inputString: string) {
+    return inputString.split(",");
+  }
+
+  // const Problems = [
+  //   {
+  //     id: 1,
+  //     title: "2684. Maximum Number of Moves in a Grid",
+  //     difficulty: "Medium",
+  //     tags: ["Array", "Dynamic Programming"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "1. Two Sum",
+  //     difficulty: "Easy",
+  //     tags: ["Array", "Hash Table"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "2. Add Two Numbers",
+  //     difficulty: "Medium",
+  //     tags: ["Linked List", "Math"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "3. Longest Substring Without Repeating Characters",
+  //     difficulty: "Medium",
+  //     tags: ["String", "Sliding Window"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "4. Median of Two Sorted Arrays",
+  //     difficulty: "Hard",
+  //     tags: ["Array", "Binary Search"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "5. Longest Palindromic Substring",
+  //     difficulty: "Medium",
+  //     tags: ["String", "Dynamic Programming"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 7,
+  //     title: "6. Zigzag Conversion",
+  //     difficulty: "Medium",
+  //     tags: ["String"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 8,
+  //     title: "7. Reverse Integer",
+  //     difficulty: "Medium",
+  //     tags: ["Math"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 9,
+  //     title: "8. String to Integer (atoi)",
+  //     difficulty: "Medium",
+  //     tags: ["String", "Math"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 10,
+  //     title: "9. Palindrome Number",
+  //     difficulty: "Easy",
+  //     tags: ["Math"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 11,
+  //     title: "10. Regular Expression Matching",
+  //     difficulty: "Hard",
+  //     tags: ["String", "Dynamic Programming"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 12,
+  //     title: "11. Container With Most Water",
+  //     difficulty: "Medium",
+  //     tags: ["Array", "Two Pointers"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 13,
+  //     title: "12. Integer to Roman",
+  //     difficulty: "Medium",
+  //     tags: ["Math", "String"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 14,
+  //     title: "13. Roman to Integer",
+  //     difficulty: "Easy",
+  //     tags: ["Math", "String"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 15,
+  //     title: "14. Longest Common Prefix",
+  //     difficulty: "Easy",
+  //     tags: ["String"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 16,
+  //     title: "15. 3Sum",
+  //     difficulty: "Medium",
+  //     tags: ["Array", "Two Pointers", "Sorting"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 17,
+  //     title: "16. 3Sum Closest",
+  //     difficulty: "Medium",
+  //     tags: ["Array", "Two Pointers"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 18,
+  //     title: "17. Letter Combinations of a Phone Number",
+  //     difficulty: "Medium",
+  //     tags: ["String", "Backtracking"],
+  //     status: "",
+  //   },
+  //   {
+  //     id: 19,
+  //     title: "18. 4Sum",
+  //     difficulty: "Medium",
+  //     tags: ["Array", "Two Pointers", "Sorting"],
+  //     status: "Solved",
+  //   },
+  //   {
+  //     id: 20,
+  //     title: "19. Remove Nth Node From End of List",
+  //     difficulty: "Medium",
+  //     tags: ["Linked List", "Two Pointers"],
+  //     status: "Solved",
+  //   },
+  // ];
 
   const Difficulty = ["Easy", "Medium", "Hard"];
 
@@ -201,10 +264,10 @@ export default function ProblemList() {
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
 
-  const filteredProblems = Problems.filter(
+  const filteredProblems = problems.filter(
     (problem) =>
       (problem.difficulty === difficulty || difficulty === "All") &&
-      (problem.status === status || status === "All") &&
+      (problem.userStatus === status || status === "All") &&
       getSelectedTags().every((tag) => problem.tags.includes(tag)) &&
       problem.title.toLowerCase().includes(search.toLowerCase()),
   );
@@ -285,19 +348,17 @@ export default function ProblemList() {
                 <Dropdown.Item
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    status === "Attempted"
-                      ? setStatus("All")
-                      : setStatus("Attempted");
+                    status === "Todo" ? setStatus("All") : setStatus("Todo");
                   }}
                 >
                   <Button variant="white" className="text-warning">
                     <div className="d-flex gap-2">
                       <img src="/attempted.svg" width="24" height="24" />
-                      Attempted
+                      To do
                     </div>
                   </Button>
                   <span className="ms-4">
-                    {status === "Attempted" ? (
+                    {status === "Todo" ? (
                       <img
                         src="/done.svg"
                         width="30"
@@ -355,7 +416,7 @@ export default function ProblemList() {
             </Form>
             <div
               className="d-flex ms-2"
-              onClick={() => pickRandom()}
+              // onClick={() => pickRandom()}
               style={{
                 cursor: "pointer",
               }}
@@ -407,59 +468,67 @@ export default function ProblemList() {
               </tr>
             </thead>
             <tbody>
-              {filteredProblems.map((problem) => (
-                <tr key={problem.id}>
-                  <td>
-                    {problem.status === "Solved" ? (
-                      <img src="/done2.svg" width="30" height="24" />
-                    ) : problem.status === "Attempted" ? (
-                      <img src="/attempted.svg" width="30" height="24" />
-                    ) : null}
-                  </td>
-                  <td>
-                    <Link
-                      to={`/problems/${problem.id}/description`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {problem.title}
-                    </Link>
-                  </td>
-
-                  <td>
-                    {problem.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="badge rounded-pill m-1 bg-secondary"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </td>
-
-                  <td>
-                    <span
-                      className={`badge ${
-                        problem.difficulty === "Easy"
-                          ? "text-success"
-                          : problem.difficulty === "Medium"
-                            ? "text-warning"
-                            : "text-danger"
-                      }`}
-                    >
-                      {problem.difficulty}
-                    </span>
+              {filteredProblems.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="text-center">
+                    <strong>No problems found</strong>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredProblems.map((problem) => (
+                  <tr key={problem.problemId}>
+                    <td>
+                      {problem.userStatus === "Solved" ? (
+                        <img src="/done2.svg" width="30" height="24" />
+                      ) : (
+                        <img src="/attempted.svg" width="30" height="24" />
+                      )}
+                    </td>
+                    <td>
+                      <Link
+                        to={`/problems/${problem.problemId}/description`}
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.color = "blue")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.color = "black")
+                        }
+                      >
+                        {problem.title}
+                      </Link>
+                    </td>
+
+                    <td>
+                      {problem.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="badge rounded-pill m-1 bg-secondary"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </td>
+
+                    <td>
+                      <span
+                        className={`badge ${
+                          problem.difficulty === "Easy"
+                            ? "text-success"
+                            : problem.difficulty === "Medium"
+                              ? "text-warning"
+                              : "text-danger"
+                        }`}
+                      >
+                        {problem.difficulty}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </Table>
         </div>

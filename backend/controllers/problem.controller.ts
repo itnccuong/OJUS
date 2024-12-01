@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { formatResponseNew } from "../utils/formatResponse";
 
 import {
@@ -15,6 +15,7 @@ import {
   findProblemById,
   saveCodeToFile,
   updateSubmissionVerdict,
+  updateUserProblemStatus,
 } from "../services/problem.services/submit.services";
 import { STATUS_CODE } from "../utils/constants";
 import {
@@ -22,7 +23,10 @@ import {
   SubmitCodeConfig,
   SubmitParamsConfig,
 } from "../interfaces/api-interface";
-import { queryProblems } from "../services/problem.services/problem.service";
+import {
+  queryProblems,
+  queryProblemStatus,
+} from "../services/problem.services/problem.service";
 
 dotenv.config();
 
@@ -111,6 +115,7 @@ export const submit = async (
   //     submissionId: submission.submissionId,
   //   },
   // });
+  await updateUserProblemStatus(userId, problem_id);
   return formatResponseNew(
     res,
     "ALL_TEST_PASSED",
@@ -122,6 +127,33 @@ export const submit = async (
   );
 };
 
-export const getAllProblems = async (req: Request, res: Response) => {
+export const getAllProblemsNoAccount = async (req: Request, res: Response) => {
   const problems = await queryProblems();
+  const responseData = problems.map((problem) => ({
+    ...problem,
+    userStatus: false,
+  }));
+  return formatResponseNew(
+    res,
+    "SUCCESS",
+    "Get all problems successfully",
+    STATUS_CODE.SUCCESS,
+    { problems: responseData },
+  );
+};
+
+export const getAllProblemsWithAccount = async (
+  req: Request,
+  res: Response,
+) => {
+  const userId = req.userId;
+  //Join userProblemStatus with problem to get status of each problem
+  const responseData = await queryProblemStatus(userId);
+  return formatResponseNew(
+    res,
+    "SUCCESS",
+    "Get all problems successfully",
+    STATUS_CODE.SUCCESS,
+    { problems: responseData },
+  );
 };

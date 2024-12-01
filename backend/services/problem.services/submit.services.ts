@@ -185,3 +185,15 @@ export const createResult = async (
     },
   });
 };
+
+export const updateUserProblemStatus = async (
+  userId: number,
+  problemId: number,
+) => {
+  await prisma.userProblemStatus.create({
+    data: {
+      userId: userId,
+      problemId: problemId,
+    },
+  });
+};
