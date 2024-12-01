@@ -93,7 +93,7 @@ const getOneContribute = async (req: Request, res: Response) => {
     const contribute = await prisma.problem.findUnique({
       where: {
         problemId: parseInt(contribute_id, 10),
-        isActive: false,
+        status: 0,
       },
     });
 
@@ -127,7 +127,7 @@ const getAllContribute = async (req: Request, res: Response) => {
     // Lấy tất cả các contribute với isActive = false
     const contributions = await prisma.problem.findMany({
       where: {
-        isActive: false,
+        status: 0,
       },
     });
 
@@ -169,12 +169,12 @@ const acceptContribute = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingContribute?.isActive) {
+    if (existingContribute?.status !== 0) {
       return formatResponse(
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Contribute is already accepted!",
+        "Contribution is not in pending state",
       );
     }
 
@@ -183,7 +183,7 @@ const acceptContribute = async (req: Request, res: Response) => {
         problemId: parseInt(contribute_id, 10),
       },
       data: {
-        isActive: true,
+        status: 2,
       },
     });
 
@@ -213,12 +213,12 @@ const rejectContribute = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingContribute?.isActive == false) {
+    if (existingContribute?.status !== 0) {
       return formatResponse(
         res,
         {},
         STATUS_CODE.BAD_REQUEST,
-        "Contribute is already rejected!",
+        "Contribution is not in pending state",
       );
     }
 
@@ -227,7 +227,7 @@ const rejectContribute = async (req: Request, res: Response) => {
         problemId: parseInt(contribute_id, 10),
       },
       data: {
-        isActive: false,
+        status: 1,
       },
     });
 

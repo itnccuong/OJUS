@@ -20,15 +20,15 @@ model User {
 }
 
 model Problem {
-  problemId   Int       @id @default(autoincrement())
-  title       String    @unique
-  description String    @db.Text
-  isActive    Boolean   @default(false)  
+  problemId   Int      @id @default(autoincrement())
+  title       String   @unique
+  description String   @db.Text
+  status      Int      @default(0)
   difficulty  Int
   tags        String
   timeLimit   Int
   memoryLimit Int
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime @default(now())
   authorId    Int
   author      User     @relation(fields: [authorId], references: [userId])
 
