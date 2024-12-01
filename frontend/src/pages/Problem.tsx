@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import {
@@ -11,14 +11,6 @@ import {
 import ReactMarkdown from "react-markdown";
 import React, { useEffect, useState } from "react";
 
-// import SyntaxHighlighter from "react-syntax-highlighter";
-// import Editor from "react-simple-code-editor";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism.css"; // Choose a Prism theme you like
-
-// // Load the language you need
-// import "prismjs/components/prism-javascript";
-
 import CodeMirror from "@uiw/react-codemirror";
 // import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
@@ -29,6 +21,7 @@ import getURL from "../../utils/getURL.ts";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
 import {
+  ErrorResponseInterface,
   GetOneProblemInterface,
   ProblemInterface,
 } from "../../interfaces/interface.ts";
