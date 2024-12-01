@@ -1,5 +1,4 @@
 import prisma from "../../prisma/client";
-import { formatResponse } from "../../utils/formatResponse";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

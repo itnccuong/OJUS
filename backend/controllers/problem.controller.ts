@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import { Response } from "express";
-import { errorResponse, successResponse } from "../utils/formatResponse";
+import { Request, Response } from "express";
+import { formatResponse } from "../utils/formatResponse";
 
 import {
   compile,
@@ -8,7 +8,6 @@ import {
   languageDetails,
 } from "../services/code-executor/executor-utils";
 import {
-  convertLanguage,
   createResult,
   createSubmission,
   downloadTestcase,
@@ -16,24 +15,30 @@ import {
   findProblemById,
   saveCodeToFile,
   updateSubmissionVerdict,
+  updateUserProblemStatus,
 } from "../services/problem.services/submit.services";
 import { STATUS_CODE } from "../utils/constants";
 import {
   CustomRequest,
   SubmitCodeConfig,
-  SubmitParamsConfig,
+  ProblemParamsInterface,
 } from "../interfaces/api-interface";
+import {
+  getUserStatus,
+  queryProblems,
+  queryProblemStatus,
+} from "../services/problem.services/problem.service";
 
 dotenv.config();
 
-const submit = async (
-  req: CustomRequest<SubmitCodeConfig, SubmitParamsConfig>,
+export const submit = async (
+  req: CustomRequest<SubmitCodeConfig, ProblemParamsInterface>,
   res: Response,
 ) => {
   const problem_id = parseInt(req.params.problem_id);
   const userId = req.userId;
-  const { code } = req.body;
-  const language = convertLanguage(req.body.language);
+  const { code, language } = req.body;
+  // const language = convertLanguage(req.body.language);
 
   let submission = await createSubmission(problem_id, userId, code, language);
   const problem = await findProblemById(problem_id);
@@ -42,29 +47,28 @@ const submit = async (
   const fileUrl = file.location;
   const testcase = await downloadTestcase(fileUrl);
 
-  const filenameWithExtension = saveCodeToFile(
-    submission.submissionId,
-    code,
-    language,
-  );
+  let filename = saveCodeToFile(submission.submissionId, code, language);
 
-  const filename = await compile(filenameWithExtension, language);
-  if (!filename) {
+  const compileResult = await compile(filename, language);
+  if (compileResult.stderr) {
     submission = await updateSubmissionVerdict(
       submission.submissionId,
       "COMPILE_ERROR",
     );
 
-    return errorResponse(
+    return formatResponse(
       res,
       "COMPILE_ERROR",
       "Compile error",
       STATUS_CODE.BAD_REQUEST,
       {
         submission: submission,
+        stderr: compileResult.stderr,
       },
     );
   }
+  filename = compileResult.filenameWithoutExtension;
+
   const testcaseLength = testcase.input.length;
   const timeLimit = problem.timeLimit;
 
@@ -93,7 +97,7 @@ const submit = async (
         submission.submissionId,
         result.verdict,
       );
-      return errorResponse(
+      return formatResponse(
         res,
         result.verdict,
         result.verdict,
@@ -112,13 +116,79 @@ const submit = async (
   //     submissionId: submission.submissionId,
   //   },
   // });
-  return successResponse(
+  await updateUserProblemStatus(userId, problem_id);
+  return formatResponse(
     res,
+    "ALL_TEST_PASSED",
+    "All testcases passed",
+    STATUS_CODE.SUCCESS,
     {
       submission: submission,
     },
-    STATUS_CODE.SUCCESS,
   );
 };
 
-export { submit };
+export const getAllProblemsNoAccount = async (req: Request, res: Response) => {
+  const problems = await queryProblems();
+
+  return formatResponse(
+    res,
+    "SUCCESS",
+    "Get all problems successfully",
+    STATUS_CODE.SUCCESS,
+    { problems: problems },
+  );
+};
+
+export const getAllProblemsWithAccount = async (
+  req: Request,
+  res: Response,
+) => {
+  const userId = req.userId;
+  //Join userProblemStatus with problem to get status of each problem
+  const responseData = await queryProblemStatus(userId);
+  return formatResponse(
+    res,
+    "SUCCESS",
+    "Get all problems successfully",
+    STATUS_CODE.SUCCESS,
+    { problems: responseData },
+  );
+};
+
+export const getOneProblemNoAccount = async (
+  req: CustomRequest<null, ProblemParamsInterface>,
+  res: Response,
+) => {
+  const problem_id = parseInt(req.params.problem_id);
+
+  const problem = await findProblemById(problem_id);
+  const resProblem = { ...problem, userStatus: false };
+
+  return formatResponse(
+    res,
+    "SUCCESS",
+    "Problem fetch successfully!",
+    STATUS_CODE.SUCCESS,
+    { problem: resProblem },
+  );
+};
+
+export const getOneProblemWithAccount = async (
+  req: CustomRequest<null, ProblemParamsInterface>,
+  res: Response,
+) => {
+  const problem_id = parseInt(req.params.problem_id);
+  const userId = req.userId;
+  const problem = await findProblemById(problem_id);
+  const userStatus = await getUserStatus(userId, problem.problemId);
+  const resProblem = { ...problem, userStatus: userStatus.userStatus };
+
+  return formatResponse(
+    res,
+    "SUCCESS",
+    "Problem fetch successfully!",
+    STATUS_CODE.SUCCESS,
+    { problem: resProblem },
+  );
+};

@@ -16,13 +16,6 @@ interface FileConfig {
   location: string;
 }
 
-//Testcase
-// input1   1
-// output1 -1
-// input2   2
-// output2 -2
-// input3   3
-// output3 -3
 export const fileData: FileConfig = {
   fileId: 1,
   filename: "testcase_1732092562978",
@@ -35,12 +28,32 @@ export const problemData = {
   problemId: 1,
   title: "1",
   description: "1",
-  isActive: true,
+  status: 0,
   difficulty: 1,
   tags: "1",
   timeLimit: 1000,
-  memoryLimit: 100,
+  memoryLimit: 1000,
   authorId: 1,
   fileId: 1,
 };
-export let fake_token = "";
+
+export const compileTestCases = [
+  {
+    language: "c",
+    invalidCode: '#include "studio.h"',
+    validCode: '#include "stdio.h"\n\nint main() {\n  printf("Random");\n}',
+  },
+  {
+    language: "cpp",
+    invalidCode: '#include "IOStream"',
+    validCode:
+      '#include <iostream>\n\nint main() {\n  std::cout << "Random";\n}',
+  },
+  {
+    language: "java",
+    invalidCode:
+      'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Random string to test compile error")  \n    }  \n}',
+    validCode:
+      'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Hello Java");\n    }  \n}',
+  },
+];

@@ -1,19 +1,27 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
-const { verifyToken } = require('../middlewares/verify-token');
+const { verifyToken } = require("../middlewares/verify-token");
 // const { uploadFile } = require('../upload/upload-file');
-import multer from 'multer';
-const upload = multer({ dest: 'uploads/' }); // Specify the destination for uploaded files
+import multer from "multer";
+const upload = multer({ dest: "uploads/", storage: multer.memoryStorage() }); // Specify the destination for uploaded files
 
-import { searchContribute, getOneContribute, getAllContribute, submitContribute, rejectContribute, acceptContribute} from '../controllers/contribute.controller';
+import {
+  searchContribute,
+  getOneContribute,
+  getAllContribute,
+  submitContribute,
+  rejectContribute,
+  acceptContribute,
+} from "../controllers/contribute.controller";
+import asyncErrorHandler from "../utils/asyncErrorHandler";
 
 router.use(verifyToken);
 
-router.get('/search', searchContribute);
-router.get('/contribute_all', getAllContribute);
-router.get('/:contribute_id', getOneContribute);
-router.post('/', upload.single('file'), submitContribute);
-router.post('/accept/:contribute_id', acceptContribute);
-router.post('/reject/:contribute_id', rejectContribute);
+// router.get("/search", searchContribute);
+router.get("/", asyncErrorHandler(getAllContribute));
+router.get("/:contribute_id", asyncErrorHandler(getOneContribute));
+router.post("/", upload.single("file"), asyncErrorHandler(submitContribute));
+router.post("/accept/:contribute_id", asyncErrorHandler(acceptContribute));
+router.post("/reject/:contribute_id", asyncErrorHandler(rejectContribute));
 
 export default router;

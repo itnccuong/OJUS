@@ -7,22 +7,18 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken";
 
-
 import { useEffect } from "react";
 
-import axios from 'axios';
+import axios from "axios";
 import getURL from "../../utils/getURL";
+import {
+  ProblemInterface,
+  GetAllContributionsInterface,
+} from "../../interfaces/interface.ts";
 
 interface Tag {
   label: string;
   selected: boolean;
-}
-
-interface ProblemList {
-  id: number;
-  title: string;
-  tags: string;
-  difficulty: string;
 }
 
 export default function ContributionList() {
@@ -67,56 +63,49 @@ export default function ContributionList() {
   const handleResetTags = () => {
     setTags(initialTags);
   };
-  
-  const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
-  const [contributes, setContributes] = useState([]);
-  
+
+  // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
+  const [contributes, setContributes] = useState<ProblemInterface[]>([]);
+
   useEffect(() => {
     const fetchContributes = async () => {
       try {
-        const response = await fetch(getURL('/api/contributes/contribute_all'), {
-          headers: { Authorization: "Bearer " + token },
-        });
-  
-        if (!response.ok) {
-          throw new Error('Lỗi khi tải dữ liệu');
-        }
-  
-        const data = await response.json();
-        if (!data.data.contributes) {
-          console.error("No contributes found");
-          return;
-        }
-  
-        setContributes(data.data.contributes);
+        const { data } = await axios.get<GetAllContributionsInterface>(
+          getURL("/api/contributes/"),
+          {
+            headers: { Authorization: "Bearer " + token },
+          },
+        );
+
+        setContributes(data.data.contributions);
       } catch (error) {
-      } finally {
+        console.log(error);
       }
     };
-  
+
     fetchContributes();
   }, []);
-  
+
   // Chuyển đổi dữ liệu từ contribute thành problem
-  useEffect(() => {
-    const allProblems = contributes.map((contribute) => {
-      const difficultyMapping = { 1: "Easy", 2: "Medium", 3: "Hard" };
-  
-      return {
-        id: contribute.problemId,
-        title: contribute.title,
-        difficulty: difficultyMapping[contribute.difficulty] || "Unknown",
-        tags: splitString(contribute.tags),
-      };
-    });
-  
-    setProblems(allProblems); // Cập nhật state của Problems
-  }, [contributes]); // Khi contributes thay đổi, sẽ cập nhật lại Problems
-  
-  function splitString(inputString) {
-    return inputString.split(',');
+  const Problems = contributes.map((contribute) => {
+    const difficultyMapping: Record<number, string> = {
+      1: "Easy",
+      2: "Medium",
+      3: "Hard",
+    };
+
+    return {
+      id: contribute.problemId,
+      title: contribute.title,
+      difficulty: difficultyMapping[contribute.difficulty] || "Unknown",
+      tags: splitString(contribute.tags),
+    };
+  });
+
+  function splitString(inputString: string) {
+    return inputString.split(",");
   }
-  
+
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
     navigate(`/contributions/${randomProblem.id}/description`);
@@ -180,15 +169,6 @@ export default function ContributionList() {
                 ))}
               </div>
             </DropdownButton>
-
-            {/* <DropdownButton
-              // key="2"
-              variant="secondary"
-              title="Status"
-            >
-              <Dropdown.Item eventKey="1">Solved</Dropdown.Item>
-              <Dropdown.Item eventKey="2">Attempted</Dropdown.Item>
-            </DropdownButton> */}
 
             <DropdownButton
               // key="2"
@@ -263,10 +243,7 @@ export default function ContributionList() {
                     }}
                   >
                     <span>Title</span>
-                    <img
-                      src="/sort.svg"
-                      alt="React Bootstrap logo"
-                    />
+                    <img src="/sort.svg" alt="React Bootstrap logo" />
                   </div>
                 </th>
                 <th style={{ width: "40%" }}>Tags</th>
@@ -291,8 +268,12 @@ export default function ContributionList() {
                           textDecoration: "none",
                           color: "black",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "blue")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "black")}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.color = "blue")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.color = "black")
+                        }
                       >
                         {problem.title}
                       </Link>
@@ -300,7 +281,10 @@ export default function ContributionList() {
 
                     <td>
                       {problem.tags.map((tag, index) => (
-                        <span key={index} className="badge rounded-pill m-1 bg-secondary">
+                        <span
+                          key={index}
+                          className="badge rounded-pill m-1 bg-secondary"
+                        >
                           {tag}
                         </span>
                       ))}
@@ -312,8 +296,8 @@ export default function ContributionList() {
                           problem.difficulty === "Easy"
                             ? "text-success"
                             : problem.difficulty === "Medium"
-                            ? "text-warning"
-                            : "text-danger"
+                              ? "text-warning"
+                              : "text-danger"
                         }`}
                       >
                         {problem.difficulty}
@@ -324,7 +308,6 @@ export default function ContributionList() {
               )}
             </tbody>
           </Table>
-
         </div>
         <Footer />
       </div>

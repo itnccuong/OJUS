@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import {
@@ -11,14 +11,6 @@ import {
 import ReactMarkdown from "react-markdown";
 import React, { useEffect, useState } from "react";
 
-// import SyntaxHighlighter from "react-syntax-highlighter";
-// import Editor from "react-simple-code-editor";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism.css"; // Choose a Prism theme you like
-
-// // Load the language you need
-// import "prismjs/components/prism-javascript";
-
 import CodeMirror from "@uiw/react-codemirror";
 // import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
@@ -28,47 +20,74 @@ import axios from "axios";
 import getURL from "../../utils/getURL.ts";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
+import {
+  ErrorResponseInterface,
+  GetOneProblemInterface,
+  ProblemInterface,
+} from "../../interfaces/interface.ts";
 
 export default function Problem() {
-  const navigate = useNavigate(); // Initialize navigate
+  const { page, id } = useParams();
   const token = getToken(); // Get token from localStorage
-  useEffect(() => {
-    if (!token) {
-      navigate("/accounts/login");
-    }
-  }, [token, navigate]);
+  const [fetchProblem, setFetchProblem] = useState<ProblemInterface>();
+  const [language, setLanguage] = useState("Python");
+  const [code, setCode] = useState("");
+  const onChange = React.useCallback((val: string) => {
+    setCode(val);
+  }, []);
 
-  // const { id } = useParams();
-  const id = 1;
-  const { page } = useParams();
-  const difficulty: string = "Medium";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let res;
+        if (!token) {
+          res = await axios.get<GetOneProblemInterface>(
+            getURL(`/api/problems/${id}/no-account`),
+            {},
+          );
+        } else {
+          res = await axios.get<GetOneProblemInterface>(
+            getURL(`/api/problems/${id}/with-account`),
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+        }
+        console.log(res.data);
+        setFetchProblem(res.data.data.problem);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (!fetchProblem) {
+    return <div>Loading...</div>;
+  }
+
+  const difficultyMapping: Record<number, string> = {
+    1: "Easy",
+    2: "Medium",
+    3: "Hard",
+  };
+
+  const problem = {
+    ...fetchProblem,
+    difficulty: difficultyMapping[fetchProblem.difficulty],
+    tags: fetchProblem.tags.split(","),
+  };
 
   const Language = ["C++", "C", "Java", "Python", "Javascript"];
-
-  const [language, setLanguage] = useState("Python");
-
-  const tags: string[] = [
-    "Array",
-    "String",
-    "Hash Table",
-    "Dynamic Programming",
-    "Math",
-    "Sorting",
-    "Greedy",
-    "Depth-First Search",
-    "Database",
-    "Binary Search",
-    "Matrix",
-    "Tree",
-    "Breadth-First Search",
-  ];
 
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">Topics</Popover.Header>
       <Popover.Body>
         <div className="mb-3">
-          {tags.map((tag, index) => (
+          {problem.tags.map((tag, index) => (
             <span
               key={index}
               className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
@@ -81,50 +100,53 @@ export default function Problem() {
     </Popover>
   );
 
-  const [code, setCode] = useState("");
-  const onChange = React.useCallback((val: string) => {
-    setCode(val);
-  }, []);
+  //   const markdown = `
+  // Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
+  //
+  // - \`'.'\` Matches any single character.
+  // - \`'*'\` Matches zero or more of the preceding element.
+  //
+  // The matching should cover the **entire** input string (not partial).
+  //
+  // #### Example 1:
+  // - **Input:** \`s = "aa"\`, \`p = "a"\`
+  // - **Output:** \`false\`
+  // - **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
+  //
+  // #### Example 2:
+  // - **Input:** \`s = "aa"\`, \`p = "a*"\`
+  // - **Output:** \`true\`
+  // - **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
+  //
+  // #### Example 3:
+  // - **Input:** \`s = "ab"\`, \`p = ".*"\`
+  // - **Output:** \`true\`
+  // - **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
+  //
+  // #### Constraints:
+  // - \`1 <= s.length <= 20\`
+  // - \`1 <= p.length <= 20\`
+  // - \`s\` contains only lowercase English letters.
+  // - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
+  // - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
+  // `;
 
-  const markdown = `
-Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
-
-- \`'.'\` Matches any single character.
-- \`'*'\` Matches zero or more of the preceding element.
-
-The matching should cover the **entire** input string (not partial).
-
-#### Example 1:
-- **Input:** \`s = "aa"\`, \`p = "a"\`
-- **Output:** \`false\`
-- **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
-
-#### Example 2:
-- **Input:** \`s = "aa"\`, \`p = "a*"\`
-- **Output:** \`true\`
-- **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
-
-#### Example 3:
-- **Input:** \`s = "ab"\`, \`p = ".*"\`
-- **Output:** \`true\`
-- **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
-
-#### Constraints:
-- \`1 <= s.length <= 20\`
-- \`1 <= p.length <= 20\`
-- \`s\` contains only lowercase English letters.
-- \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
-- It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
-`;
+  const languageMap: Record<string, string> = {
+    Python: "py",
+    "C++": "cpp",
+    C: "c",
+    Java: "java",
+    Javascript: "js",
+  };
 
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
         axios.post(
-          getURL(`/api/problems/${id}/submit`),
+          getURL(`/api/problems/${id}`),
           {
             code: code,
-            language: language,
+            language: languageMap[language],
           },
           {
             headers: {
@@ -200,19 +222,17 @@ The matching should cover the **entire** input string (not partial).
                     overflowY: "auto",
                   }}
                 >
-                  <h3 className="mb-3">
-                    3. Longest Substring Without Repeating Characters
-                  </h3>
+                  <h3 className="mb-3">{problem.title}</h3>
                   <span
                     className={`badge bg-grey me-2 ${
-                      difficulty === "Easy"
+                      problem.difficulty === "Easy"
                         ? "text-success"
-                        : difficulty === "Medium"
+                        : problem.difficulty === "Medium"
                           ? "text-warning"
                           : "text-danger"
                     }`}
                   >
-                    {difficulty}
+                    {problem.difficulty}
                   </span>
 
                   <OverlayTrigger
@@ -230,7 +250,9 @@ The matching should cover the **entire** input string (not partial).
                     </span>
                   </OverlayTrigger>
 
-                  <ReactMarkdown className="mt-3">{markdown}</ReactMarkdown>
+                  <ReactMarkdown className="mt-3">
+                    {problem.description}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <div

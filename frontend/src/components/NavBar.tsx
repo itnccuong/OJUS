@@ -18,9 +18,9 @@ function NavBar() {
         <div className="container d-flex gap-3 justify-content-start">
           <Navbar.Brand as={NavLink} to={"/"}>
             <img
-              src="/leetcode.svg"
-              width="30"
-              height="30"
+              src="https://s3-alpha-sig.figma.com/img/0c6a/519e/9a3231eb4b597654b04a494e83e43344?Expires=1733702400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ppbyGHEzIau5UmICgG1z8tieMEPfuY1HBlwb3JXbx9As3Ze5OqBFi7tOicPQPE-A2OPvgvLoKf65voJVcz5uFThKWM6Huj~uPjMOnOpLLum0cXE5GZonItkyGvP72RhM92Gcy0aDuWdxhN3gYmdQAvy01PNJj-ojljO6MAq4CYK2dPzOxc3faajtZUFHj7iL3tsIjZOfW9NqbWCDYYLC7p6jrOdQwuwTe~RDqrRw6zzTwtiAFu8KBI1ElQAnRGEnU7RoejcO8fHKW3YnFjGodxXA3vhHSieDNYog81LvHoS4PfUhiPqeY1SdRpS2TrIbFqvEPfrlSNddqijr66sG5A__"
+              width="48"
+              height="32"
               className="d-inline-block align-top"
               alt="React Bootstrap logo"
             />

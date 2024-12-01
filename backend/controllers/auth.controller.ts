@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import nodemailer from "nodemailer";
 
-import { formatResponse, successResponse } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 import {
   ChangePasswordConfig,
@@ -35,7 +35,13 @@ const register = async (
 
   const hashedPassword = hashPassword(password);
   const user = await createUser(email, fullname, hashedPassword, username);
-  return successResponse(res, { user }, STATUS_CODE.CREATED);
+  return formatResponse(
+    res,
+    "USER_CREATED",
+    "Register successfully",
+    STATUS_CODE.CREATED,
+    { user },
+  );
 };
 
 const login = async (
@@ -45,10 +51,12 @@ const login = async (
   const user = await validateLoginBody(req.body);
   const token = await signToken(user.userId);
 
-  return successResponse(
+  return formatResponse(
     res,
-    { user: user, token: token },
+    "USER_LOGINED",
+    "Login successfully",
     STATUS_CODE.SUCCESS,
+    { user: user, token: token },
   );
 };
 
@@ -64,7 +72,13 @@ const sendResetLink = async (
       where: { email: email },
     });
     if (!user) {
-      return formatResponse(res, {}, STATUS_CODE.BAD_REQUEST, "Invalid email");
+      return formatResponse(
+        res,
+        "INVALID_EMAIL",
+        "Invalid email",
+        STATUS_CODE.BAD_REQUEST,
+        {},
+      );
     }
 
     // Create a JWT reset token
@@ -107,16 +121,18 @@ const sendResetLink = async (
 
     return formatResponse(
       res,
-      {},
-      STATUS_CODE.SUCCESS,
+      "RESET_LINK_SENT",
       "Password reset link sent to your email",
+      STATUS_CODE.SUCCESS,
+      {},
     );
   } catch (err: any) {
     return formatResponse(
       res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
+      "INTERNAL_SERVER_ERROR",
       err.message,
+      STATUS_CODE.INTERNAL_SERVER_ERROR,
+      {},
     );
   }
 };
@@ -137,9 +153,10 @@ const changePassword = async (
     if (!decodedToken || !decodedToken.email) {
       return formatResponse(
         res,
+        "INVALID_TOKEN",
+        "Invalid token",
+        STATUS_CODE.BAD_REQUEST,
         {},
-        STATUS_CODE.UNAUTHORIZED,
-        "Invalid or expired token",
       );
     }
 
@@ -149,7 +166,13 @@ const changePassword = async (
     });
 
     if (!user) {
-      return formatResponse(res, {}, STATUS_CODE.BAD_REQUEST, "User not found");
+      return formatResponse(
+        res,
+        "USER_NOT_FOUND",
+        "User not found",
+        STATUS_CODE.BAD_REQUEST,
+        {},
+      );
     }
 
     // Hash the new password
@@ -161,19 +184,20 @@ const changePassword = async (
       where: { email: decodedToken.email },
       data: { password: hashedPassword },
     });
-
     return formatResponse(
       res,
-      {},
-      STATUS_CODE.SUCCESS,
+      "SUCCESS",
       "Password changed successfully",
+      STATUS_CODE.SUCCESS,
+      {},
     );
   } catch (err: any) {
     return formatResponse(
       res,
-      {},
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
+      "INTERNAL_SERVER_ERROR",
       err.message,
+      STATUS_CODE.INTERNAL_SERVER_ERROR,
+      {},
     );
   }
 };

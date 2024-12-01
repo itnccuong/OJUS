@@ -41,7 +41,6 @@ const containers: Record<string, ContainerConfig> = {
 
 const languageDetails: Record<string, LanguageDetail> = {
   c: {
-    compiledExtension: "out",
     inputFunction: null,
     compilerCmd: (filename) =>
       `gcc ./${codeFiles}/${filename}.c -o ./${codeFiles}/${filename}.out -lpthread -lrt`,
@@ -49,7 +48,6 @@ const languageDetails: Record<string, LanguageDetail> = {
     container: containers.gcc,
   },
   cpp: {
-    compiledExtension: "out",
     inputFunction: null,
     compilerCmd: (filename) =>
       `g++ ./${codeFiles}/${filename}.cpp -o ./${codeFiles}/${filename}.out`,
@@ -57,26 +55,22 @@ const languageDetails: Record<string, LanguageDetail> = {
     container: containers.gcc,
   },
   py: {
-    compiledExtension: "",
     inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
     compilerCmd: null,
-    executorCmd: (filename) => `python ./${codeFiles}/${filename}`,
+    executorCmd: (filename) => `python ./${codeFiles}/${filename}.py`,
     container: containers.py,
   },
   js: {
-    compiledExtension: "",
     inputFunction: null,
     compilerCmd: null,
-    executorCmd: (filename) => `node ./${codeDirectory}/${filename}`,
+    executorCmd: (filename) => `node ./${codeFiles}/${filename}.js`,
     container: containers.js,
   },
   java: {
-    compiledExtension: "class",
     inputFunction: null,
     compilerCmd: (filename) =>
-      `javac -d ./${codeDirectory}/${filename} ./${codeDirectory}/${filename}.java`,
-    executorCmd: (filename) =>
-      `java -cp ./${codeDirectory}/${filename} Solution`,
+      `javac -d ./${codeFiles}/${filename} ./${codeFiles}/${filename}.java`,
+    executorCmd: (filename) => `java -cp ./${codeFiles}/${filename} Solution`,
     container: containers.java,
   },
 };
@@ -144,36 +138,31 @@ const initAllDockerContainers = async () => {
 };
 
 /**
- * Compiles the code inside a Docker container.
- * @param filenameWithExtension - The file name to compile.
+ * Compiles the code inside a Docker container. Return new filename that removed the extension. Ex: main.cpp -> main
+ * @param filename - The file name to compile.
  * @param language - The language of the file.
  * @returns Promise<string | null> - Returns the filename if compile successfully, otherwise null.
  */
-const compile = async (filenameWithExtension: string, language: string) => {
-  const filename = filenameWithExtension.split(".")[0];
+const compile = async (filename: string, language: string) => {
+  const filenameWithoutExtension = filename.split(".")[0];
   const command = languageDetails[language].compilerCmd
-    ? languageDetails[language].compilerCmd(filename)
+    ? languageDetails[language].compilerCmd(filenameWithoutExtension)
     : null;
 
   if (!command) {
-    return null;
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
   }
 
   try {
     const container = languageDetails[language].container;
     const containerId = getContainerId(container);
     await execAsync(`docker exec ${containerId} ${command}`);
-    return filename;
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
   } catch (error: any) {
-    // throw new CustomError(
-    //   "COMPILE_ERROR",
-    //   "Compile error!",
-    //   STATUS_CODE.BAD_REQUEST,
-    //   {
-    //     stderr: error.stderr,
-    //   },
-    // );
-    return null;
+    return {
+      filenameWithoutExtension: filenameWithoutExtension,
+      stderr: error.stderr,
+    };
   }
 };
 

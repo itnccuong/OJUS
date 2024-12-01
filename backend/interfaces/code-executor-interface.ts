@@ -8,7 +8,6 @@ export type CompExecCmd = (id: string) => string;
 export type InputFunc = (id: string) => string;
 
 export interface LanguageDetail {
-  compiledExtension: string;
   inputFunction: InputFunc | null;
   compilerCmd: CompExecCmd | null;
   executorCmd: CompExecCmd;

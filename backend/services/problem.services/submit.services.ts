@@ -54,23 +54,6 @@ export const findProblemById = async (problem_id: number) => {
   return problem;
 };
 
-//Convert language string from frontend to match backend
-export const convertLanguage = (language: string) => {
-  const convertMap: Record<string, string> = {
-    Python: "py",
-    "C++": "cpp",
-    C: "c",
-    Java: "java",
-    Javascript: "js",
-  };
-
-  const convertedLanguage = convertMap[language];
-  if (!languageDetails[convertedLanguage]) {
-    // throw new ConvertLanguageError("Invalid language", language);
-  }
-  return convertedLanguage;
-};
-
 export const getContainerId = (container: ContainerConfig) => {
   const containerId = container.id;
   if (!containerId) {
@@ -199,6 +182,18 @@ export const createResult = async (
       verdict: verdict,
       time: time,
       memory: memory,
+    },
+  });
+};
+
+export const updateUserProblemStatus = async (
+  userId: number,
+  problemId: number,
+) => {
+  await prisma.userProblemStatus.create({
+    data: {
+      userId: userId,
+      problemId: problemId,
     },
   });
 };

@@ -15,26 +15,37 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  problems   Problem[]
-  Submission Submission[]
+  problems          Problem[]
+  Submission        Submission[]
+  UserProblemStatus UserProblemStatus[]
 }
 
 model Problem {
-  problemId   Int       @id @default(autoincrement())
-  title       String    @unique
-  description String    @db.Text
-  isActive    Boolean   @default(false)  
+  problemId   Int      @id @default(autoincrement())
+  title       String   @unique
+  description String   @db.Text
+  status      Int      @default(0)
   difficulty  Int
   tags        String
   timeLimit   Int
   memoryLimit Int
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime @default(now())
   authorId    Int
   author      User     @relation(fields: [authorId], references: [userId])
 
-  fileId     Int          @unique
-  file       Files        @relation(fields: [fileId], references: [fileId])
-  Submission Submission[]
+  fileId            Int                 @unique
+  file              Files               @relation(fields: [fileId], references: [fileId])
+  Submission        Submission[]
+  UserProblemStatus UserProblemStatus[]
+}
+
+model UserProblemStatus {
+  userProblemStatusId Int      @id @default(autoincrement())
+  userId              Int
+  problemId           Int
+  problem             Problem  @relation(fields: [problemId], references: [problemId])
+  user                User     @relation(fields: [userId], references: [userId])
+  createdAt           DateTime @default(now())
 }
 
 model Files {
