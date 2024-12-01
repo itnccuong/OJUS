@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
-import { formatResponse, formatResponseNew } from "../utils/formatResponse";
+import { formatResponseNew } from "../utils/formatResponse";
 
 import {
   compile,

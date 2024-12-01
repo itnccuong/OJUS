@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import { CustomError } from "../utils/error";
-import {formatResponse, formatResponseNew} from "../utils/formatResponse";
+import { formatResponseNew } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 
 const globalErrorHandler = (

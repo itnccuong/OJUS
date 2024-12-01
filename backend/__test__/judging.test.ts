@@ -125,6 +125,13 @@ describe("Submit code (C++)", () => {
   });
 });
 
+// import { describe, expect, test } from "@jest/globals";
+// import request from "supertest";
+// import { app } from "../src/app";
+// import { STATUS_CODE } from "../utils/constants";
+// import { initAllDockerContainers } from "../services/code-executor/executor-utils";
+// import jwt from "jsonwebtoken";
+//
 // describe("Authentication tests", () => {
 //   describe("Register", () => {
 //     test("Correct all fields", async () => {

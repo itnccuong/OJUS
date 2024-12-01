@@ -1,4 +1,4 @@
-import { formatResponse } from "../utils/formatResponse";
+import { formatResponseNew } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
@@ -32,9 +32,21 @@ export const verifyToken = (
   jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
-        return formatResponse(res, {}, STATUS_CODE.UNAUTHORIZED, err.message);
+        return formatResponseNew(
+          res,
+          "UNAUTHORIZED",
+          "Token expired",
+          STATUS_CODE.UNAUTHORIZED,
+          {},
+        );
       } else {
-        return formatResponse(res, {}, STATUS_CODE.UNAUTHORIZED, err.message);
+        return formatResponseNew(
+          res,
+          "UNAUTHORIZED",
+          "Invalid token",
+          STATUS_CODE.UNAUTHORIZED,
+          {},
+        );
       }
     } else {
       req.userId = (decoded as DecodeToken).userId;
