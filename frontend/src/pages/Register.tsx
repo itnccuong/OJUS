@@ -1,11 +1,10 @@
 import { FormEvent, useState } from "react";
-import axios from "axios";
-import getURL from "../../utils/getURL";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
+import axiosInstance from "../../utils/getURL";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ export default function Register() {
     }
 
     try {
-      const { data } = await axios.post(getURL("/api/auth/register"), {
+      const { data } = await axiosInstance.post("/api/auth/register", {
         username,
         password,
         email,

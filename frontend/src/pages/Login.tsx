@@ -1,12 +1,11 @@
-import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 import storageKeyMap from "../../utils/storageKeyMap.ts";
+import axiosInstance from "../../utils/getURL";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,7 +17,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(getURL("/api/auth/login"), {
+      const { data } = await axiosInstance.post("/api/auth/login", {
         usernameOrEmail,
         password,
       });

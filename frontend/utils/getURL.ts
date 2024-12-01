@@ -1,5 +1,8 @@
+import axios from "axios";
 import { port_server } from "../constants/Network";
-const getURL = (api: string) => {
-    return 'http://localhost:' + port_server + api
-}
-export default getURL
+
+const axiosInstance = axios.create({
+  baseURL: `http://localhost:${port_server}`,
+});
+
+export default axiosInstance;

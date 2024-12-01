@@ -16,15 +16,13 @@ import CodeMirror from "@uiw/react-codemirror";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 // import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
-import axios from "axios";
-import getURL from "../../utils/getURL.ts";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
 import {
-  ErrorResponseInterface,
   GetOneProblemInterface,
   ProblemInterface,
 } from "../../interfaces/interface.ts";
+import axiosInstance from "../../utils/getURL.ts";
 
 export default function Problem() {
   const { page, id } = useParams();
@@ -41,13 +39,13 @@ export default function Problem() {
       try {
         let res;
         if (!token) {
-          res = await axios.get<GetOneProblemInterface>(
-            getURL(`/api/problems/${id}/no-account`),
+          res = await axiosInstance.get<GetOneProblemInterface>(
+            `/api/problems/${id}/no-account`,
             {},
           );
         } else {
-          res = await axios.get<GetOneProblemInterface>(
-            getURL(`/api/problems/${id}/with-account`),
+          res = await axiosInstance.get<GetOneProblemInterface>(
+            `/api/problems/${id}/with-account`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -142,8 +140,8 @@ export default function Problem() {
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
-        axios.post(
-          getURL(`/api/problems/${id}`),
+        axiosInstance.post(
+          `/api/problems/${id}`,
           {
             code: code,
             language: languageMap[language],

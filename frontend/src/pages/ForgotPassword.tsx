@@ -1,11 +1,10 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
+import axiosInstance from "../../utils/getURL";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       await toast.promise(
-        axios.post(getURL("/api/auth/reset-link"), {
+        axiosInstance.post("/api/auth/reset-link", {
           email: email,
         }),
         {

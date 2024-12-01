@@ -3,12 +3,10 @@ import NavBar from "../components/NavBar";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Footer from "../components/Footer";
-import getURL from "../../utils/getURL";
 import { toast } from "react-toastify";
-// import getStorage from "../../utils/getStorage";
 import getToken from "../../utils/getToken";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/getURL";
 
 interface Tag {
   label: string;
@@ -66,65 +64,6 @@ export default function Contribute() {
 
   const [isMarkdown, setIsMarkdown] = useState(false);
 
-  // const initializeUpload = async (
-  //   fileName: string,
-  //   fileSize: number,
-  //   contentType: string,
-  // ) => {
-  //   const response = await axios.post(getURL("/upload/start-upload"), {
-  //     file_name: fileName,
-  //     file_size: fileSize,
-  //     content_type: contentType,
-  //   });
-  //   return response.data;
-  // };
-  //
-  // const uploadChunk = async (url: string, chunk: Blob) => {
-  //   const response = await axios.put(url, chunk);
-  //   if (response.status === 200) {
-  //     return response.headers["etag"];
-  //   }
-  //   throw new Error("Failed to upload chunk.");
-  // };
-  //
-  // const splitFileIntoChunks = (file: File, chunkSize: number) => {
-  //   const chunks = [];
-  //   let start = 0;
-  //
-  //   while (start < file.size) {
-  //     const end = Math.min(start + chunkSize, file.size);
-  //     chunks.push(file.slice(start, end));
-  //     start = end;
-  //   }
-  //
-  //   return chunks;
-  // };
-  //
-  // const uploadToS3 = async (file: File, chunkSize: number, urls: string[]) => {
-  //   const chunks = splitFileIntoChunks(file, chunkSize);
-  //   const etags = [];
-  //
-  //   for (let i = 0; i < chunks.length; i++) {
-  //     const etag = await uploadChunk(urls[i], chunks[i]);
-  //     etags.push(etag);
-  //   }
-  //
-  //   return etags;
-  // };
-  //
-  // const completeUpload = async (
-  //   key: string,
-  //   uploadId: string,
-  //   etags: string[],
-  // ) => {
-  //   const response = await axios.post(getURL("/upload/complete-upload"), {
-  //     key,
-  //     upload_id: uploadId,
-  //     etags: etags.join(","),
-  //   });
-  //   return response.data.url;
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -147,7 +86,7 @@ export default function Contribute() {
 
       // Submit the form
       const res = await toast.promise(
-        axios.post(getURL("/api/contributes"), formdata, {
+        axiosInstance.post("/api/contributes", formdata, {
           headers: { Authorization: "Bearer " + token },
         }),
         {
