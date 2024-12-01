@@ -22,10 +22,11 @@ import {
   SubmitCodeConfig,
   SubmitParamsConfig,
 } from "../interfaces/api-interface";
+import { queryProblems } from "../services/problem.services/problem.service";
 
 dotenv.config();
 
-const submit = async (
+export const submit = async (
   req: CustomRequest<SubmitCodeConfig, SubmitParamsConfig>,
   res: Response,
 ) => {
@@ -121,4 +122,6 @@ const submit = async (
   );
 };
 
-export { submit };
+export const getAllProblems = async (req: Request, res: Response) => {
+  const problems = await queryProblems();
+};

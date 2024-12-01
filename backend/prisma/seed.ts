@@ -23,7 +23,7 @@ async function main() {
     problemId: 1,
     title: "1",
     description: "1",
-    isActive: true,
+    status: 0,
     difficulty: 1,
     tags: "1",
     timeLimit: 100,
