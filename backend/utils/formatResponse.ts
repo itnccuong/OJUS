@@ -1,4 +1,4 @@
-export const formatResponseNew = (
+export const formatResponse = (
   res: any,
   name: string,
   message: string,

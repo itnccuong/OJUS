@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import { CustomError } from "../utils/error";
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 
 const globalErrorHandler = (
@@ -11,9 +11,9 @@ const globalErrorHandler = (
 ) => {
   console.log("Error in global error handler:", err);
   if (err instanceof CustomError) {
-    return formatResponseNew(res, err.name, err.message, err.status, err.data);
+    return formatResponse(res, err.name, err.message, err.status, err.data);
   }
-  return formatResponseNew(
+  return formatResponse(
     res,
     "INTERNAL_SERVER_ERROR",
     "Internal server error",

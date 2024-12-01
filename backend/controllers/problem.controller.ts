@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 
 import {
   compile,
@@ -56,7 +56,7 @@ export const submit = async (
       "COMPILE_ERROR",
     );
 
-    return formatResponseNew(
+    return formatResponse(
       res,
       "COMPILE_ERROR",
       "Compile error",
@@ -97,7 +97,7 @@ export const submit = async (
         submission.submissionId,
         result.verdict,
       );
-      return formatResponseNew(
+      return formatResponse(
         res,
         result.verdict,
         result.verdict,
@@ -117,7 +117,7 @@ export const submit = async (
   //   },
   // });
   await updateUserProblemStatus(userId, problem_id);
-  return formatResponseNew(
+  return formatResponse(
     res,
     "ALL_TEST_PASSED",
     "All testcases passed",
@@ -131,7 +131,7 @@ export const submit = async (
 export const getAllProblemsNoAccount = async (req: Request, res: Response) => {
   const problems = await queryProblems();
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Get all problems successfully",
@@ -147,7 +147,7 @@ export const getAllProblemsWithAccount = async (
   const userId = req.userId;
   //Join userProblemStatus with problem to get status of each problem
   const responseData = await queryProblemStatus(userId);
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Get all problems successfully",
@@ -165,7 +165,7 @@ export const getOneProblemNoAccount = async (
   const problem = await findProblemById(problem_id);
   const resProblem = { ...problem, userStatus: false };
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Problem fetch successfully!",
@@ -184,7 +184,7 @@ export const getOneProblemWithAccount = async (
   const userStatus = await getUserStatus(userId, problem.problemId);
   const resProblem = { ...problem, userStatus: userStatus.userStatus };
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Problem fetch successfully!",

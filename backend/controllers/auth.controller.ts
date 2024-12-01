@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import nodemailer from "nodemailer";
 
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 import {
   ChangePasswordConfig,
@@ -35,7 +35,7 @@ const register = async (
 
   const hashedPassword = hashPassword(password);
   const user = await createUser(email, fullname, hashedPassword, username);
-  return formatResponseNew(
+  return formatResponse(
     res,
     "USER_CREATED",
     "Register successfully",
@@ -51,7 +51,7 @@ const login = async (
   const user = await validateLoginBody(req.body);
   const token = await signToken(user.userId);
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "USER_LOGINED",
     "Login successfully",
@@ -72,7 +72,7 @@ const sendResetLink = async (
       where: { email: email },
     });
     if (!user) {
-      return formatResponseNew(
+      return formatResponse(
         res,
         "INVALID_EMAIL",
         "Invalid email",
@@ -119,7 +119,7 @@ const sendResetLink = async (
     // Send the email
     await transporter.sendMail(mailOptions);
 
-    return formatResponseNew(
+    return formatResponse(
       res,
       "RESET_LINK_SENT",
       "Password reset link sent to your email",
@@ -127,7 +127,7 @@ const sendResetLink = async (
       {},
     );
   } catch (err: any) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "INTERNAL_SERVER_ERROR",
       err.message,
@@ -151,7 +151,7 @@ const changePassword = async (
     );
 
     if (!decodedToken || !decodedToken.email) {
-      return formatResponseNew(
+      return formatResponse(
         res,
         "INVALID_TOKEN",
         "Invalid token",
@@ -166,7 +166,7 @@ const changePassword = async (
     });
 
     if (!user) {
-      return formatResponseNew(
+      return formatResponse(
         res,
         "USER_NOT_FOUND",
         "User not found",
@@ -184,7 +184,7 @@ const changePassword = async (
       where: { email: decodedToken.email },
       data: { password: hashedPassword },
     });
-    return formatResponseNew(
+    return formatResponse(
       res,
       "SUCCESS",
       "Password changed successfully",
@@ -192,7 +192,7 @@ const changePassword = async (
       {},
     );
   } catch (err: any) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "INTERNAL_SERVER_ERROR",
       err.message,

@@ -3,7 +3,7 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 import {
   completeUpload,
@@ -67,7 +67,7 @@ const submitContribute = async (
     },
   });
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Contribute submitted successfully",
@@ -89,7 +89,7 @@ const getOneContribute = async (req: Request, res: Response) => {
   });
 
   if (!contribute) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "NOT_FOUND",
       "Contribute not found",
@@ -98,7 +98,7 @@ const getOneContribute = async (req: Request, res: Response) => {
     );
   }
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Contribute fetch successfully",
@@ -117,7 +117,7 @@ const getAllContribute = async (req: Request, res: Response) => {
 
   // Kiểm tra nếu không có kết quả nào
   if (!contributions || contributions.length === 0) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "NOT_FOUND",
       "No contributions found",
@@ -126,7 +126,7 @@ const getAllContribute = async (req: Request, res: Response) => {
     );
   }
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Get all contributions successfully",
@@ -145,7 +145,7 @@ const acceptContribute = async (req: Request, res: Response) => {
   });
 
   if (existingContribute?.status !== 0) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "BAD_REQUEST",
       "Contribution is not in pending state",
@@ -163,7 +163,7 @@ const acceptContribute = async (req: Request, res: Response) => {
     },
   });
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Contribute accepted successfully",
@@ -182,7 +182,7 @@ const rejectContribute = async (req: Request, res: Response) => {
   });
 
   if (existingContribute?.status !== 0) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "BAD_REQUEST",
       "Contribution is not in pending state",
@@ -200,7 +200,7 @@ const rejectContribute = async (req: Request, res: Response) => {
     },
   });
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Contribute rejected successfully",

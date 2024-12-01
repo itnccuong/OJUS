@@ -3,7 +3,7 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
 
 interface ProfileRequest extends Request {
@@ -23,7 +23,7 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
   });
 
   if (!user) {
-    return formatResponseNew(
+    return formatResponse(
       res,
       "USERNAME_NOT_EXISTS",
       "Username not exists!",
@@ -32,7 +32,7 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
     );
   }
 
-  return formatResponseNew(
+  return formatResponse(
     res,
     "SUCCESS",
     "Get profile successfully!",
