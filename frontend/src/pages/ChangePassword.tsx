@@ -1,13 +1,11 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import getURL from "../../utils/getURL";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
+import axiosInstance from "../../utils/getURL";
 
-/* eslint-disable jsx-a11y/anchor-is-valid */
 export default function ChangePassword() {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -26,7 +24,7 @@ export default function ChangePassword() {
 
     try {
       // Make a request to change the password
-      const { data } = await axios.post(getURL("/api/auth/change-password"), {
+      const { data } = await axiosInstance.post("/api/auth/change-password", {
         newPassword: newPassword,
         token: token,
       });

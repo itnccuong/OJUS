@@ -7,10 +7,8 @@ import {
   GetAllProblemsInterface,
   ProblemInterface,
 } from "../../interfaces/interface.ts";
-import axios from "axios";
-import getURL from "../../utils/getURL.ts";
 import getToken from "../../utils/getToken.ts";
-// import { useEffect } from "react";
+import axiosInstance from "../../utils/getURL.ts";
 
 interface Tag {
   label: string;
@@ -62,12 +60,12 @@ export default function ProblemList() {
       try {
         let response;
         if (!token) {
-          response = await axios.get<GetAllProblemsInterface>(
-            getURL("/api/problems/no-account"),
+          response = await axiosInstance.get<GetAllProblemsInterface>(
+            "/api/problems/no-account",
           );
         } else {
-          response = await axios.get<GetAllProblemsInterface>(
-            getURL("/api/problems/with-account"),
+          response = await axiosInstance.get<GetAllProblemsInterface>(
+            "/api/problems/with-account",
             {
               headers: {
                 Authorization: `Bearer ${token}`,

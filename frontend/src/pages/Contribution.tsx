@@ -12,18 +12,15 @@ import ReactMarkdown from "react-markdown";
 import React, { useEffect, useState } from "react";
 
 import CodeMirror from "@uiw/react-codemirror";
-// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
-import axios from "axios";
-import getURL from "../../utils/getURL.ts";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
 import {
   GetOneContributionInterface,
   ProblemInterface,
 } from "../../interfaces/interface.ts";
+import axiosInstance from "../../utils/getURL.ts";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
@@ -50,8 +47,8 @@ export default function Contribution() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get<GetOneContributionInterface>(
-          getURL(`/api/contributes/${id}`),
+        const res = await axiosInstance.get<GetOneContributionInterface>(
+          `/api/contributes/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -105,8 +102,8 @@ export default function Contribution() {
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
-        axios.post(
-          getURL(`/api/problems/${id}`),
+        axiosInstance.post(
+          `/api/problems/${id}`,
           {
             code: code,
             language: languageMap[language],
@@ -133,8 +130,8 @@ export default function Contribution() {
   const handleAccept = async () => {
     try {
       const response = await toast.promise(
-        axios.post(
-          getURL(`/api/contributes/accept/${id}`), // URL
+        axiosInstance.post(
+          `/api/contributes/accept/${id}`, // URL
           {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
           {
             // Config object
@@ -161,8 +158,8 @@ export default function Contribution() {
   const handleReject = async () => {
     try {
       const response = await toast.promise(
-        axios.post(
-          getURL(`/api/contributes/reject/${id}`), // URL
+        axiosInstance.post(
+          `/api/contributes/reject/${id}`, // URL
           {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
           {
             // Config object
@@ -186,36 +183,35 @@ export default function Contribution() {
     }
   };
 
-  const markdown = `
-Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
-
-- \`'.'\` Matches any single character.
-- \`'*'\` Matches zero or more of the preceding element.
-
-The matching should cover the **entire** input string (not partial).
-
-#### Example 1:
-- **Input:** \`s = "aa"\`, \`p = "a"\`
-- **Output:** \`false\`
-- **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
-
-#### Example 2:
-- **Input:** \`s = "aa"\`, \`p = "a*"\`
-- **Output:** \`true\`
-- **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
-
-#### Example 3:
-- **Input:** \`s = "ab"\`, \`p = ".*"\`
-- **Output:** \`true\`
-- **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
-
-#### Constraints:
-- \`1 <= s.length <= 20\`
-- \`1 <= p.length <= 20\`
-- \`s\` contains only lowercase English letters.
-- \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
-- It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
-`;
+  //   const markdown = `
+  // Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
+  // - \`'.'\` Matches any single character.
+  // - \`'*'\` Matches zero or more of the preceding element.
+  //
+  // The matching should cover the **entire** input string (not partial).
+  //
+  // #### Example 1:
+  // - **Input:** \`s = "aa"\`, \`p = "a"\`
+  // - **Output:** \`false\`
+  // - **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
+  //
+  // #### Example 2:
+  // - **Input:** \`s = "aa"\`, \`p = "a*"\`
+  // - **Output:** \`true\`
+  // - **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
+  //
+  // #### Example 3:
+  // - **Input:** \`s = "ab"\`, \`p = ".*"\`
+  // - **Output:** \`true\`
+  // - **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
+  //
+  // #### Constraints:
+  // - \`1 <= s.length <= 20\`
+  // - \`1 <= p.length <= 20\`
+  // - \`s\` contains only lowercase English letters.
+  // - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
+  // - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
+  // `;
 
   const languageMap: Record<string, string> = {
     Python: "py",
