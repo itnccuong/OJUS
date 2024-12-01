@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
-import { formatResponseNew } from "../utils/formatResponse";
+import { formatResponse, formatResponseNew } from "../utils/formatResponse";
 
 import {
   compile,
@@ -21,9 +21,10 @@ import { STATUS_CODE } from "../utils/constants";
 import {
   CustomRequest,
   SubmitCodeConfig,
-  SubmitParamsConfig,
+  ProblemParamsInterface,
 } from "../interfaces/api-interface";
 import {
+  getUserStatus,
   queryProblems,
   queryProblemStatus,
 } from "../services/problem.services/problem.service";
@@ -31,7 +32,7 @@ import {
 dotenv.config();
 
 export const submit = async (
-  req: CustomRequest<SubmitCodeConfig, SubmitParamsConfig>,
+  req: CustomRequest<SubmitCodeConfig, ProblemParamsInterface>,
   res: Response,
 ) => {
   const problem_id = parseInt(req.params.problem_id);
@@ -129,16 +130,13 @@ export const submit = async (
 
 export const getAllProblemsNoAccount = async (req: Request, res: Response) => {
   const problems = await queryProblems();
-  const responseData = problems.map((problem) => ({
-    ...problem,
-    userStatus: false,
-  }));
+
   return formatResponseNew(
     res,
     "SUCCESS",
     "Get all problems successfully",
     STATUS_CODE.SUCCESS,
-    { problems: responseData },
+    { problems: problems },
   );
 };
 
@@ -155,5 +153,40 @@ export const getAllProblemsWithAccount = async (
     "Get all problems successfully",
     STATUS_CODE.SUCCESS,
     { problems: responseData },
+  );
+};
+
+export const getOneProblemNoAccount = async (
+  req: CustomRequest<null, ProblemParamsInterface>,
+  res: Response,
+) => {
+  const problem_id = parseInt(req.params.problem_id);
+
+  const problem = await findProblemById(problem_id);
+  const resProblem = { ...problem, userStatus: false };
+
+  return formatResponse(
+    res,
+    { problem: resProblem },
+    STATUS_CODE.SUCCESS,
+    "Contribute fetch successfully!",
+  );
+};
+
+export const getOneProblemWithAccount = async (
+  req: CustomRequest<null, ProblemParamsInterface>,
+  res: Response,
+) => {
+  const problem_id = parseInt(req.params.problem_id);
+  const userId = req.userId;
+  const problem = await findProblemById(problem_id);
+  const userStatus = await getUserStatus(userId, problem.problemId);
+  const resProblem = { ...problem, userStatus: userStatus.userStatus };
+
+  return formatResponse(
+    res,
+    { problem: resProblem },
+    STATUS_CODE.SUCCESS,
+    "Contribute fetch successfully!",
   );
 };

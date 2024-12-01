@@ -124,7 +124,7 @@ const getOneContribute = async (req: Request, res: Response) => {
 
 const getAllContribute = async (req: Request, res: Response) => {
   try {
-    // Lấy tất cả các contribute với isActive = false
+    // Lấy tất cả các contribute với status 0 (chưa được duyệt)
     const contributions = await prisma.problem.findMany({
       where: {
         status: 0,

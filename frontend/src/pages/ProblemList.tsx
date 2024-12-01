@@ -1,5 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
@@ -20,8 +18,6 @@ interface Tag {
 }
 
 export default function ProblemList() {
-  const navigate = useNavigate();
-
   const token = getToken();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
@@ -82,7 +78,7 @@ export default function ProblemList() {
         setFetchProblems(response.data.data.problems);
         console.log("Problems", response.data);
         console.log(response.data.data.problems[0].status.toString());
-      } catch (error: any) {
+      } catch (error) {
         console.error(error);
       }
     };

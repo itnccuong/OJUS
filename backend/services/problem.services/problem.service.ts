@@ -6,7 +6,12 @@ export const queryProblems = async () => {
       status: 2,
     },
   });
-  return problems;
+
+  const res = problems.map((problem) => ({
+    ...problem,
+    userStatus: false,
+  }));
+  return res;
 };
 
 export const queryProblemStatus = async (userId: number) => {
@@ -31,4 +36,17 @@ export const queryProblemStatus = async (userId: number) => {
   );
 
   return problemsWithStatus;
+};
+
+export const getUserStatus = async (userId: number, problemId: number) => {
+  const userProblemStatus = await prisma.userProblemStatus.findFirst({
+    where: {
+      userId: userId,
+      problemId: problemId,
+    },
+  });
+
+  return {
+    userStatus: !!userProblemStatus,
+  };
 };

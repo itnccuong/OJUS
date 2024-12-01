@@ -65,7 +65,7 @@ export interface SubmitCodeConfig {
   language: string;
 }
 
-export interface SubmitParamsConfig extends ParamsDictionary {
+export interface ProblemParamsInterface extends ParamsDictionary {
   problem_id: string;
 }
 
@@ -98,6 +98,19 @@ export interface ResultConfig {
   time: number;
   memory: number;
   createdAt: Date;
+}
+
+export interface ProblemInterface {
+  problemId: number;
+  title: string;
+  description: string;
+  status: number;
+  difficulty: number;
+  tags: string;
+  timeLimit: number;
+  memoryLimit: number;
+  authorId: number;
+  fileId: number;
 }
 
 // export interface SubmitCorrectAnswerData {
