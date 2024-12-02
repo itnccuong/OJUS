@@ -39,6 +39,7 @@ exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const index_route_1 = __importDefault(require("../routes/index.route"));
 const error_controller_1 = __importDefault(require("../controllers/error.controller"));
 const path_1 = __importDefault(require("path"));
 const upload_route_1 = __importDefault(require("../upload/upload.route"));
@@ -58,7 +59,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 (0, routes_1.RegisterRoutes)(app);
 // routes
-// app.use("/api", app);
+app.use("/api", index_route_1.default);
 // temorary route for upload
 app.get("/upload", (req, res) => {
     res.sendFile(path_1.default.join(__dirname, "../upload/test.html"));

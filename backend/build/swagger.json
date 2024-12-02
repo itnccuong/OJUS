@@ -84,7 +84,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/api/auth/login": {
+		"/auth/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {

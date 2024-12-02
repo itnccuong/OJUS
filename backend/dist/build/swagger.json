@@ -84,7 +84,7 @@
         "contact": {}
     },
     "paths": {
-        "/api/auth/login": {
+        "/auth/login/hehe": {
             "post": {
                 "operationId": "Login",
                 "responses": {

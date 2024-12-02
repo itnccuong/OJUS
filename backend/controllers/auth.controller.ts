@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { Response } from "express";
 import nodemailer from "nodemailer";
+import { Response } from "express";
 
 import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
@@ -64,7 +64,7 @@ interface LoginResponse {
   };
 }
 
-@Route("api/auth") // Base path for authentication-related routes
+@Route("/auth") // Base path for authentication-related routes
 @Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
 export class AuthController extends Controller {
   @Post("login")

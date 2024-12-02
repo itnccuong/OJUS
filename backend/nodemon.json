@@ -1,12 +1,5 @@
 {
-  "restartable": "rs",
-  "ignore": [".git", "node_modules/"],
+  "exec": "ts-node src/index.ts",
   "watch": ["src", "routes", "controllers", "utils", ".env"],
-  "exexMap": {
-      "ts": "node -r ts-node/register"
-  },
-  "env": {
-      "NODE_ENV": "development"
-  },
-  "ext": "js,json,ts,ejs,css"
+  "ext": "ts"
 }

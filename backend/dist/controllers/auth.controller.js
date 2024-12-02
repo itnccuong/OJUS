@@ -61,14 +61,14 @@ let AuthController = class AuthController extends tsoa_1.Controller {
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, tsoa_1.Post)("login"),
+    (0, tsoa_1.Post)("login/hehe"),
     __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 exports.AuthController = AuthController = __decorate([
-    (0, tsoa_1.Route)("api/auth") // Base path for authentication-related routes
+    (0, tsoa_1.Route)("/auth") // Base path for authentication-related routes
     ,
     (0, tsoa_1.Tags)("Authentication") // Group this endpoint under "Authentication" in Swagger
 ], AuthController);
