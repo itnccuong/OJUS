@@ -58,7 +58,7 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        app.post('/api/auth/login',
+        app.post('/auth/login',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.login)),
 
