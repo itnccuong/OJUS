@@ -223,12 +223,16 @@
 							},
 							"submission": {
 								"$ref": "#/components/schemas/SubmissionConfig"
+							},
+							"stderr": {
+								"type": "string"
 							}
 						},
 						"required": [
 							"testcases",
 							"results",
-							"submission"
+							"submission",
+							"stderr"
 						],
 						"type": "object"
 					}

@@ -140,6 +140,7 @@ export class SubmissionController extends Controller {
           message: result.verdict,
           name: result.verdict,
           data: {
+            stderr: result.stderr,
             submission: submission,
             results: results,
             testcases: testcases,

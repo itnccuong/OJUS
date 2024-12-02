@@ -127,10 +127,12 @@ export interface CompileErrorResponseInterface {
   };
 }
 
+//Wrong answer, runtime, memory, time limit
 export interface FailTestResponseInterface {
   name: string;
   message: string;
   data: {
+    stderr: string;
     submission: SubmissionConfig;
     results: ResultConfig[];
     testcases: TestcaseInterface;

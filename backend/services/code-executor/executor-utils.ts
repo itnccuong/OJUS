@@ -230,23 +230,27 @@ const executeAgainstTestcase = async (
       clearTimeout(timeoutId);
       if (isTimeout) {
         resolve({
+          stderr: stderr,
           stdout: stdout,
           verdict: "TIME_LIMIT_EXCEEDED",
         });
       }
       if (exitCode !== 0) {
         resolve({
+          stderr: stderr,
           stdout: "",
           verdict: "RUNTIME_ERROR",
         });
       }
       if (stdout !== expectedOutput) {
         resolve({
+          stderr: stderr,
           stdout: stdout,
           verdict: "WRONG_ANSWER",
         });
       }
       resolve({
+        stderr: stderr,
         stdout: stdout,
         verdict: "OK",
       });
