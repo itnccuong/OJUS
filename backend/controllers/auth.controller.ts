@@ -36,6 +36,8 @@ import {
   SuccessResponse,
   Response,
   Tags,
+  TsoaResponse,
+  Res,
 } from "tsoa";
 import { CustomError } from "../utils/error";
 
@@ -66,19 +68,27 @@ interface LoginResponse {
   };
 }
 
-@Route("/auth") // Base path for authentication-related routes
+interface heheInterface {
+  reason: string;
+}
+
+@Route("/api/auth") // Base path for authentication-related routes
 @Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
 export class AuthController extends Controller {
-  // @Response<CustomError>(422, "Err")
-  // @SuccessResponse("201", "Hehehe")
+  @SuccessResponse("202", "Hehehe")
   @Post("login")
   public async login(
     @Body() requestBody: LoginInterface,
+    @Res() notFoundResponse: TsoaResponse<404, heheInterface>,
+    @Res() heheResponse: TsoaResponse<405, { hehe: number }>,
   ): Promise<LoginResponse> {
     const user = await validateLoginBody(requestBody);
 
     // Generate a token
     const token = await signToken(user.userId);
+    // if (Number(requestBody.password) === 1) {
+    //   return notFoundResponse(404, { reason: "ok" });
+    // }
     return {
       data: {
         user: user,

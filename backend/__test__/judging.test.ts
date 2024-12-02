@@ -14,8 +14,9 @@ import {
 import { cleanDatabase, testCompile } from "./test_utils";
 import prisma from "../prisma/client";
 import {
+  FailTestResponseInterface,
   ResponseInterface,
-  SubmitCodeResponseDataInterface,
+  SubmitCodeResponseInterface,
 } from "../interfaces/api-interface";
 
 jest.setTimeout(30000);
@@ -74,7 +75,7 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
+      .send(body)) as ResponseInterface<SubmitCodeResponseInterface>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     expect(res.body.data.submission.verdict).toBe("OK");
   });
@@ -88,8 +89,8 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      .send(body)) as ResponseInterface<FailTestResponseInterface>;
+    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("WRONG_ANSWER");
     expect(res.body.data.submission.verdict).toBe("WRONG_ANSWER");
   });
@@ -103,8 +104,8 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      .send(body)) as ResponseInterface<FailTestResponseInterface>;
+    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("RUNTIME_ERROR");
     expect(res.body.data.submission.verdict).toBe("RUNTIME_ERROR");
   });
@@ -118,8 +119,8 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterface<SubmitCodeResponseDataInterface>;
-    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+      .send(body)) as ResponseInterface<FailTestResponseInterface>;
+    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("TIME_LIMIT_EXCEEDED");
     expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");
   });

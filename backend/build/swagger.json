@@ -7,6 +7,240 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"SubmissionConfig": {
+				"properties": {
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"code": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"submissionId",
+					"problemId",
+					"userId",
+					"code",
+					"language",
+					"verdict",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResultConfig": {
+				"properties": {
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"resultId": {
+						"type": "number",
+						"format": "double"
+					},
+					"output": {
+						"type": "string"
+					},
+					"testcaseIndex": {
+						"type": "number",
+						"format": "double"
+					},
+					"time": {
+						"type": "number",
+						"format": "double"
+					},
+					"memory": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"submissionId",
+					"verdict",
+					"resultId",
+					"output",
+					"testcaseIndex",
+					"time",
+					"memory",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TestcaseInterface": {
+				"properties": {
+					"input": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"output": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"input",
+					"output"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeResponseInterface": {
+				"properties": {
+					"data": {
+						"properties": {
+							"testcases": {
+								"$ref": "#/components/schemas/TestcaseInterface"
+							},
+							"results": {
+								"items": {
+									"$ref": "#/components/schemas/ResultConfig"
+								},
+								"type": "array"
+							},
+							"submission": {
+								"$ref": "#/components/schemas/SubmissionConfig"
+							}
+						},
+						"required": [
+							"testcases",
+							"results",
+							"submission"
+						],
+						"type": "object"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeConfig": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"language"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CompileErrorResponseInterface": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"testcases": {
+								"$ref": "#/components/schemas/TestcaseInterface"
+							},
+							"submission": {
+								"$ref": "#/components/schemas/SubmissionConfig"
+							},
+							"stderr": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"testcases",
+							"submission",
+							"stderr"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FailTestResponseInterface": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"testcases": {
+								"$ref": "#/components/schemas/TestcaseInterface"
+							},
+							"results": {
+								"items": {
+									"$ref": "#/components/schemas/ResultConfig"
+								},
+								"type": "array"
+							},
+							"submission": {
+								"$ref": "#/components/schemas/SubmissionConfig"
+							}
+						},
+						"required": [
+							"testcases",
+							"results",
+							"submission"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserConfig": {
 				"properties": {
 					"userId": {
@@ -75,6 +309,18 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"heheInterface": {
+				"properties": {
+					"reason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -84,16 +330,107 @@
 		"contact": {}
 	},
 	"paths": {
-		"/auth/login": {
+		"/api/problems/{problem_id}": {
+			"post": {
+				"operationId": "Submit",
+				"responses": {
+					"200": {
+						"description": "All testcases passed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CompileErrorResponseInterface"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FailTestResponseInterface"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problem"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubmitCodeConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"202": {
+						"description": "Hehehe",
 						"content": {
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/heheInterface"
+								}
+							}
+						}
+					},
+					"405": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"hehe": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"hehe"
+									],
+									"type": "object"
 								}
 							}
 						}

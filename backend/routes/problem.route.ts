@@ -5,7 +5,7 @@ import {
   getAllProblemsWithAccount,
   getOneProblemNoAccount,
   getOneProblemWithAccount,
-  submit,
+  // submit,
 } from "../controllers/problem.controller";
 import { verifyToken } from "../middlewares/verify-token";
 import asyncErrorHandler from "../utils/asyncErrorHandler";
@@ -16,7 +16,7 @@ router.get(
   verifyToken,
   asyncErrorHandler(getAllProblemsWithAccount),
 );
-router.post("/:problem_id/", verifyToken, asyncErrorHandler(submit));
+// router.post("/:problem_id/", verifyToken, asyncErrorHandler(submit));
 
 router.get(
   "/:problem_id/no-account",

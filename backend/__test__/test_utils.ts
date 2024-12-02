@@ -2,8 +2,9 @@ import prisma from "../prisma/client";
 import request from "supertest";
 import { app } from "../src/app";
 import {
+  CompileErrorResponseInterface,
   ResponseInterface,
-  SubmitCodeResponseDataInterface,
+  SubmitCodeResponseInterface,
 } from "../interfaces/api-interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";
@@ -38,8 +39,9 @@ export const testCompile = async (
     .send({
       code,
       language,
-    })) as ResponseInterface<SubmitCodeResponseDataInterface>;
+    })) as ResponseInterface<CompileErrorResponseInterface>;
 
+  console.log("res compile", res);
   if (isCompileError) {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(res.body.name).toBe("COMPILE_ERROR");

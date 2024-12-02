@@ -25,11 +25,7 @@ export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
 
 export interface ResponseInterface<T> {
   status: number;
-  body: {
-    name: string;
-    message: string;
-    data: T;
-  };
+  body: T;
 }
 
 export interface UserConfig {
@@ -85,7 +81,6 @@ export interface SubmissionConfig {
   code: string;
   language: string;
   verdict: string;
-  numTestPassed: number;
   createdAt: Date;
 }
 
@@ -113,15 +108,31 @@ export interface ProblemInterface {
   fileId: number;
 }
 
-// export interface SubmitCorrectAnswerData {
-//   submission: SubmissionConfig;
-// }
-//
-// export interface SubmitWrongAnswerData {
-//   submission: SubmissionConfig;
-// }
+export interface SubmitCodeResponseInterface {
+  data: {
+    submission: SubmissionConfig;
+    results: ResultConfig[];
+    testcases: TestcaseInterface;
+  };
+  message: string;
+}
 
-export interface SubmitCodeResponseDataInterface {
-  submission: SubmissionConfig;
-  stderr?: string;
+export interface CompileErrorResponseInterface {
+  name: string;
+  message: string;
+  data: {
+    stderr: string;
+    submission: SubmissionConfig;
+    testcases: TestcaseInterface;
+  };
+}
+
+export interface FailTestResponseInterface {
+  name: string;
+  message: string;
+  data: {
+    submission: SubmissionConfig;
+    results: ResultConfig[];
+    testcases: TestcaseInterface;
+  };
 }

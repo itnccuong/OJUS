@@ -150,18 +150,18 @@ const compile = async (filename: string, language: string) => {
     : null;
 
   if (!command) {
-    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
   }
 
   try {
     const container = languageDetails[language].container;
     const containerId = getContainerId(container);
     await execAsync(`docker exec ${containerId} ${command}`);
-    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
   } catch (error: any) {
     return {
       filenameWithoutExtension: filenameWithoutExtension,
-      stderr: error.stderr,
+      stderr: error.stderr as string,
     };
   }
 };
