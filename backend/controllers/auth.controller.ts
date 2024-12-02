@@ -12,6 +12,7 @@ import {
   LoginInterface,
   RegisterConfig,
   SendResetLinkConfig,
+  UserConfig,
 } from "../interfaces/api-interface";
 import prisma from "../prisma/client";
 import {
@@ -23,6 +24,18 @@ import {
   signToken,
   validateLoginBody,
 } from "../services/auth.services/login.service";
+
+import {
+  Body,
+  Controller,
+  Get,
+  Path,
+  Post,
+  Query,
+  Route,
+  SuccessResponse,
+  Tags,
+} from "tsoa";
 
 dotenv.config();
 
@@ -44,21 +57,48 @@ const register = async (
   );
 };
 
-const login = async (
-  req: CustomRequest<LoginInterface, any>,
-  res: Response,
-) => {
-  const user = await validateLoginBody(req.body);
-  const token = await signToken(user.userId);
+interface LoginResponse {
+  data: {
+    user: UserConfig;
+    token: string;
+  };
+}
 
-  return formatResponse(
-    res,
-    "USER_LOGINED",
-    "Login successfully",
-    STATUS_CODE.SUCCESS,
-    { user: user, token: token },
-  );
-};
+@Route("api/auth") // Base path for authentication-related routes
+@Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
+export class AuthController extends Controller {
+  @Post("login")
+  public async login(
+    @Body() requestBody: LoginInterface,
+  ): Promise<LoginResponse> {
+    const user = await validateLoginBody(requestBody);
+
+    // Generate a token
+    const token = await signToken(user.userId);
+
+    return {
+      data: {
+        user: user,
+        token: token,
+      },
+    };
+  }
+}
+// const login = async (
+//   req: CustomRequest<LoginInterface, any>,
+//   res: Response,
+// ) => {
+//   const user = await validateLoginBody(req.body);
+//   const token = await signToken(user.userId);
+//
+//   return formatResponse(
+//     res,
+//     "USER_LOGINED",
+//     "Login successfully",
+//     STATUS_CODE.SUCCESS,
+//     { user: user, token: token },
+//   );
+// };
 
 const sendResetLink = async (
   req: CustomRequest<SendResetLinkConfig, any>,
@@ -202,4 +242,4 @@ const changePassword = async (
   }
 };
 
-export { register, login, sendResetLink, changePassword };
+export { register, sendResetLink, changePassword };

@@ -3,7 +3,7 @@
     "clean": "rm -rf coverage dist",
     "lint": "eslint ./src/*.ts",
     "test": "dotenv -e .env.test -- prisma migrate dev && dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
-    "build": "tsc",
+    "build": "tsoa spec-and-routes && tsc",
     "start": "ts-node src/index.ts",
     "dev": "nodemon --config nodemon.json src/index.ts",
     "seed": "ts-node prisma/seed.ts"
@@ -22,6 +22,7 @@
     "@types/node": "^22.9.1",
     "@types/nodemailer": "^6.4.16",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.7",
     "express": "^4.21.1",
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",
@@ -46,6 +47,8 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.15",
     "supertest": "^7.0.0",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^6.5.1",
     "uuid": "^11.0.2"
   }
 }
