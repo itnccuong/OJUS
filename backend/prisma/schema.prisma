@@ -46,6 +46,8 @@ model UserProblemStatus {
   problem             Problem  @relation(fields: [problemId], references: [problemId])
   user                User     @relation(fields: [userId], references: [userId])
   createdAt           DateTime @default(now())
+
+  @@unique([userId, problemId])
 }
 
 model Files {

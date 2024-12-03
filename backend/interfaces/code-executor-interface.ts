@@ -15,6 +15,7 @@ export interface LanguageDetail {
 }
 
 export interface ExecuteInterface {
+  stderr: string;
   stdout: string;
   verdict:
     | "WRONG_ANSWER"

@@ -150,18 +150,18 @@ const compile = async (filename: string, language: string) => {
     : null;
 
   if (!command) {
-    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
   }
 
   try {
     const container = languageDetails[language].container;
     const containerId = getContainerId(container);
     await execAsync(`docker exec ${containerId} ${command}`);
-    return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+    return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
   } catch (error: any) {
     return {
       filenameWithoutExtension: filenameWithoutExtension,
-      stderr: error.stderr,
+      stderr: error.stderr as string,
     };
   }
 };
@@ -230,23 +230,27 @@ const executeAgainstTestcase = async (
       clearTimeout(timeoutId);
       if (isTimeout) {
         resolve({
+          stderr: stderr,
           stdout: stdout,
           verdict: "TIME_LIMIT_EXCEEDED",
         });
       }
       if (exitCode !== 0) {
         resolve({
+          stderr: stderr,
           stdout: "",
           verdict: "RUNTIME_ERROR",
         });
       }
       if (stdout !== expectedOutput) {
         resolve({
+          stderr: stderr,
           stdout: stdout,
           verdict: "WRONG_ANSWER",
         });
       }
       resolve({
+        stderr: stderr,
         stdout: stdout,
         verdict: "OK",
       });

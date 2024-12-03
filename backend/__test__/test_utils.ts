@@ -2,8 +2,9 @@ import prisma from "../prisma/client";
 import request from "supertest";
 import { app } from "../src/app";
 import {
-  ResponseInterface,
-  SubmitCodeResponseDataInterface,
+  CompileErrorResponseInterface,
+  ErrorResponseInterface,
+  ResponseInterfaceForTest,
 } from "../interfaces/api-interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";
@@ -14,6 +15,7 @@ export const cleanDatabase = async () => {
   const deleteFile = prisma.files.deleteMany();
   const deleteProblem = prisma.problem.deleteMany();
   const deleteUser = prisma.user.deleteMany();
+  const deleteUserProblemStatus = prisma.userProblemStatus.deleteMany();
 
   await prisma.$executeRawUnsafe(`SET FOREIGN_KEY_CHECKS = 0;`);
   await prisma.$transaction([
@@ -22,6 +24,7 @@ export const cleanDatabase = async () => {
     deleteProblem,
     deleteSubmission,
     deleteResult,
+    deleteUserProblemStatus,
   ]);
   await prisma.$executeRawUnsafe(`SET FOREIGN_KEY_CHECKS = 1;`);
 };
@@ -38,7 +41,9 @@ export const testCompile = async (
     .send({
       code,
       language,
-    })) as ResponseInterface<SubmitCodeResponseDataInterface>;
+    })) as ResponseInterfaceForTest<
+    ErrorResponseInterface<CompileErrorResponseInterface>
+  >;
 
   if (isCompileError) {
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
@@ -48,6 +53,5 @@ export const testCompile = async (
   } else {
     expect(res.body.name).not.toBe("COMPILE_ERROR");
     expect(res.body.data.submission.verdict).not.toBe("COMPILE_ERROR");
-    expect(res.body.data.stderr).not.toBeTruthy();
   }
 };

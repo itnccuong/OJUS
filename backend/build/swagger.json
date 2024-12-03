@@ -1,0 +1,1180 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"DefaultSelection_Prisma._36_SubmissionPayload_": {
+				"properties": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"createdAt",
+					"verdict",
+					"language",
+					"code",
+					"userId",
+					"problemId",
+					"submissionId"
+				],
+				"type": "object"
+			},
+			"Submission": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
+				"description": "Model Submission"
+			},
+			"DefaultSelection_Prisma._36_ResultPayload_": {
+				"properties": {
+					"memory": {
+						"type": "number",
+						"format": "double"
+					},
+					"time": {
+						"type": "number",
+						"format": "double"
+					},
+					"testcaseIndex": {
+						"type": "number",
+						"format": "double"
+					},
+					"output": {
+						"type": "string"
+					},
+					"resultId": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"memory",
+					"time",
+					"testcaseIndex",
+					"output",
+					"resultId",
+					"createdAt",
+					"verdict",
+					"submissionId"
+				],
+				"type": "object"
+			},
+			"Result": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ResultPayload_",
+				"description": "Model Result"
+			},
+			"TestcaseInterface": {
+				"properties": {
+					"input": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"output": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"input",
+					"output"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeResponseInterface": {
+				"properties": {
+					"submission": {
+						"$ref": "#/components/schemas/Submission"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/Result"
+						},
+						"type": "array"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"submission",
+					"results",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeConfig": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"language"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CompileErrorResponseInterface": {
+				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"submission": {
+						"$ref": "#/components/schemas/Submission"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"stderr",
+					"submission",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponseInterface_CompileErrorResponseInterface_": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/CompileErrorResponseInterface"
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FailTestResponseInterface": {
+				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"submission": {
+						"$ref": "#/components/schemas/Submission"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/Result"
+						},
+						"type": "array"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"stderr",
+					"submission",
+					"results",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponseInterface_FailTestResponseInterface_": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/FailTestResponseInterface"
+					}
+				},
+				"required": [
+					"name",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DefaultSelection_Prisma._36_ProblemPayload_": {
+				"properties": {
+					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"authorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"fileId",
+					"authorId",
+					"memoryLimit",
+					"timeLimit",
+					"tags",
+					"difficulty",
+					"status",
+					"description",
+					"title",
+					"createdAt",
+					"problemId"
+				],
+				"type": "object"
+			},
+			"ProblemWithUserStatusInterface": {
+				"properties": {
+					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"authorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userStatus": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"fileId",
+					"authorId",
+					"memoryLimit",
+					"timeLimit",
+					"tags",
+					"difficulty",
+					"status",
+					"description",
+					"title",
+					"createdAt",
+					"problemId",
+					"userStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllProblemInterface": {
+				"properties": {
+					"problems": {
+						"items": {
+							"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"problems"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetAllProblemInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetAllProblemInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOneProblemInterface": {
+				"properties": {
+					"problem": {
+						"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+					}
+				},
+				"required": [
+					"problem"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetOneProblemInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetOneProblemInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Problem": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
+				"description": "Model Problem"
+			},
+			"SuccessResponseInterface__contribution-Problem__": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"contribution": {
+								"$ref": "#/components/schemas/Problem"
+							}
+						},
+						"required": [
+							"contribution"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface__contributions-Problem-Array__": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"contributions": {
+								"items": {
+									"$ref": "#/components/schemas/Problem"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"contributions"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DefaultSelection_Prisma._36_UserPayload_": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"fullname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"password",
+					"fullname",
+					"email",
+					"username",
+					"createdAt",
+					"userId"
+				],
+				"type": "object"
+			},
+			"User": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
+				"description": "Model User"
+			},
+			"LoginResponseInterface": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_LoginResponseInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/LoginResponseInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginInterface": {
+				"properties": {
+					"usernameOrEmail": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"usernameOrEmail",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RegisterResponseInterface": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_RegisterResponseInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisterResponseInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RegisterConfig": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"fullname": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"username",
+					"password",
+					"fullname"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface____": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SendResetLinkConfig": {
+				"properties": {
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ChangePasswordConfig": {
+				"properties": {
+					"token": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"token",
+					"newPassword"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "",
+		"contact": {}
+	},
+	"paths": {
+		"/api/problems/{problem_id}": {
+			"post": {
+				"operationId": "Submit",
+				"responses": {
+					"200": {
+						"description": "All testcases passed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseInterface_CompileErrorResponseInterface_"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseInterface_FailTestResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubmitCodeConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/problems/no-account": {
+			"get": {
+				"operationId": "GetAllProblemsNoAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched all problems",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/problems/with-account": {
+			"get": {
+				"operationId": "GetAllProblemsWithAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched all problems with account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/problems/no-account/{problem_id}": {
+			"get": {
+				"operationId": "GetOneProblemNoAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched problem without user data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fetch a single problem without user account data.",
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/problems/with-account/{problem_id}": {
+			"get": {
+				"operationId": "GetOneProblemWithAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched problem with user data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fetch a single problem with user account data (status included).",
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions": {
+			"post": {
+				"operationId": "SubmitContribute",
+				"responses": {
+					"201": {
+						"description": "Contribute submitted successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"title": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									},
+									"difficulty": {
+										"type": "string"
+									},
+									"tags": {
+										"type": "string"
+									},
+									"timeLimit": {
+										"type": "string"
+									},
+									"memoryLimit": {
+										"type": "string"
+									},
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"title",
+									"description",
+									"difficulty",
+									"tags",
+									"timeLimit",
+									"memoryLimit",
+									"file"
+								]
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAllContribute",
+				"responses": {
+					"200": {
+						"description": "All contributions fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contributions-Problem-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/contributions/{contribute_id}": {
+			"get": {
+				"operationId": "GetOneContribute",
+				"responses": {
+					"200": {
+						"description": "Contribute fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions/{contribute_id}/accept": {
+			"put": {
+				"operationId": "AcceptContribution",
+				"responses": {
+					"200": {
+						"description": "Contribution accepted successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions/{contribute_id}/reject": {
+			"put": {
+				"operationId": "RejectContribution",
+				"responses": {
+					"200": {
+						"description": "Contribution rejected successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Login successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_LoginResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginInterface"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "User registered successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_RegisterResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/password/reset-link": {
+			"post": {
+				"operationId": "SendResetLink",
+				"responses": {
+					"200": {
+						"description": "Password reset link sent successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface____"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SendResetLinkConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/password/change": {
+			"post": {
+				"operationId": "ChangePassword",
+				"responses": {
+					"200": {
+						"description": "Password changed successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface____"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ChangePasswordConfig"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
