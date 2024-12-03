@@ -1,14 +1,15 @@
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../../components/NavBar.tsx";
+import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  GetAllProblemsInterface,
-  ProblemInterface,
-} from "../../interfaces/response.interface.ts";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/getURL.ts";
+  ProblemListResponseInterface,
+  ResponseInterface,
+} from "../../../interfaces/response.interface.ts";
+import getToken from "../../../utils/getToken.ts";
+import axiosInstance from "../../../utils/getURL.ts";
+import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 
 interface Tag {
   label: string;
@@ -53,29 +54,29 @@ export default function ProblemList() {
   //   navigate(`/problems/${randomProblem.id}/description`);
   // };
 
-  const [fetchProblems, setFetchProblems] = useState<ProblemInterface[]>([]);
+  const [fetchProblems, setFetchProblems] = useState<
+    ProblemWithUserStatusInterface[]
+  >([]);
 
   useEffect(() => {
     const fetchProblems = async () => {
       try {
         let response;
         if (!token) {
-          response = await axiosInstance.get<GetAllProblemsInterface>(
-            "/api/problems/no-account",
-          );
+          response = await axiosInstance.get<
+            ResponseInterface<ProblemListResponseInterface>
+          >("/api/problems/no-account");
         } else {
-          response = await axiosInstance.get<GetAllProblemsInterface>(
-            "/api/problems/with-account",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+          response = await axiosInstance.get<
+            ResponseInterface<ProblemListResponseInterface>
+          >("/api/problems/with-account", {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-          );
+          });
         }
         setFetchProblems(response.data.data.problems);
         console.log("Problems", response.data);
-        console.log(response.data.data.problems[0].status.toString());
       } catch (error) {
         console.error(error);
       }

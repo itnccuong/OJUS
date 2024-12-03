@@ -1,5 +1,6 @@
 import {
   ProblemInterface,
+  ProblemWithUserStatusInterface,
   ResultInterface,
   SubmissionInterface,
   TestcaseInterface,
@@ -32,4 +33,12 @@ export interface SubmitCodeResponseInterface {
   submission: SubmissionInterface;
   results: ResultInterface[];
   testcases: TestcaseInterface;
+}
+
+export interface OneProblemResponseInterface {
+  problem: ProblemWithUserStatusInterface;
+}
+
+export interface ProblemListResponseInterface {
+  problems: ProblemWithUserStatusInterface[];
 }

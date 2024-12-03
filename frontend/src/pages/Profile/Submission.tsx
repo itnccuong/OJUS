@@ -1,7 +1,7 @@
 // import { useNavigate } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../../components/NavBar.tsx";
+import Footer from "../../components/Footer.tsx";
 import { Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

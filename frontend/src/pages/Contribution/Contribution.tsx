@@ -1,6 +1,6 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
+import NavBar from "../../components/NavBar.tsx";
 import {
   Button,
   Dropdown,
@@ -12,49 +12,53 @@ import ReactMarkdown from "react-markdown";
 import React, { useEffect, useState } from "react";
 
 import CodeMirror from "@uiw/react-codemirror";
-// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import { toast } from "react-toastify";
-import getToken from "../../utils/getToken.ts";
+import getToken from "../../../utils/getToken.ts";
 import {
-  GetOneProblemInterface,
-  ProblemInterface,
-} from "../../interfaces/response.interface.ts";
-import axiosInstance from "../../utils/getURL.ts";
+  OneContributionResponseInterface,
+  ResponseInterface,
+  SubmitCodeResponseInterface,
+} from "../../../interfaces/response.interface.ts";
+import axiosInstance from "../../../utils/getURL.ts";
+import { ProblemInterface } from "../../../interfaces/model.interface.ts";
 
-export default function Problem() {
-  const { page, id } = useParams();
+export default function Contribution() {
+  const navigate = useNavigate(); // Initialize navigate
   const token = getToken(); // Get token from localStorage
-  const [fetchProblem, setFetchProblem] = useState<ProblemInterface>();
-  const [language, setLanguage] = useState("Python");
+  const { id, page } = useParams();
   const [code, setCode] = useState("");
   const onChange = React.useCallback((val: string) => {
     setCode(val);
   }, []);
 
+  const Language = ["C++", "C", "Java", "Python", "Javascript"];
+
+  const [language, setLanguage] = useState("Python");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
+
+  const [fetchContribution, setFetchContribution] =
+    useState<ProblemInterface>();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res;
-        if (!token) {
-          res = await axiosInstance.get<GetOneProblemInterface>(
-            `/api/problems/no-account/${id}`,
-            {},
-          );
-        } else {
-          res = await axiosInstance.get<GetOneProblemInterface>(
-            `/api/problems/with-account/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
-        }
+        const res = await axiosInstance.get<
+          ResponseInterface<OneContributionResponseInterface>
+        >(`/api/contributions/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         console.log(res.data);
-        setFetchProblem(res.data.data.problem);
+        setFetchContribution(res.data.data.contribution);
       } catch (err) {
         console.error(err);
       }
@@ -62,7 +66,7 @@ export default function Problem() {
     fetchData();
   }, []);
 
-  if (!fetchProblem) {
+  if (!fetchContribution) {
     return <div>Loading...</div>;
   }
 
@@ -72,20 +76,18 @@ export default function Problem() {
     3: "Hard",
   };
 
-  const problem = {
-    ...fetchProblem,
-    difficulty: difficultyMapping[fetchProblem.difficulty],
-    tags: fetchProblem.tags.split(","),
+  const contribution = {
+    ...fetchContribution,
+    difficulty: difficultyMapping[fetchContribution.difficulty],
+    tags: fetchContribution.tags.split(","),
   };
-
-  const Language = ["C++", "C", "Java", "Python", "Javascript"];
 
   const popover = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">Topics</Popover.Header>
       <Popover.Body>
         <div className="mb-3">
-          {problem.tags.map((tag, index) => (
+          {contribution.tags.map((tag, index) => (
             <span
               key={index}
               className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
@@ -98,9 +100,92 @@ export default function Problem() {
     </Popover>
   );
 
+  const handleSubmit = async () => {
+    try {
+      const { data } = await toast.promise(
+        axiosInstance.post<ResponseInterface<SubmitCodeResponseInterface>>(
+          `/api/problems/${id}`,
+          {
+            code: code,
+            language: languageMap[language],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        ),
+        {
+          pending: "Submitting...",
+          success: "All test cases passed",
+          // error: "Failed to submit",
+        },
+      );
+      console.log("Submit response: ", data);
+    } catch (error: never) {
+      toast.error(error.response.data.message);
+      console.error(error);
+    }
+  };
+
+  const handleAccept = async () => {
+    try {
+      const { data } = await toast.promise(
+        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+          `/api/contributions/${id}/accept`,
+          {},
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution accepted",
+          // error: "Failed to submit",
+        },
+      );
+      navigate("/contributions");
+
+      console.log("Accept response:", data);
+    } catch (error) {
+      console.error("Error accepting contribution:", error);
+      toast.error("Failed to accept contribution. Please try again.");
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const { data } = await toast.promise(
+        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+          `/api/contributions/${id}/reject`,
+          {},
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution rejected",
+          // error: "Failed to submit",
+        },
+      );
+      navigate("/contributions");
+
+      console.log("Accept response:", data);
+    } catch (error) {
+      console.error("Error accepting contribution:", error);
+      toast.error("Failed to accept contribution. Please try again.");
+    }
+  };
+
   //   const markdown = `
   // Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
-  //
   // - \`'.'\` Matches any single character.
   // - \`'*'\` Matches zero or more of the preceding element.
   //
@@ -137,34 +222,6 @@ export default function Problem() {
     Javascript: "js",
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await toast.promise(
-        axiosInstance.post(
-          `/api/problems/${id}`,
-          {
-            code: code,
-            language: languageMap[language],
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        ),
-        {
-          pending: "Submitting...",
-          success: "All test cases passed",
-          // error: "Failed to submit",
-        },
-      );
-      console.log("Submit response: ", res.data);
-    } catch (error: any) {
-      toast.error(error.response.data.message);
-      console.error(error);
-    }
-  };
-
   return (
     <div className="d-flex-flex-column">
       <NavBar />
@@ -178,7 +235,13 @@ export default function Problem() {
           zIndex: 10,
         }}
       >
+        <Button variant="danger" onClick={handleReject}>
+          Reject
+        </Button>
         <Button onClick={() => handleSubmit()}>Submit</Button>
+        <Button variant="success" onClick={handleAccept}>
+          Accept
+        </Button>
       </div>
 
       <div className="bg-light">
@@ -220,17 +283,17 @@ export default function Problem() {
                     overflowY: "auto",
                   }}
                 >
-                  <h3 className="mb-3">{problem.title}</h3>
+                  <h3 className="mb-3">{contribution.title}</h3>
                   <span
                     className={`badge bg-grey me-2 ${
-                      problem.difficulty === "Easy"
+                      contribution.difficulty === "Easy"
                         ? "text-success"
-                        : problem.difficulty === "Medium"
+                        : contribution.difficulty === "Medium"
                           ? "text-warning"
                           : "text-danger"
                     }`}
                   >
-                    {problem.difficulty}
+                    {contribution.difficulty}
                   </span>
 
                   <OverlayTrigger
@@ -249,7 +312,7 @@ export default function Problem() {
                   </OverlayTrigger>
 
                   <ReactMarkdown className="mt-3">
-                    {problem.description}
+                    {contribution.description}
                   </ReactMarkdown>
                 </div>
               ) : (

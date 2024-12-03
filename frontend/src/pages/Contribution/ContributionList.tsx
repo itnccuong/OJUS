@@ -1,11 +1,11 @@
 // import { useNavigate } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../../components/NavBar.tsx";
+import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import getToken from "../../utils/getToken";
+import getToken from "../../../utils/getToken.ts";
 
 import { useEffect } from "react";
 
@@ -13,8 +13,8 @@ import {
   ProblemInterface,
   ResponseInterface,
   ContributionListResponseInterface,
-} from "../../interfaces/response.interface.ts";
-import axiosInstance from "../../utils/getURL";
+} from "../../../interfaces/response.interface.ts";
+import axiosInstance from "../../../utils/getURL.ts";
 
 interface Tag {
   label: string;

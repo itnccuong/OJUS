@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, FloatingLabel, Form } from "react-bootstrap";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../../components/NavBar.tsx";
+import Footer from "../../components/Footer.tsx";
 import { toast } from "react-toastify";
-import axiosInstance from "../../utils/getURL";
+import axiosInstance from "../../../utils/getURL.ts";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();

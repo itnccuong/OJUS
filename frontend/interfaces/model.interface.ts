@@ -20,6 +20,10 @@ export interface ProblemInterface {
   problemId: number;
 }
 
+export interface ProblemWithUserStatusInterface extends ProblemInterface {
+  userStatus: boolean;
+}
+
 export interface SubmissionInterface {
   createdAt: string;
   verdict: string;

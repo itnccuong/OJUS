@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import NavBar from "../components/NavBar";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/getURL";
+import NavBar from "../../components/NavBar.tsx";
+import getToken from "../../../utils/getToken.ts";
+import axiosInstance from "../../../utils/getURL.ts";
 
 export default function Profile() {
   const navigate = useNavigate();

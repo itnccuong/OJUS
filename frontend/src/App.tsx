@@ -1,23 +1,23 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
+import Login from "./pages/Authentication/Login.tsx";
 import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Profile from "./pages/Profile";
-import ProblemList from "./pages/ProblemList.tsx";
-import EditProfile from "./pages/EditProfile";
-import ShowProfile from "./pages/ShowProfile";
+import Register from "./pages/Authentication/Register.tsx";
+import Profile from "./pages/Profile/Profile.tsx";
+import ProblemList from "./pages/Problem/ProblemList.tsx";
+import EditProfile from "./pages/Profile/EditProfile.tsx";
+import ShowProfile from "./pages/Profile/ShowProfile.tsx";
 
 import { Slide, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import ForgotPassword from "./pages/ForgotPassword";
-import ForgotPasswordDone from "./pages/ForgotPasswordDone";
-import ChangePassword from "./pages/ChangePassword";
-import Contribute from "./pages/Contribute";
-import ContributionList from "./pages/ContributionList.tsx";
-import Contribution from "./pages/Contribution";
-import Problem from "./pages/Problem";
-import Submission from "./pages/Submission";
+import ForgotPassword from "./pages/Authentication/ForgotPassword.tsx";
+import ForgotPasswordDone from "./pages/Authentication/ForgotPasswordDone.tsx";
+import ChangePassword from "./pages/Authentication/ChangePassword.tsx";
+import Contribute from "./pages/Contribution/Contribute.tsx";
+import ContributionList from "./pages/Contribution/ContributionList.tsx";
+import Contribution from "./pages/Contribution/Contribution.tsx";
+import Problem from "./pages/Problem/Problem.tsx";
+import Submission from "./pages/Profile/Submission.tsx";
 
 export default function App() {
   return (
