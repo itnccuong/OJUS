@@ -207,7 +207,7 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"DefaultSelection_Prisma._36_UserPayload_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "LoginResponse": {
+    "LoginResponseInterface": {
         "dataType": "refObject",
         "properties": {
             "user": {"ref":"User","required":true},
@@ -216,11 +216,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface_LoginResponse_": {
+    "SuccessResponseInterface_LoginResponseInterface_": {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
-            "data": {"ref":"LoginResponse","required":true},
+            "data": {"ref":"LoginResponseInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -234,7 +234,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "RegisterResponse": {
+    "RegisterResponseInterface": {
         "dataType": "refObject",
         "properties": {
             "user": {"ref":"User","required":true},
@@ -242,11 +242,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface_RegisterResponse_": {
+    "SuccessResponseInterface_RegisterResponseInterface_": {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
-            "data": {"ref":"RegisterResponse","required":true},
+            "data": {"ref":"RegisterResponseInterface","required":true},
         },
         "additionalProperties": false,
     },

@@ -17,10 +17,12 @@ import { javascript } from "@codemirror/lang-javascript";
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
 import {
-  GetOneContributionInterface,
-  ProblemInterface,
-} from "../../interfaces/interface.ts";
+  OneContributionResponseInterface,
+  ResponseInterface,
+  SubmitCodeResponseInterface,
+} from "../../interfaces/response.interface.ts";
 import axiosInstance from "../../utils/getURL.ts";
+import { ProblemInterface } from "../../interfaces/model.interface.ts";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
@@ -47,14 +49,13 @@ export default function Contribution() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axiosInstance.get<GetOneContributionInterface>(
-          `/api/contributions/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const res = await axiosInstance.get<
+          ResponseInterface<OneContributionResponseInterface>
+        >(`/api/contributions/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         console.log(res.data);
         setFetchContribution(res.data.data.contribution);
@@ -101,8 +102,8 @@ export default function Contribution() {
 
   const handleSubmit = async () => {
     try {
-      const res = await toast.promise(
-        axiosInstance.post(
+      const { data } = await toast.promise(
+        axiosInstance.post<ResponseInterface<SubmitCodeResponseInterface>>(
           `/api/problems/${id}`,
           {
             code: code,
@@ -120,7 +121,7 @@ export default function Contribution() {
           // error: "Failed to submit",
         },
       );
-      console.log("Submit response: ", res.data);
+      console.log("Submit response: ", data);
     } catch (error: never) {
       toast.error(error.response.data.message);
       console.error(error);
@@ -129,10 +130,10 @@ export default function Contribution() {
 
   const handleAccept = async () => {
     try {
-      const response = await toast.promise(
-        axiosInstance.put(
-          `/api/contributions/${id}/accept`, // URL
-          {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+      const { data } = await toast.promise(
+        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+          `/api/contributions/${id}/accept`,
+          {},
           {
             // Config object
             headers: {
@@ -148,7 +149,7 @@ export default function Contribution() {
       );
       navigate("/contributions");
 
-      console.log("Accept response:", response.data);
+      console.log("Accept response:", data);
     } catch (error) {
       console.error("Error accepting contribution:", error);
       toast.error("Failed to accept contribution. Please try again.");
@@ -157,10 +158,10 @@ export default function Contribution() {
 
   const handleReject = async () => {
     try {
-      const response = await toast.promise(
-        axiosInstance.put(
-          `/api/contributions/${id}/reject`, // URL
-          {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
+      const { data } = await toast.promise(
+        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+          `/api/contributions/${id}/reject`,
+          {},
           {
             // Config object
             headers: {
@@ -176,7 +177,7 @@ export default function Contribution() {
       );
       navigate("/contributions");
 
-      console.log("Accept response:", response.data);
+      console.log("Accept response:", data);
     } catch (error) {
       console.error("Error accepting contribution:", error);
       toast.error("Failed to accept contribution. Please try again.");

@@ -3,9 +3,16 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { TestcaseInterface } from "./code-executor-interface";
 
 import type { User, Problem, Result, Submission } from "@prisma/client";
-export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
-  body: T;
-  params: P;
+
+export interface SuccessResponseInterface<T> {
+  message: string;
+  data: T;
+}
+
+export interface ErrorResponseInterface<T> {
+  name: string;
+  message: string;
+  data: T;
 }
 
 export interface ResponseInterfaceForTest<T> {
@@ -29,7 +36,7 @@ export interface RegisterConfig {
   fullname: string;
 }
 
-export interface RegisterResponse {
+export interface RegisterResponseInterface {
   user: User;
 }
 
@@ -47,18 +54,7 @@ export interface SendResetLinkConfig {
   email: string;
 }
 
-export interface SuccessResponseInterface<T> {
-  message: string;
-  data: T;
-}
-
-export interface ErrorResponseInterface<T> {
-  name: string;
-  message: string;
-  data: T;
-}
-
-export interface LoginResponse {
+export interface LoginResponseInterface {
   user: User;
   token: string;
 }

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import {
   GetAllProblemsInterface,
   ProblemInterface,
-} from "../../interfaces/interface.ts";
+} from "../../interfaces/response.interface.ts";
 import getToken from "../../utils/getToken.ts";
 import axiosInstance from "../../utils/getURL.ts";
 

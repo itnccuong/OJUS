@@ -5,6 +5,10 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/getURL";
+import {
+  RegisterResponseInterface,
+  ResponseInterface,
+} from "../../interfaces/response.interface.ts";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -24,7 +28,9 @@ export default function Register() {
     }
 
     try {
-      const { data } = await axiosInstance.post("/api/auth/register", {
+      const { data } = await axiosInstance.post<
+        ResponseInterface<RegisterResponseInterface>
+      >("/api/auth/register", {
         username,
         password,
         email,

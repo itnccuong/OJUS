@@ -11,8 +11,9 @@ import { useEffect } from "react";
 
 import {
   ProblemInterface,
-  GetAllContributionsInterface,
-} from "../../interfaces/interface.ts";
+  ResponseInterface,
+  ContributionListResponseInterface,
+} from "../../interfaces/response.interface.ts";
 import axiosInstance from "../../utils/getURL";
 
 interface Tag {
@@ -69,12 +70,11 @@ export default function ContributionList() {
   useEffect(() => {
     const fetchContributes = async () => {
       try {
-        const { data } = await axiosInstance.get<GetAllContributionsInterface>(
-          "/api/contributions/",
-          {
-            headers: { Authorization: "Bearer " + token },
-          },
-        );
+        const { data } = await axiosInstance.get<
+          ResponseInterface<ContributionListResponseInterface>
+        >("/api/contributions/", {
+          headers: { Authorization: "Bearer " + token },
+        });
 
         setContributes(data.data.contributions);
       } catch (error) {

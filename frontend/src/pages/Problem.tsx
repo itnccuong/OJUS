@@ -21,7 +21,7 @@ import getToken from "../../utils/getToken.ts";
 import {
   GetOneProblemInterface,
   ProblemInterface,
-} from "../../interfaces/interface.ts";
+} from "../../interfaces/response.interface.ts";
 import axiosInstance from "../../utils/getURL.ts";
 
 export default function Problem() {

@@ -537,7 +537,7 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
 				"description": "Model User"
 			},
-			"LoginResponse": {
+			"LoginResponseInterface": {
 				"properties": {
 					"user": {
 						"$ref": "#/components/schemas/User"
@@ -553,13 +553,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface_LoginResponse_": {
+			"SuccessResponseInterface_LoginResponseInterface_": {
 				"properties": {
 					"message": {
 						"type": "string"
 					},
 					"data": {
-						"$ref": "#/components/schemas/LoginResponse"
+						"$ref": "#/components/schemas/LoginResponseInterface"
 					}
 				},
 				"required": [
@@ -585,7 +585,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RegisterResponse": {
+			"RegisterResponseInterface": {
 				"properties": {
 					"user": {
 						"$ref": "#/components/schemas/User"
@@ -597,13 +597,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface_RegisterResponse_": {
+			"SuccessResponseInterface_RegisterResponseInterface_": {
 				"properties": {
 					"message": {
 						"type": "string"
 					},
 					"data": {
-						"$ref": "#/components/schemas/RegisterResponse"
+						"$ref": "#/components/schemas/RegisterResponseInterface"
 					}
 				},
 				"required": [
@@ -1052,7 +1052,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_LoginResponse_"
+									"$ref": "#/components/schemas/SuccessResponseInterface_LoginResponseInterface_"
 								}
 							}
 						}
@@ -1084,7 +1084,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_RegisterResponse_"
+									"$ref": "#/components/schemas/SuccessResponseInterface_RegisterResponseInterface_"
 								}
 							}
 						}

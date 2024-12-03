@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 import {
   ChangePasswordConfig,
   LoginInterface,
-  LoginResponse,
+  LoginResponseInterface,
   RegisterConfig,
-  RegisterResponse,
+  RegisterResponseInterface,
   SendResetLinkConfig,
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
@@ -52,7 +52,7 @@ export class AuthController extends Controller {
   @Post("login")
   public async login(
     @Body() requestBody: LoginInterface,
-  ): Promise<SuccessResponseInterface<LoginResponse>> {
+  ): Promise<SuccessResponseInterface<LoginResponseInterface>> {
     const user = await validateLoginBody(requestBody);
 
     // Generate a token
@@ -70,7 +70,7 @@ export class AuthController extends Controller {
   @SuccessResponse("201", "User registered successfully")
   public async register(
     @Body() requestBody: RegisterConfig, // Request body containing registration details
-  ): Promise<SuccessResponseInterface<RegisterResponse>> {
+  ): Promise<SuccessResponseInterface<RegisterResponseInterface>> {
     const { email, fullname, password, username } = requestBody;
 
     // Validate the registration request

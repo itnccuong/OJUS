@@ -6,6 +6,10 @@ import Footer from "../components/Footer";
 import { toast } from "react-toastify";
 import storageKeyMap from "../../utils/storageKeyMap.ts";
 import axiosInstance from "../../utils/getURL";
+import {
+  LoginResponseInterface,
+  ResponseInterface,
+} from "../../interfaces/response.interface.ts";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,7 +21,9 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axiosInstance.post("/api/auth/login", {
+      const { data } = await axiosInstance.post<
+        ResponseInterface<LoginResponseInterface>
+      >("/api/auth/login", {
         usernameOrEmail,
         password,
       });
