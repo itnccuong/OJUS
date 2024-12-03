@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient, Problem } from "@prisma/client";
 import {
   Request as RequestExpress,
   Response as ResponseExpress,
@@ -34,16 +33,12 @@ import {
 import { verifyToken } from "../middlewares/verify-token";
 import { SuccessResponseInterface } from "../interfaces/api-interface";
 
-const prisma = new PrismaClient();
-
-interface SubmitContributeRequest {
-  title: string;
-  description: string;
-  difficulty: string;
-  tags: string;
-  timeLimit: string;
-  memoryLimit: string;
-}
+import prisma from "../prisma/client";
+import { Problem } from "@prisma/client";
+import {
+  findAllPendingContributions,
+  findPendingContribution,
+} from "../services/problem.services/contribution.services";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -102,69 +97,68 @@ export class ContributionController extends Controller {
       data: { contribution: contribution },
     };
   }
+
+  @Get("/")
+  @SuccessResponse("200", "All contributions fetched successfully")
+  public async getAllContribute(): Promise<
+    SuccessResponseInterface<{ contributions: Problem[] }>
+  > {
+    // Fetch all pending contributions
+    const contributions = await findAllPendingContributions();
+
+    // Return a success response with the fetched contributions
+    return {
+      message: "Get all contributions successfully",
+      data: { contributions: contributions },
+    };
+  }
+
+  @Get("{contribute_id}")
+  @SuccessResponse("200", "Contribute fetched successfully")
+  public async getOneContribute(
+    @Path() contribute_id: number, // Contribution ID as a path parameter
+  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
+    // Fetch the pending contribution using the provided ID
+    const contribution = await findPendingContribution(contribute_id);
+
+    // Return a success response with the fetched contribution
+    return {
+      message: "Contribute fetched successfully",
+      data: { contribution: contribution },
+    };
+  }
 }
 
-const searchContribute = async (
-  req: RequestExpress,
-  res: ResponseExpress,
-) => {};
+// const searchContribute = async (
+//   req: RequestExpress,
+//   res: ResponseExpress,
+// ) => {};
 
-const getOneContribute = async (req: RequestExpress, res: ResponseExpress) => {
-  const { contribute_id } = req.params;
+// const getOneContribute = async (req: RequestExpress, res: ResponseExpress) => {
+//   const { contribute_id } = req.params;
+//
+//   const contribution = await findPendingContribution(parseInt(contribute_id));
+//
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Contribute fetch successfully",
+//     STATUS_CODE.SUCCESS,
+//     { contribution: contribution },
+//   );
+// };
 
-  const contribute = await prisma.problem.findUnique({
-    where: {
-      problemId: parseInt(contribute_id, 10),
-      status: 0,
-    },
-  });
-
-  if (!contribute) {
-    return formatResponse(
-      res,
-      "NOT_FOUND",
-      "Contribute not found",
-      STATUS_CODE.NOT_FOUND,
-      {},
-    );
-  }
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Contribute fetch successfully",
-    STATUS_CODE.SUCCESS,
-    { contribute },
-  );
-};
-
-const getAllContribute = async (req: RequestExpress, res: ResponseExpress) => {
-  // Lấy tất cả các contribute với status 0 (chưa được duyệt)
-  const contributions = await prisma.problem.findMany({
-    where: {
-      status: 0,
-    },
-  });
-
-  // Kiểm tra nếu không có kết quả nào
-  if (!contributions || contributions.length === 0) {
-    return formatResponse(
-      res,
-      "NOT_FOUND",
-      "No contributions found",
-      STATUS_CODE.NOT_FOUND,
-      {},
-    );
-  }
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Get all contributions successfully",
-    STATUS_CODE.SUCCESS,
-    { contributions },
-  );
-};
+// const getAllContribute = async (req: RequestExpress, res: ResponseExpress) => {
+//   const contributions = await findAllPendingContributions();
+//
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Get all contributions successfully",
+//     STATUS_CODE.SUCCESS,
+//     { contributions: contributions },
+//   );
+// };
 
 const acceptContribute = async (req: RequestExpress, res: ResponseExpress) => {
   const { contribute_id } = req.params;
@@ -238,12 +232,4 @@ const rejectContribute = async (req: RequestExpress, res: ResponseExpress) => {
     STATUS_CODE.SUCCESS,
     { contribute },
   );
-};
-
-export {
-  searchContribute,
-  getOneContribute,
-  getAllContribute,
-  acceptContribute,
-  rejectContribute,
 };

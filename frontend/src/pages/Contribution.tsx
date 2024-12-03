@@ -48,7 +48,7 @@ export default function Contribution() {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<GetOneContributionInterface>(
-          `/api/contributes/${id}`,
+          `/api/contributions/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export default function Contribution() {
         );
 
         console.log(res.data);
-        setFetchContribution(res.data.data.contribute);
+        setFetchContribution(res.data.data.contribution);
       } catch (err) {
         console.error(err);
       }

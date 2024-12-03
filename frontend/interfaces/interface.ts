@@ -44,6 +44,6 @@ export interface GetOneProblemInterface extends ResponseInterface {
 
 export interface GetOneContributionInterface extends ResponseInterface {
   data: {
-    contribute: ProblemInterface;
+    contribution: ProblemInterface;
   };
 }

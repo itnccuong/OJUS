@@ -473,6 +473,33 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SuccessResponseInterface__contributions-Problem-Array__": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"contributions": {
+								"items": {
+									"$ref": "#/components/schemas/Problem"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"contributions"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
 					"password": {
@@ -699,7 +726,7 @@
 					}
 				},
 				"tags": [
-					"Problem"
+					"Problems"
 				],
 				"security": [],
 				"parameters": [
@@ -741,7 +768,7 @@
 					}
 				},
 				"tags": [
-					"Problem"
+					"Problems"
 				],
 				"security": [],
 				"parameters": []
@@ -763,7 +790,7 @@
 					}
 				},
 				"tags": [
-					"Problem"
+					"Problems"
 				],
 				"security": [],
 				"parameters": []
@@ -786,7 +813,7 @@
 				},
 				"description": "Fetch a single problem without user account data.",
 				"tags": [
-					"Problem"
+					"Problems"
 				],
 				"security": [],
 				"parameters": [
@@ -819,7 +846,7 @@
 				},
 				"description": "Fetch a single problem with user account data (status included).",
 				"tags": [
-					"Problem"
+					"Problems"
 				],
 				"security": [],
 				"parameters": [
@@ -898,6 +925,58 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetAllContribute",
+				"responses": {
+					"200": {
+						"description": "All contributions fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contributions-Problem-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/contributions/{contribute_id}": {
+			"get": {
+				"operationId": "GetOneContribute",
+				"responses": {
+					"200": {
+						"description": "Contribute fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/api/auth/login": {

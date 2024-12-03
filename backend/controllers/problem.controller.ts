@@ -53,7 +53,7 @@ import prisma from "../prisma/client";
 dotenv.config();
 
 @Route("/api/problems") // Base path for submission-related routes
-@Tags("Problem") // Group this endpoint under "Submission" in Swagger
+@Tags("Problems") // Group this endpoint under "Submission" in Swagger
 export class SubmissionController extends Controller {
   @Post("{problem_id}/")
   @Middlewares(verifyToken)

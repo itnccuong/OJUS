@@ -70,7 +70,7 @@ export default function ContributionList() {
     const fetchContributes = async () => {
       try {
         const { data } = await axiosInstance.get<GetAllContributionsInterface>(
-          "/api/contributes/",
+          "/api/contributions/",
           {
             headers: { Authorization: "Bearer " + token },
           },
