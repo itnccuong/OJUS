@@ -10,6 +10,8 @@ import {
   ResponseInterfaceForTest,
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
+import prisma from "../prisma/client";
+import jwt from "jsonwebtoken";
 
 describe("Authentication tests", () => {
   describe("Register", () => {
@@ -21,6 +23,14 @@ describe("Authentication tests", () => {
       >;
       expect(res.status).toBe(STATUS_CODE.CREATED);
       expect(res.body.data.user.password).not.toBe(registerData.password);
+      const user = await prisma.user.findFirst({
+        where: { username: registerData.username },
+      });
+      expect(user).toBeTruthy();
+      if (user) {
+        expect(user.email).toBe(registerData.email);
+        expect(user.fullname).toBe(registerData.fullname);
+      }
     });
   });
 
@@ -31,8 +41,24 @@ describe("Authentication tests", () => {
         .send(loginData)) as ResponseInterfaceForTest<
         SuccessResponseInterface<LoginResponseInterface>
       >;
-      expect(res.status).toBe(200);
-      expect(res.body.data.token).toBeTruthy();
+      expect(res.status).toBe(STATUS_CODE.SUCCESS);
+      const token = res.body.data.token;
+
+      expect(token).toBeTruthy();
+      let userId = 0;
+      jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+        userId = (decoded as { userId: number }).userId;
+      });
+      expect(userId).toBeTruthy();
+
+      const user = await prisma.user.findFirst({ where: { userId: userId } });
+      expect(user).toBeTruthy();
+      if (user) {
+        expect(
+          user.username === loginData.usernameOrEmail ||
+            user.email === loginData.usernameOrEmail,
+        ).toBeTruthy();
+      }
     });
   });
 });
