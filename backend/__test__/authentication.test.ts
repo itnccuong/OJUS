@@ -10,22 +10,6 @@ import {
   ResponseInterfaceForTest,
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
-import { cleanDatabase } from "./test_utils";
-import * as util from "node:util";
-import { exec } from "child_process";
-import prisma from "../prisma/client";
-
-const execPromise = util.promisify(exec);
-
-beforeAll(async () => {
-  await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
-});
-
-afterAll(async () => {
-  // await cleanDatabase();
-  await prisma.$disconnect();
-});
 
 describe("Authentication tests", () => {
   describe("Register", () => {

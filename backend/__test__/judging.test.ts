@@ -6,8 +6,6 @@ import { initAllDockerContainers } from "../services/code-executor/executor-util
 import jwt from "jsonwebtoken";
 
 import { compileTestCases } from "./test_data";
-import { cleanDatabase, testCompile } from "./test_utils";
-import prisma from "../prisma/client";
 import {
   ErrorResponseInterface,
   FailTestResponseInterface,
@@ -15,28 +13,18 @@ import {
   SubmitCodeResponseInterface,
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
-import * as util from "node:util";
-import { exec } from "child_process";
+import { testCompile } from "./test_services";
 
 jest.setTimeout(60000);
 let fake_token = "";
 
-const execPromise = util.promisify(exec);
-
 beforeAll(async () => {
   await initAllDockerContainers();
-  await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
   fake_token = jwt.sign(
     { userId: 1 }, // Payload
     process.env.JWT_SECRET as string, // Secret
     { expiresIn: "3m" }, // Token expiration
   );
-});
-
-afterAll(async () => {
-  // await cleanDatabase();
-  await prisma.$disconnect();
 });
 
 describe("Compile code", () => {

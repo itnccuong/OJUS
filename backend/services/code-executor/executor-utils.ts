@@ -119,10 +119,10 @@ const initDockerContainer = async (container: ContainerConfig) => {
 
   if (container_id) {
     await killContainer(container_id);
-    console.log(`Container ${name} stopped`);
+    // console.log(`Container ${name} stopped`);
   }
   container.id = await createContainer(container);
-  console.log(`Container ${name} created`);
+  // console.log(`Container ${name} created`);
 };
 
 /**
