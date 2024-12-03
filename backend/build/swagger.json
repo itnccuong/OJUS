@@ -449,21 +449,25 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
 				"description": "Model Problem"
 			},
-			"SuccessResponseInterface__contribution-Problem__": {
+			"ContributionResponseInterface": {
+				"properties": {
+					"contribution": {
+						"$ref": "#/components/schemas/Problem"
+					}
+				},
+				"required": [
+					"contribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_ContributionResponseInterface_": {
 				"properties": {
 					"message": {
 						"type": "string"
 					},
 					"data": {
-						"properties": {
-							"contribution": {
-								"$ref": "#/components/schemas/Problem"
-							}
-						},
-						"required": [
-							"contribution"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/ContributionResponseInterface"
 					}
 				},
 				"required": [
@@ -489,6 +493,30 @@
 						},
 						"required": [
 							"contributions"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface__contribution-Problem__": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"contribution": {
+								"$ref": "#/components/schemas/Problem"
+							}
+						},
+						"required": [
+							"contribution"
 						],
 						"type": "object"
 					}
@@ -871,7 +899,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+									"$ref": "#/components/schemas/SuccessResponseInterface_ContributionResponseInterface_"
 								}
 							}
 						}

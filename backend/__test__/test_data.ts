@@ -28,7 +28,12 @@ export const registerData: RegisterConfig = {
   username: "hien2",
 };
 
-export const loginData: LoginInterface = {
-  usernameOrEmail: registerData.username,
-  password: registerData.password,
+export const loginWithUsernameData: LoginInterface = {
+  usernameOrEmail: "hien",
+  password: "1",
+};
+
+export const loginWithEmailData: LoginInterface = {
+  usernameOrEmail: "hienvuongnhat@gmail.com",
+  password: "1",
 };

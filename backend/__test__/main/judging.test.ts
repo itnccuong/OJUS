@@ -1,19 +1,19 @@
 import { describe, expect, test } from "@jest/globals";
 import request from "supertest";
-import { app } from "../src/app";
-import { STATUS_CODE } from "../utils/constants";
-import { initAllDockerContainers } from "../services/code-executor/executor-utils";
+import { app } from "../../src/app";
+import { STATUS_CODE } from "../../utils/constants";
+import { initAllDockerContainers } from "../../services/code-executor/executor-utils";
 import jwt from "jsonwebtoken";
 
-import { compileTestCases } from "./test_data";
+import { compileTestCases } from "../test_data";
 import {
   ErrorResponseInterface,
   FailTestResponseInterface,
   ResponseInterfaceForTest,
   SubmitCodeResponseInterface,
   SuccessResponseInterface,
-} from "../interfaces/api-interface";
-import { testCompile } from "./test_services";
+} from "../../interfaces/api-interface";
+import { testCompile } from "../test_services";
 
 jest.setTimeout(60000);
 let fake_token = "";
