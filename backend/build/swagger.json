@@ -529,6 +529,58 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"RegisterResponse": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_RegisterResponse_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RegisterResponse"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RegisterConfig": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"fullname": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"username",
+					"password",
+					"fullname"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -714,8 +766,8 @@
 			"post": {
 				"operationId": "Login",
 				"responses": {
-					"202": {
-						"description": "Hehehe",
+					"200": {
+						"description": "Login successfully",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -736,6 +788,38 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/LoginInterface"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "User registered successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_RegisterResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterConfig"
 							}
 						}
 					}

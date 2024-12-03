@@ -3,7 +3,6 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { TestcaseInterface } from "./code-executor-interface";
 
 import type { User, Problem, Result, Submission } from "@prisma/client";
-
 export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
   body: T;
   params: P;
@@ -24,6 +23,10 @@ export interface RegisterConfig {
   username: string;
   password: string;
   fullname: string;
+}
+
+export interface RegisterResponse {
+  user: User;
 }
 
 export interface SubmitCodeConfig {
