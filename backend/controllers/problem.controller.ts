@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Request as RequestEx, Response } from "express";
+import { Request as RequestExpress, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
 
 import {
@@ -25,6 +25,11 @@ import {
   SubmitCodeResponseInterface,
   FailTestResponseInterface,
   CompileErrorResponseInterface,
+  ErrorResponseInterface,
+  SuccessResponseInterface,
+  GetAllProblemInterface,
+  ProblemInterface,
+  GetOneProblemInterface,
 } from "../interfaces/api-interface";
 import {
   getUserStatus,
@@ -46,6 +51,7 @@ import {
   Res,
   Request,
   Middlewares,
+  Security,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import prisma from "../prisma/client";
@@ -61,11 +67,18 @@ export class SubmissionController extends Controller {
   public async submit(
     @Path() problem_id: number, // Path parameter
     @Body() body: SubmitCodeConfig, // Request body
-    @Request() req: RequestEx,
+    @Request() req: RequestExpress,
     @Res()
-    CompileErrorResponse: TsoaResponse<400, CompileErrorResponseInterface>,
-    @Res() FailTestResponse: TsoaResponse<422, FailTestResponseInterface>,
-  ): Promise<SubmitCodeResponseInterface> {
+    CompileErrorResponse: TsoaResponse<
+      400,
+      ErrorResponseInterface<CompileErrorResponseInterface>
+    >,
+    @Res()
+    FailTestResponse: TsoaResponse<
+      422,
+      ErrorResponseInterface<FailTestResponseInterface>
+    >,
+  ): Promise<SuccessResponseInterface<SubmitCodeResponseInterface>> {
     const { code, language } = body;
     const userId = req.userId;
     // Step 1: Create submission record
@@ -162,6 +175,70 @@ export class SubmissionController extends Controller {
     return {
       message: "All testcases passed",
       data: { submission: submission, results: results, testcases: testcases },
+    };
+  }
+
+  @Get("/no-account")
+  @SuccessResponse(200, "Successfully fetched all problems")
+  public async getAllProblemsNoAccount(): Promise<
+    SuccessResponseInterface<GetAllProblemInterface>
+  > {
+    const problems = await queryProblems();
+
+    return {
+      message: "Get all problems successfully",
+      data: { problems },
+    };
+  }
+
+  @Get("/with-account")
+  // @Security("jwt")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched all problems with account")
+  public async getAllProblemsWithAccount(
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetAllProblemInterface>> {
+    const userId = req.userId;
+    const responseData = await queryProblemStatus(userId);
+    return {
+      message: "Get all problems with account successfully",
+      data: { problems: responseData },
+    };
+  }
+
+  /**
+   * Fetch a single problem without user account data.
+   */
+  @Get("/no-account/{problem_id}")
+  @SuccessResponse(200, "Successfully fetched problem without user data")
+  public async getOneProblemNoAccount(
+    @Path() problem_id: number,
+  ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
+    const problem = await findProblemById(problem_id);
+    const resProblem = { ...problem, userStatus: false };
+    return {
+      message: "Problem fetched successfully!",
+      data: { problem: resProblem },
+    };
+  }
+
+  /**
+   * Fetch a single problem with user account data (status included).
+   */
+  @Get("/with-account/{problem_id}")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched problem with user data")
+  public async getOneProblemWithAccount(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
+    const userId = req.userId;
+    const problem = await findProblemById(problem_id);
+    const userStatus = await getUserStatus(userId, problem.problemId);
+    const resProblem = { ...problem, userStatus: userStatus.userStatus };
+    return {
+      message: "Problem fetched successfully!",
+      data: { problem: resProblem },
     };
   }
 }
@@ -263,70 +340,70 @@ export class SubmissionController extends Controller {
 //   );
 // };
 
-export const getAllProblemsNoAccount = async (
-  req: RequestEx,
-  res: Response,
-) => {
-  const problems = await queryProblems();
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Get all problems successfully",
-    STATUS_CODE.SUCCESS,
-    { problems: problems },
-  );
-};
-
-export const getAllProblemsWithAccount = async (
-  req: RequestEx,
-  res: Response,
-) => {
-  const userId = req.userId;
-  //Join userProblemStatus with problem to get status of each problem
-  const responseData = await queryProblemStatus(userId);
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Get all problems successfully",
-    STATUS_CODE.SUCCESS,
-    { problems: responseData },
-  );
-};
-
-export const getOneProblemNoAccount = async (
-  req: CustomRequest<null, ProblemParamsInterface>,
-  res: Response,
-) => {
-  const problem_id = parseInt(req.params.problem_id);
-
-  const problem = await findProblemById(problem_id);
-  const resProblem = { ...problem, userStatus: false };
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Problem fetch successfully!",
-    STATUS_CODE.SUCCESS,
-    { problem: resProblem },
-  );
-};
-
-export const getOneProblemWithAccount = async (
-  req: CustomRequest<null, ProblemParamsInterface>,
-  res: Response,
-) => {
-  const problem_id = parseInt(req.params.problem_id);
-  const userId = req.userId;
-  const problem = await findProblemById(problem_id);
-  const userStatus = await getUserStatus(userId, problem.problemId);
-  const resProblem = { ...problem, userStatus: userStatus.userStatus };
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Problem fetch successfully!",
-    STATUS_CODE.SUCCESS,
-    { problem: resProblem },
-  );
-};
+// export const getAllProblemsNoAccount = async (
+//   req: RequestExpress,
+//   res: Response,
+// ) => {
+//   const problems = await queryProblems();
+//
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Get all problems successfully",
+//     STATUS_CODE.SUCCESS,
+//     { problems: problems },
+//   );
+// };
+//
+// export const getAllProblemsWithAccount = async (
+//   req: RequestExpress,
+//   res: Response,
+// ) => {
+//   const userId = req.userId;
+//   //Join userProblemStatus with problem to get status of each problem
+//   const responseData = await queryProblemStatus(userId);
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Get all problems successfully",
+//     STATUS_CODE.SUCCESS,
+//     { problems: responseData },
+//   );
+// };
+//
+// export const getOneProblemNoAccount = async (
+//   req: CustomRequest<null, ProblemParamsInterface>,
+//   res: Response,
+// ) => {
+//   const problem_id = parseInt(req.params.problem_id);
+//
+//   const problem = await findProblemById(problem_id);
+//   const resProblem = { ...problem, userStatus: false };
+//
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Problem fetch successfully!",
+//     STATUS_CODE.SUCCESS,
+//     { problem: resProblem },
+//   );
+// };
+//
+// export const getOneProblemWithAccount = async (
+//   req: CustomRequest<null, ProblemParamsInterface>,
+//   res: Response,
+// ) => {
+//   const problem_id = parseInt(req.params.problem_id);
+//   const userId = req.userId;
+//   const problem = await findProblemById(problem_id);
+//   const userStatus = await getUserStatus(userId, problem.problemId);
+//   const resProblem = { ...problem, userStatus: userStatus.userStatus };
+//
+//   return formatResponse(
+//     res,
+//     "SUCCESS",
+//     "Problem fetch successfully!",
+//     STATUS_CODE.SUCCESS,
+//     { problem: resProblem },
+//   );
+// };

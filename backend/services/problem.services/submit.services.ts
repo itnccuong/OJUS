@@ -190,8 +190,15 @@ export const updateUserProblemStatus = async (
   userId: number,
   problemId: number,
 ) => {
-  await prisma.userProblemStatus.create({
-    data: {
+  await prisma.userProblemStatus.upsert({
+    where: {
+      userId_problemId: {
+        userId: userId,
+        problemId: problemId,
+      },
+    },
+    update: {}, // Leave empty if you don't want to update existing records
+    create: {
       userId: userId,
       problemId: problemId,
     },

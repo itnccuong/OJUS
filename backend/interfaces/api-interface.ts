@@ -7,23 +7,7 @@ export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
   params: P;
 }
 
-// export interface SuccessResponse<T> {
-//   status: number;
-//   body: {
-//     data: T;
-//   };
-// }
-//
-// export interface ErrorResponse<T> {
-//   status: number;
-//   body: {
-//     name: string;
-//     message: string;
-//     data: T;
-//   };
-// }
-
-export interface ResponseInterface<T> {
+export interface ResponseInterfaceForTest<T> {
   status: number;
   body: T;
 }
@@ -39,14 +23,6 @@ export interface UserConfig {
 export interface LoginInterface {
   usernameOrEmail: string;
   password: string;
-}
-
-export interface LoginSuccessData {
-  token: string;
-}
-
-export interface RegisterSuccessData {
-  user: UserConfig;
 }
 
 export interface RegisterConfig {
@@ -108,33 +84,45 @@ export interface ProblemInterface {
   fileId: number;
 }
 
-export interface SubmitCodeResponseInterface {
-  data: {
-    submission: SubmissionConfig;
-    results: ResultConfig[];
-    testcases: TestcaseInterface;
-  };
+export interface SuccessResponseInterface<T> {
   message: string;
+  data: T;
+}
+
+export interface ErrorResponseInterface<T> {
+  name: string;
+  message: string;
+  data: T;
+}
+
+export interface SubmitCodeResponseInterface {
+  submission: SubmissionConfig;
+  results: ResultConfig[];
+  testcases: TestcaseInterface;
 }
 
 export interface CompileErrorResponseInterface {
-  name: string;
-  message: string;
-  data: {
-    stderr: string;
-    submission: SubmissionConfig;
-    testcases: TestcaseInterface;
-  };
+  stderr: string;
+  submission: SubmissionConfig;
+  testcases: TestcaseInterface;
 }
 
 //Wrong answer, runtime, memory, time limit
 export interface FailTestResponseInterface {
-  name: string;
-  message: string;
-  data: {
-    stderr: string;
-    submission: SubmissionConfig;
-    results: ResultConfig[];
-    testcases: TestcaseInterface;
-  };
+  stderr: string;
+  submission: SubmissionConfig;
+  results: ResultConfig[];
+  testcases: TestcaseInterface;
+}
+
+export interface ProblemWithUserStatusInterface extends ProblemInterface {
+  userStatus: boolean;
+}
+
+export interface GetAllProblemInterface {
+  problems: ProblemWithUserStatusInterface[];
+}
+
+export interface GetOneProblemInterface {
+  problem: ProblemWithUserStatusInterface;
 }

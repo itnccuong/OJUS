@@ -117,35 +117,39 @@
 			},
 			"SubmitCodeResponseInterface": {
 				"properties": {
-					"data": {
-						"properties": {
-							"testcases": {
-								"$ref": "#/components/schemas/TestcaseInterface"
-							},
-							"results": {
-								"items": {
-									"$ref": "#/components/schemas/ResultConfig"
-								},
-								"type": "array"
-							},
-							"submission": {
-								"$ref": "#/components/schemas/SubmissionConfig"
-							}
-						},
-						"required": [
-							"testcases",
-							"results",
-							"submission"
-						],
-						"type": "object"
+					"submission": {
+						"$ref": "#/components/schemas/SubmissionConfig"
 					},
-					"message": {
-						"type": "string"
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/ResultConfig"
+						},
+						"type": "array"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
 					}
 				},
 				"required": [
-					"data",
-					"message"
+					"submission",
+					"results",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -168,6 +172,26 @@
 			},
 			"CompileErrorResponseInterface": {
 				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"submission": {
+						"$ref": "#/components/schemas/SubmissionConfig"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"stderr",
+					"submission",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponseInterface_CompileErrorResponseInterface_": {
+				"properties": {
 					"name": {
 						"type": "string"
 					},
@@ -175,23 +199,7 @@
 						"type": "string"
 					},
 					"data": {
-						"properties": {
-							"testcases": {
-								"$ref": "#/components/schemas/TestcaseInterface"
-							},
-							"submission": {
-								"$ref": "#/components/schemas/SubmissionConfig"
-							},
-							"stderr": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"testcases",
-							"submission",
-							"stderr"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/CompileErrorResponseInterface"
 					}
 				},
 				"required": [
@@ -204,6 +212,33 @@
 			},
 			"FailTestResponseInterface": {
 				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"submission": {
+						"$ref": "#/components/schemas/SubmissionConfig"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/ResultConfig"
+						},
+						"type": "array"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"stderr",
+					"submission",
+					"results",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponseInterface_FailTestResponseInterface_": {
+				"properties": {
 					"name": {
 						"type": "string"
 					},
@@ -211,34 +246,129 @@
 						"type": "string"
 					},
 					"data": {
-						"properties": {
-							"testcases": {
-								"$ref": "#/components/schemas/TestcaseInterface"
-							},
-							"results": {
-								"items": {
-									"$ref": "#/components/schemas/ResultConfig"
-								},
-								"type": "array"
-							},
-							"submission": {
-								"$ref": "#/components/schemas/SubmissionConfig"
-							},
-							"stderr": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"testcases",
-							"results",
-							"submission",
-							"stderr"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/FailTestResponseInterface"
 					}
 				},
 				"required": [
 					"name",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProblemWithUserStatusInterface": {
+				"properties": {
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"authorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userStatus": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"problemId",
+					"title",
+					"description",
+					"status",
+					"difficulty",
+					"tags",
+					"timeLimit",
+					"memoryLimit",
+					"authorId",
+					"fileId",
+					"userStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllProblemInterface": {
+				"properties": {
+					"problems": {
+						"items": {
+							"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"problems"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetAllProblemInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetAllProblemInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOneProblemInterface": {
+				"properties": {
+					"problem": {
+						"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+					}
+				},
+				"required": [
+					"problem"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetOneProblemInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetOneProblemInterface"
+					}
+				},
+				"required": [
 					"message",
 					"data"
 				],
@@ -343,7 +473,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
 								}
 							}
 						}
@@ -353,7 +483,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CompileErrorResponseInterface"
+									"$ref": "#/components/schemas/ErrorResponseInterface_CompileErrorResponseInterface_"
 								}
 							}
 						}
@@ -363,7 +493,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/FailTestResponseInterface"
+									"$ref": "#/components/schemas/ErrorResponseInterface_FailTestResponseInterface_"
 								}
 							}
 						}
@@ -394,6 +524,116 @@
 						}
 					}
 				}
+			}
+		},
+		"/api/problems/no-account": {
+			"get": {
+				"operationId": "GetAllProblemsNoAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched all problems",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problem"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/problems/with-account": {
+			"get": {
+				"operationId": "GetAllProblemsWithAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched all problems with account",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problem"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/problems/no-account/{problem_id}": {
+			"get": {
+				"operationId": "GetOneProblemNoAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched problem without user data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fetch a single problem without user account data.",
+				"tags": [
+					"Problem"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/problems/with-account/{problem_id}": {
+			"get": {
+				"operationId": "GetOneProblemWithAccount",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched problem with user data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fetch a single problem with user account data (status included).",
+				"tags": [
+					"Problem"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/api/auth/login": {

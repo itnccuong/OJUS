@@ -9,6 +9,6 @@ import problemRoute from "./problem.route";
 // router.use("/auth", authRoute);
 router.use("/users", userRoute);
 router.use("/contributes", contributeRoute);
-router.use("/problems", problemRoute);
+// router.use("/problems", problemRoute);
 
 export default router;
