@@ -1,34 +1,25 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import {
-  Request as RequestExpress,
-  Response as ResponseExpress,
-} from "express";
-import { formatResponse } from "../utils/formatResponse";
-import { STATUS_CODE } from "../utils/constants";
+import { Request as RequestExpress } from "express";
 import {
   completeUpload,
   startUpload,
   uploadToS3,
 } from "../services/contribute.services/uploadFile.service";
 import {
-  Body,
   Controller,
   Get,
   Path,
   Post,
-  Query,
   Route,
   SuccessResponse,
-  Response,
   Request,
   Tags,
-  TsoaResponse,
-  Res,
   Middlewares,
   UploadedFile,
   FormField,
+  Put,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import { SuccessResponseInterface } from "../interfaces/api-interface";
@@ -127,109 +118,54 @@ export class ContributionController extends Controller {
       data: { contribution: contribution },
     };
   }
+
+  @Put("{contribute_id}/accept")
+  @SuccessResponse("200", "Contribution accepted successfully")
+  public async acceptContribution(
+    @Path() contribute_id: number,
+  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
+    // Validate that the contribution exists and is pending
+    await findPendingContribution(contribute_id);
+
+    // Update the contribution status to 'accepted' (e.g., status = 2)
+    const updateContribution = await prisma.problem.update({
+      where: {
+        problemId: contribute_id,
+      },
+      data: {
+        status: 2,
+      },
+    });
+
+    // Return success response
+    return {
+      message: "Contribute accepted successfully",
+      data: { contribution: updateContribution },
+    };
+  }
+
+  @Put("{contribute_id}/reject")
+  @SuccessResponse("200", "Contribution rejected successfully")
+  public async rejectContribution(
+    @Path() contribute_id: number,
+  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
+    // Validate that the contribution exists and is pending
+    await findPendingContribution(contribute_id);
+
+    // Update the contribution status to 'rejected' (e.g., status = 1)
+    const updateContribution = await prisma.problem.update({
+      where: {
+        problemId: contribute_id,
+      },
+      data: {
+        status: 1,
+      },
+    });
+
+    // Return success response
+    return {
+      message: "Contribute rejected successfully",
+      data: { contribution: updateContribution },
+    };
+  }
 }
-
-// const searchContribute = async (
-//   req: RequestExpress,
-//   res: ResponseExpress,
-// ) => {};
-
-// const getOneContribute = async (req: RequestExpress, res: ResponseExpress) => {
-//   const { contribute_id } = req.params;
-//
-//   const contribution = await findPendingContribution(parseInt(contribute_id));
-//
-//   return formatResponse(
-//     res,
-//     "SUCCESS",
-//     "Contribute fetch successfully",
-//     STATUS_CODE.SUCCESS,
-//     { contribution: contribution },
-//   );
-// };
-
-// const getAllContribute = async (req: RequestExpress, res: ResponseExpress) => {
-//   const contributions = await findAllPendingContributions();
-//
-//   return formatResponse(
-//     res,
-//     "SUCCESS",
-//     "Get all contributions successfully",
-//     STATUS_CODE.SUCCESS,
-//     { contributions: contributions },
-//   );
-// };
-
-const acceptContribute = async (req: RequestExpress, res: ResponseExpress) => {
-  const { contribute_id } = req.params;
-
-  const existingContribute = await prisma.problem.findUnique({
-    where: {
-      problemId: parseInt(contribute_id, 10),
-    },
-  });
-
-  if (existingContribute?.status !== 0) {
-    return formatResponse(
-      res,
-      "BAD_REQUEST",
-      "Contribution is not in pending state",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
-  }
-
-  const contribute = await prisma.problem.update({
-    where: {
-      problemId: parseInt(contribute_id, 10),
-    },
-    data: {
-      status: 2,
-    },
-  });
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Contribute accepted successfully",
-    STATUS_CODE.SUCCESS,
-    { contribute },
-  );
-};
-
-const rejectContribute = async (req: RequestExpress, res: ResponseExpress) => {
-  const { contribute_id } = req.params;
-
-  const existingContribute = await prisma.problem.findUnique({
-    where: {
-      problemId: parseInt(contribute_id, 10),
-    },
-  });
-
-  if (existingContribute?.status !== 0) {
-    return formatResponse(
-      res,
-      "BAD_REQUEST",
-      "Contribution is not in pending state",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
-  }
-
-  const contribute = await prisma.problem.update({
-    where: {
-      problemId: parseInt(contribute_id, 10),
-    },
-    data: {
-      status: 1,
-    },
-  });
-
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Contribute rejected successfully",
-    STATUS_CODE.SUCCESS,
-    { contribute },
-  );
-};

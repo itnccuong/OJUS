@@ -979,6 +979,70 @@
 				]
 			}
 		},
+		"/api/contributions/{contribute_id}/accept": {
+			"put": {
+				"operationId": "AcceptContribution",
+				"responses": {
+					"200": {
+						"description": "Contribution accepted successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions/{contribute_id}/reject": {
+			"put": {
+				"operationId": "RejectContribution",
+				"responses": {
+					"200": {
+						"description": "Contribution rejected successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/api/auth/login": {
 			"post": {
 				"operationId": "Login",

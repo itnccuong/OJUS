@@ -130,8 +130,8 @@ export default function Contribution() {
   const handleAccept = async () => {
     try {
       const response = await toast.promise(
-        axiosInstance.post(
-          `/api/contributes/accept/${id}`, // URL
+        axiosInstance.put(
+          `/api/contributions/${id}/accept`, // URL
           {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
           {
             // Config object
@@ -158,8 +158,8 @@ export default function Contribution() {
   const handleReject = async () => {
     try {
       const response = await toast.promise(
-        axiosInstance.post(
-          `/api/contributes/reject/${id}`, // URL
+        axiosInstance.put(
+          `/api/contributions/${id}/reject`, // URL
           {}, // Payload body (bỏ trống nếu không cần gửi thêm dữ liệu)
           {
             // Config object
