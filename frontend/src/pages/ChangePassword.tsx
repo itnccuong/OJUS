@@ -24,7 +24,7 @@ export default function ChangePassword() {
 
     try {
       // Make a request to change the password
-      const { data } = await axiosInstance.post("/api/auth/change-password", {
+      const { data } = await axiosInstance.post("/api/auth/password/change", {
         newPassword: newPassword,
         token: token,
       });

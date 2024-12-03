@@ -13,6 +13,10 @@ export interface ResponseInterfaceForTest<T> {
   body: T;
 }
 
+export interface decodedResetTokenInterface {
+  email: string;
+}
+
 export interface LoginInterface {
   usernameOrEmail: string;
   password: string;

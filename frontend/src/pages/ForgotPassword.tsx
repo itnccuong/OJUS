@@ -15,7 +15,7 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       await toast.promise(
-        axiosInstance.post("/api/auth/reset-link", {
+        axiosInstance.post("/api/auth/password/reset-link", {
           email: email,
         }),
         {
