@@ -86,7 +86,7 @@ export default function Contribute() {
 
       // Submit the form
       const res = await toast.promise(
-        axiosInstance.post("/api/contributes", formdata, {
+        axiosInstance.post("/api/contributions", formdata, {
           headers: { Authorization: "Bearer " + token },
         }),
         {

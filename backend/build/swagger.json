@@ -445,6 +445,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Problem": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
+				"description": "Model Problem"
+			},
+			"SuccessResponseInterface__contribution-Problem__": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"contribution": {
+								"$ref": "#/components/schemas/Problem"
+							}
+						},
+						"required": [
+							"contribution"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
 					"password": {
@@ -805,6 +833,71 @@
 						}
 					}
 				]
+			}
+		},
+		"/api/contributions": {
+			"post": {
+				"operationId": "SubmitContribute",
+				"responses": {
+					"201": {
+						"description": "Contribute submitted successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"title": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									},
+									"difficulty": {
+										"type": "string"
+									},
+									"tags": {
+										"type": "string"
+									},
+									"timeLimit": {
+										"type": "string"
+									},
+									"memoryLimit": {
+										"type": "string"
+									},
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"title",
+									"description",
+									"difficulty",
+									"tags",
+									"timeLimit",
+									"memoryLimit",
+									"file"
+								]
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/auth/login": {

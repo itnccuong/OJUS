@@ -9,7 +9,6 @@ import {
   searchContribute,
   getOneContribute,
   getAllContribute,
-  submitContribute,
   rejectContribute,
   acceptContribute,
 } from "../controllers/contribute.controller";
@@ -20,7 +19,7 @@ router.use(verifyToken);
 // router.get("/search", searchContribute);
 router.get("/", asyncErrorHandler(getAllContribute));
 router.get("/:contribute_id", asyncErrorHandler(getOneContribute));
-router.post("/", upload.single("file"), asyncErrorHandler(submitContribute));
+// router.post("/", upload.single("file"), asyncErrorHandler(submitContribute));
 router.post("/accept/:contribute_id", asyncErrorHandler(acceptContribute));
 router.post("/reject/:contribute_id", asyncErrorHandler(rejectContribute));
 
