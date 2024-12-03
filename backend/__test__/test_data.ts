@@ -1,36 +1,4 @@
-import type { User, Problem, Files } from "@prisma/client";
-
-export const registerData: User = {
-  userId: 1,
-  email: "hienvuongnhat@gmail.com",
-  username: "hien",
-  password: "1",
-  fullname: "Hien",
-  createdAt: new Date(),
-};
-
-export const fileData: Files = {
-  fileId: 1,
-  filename: "testcase_1732092562978",
-  filesize: 1057,
-  fileType: "application/x-zip-compressed",
-  location:
-    "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip",
-  createdAt: new Date(),
-};
-export const problemData: Problem = {
-  problemId: 1,
-  title: "1",
-  description: "1",
-  status: 0,
-  difficulty: 1,
-  tags: "1",
-  timeLimit: 1000,
-  memoryLimit: 1000,
-  authorId: 1,
-  fileId: 1,
-  createdAt: new Date(),
-};
+import { LoginInterface, RegisterConfig } from "../interfaces/api-interface";
 
 export const compileTestCases = [
   {
@@ -52,3 +20,15 @@ export const compileTestCases = [
       'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Hello Java");\n    }  \n}',
   },
 ];
+
+export const registerData: RegisterConfig = {
+  email: "hienvuongnhat@gmail.com2",
+  password: "2",
+  fullname: "Hien2",
+  username: "hien2",
+};
+
+export const loginData: LoginInterface = {
+  usernameOrEmail: registerData.username,
+  password: registerData.password,
+};

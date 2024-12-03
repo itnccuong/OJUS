@@ -2,7 +2,7 @@
   "scripts": {
     "clean": "rm -rf coverage dist",
     "lint": "eslint ./src/*.ts",
-    "test": "dotenv -e .env.test -- prisma migrate dev && dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
+    "test": "dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
     "build": "tsoa spec-and-routes && tsc",
     "start": "ts-node src/index.ts",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
