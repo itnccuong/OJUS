@@ -1,3 +1,5 @@
+import { LoginInterface, RegisterConfig } from "../interfaces/api-interface";
+
 export const compileTestCases = [
   {
     language: "c",
@@ -18,3 +20,15 @@ export const compileTestCases = [
       'class Solution{  \n    public static void main(String args[]){  \n     System.out.println("Hello Java");\n    }  \n}',
   },
 ];
+
+export const registerData: RegisterConfig = {
+  email: "hienvuongnhat@gmail.com2",
+  password: "2",
+  fullname: "Hien2",
+  username: "hien2",
+};
+
+export const loginData: LoginInterface = {
+  usernameOrEmail: registerData.username,
+  password: registerData.password,
+};

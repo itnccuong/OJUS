@@ -125,38 +125,3 @@ describe("Submit code (C++)", () => {
     expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");
   });
 });
-
-// import { describe, expect, test } from "@jest/globals";
-// import request from "supertest";
-// import { app } from "../src/app";
-// import { STATUS_CODE } from "../utils/constants";
-// import { initAllDockerContainers } from "../services/code-executor/executor-utils";
-// import jwt from "jsonwebtoken";
-//
-// describe("Authentication tests", () => {
-//   describe("Register", () => {
-//     test("Correct all fields", async () => {
-//       const res = (await request(app)
-//         .post("/api/auth/register")
-//         .send(registerData)) as SuccessResponse<RegisterSuccessData>;
-//       expect(res.status).toBe(STATUS_CODE.CREATED);
-//       expect(res.body.data.user.password).not.toBe(registerData.password);
-//     });
-//   });
-//
-//   describe("Login", () => {
-//     test("Correct username and password", async () => {
-//       const body: LoginInterface = {
-//         usernameOrEmail: registerData.username,
-//         password: registerData.password,
-//       };
-//       const res = (await request(app)
-//         .post("/api/auth/login")
-//         .send(body)) as SuccessResponse<LoginSuccessData>;
-//       expect(res.status).toBe(200);
-//       expect(res.body.data.token).toBeTruthy();
-//       //Save token
-//       token = res.body.data.token;
-//     });
-//   });
-// });
