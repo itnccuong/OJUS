@@ -58,7 +58,7 @@ export class AuthController extends Controller {
     // Generate a token
     const token = await signToken(user.userId);
     return {
-      message: "Login successfully",
+      message: "Login successfully!",
       data: {
         user: user,
         token: token,
