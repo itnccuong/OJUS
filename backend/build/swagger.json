@@ -7,9 +7,22 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"SubmissionConfig": {
+			"DefaultSelection_Prisma._36_SubmissionPayload_": {
 				"properties": {
-					"submissionId": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					},
+					"userId": {
 						"type": "number",
 						"format": "double"
 					},
@@ -17,53 +30,29 @@
 						"type": "number",
 						"format": "double"
 					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"code": {
-						"type": "string"
-					},
-					"language": {
-						"type": "string"
-					},
-					"verdict": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"submissionId",
-					"problemId",
-					"userId",
-					"code",
-					"language",
-					"verdict",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ResultConfig": {
-				"properties": {
 					"submissionId": {
 						"type": "number",
 						"format": "double"
-					},
-					"verdict": {
-						"type": "string"
-					},
-					"resultId": {
-						"type": "number",
-						"format": "double"
-					},
-					"output": {
-						"type": "string"
-					},
-					"testcaseIndex": {
+					}
+				},
+				"required": [
+					"createdAt",
+					"verdict",
+					"language",
+					"code",
+					"userId",
+					"problemId",
+					"submissionId"
+				],
+				"type": "object"
+			},
+			"Submission": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
+				"description": "Model Submission"
+			},
+			"DefaultSelection_Prisma._36_ResultPayload_": {
+				"properties": {
+					"memory": {
 						"type": "number",
 						"format": "double"
 					},
@@ -71,27 +60,44 @@
 						"type": "number",
 						"format": "double"
 					},
-					"memory": {
+					"testcaseIndex": {
+						"type": "number",
+						"format": "double"
+					},
+					"output": {
+						"type": "string"
+					},
+					"resultId": {
 						"type": "number",
 						"format": "double"
 					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"submissionId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"submissionId",
-					"verdict",
-					"resultId",
-					"output",
-					"testcaseIndex",
-					"time",
 					"memory",
-					"createdAt"
+					"time",
+					"testcaseIndex",
+					"output",
+					"resultId",
+					"createdAt",
+					"verdict",
+					"submissionId"
 				],
-				"type": "object",
-				"additionalProperties": false
+				"type": "object"
+			},
+			"Result": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ResultPayload_",
+				"description": "Model Result"
 			},
 			"TestcaseInterface": {
 				"properties": {
@@ -118,11 +124,11 @@
 			"SubmitCodeResponseInterface": {
 				"properties": {
 					"submission": {
-						"$ref": "#/components/schemas/SubmissionConfig"
+						"$ref": "#/components/schemas/Submission"
 					},
 					"results": {
 						"items": {
-							"$ref": "#/components/schemas/ResultConfig"
+							"$ref": "#/components/schemas/Result"
 						},
 						"type": "array"
 					},
@@ -176,7 +182,7 @@
 						"type": "string"
 					},
 					"submission": {
-						"$ref": "#/components/schemas/SubmissionConfig"
+						"$ref": "#/components/schemas/Submission"
 					},
 					"testcases": {
 						"$ref": "#/components/schemas/TestcaseInterface"
@@ -216,11 +222,11 @@
 						"type": "string"
 					},
 					"submission": {
-						"$ref": "#/components/schemas/SubmissionConfig"
+						"$ref": "#/components/schemas/Submission"
 					},
 					"results": {
 						"items": {
-							"$ref": "#/components/schemas/ResultConfig"
+							"$ref": "#/components/schemas/Result"
 						},
 						"type": "array"
 					},
@@ -257,34 +263,9 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ProblemWithUserStatusInterface": {
+			"DefaultSelection_Prisma._36_ProblemPayload_": {
 				"properties": {
-					"problemId": {
-						"type": "number",
-						"format": "double"
-					},
-					"title": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"difficulty": {
-						"type": "number",
-						"format": "double"
-					},
-					"tags": {
-						"type": "string"
-					},
-					"timeLimit": {
-						"type": "number",
-						"format": "double"
-					},
-					"memoryLimit": {
+					"fileId": {
 						"type": "number",
 						"format": "double"
 					},
@@ -292,7 +273,95 @@
 						"type": "number",
 						"format": "double"
 					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"fileId",
+					"authorId",
+					"memoryLimit",
+					"timeLimit",
+					"tags",
+					"difficulty",
+					"status",
+					"description",
+					"title",
+					"createdAt",
+					"problemId"
+				],
+				"type": "object"
+			},
+			"ProblemWithUserStatusInterface": {
+				"properties": {
 					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"authorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"problemId": {
 						"type": "number",
 						"format": "double"
 					},
@@ -301,16 +370,17 @@
 					}
 				},
 				"required": [
-					"problemId",
-					"title",
-					"description",
-					"status",
-					"difficulty",
-					"tags",
-					"timeLimit",
-					"memoryLimit",
-					"authorId",
 					"fileId",
+					"authorId",
+					"memoryLimit",
+					"timeLimit",
+					"tags",
+					"difficulty",
+					"status",
+					"description",
+					"title",
+					"createdAt",
+					"problemId",
 					"userStatus"
 				],
 				"type": "object",
@@ -375,54 +445,70 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserConfig": {
+			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"username": {
-						"type": "string"
-					},
-					"email": {
+					"password": {
 						"type": "string"
 					},
 					"fullname": {
 						"type": "string"
 					},
-					"password": {
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"password",
+					"fullname",
+					"email",
+					"username",
+					"createdAt",
+					"userId"
+				],
+				"type": "object"
+			},
+			"User": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
+				"description": "Model User"
+			},
+			"LoginResponse": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"userId",
-					"username",
-					"email",
-					"fullname",
-					"password"
+					"user",
+					"token"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"LoginResponse": {
+			"SuccessResponseInterface_LoginResponse_": {
 				"properties": {
+					"message": {
+						"type": "string"
+					},
 					"data": {
-						"properties": {
-							"token": {
-								"type": "string"
-							},
-							"user": {
-								"$ref": "#/components/schemas/UserConfig"
-							}
-						},
-						"required": [
-							"token",
-							"user"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/LoginResponse"
 					}
 				},
 				"required": [
+					"message",
 					"data"
 				],
 				"type": "object",
@@ -440,18 +526,6 @@
 				"required": [
 					"usernameOrEmail",
 					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"heheInterface": {
-				"properties": {
-					"reason": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"reason"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -645,36 +719,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/heheInterface"
-								}
-							}
-						}
-					},
-					"405": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"hehe": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"hehe"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/SuccessResponseInterface_LoginResponse_"
 								}
 							}
 						}

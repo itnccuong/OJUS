@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-import { Request as RequestExpress, Response } from "express";
-import { formatResponse } from "../utils/formatResponse";
+import { Request as RequestExpress } from "express";
 
 import {
   compile,
@@ -17,18 +16,14 @@ import {
   updateSubmissionVerdict,
   updateUserProblemStatus,
 } from "../services/problem.services/submit.services";
-import { STATUS_CODE } from "../utils/constants";
 import {
-  CustomRequest,
   SubmitCodeConfig,
-  ProblemParamsInterface,
   SubmitCodeResponseInterface,
   FailTestResponseInterface,
   CompileErrorResponseInterface,
   ErrorResponseInterface,
   SuccessResponseInterface,
   GetAllProblemInterface,
-  ProblemInterface,
   GetOneProblemInterface,
 } from "../interfaces/api-interface";
 import {
@@ -43,7 +38,6 @@ import {
   Get,
   Path,
   Post,
-  Query,
   Route,
   SuccessResponse,
   Tags,

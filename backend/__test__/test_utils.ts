@@ -4,9 +4,7 @@ import { app } from "../src/app";
 import {
   CompileErrorResponseInterface,
   ErrorResponseInterface,
-  FailTestResponseInterface,
   ResponseInterfaceForTest,
-  SubmitCodeResponseInterface,
 } from "../interfaces/api-interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";

@@ -10,9 +10,10 @@ import {
   ChangePasswordConfig,
   CustomRequest,
   LoginInterface,
+  LoginResponse,
   RegisterConfig,
   SendResetLinkConfig,
-  UserConfig,
+  SuccessResponseInterface,
 } from "../interfaces/api-interface";
 import prisma from "../prisma/client";
 import {
@@ -61,17 +62,6 @@ dotenv.config();
 //   );
 // };
 
-interface LoginResponse {
-  data: {
-    user: UserConfig;
-    token: string;
-  };
-}
-
-interface heheInterface {
-  reason: string;
-}
-
 @Route("/api/auth") // Base path for authentication-related routes
 @Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
 export class AuthController extends Controller {
@@ -79,17 +69,13 @@ export class AuthController extends Controller {
   @Post("login")
   public async login(
     @Body() requestBody: LoginInterface,
-    @Res() notFoundResponse: TsoaResponse<404, heheInterface>,
-    @Res() heheResponse: TsoaResponse<405, { hehe: number }>,
-  ): Promise<LoginResponse> {
+  ): Promise<SuccessResponseInterface<LoginResponse>> {
     const user = await validateLoginBody(requestBody);
 
     // Generate a token
     const token = await signToken(user.userId);
-    // if (Number(requestBody.password) === 1) {
-    //   return notFoundResponse(404, { reason: "ok" });
-    // }
     return {
+      message: "Login successfully",
       data: {
         user: user,
         token: token,

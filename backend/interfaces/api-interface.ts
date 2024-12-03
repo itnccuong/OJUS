@@ -2,6 +2,8 @@ import { Request } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { TestcaseInterface } from "./code-executor-interface";
 
+import type { User, Problem, Result, Submission } from "@prisma/client";
+
 export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
   body: T;
   params: P;
@@ -10,14 +12,6 @@ export interface CustomRequest<T, P extends ParamsDictionary> extends Request {
 export interface ResponseInterfaceForTest<T> {
   status: number;
   body: T;
-}
-
-export interface UserConfig {
-  userId: number;
-  username: string;
-  email: string;
-  fullname: string;
-  password: string;
 }
 
 export interface LoginInterface {
@@ -37,10 +31,6 @@ export interface SubmitCodeConfig {
   language: string;
 }
 
-export interface ProblemParamsInterface extends ParamsDictionary {
-  problem_id: string;
-}
-
 export interface ChangePasswordConfig {
   token: string;
   newPassword: string;
@@ -48,40 +38,6 @@ export interface ChangePasswordConfig {
 
 export interface SendResetLinkConfig {
   email: string;
-}
-
-export interface SubmissionConfig {
-  submissionId: number;
-  problemId: number;
-  userId: number;
-  code: string;
-  language: string;
-  verdict: string;
-  createdAt: Date;
-}
-
-export interface ResultConfig {
-  submissionId: number;
-  verdict: string;
-  resultId: number;
-  output: string;
-  testcaseIndex: number;
-  time: number;
-  memory: number;
-  createdAt: Date;
-}
-
-export interface ProblemInterface {
-  problemId: number;
-  title: string;
-  description: string;
-  status: number;
-  difficulty: number;
-  tags: string;
-  timeLimit: number;
-  memoryLimit: number;
-  authorId: number;
-  fileId: number;
 }
 
 export interface SuccessResponseInterface<T> {
@@ -95,27 +51,32 @@ export interface ErrorResponseInterface<T> {
   data: T;
 }
 
+export interface LoginResponse {
+  user: User;
+  token: string;
+}
+
 export interface SubmitCodeResponseInterface {
-  submission: SubmissionConfig;
-  results: ResultConfig[];
+  submission: Submission;
+  results: Result[];
   testcases: TestcaseInterface;
 }
 
 export interface CompileErrorResponseInterface {
   stderr: string;
-  submission: SubmissionConfig;
+  submission: Submission;
   testcases: TestcaseInterface;
 }
 
 //Wrong answer, runtime, memory, time limit
 export interface FailTestResponseInterface {
   stderr: string;
-  submission: SubmissionConfig;
-  results: ResultConfig[];
+  submission: Submission;
+  results: Result[];
   testcases: TestcaseInterface;
 }
 
-export interface ProblemWithUserStatusInterface extends ProblemInterface {
+export interface ProblemWithUserStatusInterface extends Problem {
   userStatus: boolean;
 }
 

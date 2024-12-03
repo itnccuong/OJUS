@@ -40,12 +40,12 @@ export default function Problem() {
         let res;
         if (!token) {
           res = await axiosInstance.get<GetOneProblemInterface>(
-            `/api/problems/${id}/no-account`,
+            `/api/problems/no-account/${id}`,
             {},
           );
         } else {
           res = await axiosInstance.get<GetOneProblemInterface>(
-            `/api/problems/${id}/with-account`,
+            `/api/problems/with-account/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
