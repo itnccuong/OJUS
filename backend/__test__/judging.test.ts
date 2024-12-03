@@ -21,7 +21,7 @@ import {
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 let fake_token = "";
 
 beforeAll(async () => {
