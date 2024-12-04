@@ -66,6 +66,13 @@ describe("Submit code (C++)", () => {
     >;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     expect(res.body.data.submission.verdict).toBe("OK");
+    const results = res.body.data.results;
+    const testcases = res.body.data.testcases;
+    expect(results.length).toBe(testcases.input.length);
+    results.map((result, index: number) => {
+      expect(result.output).toBe(testcases.output[index]);
+      expect(result.verdict).toBe("OK");
+    });
   });
 
   test("Wrong answer", async () => {
@@ -83,6 +90,10 @@ describe("Submit code (C++)", () => {
     expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("WRONG_ANSWER");
     expect(res.body.data.submission.verdict).toBe("WRONG_ANSWER");
+    const results = res.body.data.results;
+    expect(results.length).toBe(2);
+    expect(results[0].verdict).toBe("OK");
+    expect(results[1].verdict).toBe("WRONG_ANSWER");
   });
 
   test("Runtime Error", async () => {
@@ -100,6 +111,9 @@ describe("Submit code (C++)", () => {
     expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("RUNTIME_ERROR");
     expect(res.body.data.submission.verdict).toBe("RUNTIME_ERROR");
+    const results = res.body.data.results;
+    expect(results.length).toBe(1);
+    expect(results[0].verdict).toBe("RUNTIME_ERROR");
   });
 
   test("Time limit exceeded", async () => {
@@ -117,5 +131,8 @@ describe("Submit code (C++)", () => {
     expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
     expect(res.body.name).toBe("TIME_LIMIT_EXCEEDED");
     expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");
+    const results = res.body.data.results;
+    expect(results.length).toBe(1);
+    expect(results[0].verdict).toBe("TIME_LIMIT_EXCEEDED");
   });
 });
