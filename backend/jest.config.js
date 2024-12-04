@@ -4,6 +4,6 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest", {}],
   },
-  // globalSetup: "<rootDir>/__test__/globalSetup.ts", // Adjust the path as needed
-  // globalTeardown: "<rootDir>/__test__/globalTeardown.ts", // Adjust the path as needed
+  globalSetup: "<rootDir>/__test__/globalSetup.ts", // Adjust the path as needed
+  globalTeardown: "<rootDir>/__test__/globalTeardown.ts", // Adjust the path as needed
 };
