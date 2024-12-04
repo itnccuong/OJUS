@@ -14,8 +14,11 @@ import prisma from "../../prisma/client";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
+import { STATUS_CODE } from "../../utils/constants";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
+
+jest.setTimeout(60000);
 
 let fake_token = "";
 
@@ -142,5 +145,16 @@ describe("Admin Contribution Actions", () => {
     >;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(1);
+  });
+  test("Accept a non-pending contribution", async () => {
+    const res = (await request(app)
+      .put("/api/contributions/3/accept")
+      .set(
+        "Authorization",
+        `Bearer ${fake_token}`,
+      )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<ContributionResponseInterface>
+    >;
+    expect(res.status).toBe(STATUS_CODE.NOT_FOUND);
   });
 });

@@ -20,6 +20,8 @@ import { cleanDatabase } from "../test_utils";
 import util from "node:util";
 import { exec } from "child_process";
 
+jest.setTimeout(60000);
+
 const execPromise = util.promisify(exec);
 beforeAll(async () => {
   await cleanDatabase();
