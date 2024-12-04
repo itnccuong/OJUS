@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import prisma from "./client";
-import { Files, Problem, User } from "@prisma/client";
+import { Files, Problem, User, UserProblemStatus } from "@prisma/client";
 import { numAccept, numPending, numReject } from "../__test__/test_data";
 
 async function main() {
@@ -48,7 +48,7 @@ async function main() {
       problemId: index + 1,
       title: `Problem ${index + 1}`,
       description: `Description for problem ${index + 1}`,
-      status: index < numPending ? 0 : index < numPending + numAccept ? 1 : 2,
+      status: index < numPending ? 0 : index < numPending + numReject ? 1 : 2,
       difficulty: index + 1,
       tags: `Tag ${index + 1}`,
       timeLimit: (index + 1) * 1000,
@@ -62,6 +62,7 @@ async function main() {
   // Upsert data
   await upsertData(prisma.user, [userData], "userId");
   await upsertData(prisma.files, filesData, "fileId");
+  await upsertData(prisma.problem, problemsData, "problemId");
   await upsertData(prisma.problem, problemsData, "problemId");
 }
 
