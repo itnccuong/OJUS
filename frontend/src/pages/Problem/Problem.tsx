@@ -159,8 +159,7 @@ export default function Problem() {
         },
       );
       console.log("Submit response: ", res.data);
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    } catch (error) {
       console.error(error);
     }
   };

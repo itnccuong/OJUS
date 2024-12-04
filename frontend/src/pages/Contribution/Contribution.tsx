@@ -122,8 +122,7 @@ export default function Contribution() {
         },
       );
       console.log("Submit response: ", data);
-    } catch (error: never) {
-      toast.error(error.response.data.message);
+    } catch (error) {
       console.error(error);
     }
   };

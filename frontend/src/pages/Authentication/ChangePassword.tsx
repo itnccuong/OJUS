@@ -33,9 +33,8 @@ export default function ChangePassword() {
 
       // Optionally redirect to another page (like login or profile)
       navigate("/accounts/login");
-    } catch (error: any) {
-      console.error("Error changing password:", error);
-      toast.error(error.response.data.message);
+    } catch (error) {
+      console.error(error);
     }
   };
 

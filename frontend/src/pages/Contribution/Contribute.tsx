@@ -97,9 +97,8 @@ export default function Contribute() {
       );
 
       console.log("Submit contribute response: ", res.data);
-    } catch (error: any) {
-      console.error("Error submitting the form:", error);
-      toast.error("An error occurred while submitting your question.");
+    } catch (error) {
+      console.error(error);
     }
   };
 

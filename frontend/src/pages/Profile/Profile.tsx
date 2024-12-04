@@ -17,7 +17,7 @@ export default function Profile() {
       const { data } = await axiosInstance.get(`/api/user/${username}`);
       setFullname(data.data.user.fullname);
       console.log("getprofile", data);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     }
   };
