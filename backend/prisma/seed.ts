@@ -1,15 +1,17 @@
 import bcrypt from "bcrypt";
 import prisma from "./client";
 import { Files, Problem, User } from "@prisma/client";
+import { numAccept, numPending, numReject } from "../__test__/test_data";
 
 async function main() {
+  const length = numPending + numAccept + numReject;
   // Helper function to upsert data
   async function upsertData<T>(model: any, data: T[], key: keyof T) {
     for (const item of data) {
       await model.upsert({
         create: item,
         where: { [key]: item[key] },
-        update: {},
+        update: item,
       });
     }
   }
@@ -29,7 +31,7 @@ async function main() {
   };
 
   // Define files data
-  const filesData: Files[] = Array.from({ length: 4 }, (_, index) => ({
+  const filesData: Files[] = Array.from({ length: length }, (_, index) => ({
     fileId: index + 1,
     filename: `testcase_${index + 1}`,
     filesize: 1057,
@@ -40,19 +42,22 @@ async function main() {
   }));
 
   // Define problems data
-  const problemsData: Problem[] = Array.from({ length: 4 }, (_, index) => ({
-    problemId: index + 1,
-    title: `Problem ${index + 1}`,
-    description: `Description for problem ${index + 1}`,
-    status: index < 2 ? 0 : index < 3 ? 1 : 2,
-    difficulty: index + 1,
-    tags: `Tag ${index + 1}`,
-    timeLimit: (index + 1) * 1000,
-    memoryLimit: (index + 1) * 1000,
-    authorId: 1,
-    fileId: index + 1,
-    createdAt: new Date(),
-  }));
+  const problemsData: Problem[] = Array.from(
+    { length: length },
+    (_, index) => ({
+      problemId: index + 1,
+      title: `Problem ${index + 1}`,
+      description: `Description for problem ${index + 1}`,
+      status: index < numPending ? 0 : index < numPending + numAccept ? 1 : 2,
+      difficulty: index + 1,
+      tags: `Tag ${index + 1}`,
+      timeLimit: (index + 1) * 1000,
+      memoryLimit: (index + 1) * 1000,
+      authorId: 1,
+      fileId: index + 1,
+      createdAt: new Date(),
+    }),
+  );
 
   // Upsert data
   await upsertData(prisma.user, [userData], "userId");
