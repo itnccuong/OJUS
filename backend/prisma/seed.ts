@@ -49,7 +49,7 @@ async function main() {
       title: `Problem ${index + 1}`,
       description: `Description for problem ${index + 1}`,
       status: index < numPending ? 0 : index < numPending + numReject ? 1 : 2,
-      difficulty: index + 1,
+      difficulty: 2,
       tags: `Tag ${index + 1}`,
       timeLimit: (index + 1) * 1000,
       memoryLimit: (index + 1) * 1000,
