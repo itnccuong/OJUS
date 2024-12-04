@@ -1,20 +1,29 @@
-import { describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 import { app } from "../../src/app";
 import request from "supertest";
 import jwt from "jsonwebtoken";
 import path from "path";
 import {
+  ContributionListResponseInterface,
   ContributionResponseInterface,
+  GetOneProblemInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
 } from "../../interfaces/api-interface";
-import { Problem } from "@prisma/client";
 import prisma from "../../prisma/client";
+import { cleanDatabase } from "../test_utils";
+import * as util from "node:util";
+import { exec } from "child_process";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
 
 let fake_token = "";
-beforeAll(async () => {
+
+const execPromise = util.promisify(exec);
+beforeEach(async () => {
+  await cleanDatabase();
+  await execPromise("ts-node prisma/seed.ts");
+
   fake_token = jwt.sign(
     { userId: 1 }, // Payload
     process.env.JWT_SECRET as string, // Secret
@@ -51,5 +60,87 @@ describe("Contribute", () => {
       expect(file.fileType).toContain("zip");
       expect(file.location).toBeTruthy();
     }
+  });
+});
+
+describe("Get contributions", () => {
+  test("Get all contributions", async () => {
+    const res = (await request(app)
+      .get("/api/contributions")
+      .set(
+        "Authorization",
+        `Bearer ${fake_token}`,
+      )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<ContributionListResponseInterface>
+    >;
+    expect(res.status).toBe(200);
+    const contributions = res.body.data.contributions;
+    expect(contributions.length).toBeGreaterThan(0);
+    contributions.map((contribution) => {
+      expect(contribution.status).toBe(0);
+    });
+  });
+
+  test("Get one contribution", async () => {
+    const res = (await request(app)
+      .get("/api/contributions/1")
+      .set(
+        "Authorization",
+        `Bearer ${fake_token}`,
+      )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<ContributionResponseInterface>
+    >;
+    const contribution = res.body.data.contribution;
+    expect(res.status).toBe(200);
+    expect(contribution.problemId).toBe(1);
+    expect(contribution.status).toBe(0);
+  });
+});
+
+describe("Admin Contribution Actions", () => {
+  test("Accept a contribution", async () => {
+    const res = (await request(app)
+      .put("/api/contributions/1/accept")
+      .set(
+        "Authorization",
+        `Bearer ${fake_token}`,
+      )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<ContributionResponseInterface>
+    >;
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.contribution.status).toBe(2);
+
+    // Verify the contribution status is updated
+    const problemRes = (await request(app).get(
+      "/api/problems/no-account/1",
+    )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<GetOneProblemInterface>
+    >;
+    const problem = problemRes.body.data.problem;
+    expect(problem.status).toBe(2);
+  });
+
+  test("Reject a contribution", async () => {
+    const res = (await request(app)
+      .put("/api/contributions/1/reject")
+      .set(
+        "Authorization",
+        `Bearer ${fake_token}`,
+      )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<ContributionResponseInterface>
+    >;
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.contribution.status).toBe(1);
+
+    // Verify the contribution status is updated
+    const problemRes = (await request(app).get(
+      "/api/problems/no-account/1",
+    )) as ResponseInterfaceForTest<
+      SuccessResponseInterface<GetOneProblemInterface>
+    >;
+    const problem = problemRes.body.data.problem;
+    expect(problem.status).toBe(1);
   });
 });

@@ -14,12 +14,18 @@ import {
   SuccessResponseInterface,
 } from "../../interfaces/api-interface";
 import { testCompile } from "../test_services";
+import { cleanDatabase } from "../test_utils";
+import util from "node:util";
+import { exec } from "child_process";
 
 jest.setTimeout(60000);
 let fake_token = "";
 
+const execPromise = util.promisify(exec);
 beforeAll(async () => {
   await initAllDockerContainers();
+  await cleanDatabase();
+  await execPromise("ts-node prisma/seed.ts");
   fake_token = jwt.sign(
     { userId: 1 }, // Payload
     process.env.JWT_SECRET as string, // Secret

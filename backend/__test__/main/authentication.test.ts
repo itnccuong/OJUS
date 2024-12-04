@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 import request from "supertest";
 import { app } from "../../src/app";
 import { STATUS_CODE } from "../../utils/constants";
@@ -16,6 +16,15 @@ import {
 } from "../../interfaces/api-interface";
 import prisma from "../../prisma/client";
 import jwt from "jsonwebtoken";
+import { cleanDatabase } from "../test_utils";
+import util from "node:util";
+import { exec } from "child_process";
+
+const execPromise = util.promisify(exec);
+beforeAll(async () => {
+  await cleanDatabase();
+  await execPromise("ts-node prisma/seed.ts");
+});
 
 describe("Register", () => {
   test("Correct all fields", async () => {

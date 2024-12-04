@@ -92,3 +92,7 @@ export interface GetOneProblemInterface {
 export interface ContributionResponseInterface {
   contribution: Problem;
 }
+
+export interface ContributionListResponseInterface {
+  contributions: Problem[];
+}
