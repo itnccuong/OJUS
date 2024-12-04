@@ -15,6 +15,7 @@ import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
 import { STATUS_CODE } from "../../utils/constants";
+import { numPending } from "../test_data";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
 
@@ -78,7 +79,7 @@ describe("Get contributions", () => {
     >;
     expect(res.status).toBe(200);
     const contributions = res.body.data.contributions;
-    expect(contributions.length).toBeGreaterThan(0);
+    expect(contributions.length).toBe(numPending);
     contributions.map((contribution) => {
       expect(contribution.status).toBe(0);
     });
@@ -148,7 +149,7 @@ describe("Admin Contribution Actions", () => {
   });
   test("Accept a non-pending contribution", async () => {
     const res = (await request(app)
-      .put("/api/contributions/3/accept")
+      .put("/api/contributions/6/accept")
       .set(
         "Authorization",
         `Bearer ${fake_token}`,

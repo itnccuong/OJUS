@@ -37,3 +37,7 @@ export const loginWithEmailData: LoginInterface = {
   usernameOrEmail: "hienvuongnhat@gmail.com",
   password: "1",
 };
+
+export const numPending = 4;
+export const numAccept = 3;
+export const numReject = 2;
