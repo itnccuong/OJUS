@@ -179,11 +179,19 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"DefaultSelection_Prisma._36_ProblemPayload_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface__contribution-Problem__": {
+    "ContributionResponseInterface": {
+        "dataType": "refObject",
+        "properties": {
+            "contribution": {"ref":"Problem","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface_ContributionResponseInterface_": {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
-            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"contribution":{"ref":"Problem","required":true}},"required":true},
+            "data": {"ref":"ContributionResponseInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -193,6 +201,15 @@ const models: TsoaRoute.Models = {
         "properties": {
             "message": {"dataType":"string","required":true},
             "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"contributions":{"dataType":"array","array":{"dataType":"refAlias","ref":"Problem"},"required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface__contribution-Problem__": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"contribution":{"ref":"Problem","required":true}},"required":true},
         },
         "additionalProperties": false,
     },

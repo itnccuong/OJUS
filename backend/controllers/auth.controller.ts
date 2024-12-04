@@ -22,20 +22,7 @@ import {
   validateLoginBody,
 } from "../services/auth.services/login.service";
 
-import {
-  Body,
-  Controller,
-  Get,
-  Path,
-  Post,
-  Query,
-  Route,
-  SuccessResponse,
-  Response,
-  Tags,
-  TsoaResponse,
-  Res,
-} from "tsoa";
+import { Body, Controller, Post, Route, SuccessResponse, Tags } from "tsoa";
 import { CustomError } from "../utils/error";
 import {
   decodeResetToken,
@@ -58,7 +45,7 @@ export class AuthController extends Controller {
     // Generate a token
     const token = await signToken(user.userId);
     return {
-      message: "Login successfully",
+      message: "Login successfully!",
       data: {
         user: user,
         token: token,

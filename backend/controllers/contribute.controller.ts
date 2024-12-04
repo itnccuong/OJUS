@@ -22,7 +22,10 @@ import {
   Put,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
-import { SuccessResponseInterface } from "../interfaces/api-interface";
+import {
+  ContributionResponseInterface,
+  SuccessResponseInterface,
+} from "../interfaces/api-interface";
 
 import prisma from "../prisma/client";
 import { Problem } from "@prisma/client";
@@ -47,7 +50,7 @@ export class ContributionController extends Controller {
     @FormField() memoryLimit: string,
     @UploadedFile()
     file: Express.Multer.File,
-  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
+  ): Promise<SuccessResponseInterface<ContributionResponseInterface>> {
     // Step 1: Start file upload process
     const details = await startUpload(file);
 

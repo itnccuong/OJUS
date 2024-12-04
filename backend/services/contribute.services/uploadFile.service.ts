@@ -17,7 +17,6 @@ export const startUpload = async (file: Express.Multer.File) => {
   });
 
   const key = `${uuidv4()}/${file.originalname}`;
-  console.log("Key 33333333333", key);
 
   const createMultipartUploadCommand = new CreateMultipartUploadCommand({
     Bucket: process.env.AWS_STORAGE_BUCKET_NAME,
@@ -65,9 +64,7 @@ const splitFileIntoChunks = (file: Express.Multer.File, chunkSize: number) => {
 
   while (start < file.size) {
     const end = Math.min(start + chunkSize, file.size);
-    console.log("start end", start, end);
     chunks.push(file.buffer.subarray(start, end));
-    console.log("OKOKOKOK");
     start = end;
   }
 
@@ -148,8 +145,6 @@ export const completeUpload = async (
     },
   };
 
-  console.log("Complete upload input", completeUploadInput);
-
   const completeMultipartUploadCommand = new CompleteMultipartUploadCommand(
     completeUploadInput,
   );
@@ -160,7 +155,6 @@ export const completeUpload = async (
   if (!completeUploadResponse.Location) {
     throw new Error("Failed to complete upload.");
   }
-  console.log("Complete upload response", completeUploadResponse);
 
   return completeUploadResponse.Location;
 };

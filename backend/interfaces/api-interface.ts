@@ -88,3 +88,11 @@ export interface GetAllProblemInterface {
 export interface GetOneProblemInterface {
   problem: ProblemWithUserStatusInterface;
 }
+
+export interface ContributionResponseInterface {
+  contribution: Problem;
+}
+
+export interface ContributionListResponseInterface {
+  contributions: Problem[];
+}

@@ -48,9 +48,19 @@ jobs:
         touch ./backend/.env
         touch ./backend/.env.test
         mkdir -p ./backend/services/code-executor/codeFiles
-        echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> ./backend/.env
-        echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./backend/.env.test
+
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./backend/.env
+        echo JWT_RESET=${{ secrets.JWT_RESET }} >> ./backend/.env
+        echo CLIENT_URL=${{ secrets.CLIENT_URL }} >> ./backend/.env
+        echo EMAIL_USER=${{ secrets.EMAIL_USER }} >> ./backend/.env
+        echo EMAIL_PASS=${{ secrets.EMAIL_PASS }} >> ./backend/.env
+        echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> ./backend/.env
+        echo AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }} >> ./backend/.env
+        echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> ./backend/.env
+        echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./backend/.env
+        echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./backend/.env
+
+        echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./backend/.env.test
     - run: npm run build --if-present
       working-directory: ./backend
     - run: npm test
