@@ -50,7 +50,7 @@ exports.app = app;
 // middlewares
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://ojus-se.vercel.app"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));

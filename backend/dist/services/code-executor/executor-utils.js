@@ -115,10 +115,10 @@ const initDockerContainer = (container) => __awaiter(void 0, void 0, void 0, fun
     const container_id = yield getContainerIdByName(name);
     if (container_id) {
         yield killContainer(container_id);
-        console.log(`Container ${name} stopped`);
+        // console.log(`Container ${name} stopped`);
     }
     container.id = yield createContainer(container);
-    console.log(`Container ${name} created`);
+    // console.log(`Container ${name} created`);
 });
 /**
  * Initialize all docker from container list
@@ -140,13 +140,13 @@ const compile = (filename, language) => __awaiter(void 0, void 0, void 0, functi
         ? languageDetails[language].compilerCmd(filenameWithoutExtension)
         : null;
     if (!command) {
-        return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+        return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
     }
     try {
         const container = languageDetails[language].container;
         const containerId = (0, submit_services_1.getContainerId)(container);
         yield execAsync(`docker exec ${containerId} ${command}`);
-        return { filenameWithoutExtension: filenameWithoutExtension, stderr: null };
+        return { filenameWithoutExtension: filenameWithoutExtension, stderr: "" };
     }
     catch (error) {
         return {
@@ -204,23 +204,27 @@ const executeAgainstTestcase = (filename, input, expectedOutput, language, timeL
             clearTimeout(timeoutId);
             if (isTimeout) {
                 resolve({
+                    stderr: stderr,
                     stdout: stdout,
                     verdict: "TIME_LIMIT_EXCEEDED",
                 });
             }
             if (exitCode !== 0) {
                 resolve({
+                    stderr: stderr,
                     stdout: "",
                     verdict: "RUNTIME_ERROR",
                 });
             }
             if (stdout !== expectedOutput) {
                 resolve({
+                    stderr: stderr,
                     stdout: stdout,
                     verdict: "WRONG_ANSWER",
                 });
             }
             resolve({
+                stderr: stderr,
                 stdout: stdout,
                 verdict: "OK",
             });
