@@ -176,8 +176,15 @@ const createResult = (submissionId, testcaseIndex, output, verdict, time, memory
 });
 exports.createResult = createResult;
 const updateUserProblemStatus = (userId, problemId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield client_1.default.userProblemStatus.create({
-        data: {
+    yield client_1.default.userProblemStatus.upsert({
+        where: {
+            userId_problemId: {
+                userId: userId,
+                problemId: problemId,
+            },
+        },
+        update: {}, // Leave empty if you don't want to update existing records
+        create: {
             userId: userId,
             problemId: problemId,
         },

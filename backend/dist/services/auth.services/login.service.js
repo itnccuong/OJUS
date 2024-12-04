@@ -47,7 +47,7 @@ exports.validateLoginBody = validateLoginBody;
 const signToken = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const token = jsonwebtoken_1.default.sign({ userId: userId }, // Payload
     process.env.JWT_SECRET, // Secret
-    { expiresIn: "3d" });
+    { expiresIn: "12m" });
     return token;
 });
 exports.signToken = signToken;
