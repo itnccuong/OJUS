@@ -39,8 +39,7 @@ export default function Register() {
       console.log(data);
       toast.success("Registered successfully!");
       navigate("/accounts/login");
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    } catch (error) {
       console.error(error);
     }
   };

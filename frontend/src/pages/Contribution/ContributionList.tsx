@@ -10,11 +10,11 @@ import getToken from "../../../utils/getToken.ts";
 import { useEffect } from "react";
 
 import {
-  ProblemInterface,
   ResponseInterface,
   ContributionListResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
+import { ProblemInterface } from "../../../interfaces/model.interface.ts";
 
 interface Tag {
   label: string;

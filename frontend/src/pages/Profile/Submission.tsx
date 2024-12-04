@@ -3,53 +3,9 @@
 import NavBar from "../../components/NavBar.tsx";
 import Footer from "../../components/Footer.tsx";
 import { Table } from "react-bootstrap";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// import { useEffect } from "react";
-
-interface Tag {
-  label: string;
-  selected: boolean;
-}
+import { Link } from "react-router-dom";
 
 export default function Contributions() {
-  const navigate = useNavigate();
-  const initialTags: Tag[] = [
-    { label: "Array", selected: false },
-    { label: "String", selected: false },
-    { label: "Hash Table", selected: false },
-    { label: "Dynamic Programming", selected: false },
-    { label: "Math", selected: false },
-    { label: "Sorting", selected: false },
-    { label: "Greedy", selected: false },
-    { label: "Depth-First Search", selected: false },
-    { label: "Database", selected: false },
-    { label: "Binary Search", selected: false },
-    { label: "Matrix", selected: false },
-    { label: "Tree", selected: false },
-    { label: "Breadth-First Search", selected: false },
-  ];
-
-  const [tags, setTags] = useState<Tag[]>(initialTags);
-  const [search, setSearch] = useState("");
-
-  const toggleTag = (index: number) => {
-    setTags((prevTags) =>
-      prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag,
-      ),
-    );
-  };
-
-  const handleResetTags = () => {
-    setTags(initialTags);
-  };
-
-  const pickRandom = () => {
-    const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
-    navigate(`/contributions/${randomProblem.id}/description`);
-  };
-
   const Problems = [
     {
       id: 1,

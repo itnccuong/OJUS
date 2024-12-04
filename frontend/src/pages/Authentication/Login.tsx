@@ -31,8 +31,7 @@ export default function Login() {
       toast.success("Logged in successfully");
       localStorage.setItem(storageKeyMap.token, data.data.token);
       navigate("/");
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    } catch (error) {
       console.error(error);
     }
   };
