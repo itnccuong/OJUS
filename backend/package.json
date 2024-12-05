@@ -3,7 +3,7 @@
     "clean": "rm -rf coverage dist",
     "lint": "eslint ./src/*.ts",
     "test": "dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
-    "build": "tsoa spec-and-routes && tsc",
+    "build": "tsoa spec-and-routes && tsc --output public",
     "start": "ts-node src/index.ts",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
     "seed": "ts-node prisma/seed.ts"
