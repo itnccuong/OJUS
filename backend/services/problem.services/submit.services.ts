@@ -1,8 +1,5 @@
 import { CustomError } from "../../utils/error";
-import {
-  codeDirectory,
-  languageDetails,
-} from "../code-executor/executor-utils";
+import { codeDirectory, languageDetails } from "./code-executor/executor-utils";
 import fs, { readFileSync } from "fs";
 import axios from "axios";
 import AdmZip from "adm-zip";
