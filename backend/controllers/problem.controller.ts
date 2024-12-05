@@ -5,7 +5,7 @@ import {
   compile,
   executeAgainstTestcase,
   languageDetails,
-} from "../services/code-executor/executor-utils";
+} from "../services/problem.services/code-executor/executor-utils";
 import {
   createResult,
   createSubmission,

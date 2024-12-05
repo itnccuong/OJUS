@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { initAllDockerContainers } from "../services/code-executor/executor-utils";
+import { initAllDockerContainers } from "../services/problem.services/code-executor/executor-utils";
 require("dotenv").config();
 
 initAllDockerContainers().catch((err) => {

@@ -6,7 +6,7 @@ import {
   completeUpload,
   startUpload,
   uploadToS3,
-} from "../services/contribute.services/uploadFile.service";
+} from "../services/contribution.services/uploadFile.service";
 import {
   Controller,
   Get,
@@ -32,7 +32,7 @@ import { Problem } from "@prisma/client";
 import {
   findAllPendingContributions,
   findPendingContribution,
-} from "../services/problem.services/contribution.services";
+} from "../services/contribution.services/findContribution.services";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger

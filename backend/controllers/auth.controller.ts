@@ -28,7 +28,7 @@ import {
   decodeResetToken,
   fineUserByEmail,
   sendEmail,
-} from "../services/problem.services/auth.services";
+} from "../services/auth.services/password.services";
 
 dotenv.config();
 

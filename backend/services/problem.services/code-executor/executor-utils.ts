@@ -5,8 +5,8 @@ import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
-} from "../../interfaces/code-executor-interface";
-import { getContainerId } from "../problem.services/submit.services";
+} from "../../../interfaces/code-executor-interface";
+import { getContainerId } from "../submit.services";
 
 const codeFiles = "codeFiles";
 const STDOUT = "stdout";
