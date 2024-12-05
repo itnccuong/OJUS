@@ -1,7 +1,7 @@
 {
   "scripts": {
     "clean": "rm -rf coverage dist",
-    "lint": "eslint ./src/*.ts",
+    "lint": "eslint src/*.ts",
     "test": "dotenv -e .env.test -- jest -i --forceExit --detectOpenHandles",
     "build": "tsoa spec-and-routes && tsc",
     "start": "ts-node src/index.ts",

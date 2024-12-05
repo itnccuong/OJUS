@@ -57,7 +57,7 @@
                 const url = await completeUpload(details.key, details.upload_id, etags);
 
                 if (url) {
-                    // Send data to /api/contributes/
+                    // Send data to /src/contributes/
                     const contributeResponse = await submitContribute(authorization, title, description, difficulty, tags, timeLimit, memoryLimit, url, file.size, file.type);
 
                     if (contributeResponse.success) {
