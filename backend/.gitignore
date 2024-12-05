@@ -6,3 +6,4 @@ mysql_test
 .env.test
 services/problem.services/code-executor/codeFiles
 services/problem.services/testcases
+.vercel
