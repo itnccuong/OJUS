@@ -6,7 +6,6 @@ import Footer from "../../components/Footer.tsx";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import {
-  LoginResponseInterface,
   RegisterResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";

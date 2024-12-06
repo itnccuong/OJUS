@@ -23,6 +23,7 @@ import {
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemInterface } from "../../../interfaces/model.interface.ts";
+import Loader from "../../components/Loader.tsx";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
@@ -46,6 +47,7 @@ export default function Contribution() {
   const [fetchContribution, setFetchContribution] =
     useState<ProblemInterface>();
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,13 +63,15 @@ export default function Contribution() {
         setFetchContribution(res.data.data.contribution);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  if (!fetchContribution) {
-    return <div>Loading...</div>;
+  if (loading || !fetchContribution) {
+    return <Loader />;
   }
 
   const difficultyMapping: Record<number, string> = {

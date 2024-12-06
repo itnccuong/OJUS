@@ -15,6 +15,7 @@ import {
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemInterface } from "../../../interfaces/model.interface.ts";
+import Loader from "../../components/Loader.tsx";
 
 interface Tag {
   label: string;
@@ -23,6 +24,7 @@ interface Tag {
 
 export default function ContributionList() {
   const navigate = useNavigate();
+  const [difficulty, setDifficulty] = useState("All");
 
   //Check if user is logged in
   const token = getToken();
@@ -67,6 +69,7 @@ export default function ContributionList() {
   // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
   const [contributes, setContributes] = useState<ProblemInterface[]>([]);
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchContributes = async () => {
       try {
@@ -79,11 +82,17 @@ export default function ContributionList() {
         setContributes(data.data.contributions);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchContributes();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   // Chuyển đổi dữ liệu từ contribute thành problem
   const Problems = contributes.map((contribute) => {
@@ -111,8 +120,6 @@ export default function ContributionList() {
   };
 
   const Difficulty = ["Easy", "Medium", "Hard"];
-
-  const [difficulty, setDifficulty] = useState("All");
 
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);

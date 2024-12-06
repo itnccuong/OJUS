@@ -24,6 +24,7 @@ import {
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+import Loader from "../../components/Loader.tsx";
 
 export default function Problem() {
   const { page, id } = useParams();
@@ -36,6 +37,7 @@ export default function Problem() {
     setCode(val);
   }, []);
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,13 +59,15 @@ export default function Problem() {
         setFetchProblem(res.data.data.problem);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  if (!fetchProblem) {
-    return <div>Loading...</div>;
+  if (loading || !fetchProblem) {
+    return <Loader />;
   }
 
   const difficultyMapping: Record<number, string> = {
