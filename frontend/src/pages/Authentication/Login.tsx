@@ -21,15 +21,22 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axiosInstance.post<
-        ResponseInterface<LoginResponseInterface>
-      >("/api/auth/login", {
-        usernameOrEmail,
-        password,
-      });
-      console.log(data);
-      toast.success("Logged in successfully");
-      localStorage.setItem(storageKeyMap.token, data.data.token);
+      const res = await toast.promise(
+        axiosInstance.post<ResponseInterface<LoginResponseInterface>>(
+          "/api/auth/login",
+          {
+            usernameOrEmail,
+            password,
+          },
+        ),
+        {
+          pending: "Sign in...",
+          success: "Sign in successfully",
+          error: "Sign in failed",
+        },
+      );
+      console.log(res.data);
+      localStorage.setItem(storageKeyMap.token, res.data.data.token);
       navigate("/");
     } catch (error) {
       console.error(error);

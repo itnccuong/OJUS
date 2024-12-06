@@ -128,7 +128,12 @@ export default function ContributionList() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <div className="container d-flex flex-column">
+        <div
+          className="container d-flex flex-column"
+          style={{
+            height: "87vh",
+          }}
+        >
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <DropdownButton variant="secondary" title="Difficulty">
               <div className="d-flex flex-column">

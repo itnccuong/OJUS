@@ -155,7 +155,7 @@ export default function Problem() {
         {
           pending: "Submitting...",
           success: "All test cases passed",
-          // error: "Failed to submit",
+          error: "Failed",
         },
       );
       console.log("Submit response: ", res.data);
