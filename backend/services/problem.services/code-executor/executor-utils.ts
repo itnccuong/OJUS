@@ -41,33 +41,28 @@ const containers: Record<string, ContainerConfig> = {
 
 const languageDetails: Record<string, LanguageDetail> = {
   c: {
-    inputFunction: null,
     compilerCmd: (filename) =>
       `gcc ./${codeFiles}/${filename}.c -o ./${codeFiles}/${filename}.out -lpthread -lrt`,
     executorCmd: (filename) => `./${codeFiles}/${filename}.out`,
     container: containers.gcc,
   },
   cpp: {
-    inputFunction: null,
     compilerCmd: (filename) =>
       `g++ ./${codeFiles}/${filename}.cpp -o ./${codeFiles}/${filename}.out`,
     executorCmd: (filename) => `./${codeFiles}/${filename}.out`,
     container: containers.gcc,
   },
   py: {
-    inputFunction: (data: string) => (data ? data.split(" ").join("\n") : ""),
     compilerCmd: null,
     executorCmd: (filename) => `python ./${codeFiles}/${filename}.py`,
     container: containers.py,
   },
   js: {
-    inputFunction: null,
     compilerCmd: null,
     executorCmd: (filename) => `node ./${codeFiles}/${filename}.js`,
     container: containers.js,
   },
   java: {
-    inputFunction: null,
     compilerCmd: (filename) =>
       `javac -d ./${codeFiles}/${filename} ./${codeFiles}/${filename}.java`,
     executorCmd: (filename) => `java -cp ./${codeFiles}/${filename} Solution`,
@@ -227,6 +222,7 @@ const executeAgainstTestcase = async (
 
     //Can also use close instead of exit?
     cmd.on("exit", (exitCode) => {
+      stdout = stdout.trim();
       clearTimeout(timeoutId);
       if (isTimeout) {
         resolve({

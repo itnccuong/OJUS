@@ -113,9 +113,7 @@ export class SubmissionController extends Controller {
     for (let index = 0; index < testcaseLength; ++index) {
       const result = await executeAgainstTestcase(
         filename,
-        languageDetails[language].inputFunction
-          ? languageDetails[language].inputFunction(testcases.input[index])
-          : testcases.input[index],
+        testcases.input[index],
         testcases.output[index],
         language,
         timeLimit,
