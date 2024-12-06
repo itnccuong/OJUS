@@ -5,10 +5,8 @@ export interface ContainerConfig {
 }
 
 export type CompExecCmd = (id: string) => string;
-export type InputFunc = (id: string) => string;
 
 export interface LanguageDetail {
-  inputFunction: InputFunc | null;
   compilerCmd: CompExecCmd | null;
   executorCmd: CompExecCmd;
   container: ContainerConfig;

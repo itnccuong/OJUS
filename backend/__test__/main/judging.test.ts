@@ -5,7 +5,7 @@ import { STATUS_CODE } from "../../utils/constants";
 import { initAllDockerContainers } from "../../services/problem.services/code-executor/executor-utils";
 import jwt from "jsonwebtoken";
 
-import { compileTestCases } from "../test_data";
+import { compileFailAnswer, correctAnswers } from "../test_data";
 import {
   ErrorResponseInterface,
   FailTestResponseInterface,
@@ -13,7 +13,7 @@ import {
   SubmitCodeResponseInterface,
   SuccessResponseInterface,
 } from "../../interfaces/api-interface";
-import { testCompile } from "../test_services";
+import { testCompile, testCorrect } from "../test_services";
 import { cleanDatabase } from "../test_utils";
 import util from "node:util";
 import { exec } from "child_process";
@@ -35,7 +35,7 @@ beforeAll(async () => {
 
 describe("Compile code", () => {
   describe("Compile fail", () => {
-    compileTestCases.forEach(({ language, invalidCode }) => {
+    compileFailAnswer.forEach(({ language, invalidCode }) => {
       test(`${language} - Compile Error`, async () => {
         await testCompile(invalidCode, language, true, fake_token);
       });
@@ -43,7 +43,7 @@ describe("Compile code", () => {
   });
 
   describe("Compile success", () => {
-    compileTestCases.forEach(({ language, validCode }) => {
+    compileFailAnswer.forEach(({ language, validCode }) => {
       test(`${language} - Successful Compilation`, async () => {
         await testCompile(validCode, language, false, fake_token);
       });
@@ -51,30 +51,15 @@ describe("Compile code", () => {
   });
 });
 
-describe("Submit code (C++)", () => {
-  test("Correct answer", async () => {
-    const body = {
-      code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -i;\n}",
-      language: "cpp",
-    };
-
-    const res = (await request(app)
-      .post(`/api/problems/1`)
-      .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<SubmitCodeResponseInterface>
-    >;
-    expect(res.status).toBe(STATUS_CODE.SUCCESS);
-    expect(res.body.data.submission.verdict).toBe("OK");
-    const results = res.body.data.results;
-    const testcases = res.body.data.testcases;
-    expect(results.length).toBe(testcases.input.length);
-    results.map((result, index: number) => {
-      expect(result.output).toBe(testcases.output[index]);
-      expect(result.verdict).toBe("OK");
+describe("Correct answer code", () => {
+  correctAnswers.forEach(({ language, code }) => {
+    test(`${language} - Correct answer`, async () => {
+      await testCorrect(code, language, fake_token);
     });
   });
+});
 
+describe("Submit code (C++)", () => {
   test("Wrong answer", async () => {
     const body = {
       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
