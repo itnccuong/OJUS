@@ -28,16 +28,23 @@ export default function Register() {
     }
 
     try {
-      const { data } = await axiosInstance.post<
-        ResponseInterface<RegisterResponseInterface>
-      >("/api/auth/register", {
-        username,
-        password,
-        email,
-        fullname,
-      });
-      console.log(data);
-      toast.success("Registered successfully!");
+      const res = await toast.promise(
+        axiosInstance.post<ResponseInterface<RegisterResponseInterface>>(
+          "/api/auth/register",
+          {
+            username,
+            password,
+            email,
+            fullname,
+          },
+        ),
+        {
+          pending: "Sign up...",
+          success: "Sign up successfully",
+          error: "Sign up failed",
+        },
+      );
+      console.log(res.data);
       navigate("/accounts/login");
     } catch (error) {
       console.error(error);

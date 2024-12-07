@@ -10,6 +10,7 @@ import {
 import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+import Loader from "../../components/Loader.tsx";
 
 interface Tag {
   label: string;
@@ -34,8 +35,11 @@ export default function ProblemList() {
     { label: "Breadth-First Search", selected: false },
   ];
 
+  const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<Tag[]>(initialTags);
   const [search, setSearch] = useState("");
+  const [difficulty, setDifficulty] = useState("All");
+  const [status, setStatus] = useState("All");
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
@@ -57,7 +61,6 @@ export default function ProblemList() {
   const [fetchProblems, setFetchProblems] = useState<
     ProblemWithUserStatusInterface[]
   >([]);
-
   useEffect(() => {
     const fetchProblems = async () => {
       try {
@@ -79,10 +82,16 @@ export default function ProblemList() {
         console.log("Problems", response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProblems();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const problems = fetchProblems.map((fetchProblem) => {
     const difficultyMapping: Record<number, string> = {
@@ -253,9 +262,6 @@ export default function ProblemList() {
 
   const Difficulty = ["Easy", "Medium", "Hard"];
 
-  const [difficulty, setDifficulty] = useState("All");
-  const [status, setStatus] = useState("All");
-
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
 
@@ -271,7 +277,12 @@ export default function ProblemList() {
     <>
       <div className="d-flex flex-column">
         <NavBar />
-        <div className="container d-flex flex-column">
+        <div
+          className="container d-flex flex-column"
+          style={{
+            height: "87vh",
+          }}
+        >
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <DropdownButton variant="secondary" title="Difficulty">
               <div className="d-flex flex-column">
