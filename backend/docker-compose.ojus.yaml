@@ -1,6 +1,6 @@
 services:
   online-judge:
-    image: nhathien/ojus-docker:latest
+    image: nhathien/ojus-backend:latest
     ports:
       - "8080:8080"
     volumes:
