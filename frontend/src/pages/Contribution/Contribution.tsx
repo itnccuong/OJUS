@@ -19,7 +19,6 @@ import getToken from "../../../utils/getToken.ts";
 import {
   OneContributionResponseInterface,
   ResponseInterface,
-  SubmitCodeResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemInterface } from "../../../interfaces/model.interface.ts";
@@ -106,8 +105,8 @@ export default function Contribution() {
 
   const handleSubmit = async () => {
     try {
-      const { data } = await toast.promise(
-        axiosInstance.post<ResponseInterface<SubmitCodeResponseInterface>>(
+      const res = await toast.promise(
+        axiosInstance.post(
           `/api/problems/${id}`,
           {
             code: code,
@@ -122,10 +121,10 @@ export default function Contribution() {
         {
           pending: "Submitting...",
           success: "All test cases passed",
-          // error: "Failed to submit",
+          error: "Failed",
         },
       );
-      console.log("Submit response: ", data);
+      console.log("Submit response: ", res.data);
     } catch (error) {
       console.error(error);
     }
