@@ -47,7 +47,7 @@ jobs:
       run: |
         touch ./backend/.env
         touch ./backend/.env.test
-        mkdir -p ./backend/services/problem.services/code-executor/codeFiles
+        mkdir -p ./backend/codeFiles
 
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./backend/.env
         echo JWT_RESET=${{ secrets.JWT_RESET }} >> ./backend/.env
