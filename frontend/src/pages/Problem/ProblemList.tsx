@@ -476,7 +476,7 @@ export default function ProblemList() {
             <tbody>
               {filteredProblems.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="text-center">
+                  <td colSpan={4} className="text-center">
                     <strong>No problems found</strong>
                   </td>
                 </tr>
