@@ -61,7 +61,7 @@ jobs:
         echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./backend/.env
 
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./backend/.env.test
-    - run: docker compose up -d
+    - run: docker compose -f docker-compose.langs.yaml up -d
       working-directory: ./backend
     - run: npm run build --if-present
       working-directory: ./backend
