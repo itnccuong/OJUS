@@ -8,10 +8,12 @@ import {
 } from "../../../interfaces/code-executor-interface";
 import { getContainerId } from "../submit.services";
 
-const codeFiles = "codeFiles";
 const STDOUT = "stdout";
 const STDERR = "stderr";
+const codeFiles = "codeFiles";
 const codeDirectory = path.join(__dirname, codeFiles);
+
+// const codeDirectory = path.join(
 
 //Convert callback function to promise to use await
 const execAsync = promisify(exec);
@@ -93,6 +95,7 @@ const getContainerIdByName = async (container_name: string) => {
   const running = await execAsync(
     `docker container ps --filter "name=${container_name}" --format "{{.ID}}"`,
   );
+  console.log("Get container id by name", running.stdout.trim());
   return running.stdout.trim();
 };
 
@@ -110,13 +113,13 @@ const killContainer = async (container_name: string) => {
  */
 const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
-  const container_id = await getContainerIdByName(name);
+  container.id = await getContainerIdByName(name);
 
-  if (container_id) {
-    await killContainer(container_id);
-    // console.log(`Container ${name} stopped`);
-  }
-  container.id = await createContainer(container);
+  // if (container_id) {
+  //   await killContainer(container_id);
+  //   // console.log(`Container ${name} stopped`);
+  // }
+  // container.id = await createContainer(container);
   // console.log(`Container ${name} created`);
 };
 

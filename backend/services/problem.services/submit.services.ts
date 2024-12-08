@@ -53,6 +53,7 @@ export const findProblemById = async (problem_id: number) => {
 
 export const getContainerId = (container: ContainerConfig) => {
   const containerId = container.id;
+
   if (!containerId) {
     throw new CustomError(
       "NOT_FOUND",
@@ -139,11 +140,8 @@ export const saveCodeToFile = (
 ) => {
   //Use submissionId to generate unique filename
   const filename = `${submissionId}.${language}`;
-  //If code directory not exist, create it
-  if (!fs.existsSync(codeDirectory)) {
-    fs.mkdirSync(codeDirectory);
-  }
-  const filePath = path.join(codeDirectory, filename);
+
+  const filePath = path.join("codeFiles", filename);
   fs.writeFileSync(filePath, code, { encoding: "utf-8" });
   return filename;
 };

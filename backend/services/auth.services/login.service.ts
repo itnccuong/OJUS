@@ -1,6 +1,6 @@
 import prisma from "../../prisma/client";
 import { STATUS_CODE } from "../../utils/constants";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { LoginInterface } from "../../interfaces/api-interface";
 import { CustomError } from "../../utils/error";
