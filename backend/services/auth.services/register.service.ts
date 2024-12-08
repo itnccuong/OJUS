@@ -2,7 +2,7 @@ import { RegisterConfig } from "../../interfaces/api-interface";
 import prisma from "../../prisma/client";
 import { CustomError } from "../../utils/error";
 import { STATUS_CODE } from "../../utils/constants";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const validateRegisterBody = async (data: RegisterConfig) => {
   const { email, fullname, password, username } = data;

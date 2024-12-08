@@ -47,7 +47,7 @@ jobs:
       run: |
         touch ./backend/.env
         touch ./backend/.env.test
-        mkdir -p ./backend/services/problem.services/code-executor/codeFiles
+        mkdir -p ./backend/codeFiles
 
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./backend/.env
         echo JWT_RESET=${{ secrets.JWT_RESET }} >> ./backend/.env
@@ -61,6 +61,8 @@ jobs:
         echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./backend/.env
 
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./backend/.env.test
+    - run: docker compose up -d
+      working-directory: ./backend
     - run: npm run build --if-present
       working-directory: ./backend
     - run: npm test
