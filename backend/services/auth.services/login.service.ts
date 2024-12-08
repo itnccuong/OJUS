@@ -48,7 +48,7 @@ export const signToken = async (userId: number) => {
   const token = jwt.sign(
     { userId: userId }, // Payload
     process.env.JWT_SECRET as string, // Secret
-    { expiresIn: "12m" }, // Token expiration
+    { expiresIn: "180d" }, // Token expiration
   );
   return token;
 };
