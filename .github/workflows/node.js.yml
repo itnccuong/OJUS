@@ -83,4 +83,4 @@ jobs:
       with:
         push: true
         tags: nhathien/ojus-backend:latest
-      working-directory: ./backend
+        context: ./backend
