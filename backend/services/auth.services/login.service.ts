@@ -35,7 +35,7 @@ export const validateLoginBody = async (data: LoginInterface) => {
   if (!isPasswordValid) {
     throw new CustomError(
       "INVALID_PASSWORD",
-      "Invalid password",
+      "Invalid password!",
       STATUS_CODE.BAD_REQUEST,
       {},
     );

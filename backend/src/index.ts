@@ -1,8 +1,6 @@
 import { app } from "./app";
 import { initAllDockerContainers } from "../services/problem.services/code-executor/executor-utils";
 require("dotenv").config();
-//Add comment to test watchtower
-//make dir services/problem.services/code-executor/codeFiles if not exist
 const fs = require("fs");
 const path = require("path");
 const dir = path.join("codeFiles");
