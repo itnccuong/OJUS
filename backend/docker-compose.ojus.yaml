@@ -20,6 +20,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 30 ojus-container
+    environment:
+      - WATCHTOWER_CLEANUP=true
 
 #services:
 #  mysql:
