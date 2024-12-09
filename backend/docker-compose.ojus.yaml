@@ -1,6 +1,7 @@
 services:
   online-judge:
     image: nhathien/ojus-backend:latest
+    container_name: ojus-container
     ports:
       - "8080:8080"
     volumes:
@@ -13,7 +14,12 @@ services:
       - js
       - java
 
-
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 ojus-container
 
 #services:
 #  mysql:
