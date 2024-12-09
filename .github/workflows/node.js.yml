@@ -4,12 +4,13 @@
 name: Node.js CI
 
 on:
-  push:
+  push: 
     branches:
       - "**"
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -32,55 +33,54 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path: backend/package-lock.json
-      - run: npm ci
-        working-directory: ./backend
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    - run: npm ci
+      working-directory: ./backend
 
-      - name: Set up environment
-        run: |
-          touch ./.env
-          touch ./.env.test
-          mkdir -p ./codeFiles
-
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./.env
-          echo JWT_RESET=${{ secrets.JWT_RESET }} >> ./.env
-          echo CLIENT_URL=${{ secrets.CLIENT_URL }} >> ./.env
-          echo EMAIL_USER=${{ secrets.EMAIL_USER }} >> ./.env
-          echo EMAIL_PASS=${{ secrets.EMAIL_PASS }} >> ./.env
-          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> ./.env
-          echo AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }} >> ./.env
-          echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> ./.env
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./.env
-          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./.env
-
-          echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./.env.test
-        working-directory: ./backend
-      - run: docker compose -f docker-compose.langs.yaml up -d
-        working-directory: ./backend
-      - run: npm run build --if-present
-        working-directory: ./backend
-      # - run: npm test
-      #   working-directory: ./backend
+    - name: Set up environment
+      run: |
+        touch ./.env
+        touch ./.env.test
+        mkdir -p ./codeFiles
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./.env
+        echo JWT_RESET=${{ secrets.JWT_RESET }} >> ./.env
+        echo CLIENT_URL=${{ secrets.CLIENT_URL }} >> ./.env
+        echo EMAIL_USER=${{ secrets.EMAIL_USER }} >> ./.env
+        echo EMAIL_PASS=${{ secrets.EMAIL_PASS }} >> ./.env
+        echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> ./.env
+        echo AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }} >> ./.env
+        echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> ./.env
+        echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./.env
+        echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./.env
+        echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./.env.test
+      working-directory: ./backend
+    - run: docker compose -f docker-compose.langs.yaml up -d
+      working-directory: ./backend
+    - run: npm run build --if-present
+      working-directory: ./backend
+    # - run: npm test
+    #   working-directory: ./backend
+    -
       name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: nhathien/ojus-backend:latest
+      uses: docker/login-action@v3
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    -
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    -
+      name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: nhathien/ojus-backend:latest
