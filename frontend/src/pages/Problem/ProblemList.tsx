@@ -464,7 +464,6 @@ export default function ProblemList() {
                       src="/sort.svg"
                       // width="30"
                       // height="24"
-                      alt="React Bootstrap logo"
                     />
                   </div>
                 </th>
