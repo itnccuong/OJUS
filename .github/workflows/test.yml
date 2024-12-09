@@ -42,9 +42,6 @@ jobs:
         cache-dependency-path: backend/package-lock.json
     - run: npm ci
       working-directory: ./backend
-    
-    - run: npx prisma generate
-      working-directory: ./backend
 
     - name: Set up environment
       run: |
