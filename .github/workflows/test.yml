@@ -43,7 +43,7 @@ jobs:
     - run: npm ci
       working-directory: ./backend
     
-    - run: prisma generate
+    - run: npx prisma generate
       working-directory: ./backend
 
     - name: Set up environment
