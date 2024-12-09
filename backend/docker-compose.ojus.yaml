@@ -22,6 +22,7 @@ services:
     command: --interval 30 ojus-container
     environment:
       - WATCHTOWER_CLEANUP=true
+    restart: always
 
 #services:
 #  mysql:
