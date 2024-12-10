@@ -16,7 +16,7 @@ function NavBar() {
     <Navbar className="bg-body-tertiary border-bottom d-flex">
       <div className="d-flex container">
         <div className="container d-flex gap-3 justify-content-start">
-          <Navbar.Brand as={NavLink} to={"/"}>
+          <Navbar.Brand as={NavLink} to={token ? "/" : "/accounts/login"}>
             <img
               src="/ojus.png"
               width="48"
