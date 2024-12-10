@@ -85,10 +85,6 @@ export class AuthController extends Controller {
     // Check if the user exists
     const user = await fineUserByEmail(email);
 
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     // Create a JWT reset token
     const resetToken = jwt.sign(
       { email: user.email }, // Payload: email to identify the user
@@ -122,9 +118,6 @@ export class AuthController extends Controller {
 
     // Check if the user exists
     const user = await fineUserByEmail(email);
-    if (!user) {
-      throw new Error("User not found");
-    }
 
     // Hash the new password
     const saltRounds = 10;
