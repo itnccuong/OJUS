@@ -5,6 +5,7 @@ import NavBar from "../../components/NavBar.tsx";
 import Footer from "../../components/Footer.tsx";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
+import { AxiosError } from "axios";
 
 export default function ChangePassword() {
   const { token } = useParams();
@@ -34,6 +35,10 @@ export default function ChangePassword() {
       // Optionally redirect to another page (like login or profile)
       navigate("/accounts/login");
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };

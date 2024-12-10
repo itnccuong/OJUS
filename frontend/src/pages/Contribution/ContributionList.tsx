@@ -16,6 +16,8 @@ import {
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface Tag {
   label: string;
@@ -30,7 +32,7 @@ export default function ContributionList() {
   const token = getToken();
   useEffect(() => {
     if (!token) {
-      console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+      toast.error("Please login first");
       navigate("/accounts/login");
     }
   }, [token, navigate]);
@@ -81,7 +83,11 @@ export default function ContributionList() {
 
         setContributes(data.data.contributions);
       } catch (error) {
-        console.log(error);
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -168,12 +174,7 @@ export default function ContributionList() {
                     </Button>
                     <span className="ms-4">
                       {difficulty === diff ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
+                        <img src="/done.svg" width="30" height="24" />
                       ) : null}
                     </span>
                   </Dropdown.Item>
@@ -231,12 +232,7 @@ export default function ContributionList() {
                 cursor: "pointer",
               }}
             >
-              <img
-                src="/random.svg"
-                width="30"
-                height="24"
-                alt="React Bootstrap logo"
-              />
+              <img src="/random.svg" width="30" height="24" />
               <span className="ms-2">Pick Random</span>
             </div>
           </div>

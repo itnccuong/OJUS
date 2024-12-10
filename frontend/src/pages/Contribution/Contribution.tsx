@@ -23,6 +23,7 @@ import {
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
+import { AxiosError } from "axios";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
@@ -60,8 +61,12 @@ export default function Contribution() {
 
         console.log(res.data);
         setFetchContribution(res.data.data.contribution);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -121,11 +126,14 @@ export default function Contribution() {
         {
           pending: "Submitting...",
           success: "All test cases passed",
-          error: "Failed",
         },
       );
       console.log("Submit response: ", res.data);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -146,15 +154,22 @@ export default function Contribution() {
         {
           pending: "Loading...",
           success: "Contribution accepted",
-          // error: "Failed to submit",
         },
       );
       navigate("/contributions");
 
       console.log("Accept response:", data);
     } catch (error) {
-      console.error("Error accepting contribution:", error);
-      toast.error("Failed to accept contribution. Please try again.");
+      if (error instanceof AxiosError) {
+        if (error.response?.data?.name === "UNAUTHORIZED") {
+          toast.error("Please login to submit your code");
+          navigate("/accounts/login");
+        } else {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+      }
+      console.error(error);
     }
   };
 
@@ -174,15 +189,17 @@ export default function Contribution() {
         {
           pending: "Loading...",
           success: "Contribution rejected",
-          // error: "Failed to submit",
         },
       );
       navigate("/contributions");
 
       console.log("Accept response:", data);
     } catch (error) {
-      console.error("Error accepting contribution:", error);
-      toast.error("Failed to accept contribution. Please try again.");
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
+      console.error(error);
     }
   };
 
@@ -345,12 +362,7 @@ export default function Contribution() {
                         <Button variant="white">{lang}</Button>
                         <span className="ms-4">
                           {language === lang ? (
-                            <img
-                              src="/done.svg"
-                              width="30"
-                              height="24"
-                              alt="React Bootstrap logo"
-                            />
+                            <img src="/done.svg" width="30" height="24" />
                           ) : null}
                         </span>
                       </Dropdown.Item>

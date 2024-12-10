@@ -28,7 +28,6 @@ export default function Footer() {
               width="30"
               height="24"
               // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
             />
           </a>
           <a
@@ -37,13 +36,7 @@ export default function Footer() {
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
           >
-            <img
-              src="/git.png"
-              width="50"
-              height="24"
-              // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+            <img src="/git.png" width="50" height="24" />
           </a>
         </div>
       </div>
