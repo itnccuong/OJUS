@@ -16,7 +16,7 @@ const globalErrorHandler = (
   return formatResponse(
     res,
     "INTERNAL_SERVER_ERROR",
-    "Internal server error",
+    err.message,
     STATUS_CODE.INTERNAL_SERVER_ERROR,
     {},
   );

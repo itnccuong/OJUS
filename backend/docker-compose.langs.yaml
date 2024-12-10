@@ -1,0 +1,26 @@
+services:
+  gcc:
+    image: gcc:latest
+    container_name: gcc-container
+    command: sleep infinity
+    volumes:
+      - ./codeFiles:/codeFiles
+
+  py:
+    image: python:3.10-slim
+    container_name: py-container
+    command: sleep infinity
+    volumes:
+      - ./codeFiles:/codeFiles
+  js:
+    image: node:16.17.0-bullseye-slim
+    container_name: js-container
+    command: sleep infinity
+    volumes:
+      - ./codeFiles:/codeFiles
+  java:
+    image: openjdk:20-slim
+    container_name: java-container
+    command: sleep infinity
+    volumes:
+      - ./codeFiles:/codeFiles

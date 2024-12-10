@@ -5,6 +5,7 @@ import NavBar from "../../components/NavBar.tsx";
 import Footer from "../../components/Footer.tsx";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
+import { AxiosError } from "axios";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -21,11 +22,14 @@ export default function ForgotPassword() {
         {
           pending: "Sending reset link...",
           success: "Reset link sent successfully!",
-          error: "Failed to send reset link",
         },
       );
       navigate("/accounts/password/reset/done");
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     } finally {
       setLoading(false);

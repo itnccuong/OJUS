@@ -1,6 +1,7 @@
 services:
   online-judge:
-    image: nhathien/ojus-docker:latest
+    image: nhathien/ojus-backend:latest
+    container_name: ojus-container
     ports:
       - "8080:8080"
     volumes:
@@ -13,31 +14,15 @@ services:
       - js
       - java
 
-  gcc:
-    image: gcc:latest
-    container_name: gcc-container
-    command: tail -f /dev/null
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
     volumes:
-      - ./codeFiles:/codeFiles
-
-  py:
-    image: python:3.10-slim
-    container_name: py-container
-    command: tail -f /dev/null
-    volumes:
-      - ./codeFiles:/codeFiles
-  js:
-    image: node:16.17.0-bullseye-slim
-    container_name: js-container
-    command: tail -f /dev/null
-    volumes:
-      - ./codeFiles:/codeFiles
-  java:
-    image: openjdk:20-slim
-    container_name: java-container
-    command: tail -f /dev/null
-    volumes:
-      - ./codeFiles:/codeFiles
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 ojus-container
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    restart: always
 
 #services:
 #  mysql:

@@ -15,12 +15,7 @@ export default function Footer() {
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
           >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg"
-              width="30"
-              height="24"
-              alt="React Bootstrap logo"
-            />
+            <img src="/facebook.svg" width="30" height="24" />
           </a>
           <a
             className="text-body-secondary"
@@ -33,7 +28,6 @@ export default function Footer() {
               width="30"
               height="24"
               // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
             />
           </a>
           <a
@@ -42,13 +36,7 @@ export default function Footer() {
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
           >
-            <img
-              src="/git.png"
-              width="50"
-              height="24"
-              // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+            <img src="/git.png" width="50" height="24" />
           </a>
         </div>
       </div>

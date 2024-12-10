@@ -10,6 +10,7 @@ import {
   LoginResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,13 +33,16 @@ export default function Login() {
         {
           pending: "Sign in...",
           success: "Sign in successfully",
-          error: "Sign in failed",
         },
       );
       console.log(res.data);
       localStorage.setItem(storageKeyMap.token, res.data.data.token);
       navigate("/");
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -60,13 +64,7 @@ export default function Login() {
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
           <Container className="d-flex justify-content-center align-items-center mb-4">
-            <img
-              src="https://s3-alpha-sig.figma.com/img/0c6a/519e/9a3231eb4b597654b04a494e83e43344?Expires=1733702400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ppbyGHEzIau5UmICgG1z8tieMEPfuY1HBlwb3JXbx9As3Ze5OqBFi7tOicPQPE-A2OPvgvLoKf65voJVcz5uFThKWM6Huj~uPjMOnOpLLum0cXE5GZonItkyGvP72RhM92Gcy0aDuWdxhN3gYmdQAvy01PNJj-ojljO6MAq4CYK2dPzOxc3faajtZUFHj7iL3tsIjZOfW9NqbWCDYYLC7p6jrOdQwuwTe~RDqrRw6zzTwtiAFu8KBI1ElQAnRGEnU7RoejcO8fHKW3YnFjGodxXA3vhHSieDNYog81LvHoS4PfUhiPqeY1SdRpS2TrIbFqvEPfrlSNddqijr66sG5A__"
-              width="72"
-              height="48"
-              // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+            <img src="/ojus.png" width="72" height="48" />
           </Container>
           <FloatingLabel
             className="mb-3"

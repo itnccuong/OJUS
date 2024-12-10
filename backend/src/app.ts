@@ -15,7 +15,11 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://ojus-se.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://ojus-se.vercel.app",
+      "https://clownfish-app-eisbc.ondigitalocean.app",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   }),
@@ -28,12 +32,12 @@ RegisterRoutes(app);
 // routes
 app.use("/src", router);
 
-// temorary route for upload
-app.get("/upload", (req, res) => {
-  res.sendFile(path.join(__dirname, "../upload/test.html"));
-});
-
-app.use("/upload", upload);
+// // temorary route for upload
+// app.get("/upload", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../upload/test.html"));
+// });
+//
+// app.use("/upload", upload);
 
 app.use(globalErrorHandler);
 

@@ -11,6 +11,8 @@ import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface Tag {
   label: string;
@@ -81,6 +83,10 @@ export default function ProblemList() {
         setFetchProblems(response.data.data.problems);
         console.log("Problems", response.data);
       } catch (error) {
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
         console.error(error);
       } finally {
         setLoading(false);
@@ -310,12 +316,7 @@ export default function ProblemList() {
                     </Button>
                     <span className="ms-4">
                       {difficulty === diff ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="React Bootstrap logo"
-                        />
+                        <img src="/done.svg" width="30" height="24" />
                       ) : null}
                     </span>
                   </Dropdown.Item>
@@ -341,12 +342,7 @@ export default function ProblemList() {
                   </Button>
                   <span className="ms-4">
                     {status === "Solved" ? (
-                      <img
-                        src="/done.svg"
-                        width="30"
-                        height="24"
-                        alt="React Bootstrap logo"
-                      />
+                      <img src="/done.svg" width="30" height="24" />
                     ) : null}
                   </span>
                 </Dropdown.Item>
@@ -365,12 +361,7 @@ export default function ProblemList() {
                   </Button>
                   <span className="ms-4">
                     {status === "Todo" ? (
-                      <img
-                        src="/done.svg"
-                        width="30"
-                        height="24"
-                        alt="React Bootstrap logo"
-                      />
+                      <img src="/done.svg" width="30" height="24" />
                     ) : null}
                   </span>
                 </Dropdown.Item>
@@ -427,12 +418,7 @@ export default function ProblemList() {
                 cursor: "pointer",
               }}
             >
-              <img
-                src="/random.svg"
-                width="30"
-                height="24"
-                alt="React Bootstrap logo"
-              />
+              <img src="/random.svg" width="30" height="24" />
               <span className="ms-2">Pick Random</span>
             </div>
           </div>
@@ -464,7 +450,6 @@ export default function ProblemList() {
                       src="/sort.svg"
                       // width="30"
                       // height="24"
-                      alt="React Bootstrap logo"
                     />
                   </div>
                 </th>
@@ -476,7 +461,7 @@ export default function ProblemList() {
             <tbody>
               {filteredProblems.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="text-center">
+                  <td colSpan={4} className="text-center">
                     <strong>No problems found</strong>
                   </td>
                 </tr>

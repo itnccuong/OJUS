@@ -12,9 +12,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+
 # Copy the rest of the application code to the container
 COPY . .
 
+RUN npx prisma generate
 # Update package lists
 RUN apt-get update
 

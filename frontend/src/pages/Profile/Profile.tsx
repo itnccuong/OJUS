@@ -4,6 +4,8 @@ import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar.tsx";
 import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -18,6 +20,10 @@ export default function Profile() {
       setFullname(data.data.user.fullname);
       console.log("getprofile", data);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
