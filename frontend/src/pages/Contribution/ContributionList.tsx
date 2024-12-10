@@ -32,7 +32,7 @@ export default function ContributionList() {
   const token = getToken();
   useEffect(() => {
     if (!token) {
-      console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+      toast.error("Please login first");
       navigate("/accounts/login");
     }
   }, [token, navigate]);

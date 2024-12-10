@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import {
@@ -37,6 +37,8 @@ export default function Problem() {
   const onChange = React.useCallback((val: string) => {
     setCode(val);
   }, []);
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -169,8 +171,13 @@ export default function Problem() {
       console.log("Submit response: ", res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
+        if (error.response?.data?.name === "UNAUTHORIZED") {
+          toast.error("Please login to submit your code");
+          navigate("/accounts/login");
+        } else {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
       }
       console.error(error);
     }

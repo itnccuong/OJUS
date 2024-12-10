@@ -161,8 +161,13 @@ export default function Contribution() {
       console.log("Accept response:", data);
     } catch (error) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
+        if (error.response?.data?.name === "UNAUTHORIZED") {
+          toast.error("Please login to submit your code");
+          navigate("/accounts/login");
+        } else {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
       }
       console.error(error);
     }

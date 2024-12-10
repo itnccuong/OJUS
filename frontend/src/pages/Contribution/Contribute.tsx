@@ -21,7 +21,7 @@ export default function Contribute() {
   console.log(token);
   useEffect(() => {
     if (!token) {
-      console.error("Token hoặc User không tồn tại hoặc đã hết hạn.");
+      toast.error("You need to login to contribute");
       navigate("/accounts/login");
     }
   }, [token, navigate]);
