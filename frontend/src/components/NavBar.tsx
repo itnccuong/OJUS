@@ -22,7 +22,6 @@ function NavBar() {
               width="48"
               height="32"
               className="d-inline-block align-top"
-              alt="React Bootstrap logo"
             />
           </Navbar.Brand>
 

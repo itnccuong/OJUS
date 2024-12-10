@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../utils/getURL.ts";
+import { AxiosError } from "axios";
 
 interface Tag {
   label: string;
@@ -92,12 +93,15 @@ export default function Contribute() {
         {
           pending: "Submitting...",
           success: "Your question has been submitted",
-          // error: "Failed to submit",
         },
       );
 
       console.log("Submit contribute response: ", res.data);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -288,12 +292,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               }}
             >
               <div className="mb-3">
-                <img
-                  src="/lightbulb.svg"
-                  width="36"
-                  height="36"
-                  alt="React Bootstrap logo"
-                />
+                <img src="/lightbulb.svg" width="36" height="36" />
               </div>
               <ReactMarkdown>{markdown}</ReactMarkdown>
             </Container>

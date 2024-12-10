@@ -25,6 +25,7 @@ import {
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
+import { AxiosError } from "axios";
 
 export default function Problem() {
   const { page, id } = useParams();
@@ -57,8 +58,12 @@ export default function Problem() {
         }
         console.log(res.data);
         setFetchProblem(res.data.data.problem);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -159,11 +164,14 @@ export default function Problem() {
         {
           pending: "Submitting...",
           success: "All test cases passed",
-          error: "Failed",
         },
       );
       console.log("Submit response: ", res.data);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -283,12 +291,7 @@ export default function Problem() {
                         <Button variant="white">{lang}</Button>
                         <span className="ms-4">
                           {language === lang ? (
-                            <img
-                              src="/done.svg"
-                              width="30"
-                              height="24"
-                              alt="React Bootstrap logo"
-                            />
+                            <img src="/done.svg" width="30" height="24" />
                           ) : null}
                         </span>
                       </Dropdown.Item>

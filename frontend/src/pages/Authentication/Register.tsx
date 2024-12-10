@@ -9,6 +9,7 @@ import {
   RegisterResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";
+import { AxiosError } from "axios";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -41,12 +42,15 @@ export default function Register() {
         {
           pending: "Sign up...",
           success: "Sign up successfully",
-          error: "Sign up failed",
         },
       );
       console.log(res.data);
       navigate("/accounts/login");
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -65,13 +69,7 @@ export default function Register() {
           onSubmit={handleSubmit}
         >
           <Container className="d-flex justify-content-center align-items-center mb-4">
-            <img
-              src="/ojus.png"
-              width="72"
-              height="48"
-              // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+            <img src="/ojus.png" width="72" height="48" />
           </Container>
 
           <FloatingLabel

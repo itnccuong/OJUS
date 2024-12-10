@@ -10,6 +10,7 @@ import {
   LoginResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,13 +33,16 @@ export default function Login() {
         {
           pending: "Sign in...",
           success: "Sign in successfully",
-          error: "Sign in failed",
         },
       );
       console.log(res.data);
       localStorage.setItem(storageKeyMap.token, res.data.data.token);
       navigate("/");
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     }
   };
@@ -60,13 +64,7 @@ export default function Login() {
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
           <Container className="d-flex justify-content-center align-items-center mb-4">
-            <img
-              src="/ojus.png"
-              width="72"
-              height="48"
-              // className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
+            <img src="/ojus.png" width="72" height="48" />
           </Container>
           <FloatingLabel
             className="mb-3"
