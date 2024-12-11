@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import {
@@ -29,7 +29,7 @@ import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
 
 export default function Problem() {
-  const { page, id } = useParams();
+  const { id } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
@@ -110,37 +110,6 @@ export default function Problem() {
     </Popover>
   );
 
-  //   const markdown = `
-  // Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
-  //
-  // - \`'.'\` Matches any single character.
-  // - \`'*'\` Matches zero or more of the preceding element.
-  //
-  // The matching should cover the **entire** input string (not partial).
-  //
-  // #### Example 1:
-  // - **Input:** \`s = "aa"\`, \`p = "a"\`
-  // - **Output:** \`false\`
-  // - **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
-  //
-  // #### Example 2:
-  // - **Input:** \`s = "aa"\`, \`p = "a*"\`
-  // - **Output:** \`true\`
-  // - **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
-  //
-  // #### Example 3:
-  // - **Input:** \`s = "ab"\`, \`p = ".*"\`
-  // - **Output:** \`true\`
-  // - **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
-  //
-  // #### Constraints:
-  // - \`1 <= s.length <= 20\`
-  // - \`1 <= p.length <= 20\`
-  // - \`s\` contains only lowercase English letters.
-  // - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
-  // - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
-  // `;
-
   const languageMap: Record<string, string> = {
     Python: "py",
     "C++": "cpp",
@@ -208,15 +177,7 @@ export default function Problem() {
             className="d-flex justify-content-between gap-2"
             style={{ minHeight: "76vh" }}
           >
-            <div
-              className="container p-3 border rounded-4 round shadow-sm bg-white"
-              style={
-                {
-                  // height: "82vh",
-                  // overflowY: "auto",
-                }
-              }
-            >
+            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
               <h3 className="mb-3">{problem.title}</h3>
               <span
                 className={`badge bg-grey me-2 ${
@@ -250,7 +211,6 @@ export default function Problem() {
               </ReactMarkdown>
             </div>
             <div className="container p-3 border rounded-4 round shadow-sm bg-white">
-              {/*<div className="border rounded bg-white mt-2">*/}
               <div className="mb-3 d-flex justify-content-between">
                 <Button onClick={() => handleSubmit()}>Submit</Button>
 
@@ -288,7 +248,6 @@ export default function Problem() {
                   onChange={onChange}
                 />
               </div>
-              {/*</div>*/}
             </div>
           </div>
         </div>

@@ -1,10 +1,8 @@
-import dotenv from "dotenv";
 import { Request as RequestExpress } from "express";
 
 import {
   compile,
   executeAgainstTestcase,
-  languageDetails,
 } from "../services/problem.services/code-executor/executor-utils";
 import {
   createResult,
@@ -45,12 +43,9 @@ import {
   Res,
   Request,
   Middlewares,
-  Security,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import prisma from "../prisma/client";
-
-dotenv.config();
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger

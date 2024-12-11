@@ -1,8 +1,7 @@
 import { app } from "./app";
 import { initAllDockerContainers } from "../services/problem.services/code-executor/executor-utils";
-require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 const dir = path.join("codeFiles");
 
 if (!fs.existsSync(dir)) {
