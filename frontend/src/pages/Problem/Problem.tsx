@@ -26,6 +26,7 @@ import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
+import Footer from "../../components/Footer.tsx";
 
 export default function Problem() {
   const { page, id } = useParams();
@@ -186,107 +187,74 @@ export default function Problem() {
   return (
     <div className="d-flex-flex-column">
       <NavBar />
-      <div
-        className="d-flex gap-2"
-        style={{
-          position: "absolute",
-          top: "10px", // Adjust this value to position vertically
-          right: "50%",
-          transform: "translateX(+50%)",
-          zIndex: 10,
-        }}
-      >
-        <Button onClick={() => handleSubmit()}>Submit</Button>
-      </div>
 
-      <div className="bg-light">
-        <div className="d-flex container">
-          <div
-            className="container"
-            style={{
-              marginRight: "-15px",
-            }}
-          >
-            <div className="border rounded bg-white mt-2">
-              <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <Link
-                  to={`/problems/${id}/description`}
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                  }}
-                >
-                  Description
-                </Link>
-                <span className="text-body-tertiary ">|</span>
-                <Link
-                  to={`/problems/${id}/submissions`}
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                  }}
-                >
-                  Submissions
-                </Link>
-              </div>
-
-              {page === "description" ? (
-                <div
-                  className="container p-3"
-                  style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
-                  }}
-                >
-                  <h3 className="mb-3">{problem.title}</h3>
-                  <span
-                    className={`badge bg-grey me-2 ${
-                      problem.difficulty === "Easy"
-                        ? "text-success"
-                        : problem.difficulty === "Medium"
-                          ? "text-warning"
-                          : "text-danger"
-                    }`}
-                  >
-                    {problem.difficulty}
-                  </span>
-
-                  <OverlayTrigger
-                    trigger="hover"
-                    placement="right"
-                    overlay={popover}
-                  >
-                    <span
-                      className="badge text-dark bg-grey"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      Topics
-                    </span>
-                  </OverlayTrigger>
-
-                  <ReactMarkdown className="mt-3">
-                    {problem.description}
-                  </ReactMarkdown>
-                </div>
-              ) : (
-                <div
-                  className="container p-3"
-                  style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
-                  }}
-                >
-                  <h3>Submission</h3>
-                </div>
-              )}
-            </div>
+      <div className="bg-light p-3">
+        <div className="container">
+          <div className="d-flex gap-2 mb-3">
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/problems/${id}/description`)}
+            >
+              Description
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => navigate(`/problems/${id}/submissions`)}
+            >
+              Submission
+            </Button>
           </div>
-          <div className="container">
-            <div className="border rounded bg-white mt-2">
-              <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <DropdownButton variant="light" title={language}>
+          <div
+            className="d-flex justify-content-between gap-2"
+            style={{ minHeight: "76vh" }}
+          >
+            <div
+              className="container p-3 border rounded-4 round shadow-sm bg-white"
+              style={
+                {
+                  // height: "82vh",
+                  // overflowY: "auto",
+                }
+              }
+            >
+              <h3 className="mb-3">{problem.title}</h3>
+              <span
+                className={`badge bg-grey me-2 ${
+                  problem.difficulty === "Easy"
+                    ? "text-success"
+                    : problem.difficulty === "Medium"
+                      ? "text-warning"
+                      : "text-danger"
+                }`}
+              >
+                {problem.difficulty}
+              </span>
+
+              <OverlayTrigger
+                trigger="hover"
+                placement="right"
+                overlay={popover}
+              >
+                <span
+                  className="badge text-dark bg-grey"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
+                  Topics
+                </span>
+              </OverlayTrigger>
+
+              <ReactMarkdown className="mt-3">
+                {problem.description}
+              </ReactMarkdown>
+            </div>
+            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+              {/*<div className="border rounded bg-white mt-2">*/}
+              <div className="mb-3 d-flex justify-content-between">
+                <Button onClick={() => handleSubmit()}>Submit</Button>
+
+                <DropdownButton variant="secondary" title={language}>
                   <div className="d-flex flex-column">
                     {Language.map((lang, index) => (
                       <Dropdown.Item
@@ -298,7 +266,12 @@ export default function Problem() {
                         <Button variant="white">{lang}</Button>
                         <span className="ms-4">
                           {language === lang ? (
-                            <img src="/done.svg" width="30" height="24" />
+                            <img
+                              src="/done.svg"
+                              width="30"
+                              height="24"
+                              alt="done"
+                            />
                           ) : null}
                         </span>
                       </Dropdown.Item>
@@ -306,13 +279,7 @@ export default function Problem() {
                   </div>
                 </DropdownButton>
               </div>
-              <div
-                className="container p-3"
-                style={{
-                  height: "85vh", // Adjust this height as needed
-                  overflowY: "auto",
-                }}
-              >
+              <div>
                 <CodeMirror
                   value={code}
                   theme={vscodeLight}
@@ -321,10 +288,13 @@ export default function Problem() {
                   onChange={onChange}
                 />
               </div>
+              {/*</div>*/}
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
+    // </div>
   );
 }
