@@ -159,25 +159,25 @@ export default function Problem() {
 
       <div className="bg-light p-3">
         <div className="container">
-          <div className="d-flex gap-2 mb-3">
-            <Button
-              variant="secondary"
-              onClick={() => navigate(`/problems/${id}/description`)}
-            >
-              Description
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => navigate(`/problems/${id}/submissions`)}
-            >
-              Submission
-            </Button>
-          </div>
           <div
             className="d-flex justify-content-between gap-2"
-            style={{ minHeight: "76vh" }}
+            style={{ minHeight: "83vh" }}
           >
             <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+              <div className="d-flex gap-2 mb-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate(`/problems/${id}/description`)}
+                >
+                  Description
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate(`/problems/${id}/submissions`)}
+                >
+                  Submission
+                </Button>
+              </div>
               <h3 className="mb-3">{problem.title}</h3>
               <span
                 className={`badge bg-grey me-2 ${

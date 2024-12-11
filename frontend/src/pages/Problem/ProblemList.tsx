@@ -336,7 +336,7 @@ export default function ProblemList() {
                 >
                   <Button variant="white" className="text-success">
                     <div className="d-flex gap-2">
-                      <img src="/done2.svg" width="24" height="24" />
+                      <img src="/accept.png" width="24" height="24" />
                       Solved
                     </div>
                   </Button>
@@ -355,7 +355,7 @@ export default function ProblemList() {
                 >
                   <Button variant="white" className="text-warning">
                     <div className="d-flex gap-2">
-                      <img src="/attempted.svg" width="24" height="24" />
+                      <img src="/reject.png" width="24" height="24" />
                       To do
                     </div>
                   </Button>
@@ -468,11 +468,11 @@ export default function ProblemList() {
               ) : (
                 filteredProblems.map((problem) => (
                   <tr key={problem.problemId}>
-                    <td>
+                    <td className="text-center">
                       {problem.userStatus === "Solved" ? (
-                        <img src="/done2.svg" width="30" height="24" />
+                        <img src="/accept.png" width="24" height="24" />
                       ) : (
-                        <img src="/attempted.svg" width="30" height="24" />
+                        <img src="/reject.png" width="24" height="24" />
                       )}
                     </td>
                     <td>
