@@ -53,7 +53,6 @@ export default function Login() {
       <div
         className="d-flex justify-content-center align-items-center bg-grey"
         style={{
-          // backgroundColor: "#eceff1",
           height: "87vh",
         }}
       >

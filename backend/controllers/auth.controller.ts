@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 import {
@@ -29,8 +28,6 @@ import {
   fineUserByEmail,
   sendEmail,
 } from "../services/auth.services/password.services";
-
-dotenv.config();
 
 @Route("/api/auth") // Base path for authentication-related routes
 @Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
@@ -117,7 +114,7 @@ export class AuthController extends Controller {
     const email = decodedToken.email;
 
     // Check if the user exists
-    const user = await fineUserByEmail(email);
+    await fineUserByEmail(email);
 
     // Hash the new password
     const saltRounds = 10;

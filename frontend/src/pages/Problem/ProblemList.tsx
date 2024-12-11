@@ -101,9 +101,9 @@ export default function ProblemList() {
 
   const problems = fetchProblems.map((fetchProblem) => {
     const difficultyMapping: Record<number, string> = {
-      1: "Easy",
-      2: "Medium",
-      3: "Hard",
+      1: "Bronze",
+      2: "Platinum",
+      3: "Master",
     };
 
     const statusMapping: Record<string, string> = {
@@ -123,150 +123,7 @@ export default function ProblemList() {
     return inputString.split(",");
   }
 
-  // const Problems = [
-  //   {
-  //     id: 1,
-  //     title: "2684. Maximum Number of Moves in a Grid",
-  //     difficulty: "Medium",
-  //     tags: ["Array", "Dynamic Programming"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "1. Two Sum",
-  //     difficulty: "Easy",
-  //     tags: ["Array", "Hash Table"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "2. Add Two Numbers",
-  //     difficulty: "Medium",
-  //     tags: ["Linked List", "Math"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "3. Longest Substring Without Repeating Characters",
-  //     difficulty: "Medium",
-  //     tags: ["String", "Sliding Window"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "4. Median of Two Sorted Arrays",
-  //     difficulty: "Hard",
-  //     tags: ["Array", "Binary Search"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 6,
-  //     title: "5. Longest Palindromic Substring",
-  //     difficulty: "Medium",
-  //     tags: ["String", "Dynamic Programming"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 7,
-  //     title: "6. Zigzag Conversion",
-  //     difficulty: "Medium",
-  //     tags: ["String"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 8,
-  //     title: "7. Reverse Integer",
-  //     difficulty: "Medium",
-  //     tags: ["Math"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 9,
-  //     title: "8. String to Integer (atoi)",
-  //     difficulty: "Medium",
-  //     tags: ["String", "Math"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 10,
-  //     title: "9. Palindrome Number",
-  //     difficulty: "Easy",
-  //     tags: ["Math"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 11,
-  //     title: "10. Regular Expression Matching",
-  //     difficulty: "Hard",
-  //     tags: ["String", "Dynamic Programming"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 12,
-  //     title: "11. Container With Most Water",
-  //     difficulty: "Medium",
-  //     tags: ["Array", "Two Pointers"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 13,
-  //     title: "12. Integer to Roman",
-  //     difficulty: "Medium",
-  //     tags: ["Math", "String"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 14,
-  //     title: "13. Roman to Integer",
-  //     difficulty: "Easy",
-  //     tags: ["Math", "String"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 15,
-  //     title: "14. Longest Common Prefix",
-  //     difficulty: "Easy",
-  //     tags: ["String"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 16,
-  //     title: "15. 3Sum",
-  //     difficulty: "Medium",
-  //     tags: ["Array", "Two Pointers", "Sorting"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 17,
-  //     title: "16. 3Sum Closest",
-  //     difficulty: "Medium",
-  //     tags: ["Array", "Two Pointers"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 18,
-  //     title: "17. Letter Combinations of a Phone Number",
-  //     difficulty: "Medium",
-  //     tags: ["String", "Backtracking"],
-  //     status: "",
-  //   },
-  //   {
-  //     id: 19,
-  //     title: "18. 4Sum",
-  //     difficulty: "Medium",
-  //     tags: ["Array", "Two Pointers", "Sorting"],
-  //     status: "Solved",
-  //   },
-  //   {
-  //     id: 20,
-  //     title: "19. Remove Nth Node From End of List",
-  //     difficulty: "Medium",
-  //     tags: ["Linked List", "Two Pointers"],
-  //     status: "Solved",
-  //   },
-  // ];
-
-  const Difficulty = ["Easy", "Medium", "Hard"];
+  const Difficulty = ["Bronze", "Platinum", "Master"];
 
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
@@ -305,10 +162,10 @@ export default function ProblemList() {
                     <Button
                       variant="white"
                       className={`text-${
-                        diff === "Easy"
-                          ? "success"
-                          : diff === "Medium"
-                            ? "warning"
+                        diff === "Bronze"
+                          ? "warning-emphasis"
+                          : diff === "Platinum"
+                            ? "primary"
                             : "danger"
                       }`}
                     >
@@ -336,7 +193,7 @@ export default function ProblemList() {
                 >
                   <Button variant="white" className="text-success">
                     <div className="d-flex gap-2">
-                      <img src="/done2.svg" width="24" height="24" />
+                      <img src="/accept.png" width="24" height="24" />
                       Solved
                     </div>
                   </Button>
@@ -355,7 +212,7 @@ export default function ProblemList() {
                 >
                   <Button variant="white" className="text-warning">
                     <div className="d-flex gap-2">
-                      <img src="/attempted.svg" width="24" height="24" />
+                      <img src="/reject.png" width="24" height="24" />
                       To do
                     </div>
                   </Button>
@@ -468,11 +325,11 @@ export default function ProblemList() {
               ) : (
                 filteredProblems.map((problem) => (
                   <tr key={problem.problemId}>
-                    <td>
+                    <td className="text-center">
                       {problem.userStatus === "Solved" ? (
-                        <img src="/done2.svg" width="30" height="24" />
+                        <img src="/accept.png" width="24" height="24" />
                       ) : (
-                        <img src="/attempted.svg" width="30" height="24" />
+                        <img src="/reject.png" width="24" height="24" />
                       )}
                     </td>
                     <td>
@@ -507,10 +364,10 @@ export default function ProblemList() {
                     <td>
                       <span
                         className={`badge ${
-                          problem.difficulty === "Easy"
-                            ? "text-success"
-                            : problem.difficulty === "Medium"
-                              ? "text-warning"
+                          problem.difficulty === "Bronze"
+                            ? "text-warning-emphasis"
+                            : problem.difficulty === "Platinum"
+                              ? "text-primary"
                               : "text-danger"
                         }`}
                       >

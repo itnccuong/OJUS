@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import {
@@ -26,9 +26,10 @@ import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
+import Footer from "../../components/Footer.tsx";
 
 export default function Problem() {
-  const { page, id } = useParams();
+  const { id } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
@@ -78,9 +79,9 @@ export default function Problem() {
   }
 
   const difficultyMapping: Record<number, string> = {
-    1: "Easy",
-    2: "Medium",
-    3: "Hard",
+    1: "Bronze",
+    2: "Platinum",
+    3: "Master",
   };
 
   const problem = {
@@ -108,37 +109,6 @@ export default function Problem() {
       </Popover.Body>
     </Popover>
   );
-
-  //   const markdown = `
-  // Given an input string \`s\` and a pattern \`p\`, implement regular expression matching with support for \`'.'\` and \`'*'\` where:
-  //
-  // - \`'.'\` Matches any single character.
-  // - \`'*'\` Matches zero or more of the preceding element.
-  //
-  // The matching should cover the **entire** input string (not partial).
-  //
-  // #### Example 1:
-  // - **Input:** \`s = "aa"\`, \`p = "a"\`
-  // - **Output:** \`false\`
-  // - **Explanation:** \`"a"\` does not match the entire string \`"aa"\`.
-  //
-  // #### Example 2:
-  // - **Input:** \`s = "aa"\`, \`p = "a*"\`
-  // - **Output:** \`true\`
-  // - **Explanation:** \`'*'\` means zero or more of the preceding element, \`'a'\`. Therefore, by repeating \`'a'\` once, it becomes \`"aa"\`.
-  //
-  // #### Example 3:
-  // - **Input:** \`s = "ab"\`, \`p = ".*"\`
-  // - **Output:** \`true\`
-  // - **Explanation:** \`".*"\` means "zero or more (\`*\`) of any character (\`.\`)".
-  //
-  // #### Constraints:
-  // - \`1 <= s.length <= 20\`
-  // - \`1 <= p.length <= 20\`
-  // - \`s\` contains only lowercase English letters.
-  // - \`p\` contains only lowercase English letters, \`'.'\`, and \`'*'\`.
-  // - It is guaranteed for each appearance of the character \`'*'\`, there will be a previous valid character to match.
-  // `;
 
   const languageMap: Record<string, string> = {
     Python: "py",
@@ -186,107 +156,65 @@ export default function Problem() {
   return (
     <div className="d-flex-flex-column">
       <NavBar />
-      <div
-        className="d-flex gap-2"
-        style={{
-          position: "absolute",
-          top: "10px", // Adjust this value to position vertically
-          right: "50%",
-          transform: "translateX(+50%)",
-          zIndex: 10,
-        }}
-      >
-        <Button onClick={() => handleSubmit()}>Submit</Button>
-      </div>
 
-      <div className="bg-light">
-        <div className="d-flex container">
+      <div className="bg-light p-3">
+        <div className="container">
           <div
-            className="container"
-            style={{
-              marginRight: "-15px",
-            }}
+            className="d-flex justify-content-between gap-2"
+            style={{ minHeight: "83vh" }}
           >
-            <div className="border rounded bg-white mt-2">
-              <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <Link
-                  to={`/problems/${id}/description`}
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                  }}
+            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+              <div className="d-flex gap-2 mb-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate(`/problems/${id}/description`)}
                 >
                   Description
-                </Link>
-                <span className="text-body-tertiary ">|</span>
-                <Link
-                  to={`/problems/${id}/submissions`}
-                  style={{
-                    color: "black",
-                    textDecoration: "none",
-                  }}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate(`/problems/${id}/submissions`)}
                 >
-                  Submissions
-                </Link>
+                  Submission
+                </Button>
               </div>
+              <h3 className="mb-3">{problem.title}</h3>
+              <span
+                className={`badge bg-grey me-2 ${
+                  problem.difficulty === "Bronze"
+                    ? "text-warning-emphasis"
+                    : problem.difficulty === "Platinum"
+                      ? "text-primary"
+                      : "text-danger"
+                }`}
+              >
+                {problem.difficulty}
+              </span>
 
-              {page === "description" ? (
-                <div
-                  className="container p-3"
+              <OverlayTrigger
+                trigger="hover"
+                placement="right"
+                overlay={popover}
+              >
+                <span
+                  className="badge text-dark bg-grey"
                   style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
+                    cursor: "pointer",
                   }}
                 >
-                  <h3 className="mb-3">{problem.title}</h3>
-                  <span
-                    className={`badge bg-grey me-2 ${
-                      problem.difficulty === "Easy"
-                        ? "text-success"
-                        : problem.difficulty === "Medium"
-                          ? "text-warning"
-                          : "text-danger"
-                    }`}
-                  >
-                    {problem.difficulty}
-                  </span>
+                  Topics
+                </span>
+              </OverlayTrigger>
 
-                  <OverlayTrigger
-                    trigger="hover"
-                    placement="right"
-                    overlay={popover}
-                  >
-                    <span
-                      className="badge text-dark bg-grey"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      Topics
-                    </span>
-                  </OverlayTrigger>
-
-                  <ReactMarkdown className="mt-3">
-                    {problem.description}
-                  </ReactMarkdown>
-                </div>
-              ) : (
-                <div
-                  className="container p-3"
-                  style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
-                  }}
-                >
-                  <h3>Submission</h3>
-                </div>
-              )}
+              <ReactMarkdown className="mt-3">
+                {problem.description}
+              </ReactMarkdown>
             </div>
-          </div>
-          <div className="container">
-            <div className="border rounded bg-white mt-2">
-              <div className="container border-bottom p-2 ps-3 d-flex gap-2">
-                <DropdownButton variant="light" title={language}>
+            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+              <div className="mb-3 d-flex justify-content-between">
+                <Button onClick={() => handleSubmit()}>Submit</Button>
+
+                <DropdownButton variant="secondary" title={language}>
                   <div className="d-flex flex-column">
                     {Language.map((lang, index) => (
                       <Dropdown.Item
@@ -298,7 +226,12 @@ export default function Problem() {
                         <Button variant="white">{lang}</Button>
                         <span className="ms-4">
                           {language === lang ? (
-                            <img src="/done.svg" width="30" height="24" />
+                            <img
+                              src="/done.svg"
+                              width="30"
+                              height="24"
+                              alt="done"
+                            />
                           ) : null}
                         </span>
                       </Dropdown.Item>
@@ -306,13 +239,7 @@ export default function Problem() {
                   </div>
                 </DropdownButton>
               </div>
-              <div
-                className="container p-3"
-                style={{
-                  height: "85vh", // Adjust this height as needed
-                  overflowY: "auto",
-                }}
-              >
+              <div>
                 <CodeMirror
                   value={code}
                   theme={vscodeLight}
@@ -325,6 +252,8 @@ export default function Problem() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
+    // </div>
   );
 }
