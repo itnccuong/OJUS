@@ -79,9 +79,9 @@ export default function Problem() {
   }
 
   const difficultyMapping: Record<number, string> = {
-    1: "Easy",
-    2: "Medium",
-    3: "Hard",
+    1: "Bronze",
+    2: "Platinum",
+    3: "Master",
   };
 
   const problem = {
@@ -181,10 +181,10 @@ export default function Problem() {
               <h3 className="mb-3">{problem.title}</h3>
               <span
                 className={`badge bg-grey me-2 ${
-                  problem.difficulty === "Easy"
-                    ? "text-success"
-                    : problem.difficulty === "Medium"
-                      ? "text-warning"
+                  problem.difficulty === "Bronze"
+                    ? "text-warning-emphasis"
+                    : problem.difficulty === "Platinum"
+                      ? "text-primary"
                       : "text-danger"
                 }`}
               >
