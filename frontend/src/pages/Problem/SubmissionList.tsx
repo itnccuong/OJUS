@@ -1,27 +1,27 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
-import { Button, OverlayTrigger, Popover, Table } from "react-bootstrap";
-import ReactMarkdown from "react-markdown";
-import React, { useEffect, useState } from "react";
+import { Button, Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import {
-  OneProblemResponseInterface,
   ResponseInterface,
+  SubmissionListResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+import { SubmissionInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
 
 export default function SubmissionList() {
-  const { id } = useParams();
+  const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
-  const [fetchProblem, setFetchProblem] =
-    useState<ProblemWithUserStatusInterface>();
+  const [fetchSubmissions, setFetchSubmissions] = useState<
+    SubmissionInterface[]
+  >([]);
 
   const navigate = useNavigate();
 
@@ -29,22 +29,16 @@ export default function SubmissionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res;
-        if (!token) {
-          res = await axiosInstance.get<
-            ResponseInterface<OneProblemResponseInterface>
-          >(`/api/problems/no-account/${id}`, {});
-        } else {
-          res = await axiosInstance.get<
-            ResponseInterface<OneProblemResponseInterface>
-          >(`/api/problems/with-account/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
+        const res = await axiosInstance.get<
+          ResponseInterface<SubmissionListResponseInterface>
+        >(`/api/problems/${problemId}/submissions`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         console.log(res.data);
-        setFetchProblem(res.data.data.problem);
+        setFetchSubmissions(res.data.data.submissions);
       } catch (error) {
         if (error instanceof AxiosError) {
           const errorMessage = error.response?.data?.message;
@@ -58,49 +52,47 @@ export default function SubmissionList() {
     fetchData();
   }, []);
 
-  if (loading || !fetchProblem) {
+  if (loading || !fetchSubmissions) {
     return <Loader />;
   }
 
-  type Submission = {
-    submissionId: number;
-    language: string;
-    verdict: string;
-    createdAt: string;
-  };
+  const submissions = fetchSubmissions.map((fetchSubmission) => {
+    const languageMap: Record<string, string> = {
+      py: "Python",
+      c: "C",
+      cpp: "C++",
+      java: "Java",
+      js: "JavaScript",
+    };
 
-  const submissions: Submission[] = [
-    {
-      submissionId: 1,
-      language: "Python",
-      verdict: "Accepted",
-      createdAt: "2024-12-12T10:15:30Z",
-    },
-    {
-      submissionId: 2,
-      language: "C++",
-      verdict: "Wrong Answer on test 2",
-      createdAt: "2024-12-12T10:20:15Z",
-    },
-    {
-      submissionId: 3,
-      language: "Java",
-      verdict: "Time Limit Exceeded on test 4",
-      createdAt: "2024-12-12T10:25:45Z",
-    },
-    {
-      submissionId: 4,
-      language: "Python",
-      verdict: "Runtime Error on test 3",
-      createdAt: "2024-12-12T10:30:05Z",
-    },
-    {
-      submissionId: 5,
-      language: "JavaScript",
-      verdict: "Accepted",
-      createdAt: "2024-12-12T10:35:50Z",
-    },
-  ];
+    const verdictMap: Record<string, string> = {
+      OK: "Accepted",
+      WRONG_ANSWER: "Wrong Answer",
+      TIME_LIMIT_EXCEEDED: "Time Limit Exceeded",
+      RUNTIME_ERROR: "Runtime Error",
+      COMPILE_ERROR: "Compile Error",
+    };
+
+    const date = new Date(fetchSubmission.createdAt);
+
+    const readableTime = date.toLocaleString("en-US", {
+      weekday: "long", // e.g., "Friday"
+      year: "numeric", // e.g., "2024"
+      month: "long", // e.g., "December"
+      day: "numeric", // e.g., "6"
+      hour: "numeric", // e.g., "8 AM"
+      minute: "numeric", // e.g., "57"
+      second: "numeric", // e.g., "20"
+      hour12: true, // 12-hour clock (AM/PM)
+    });
+
+    return {
+      ...fetchSubmission,
+      language: languageMap[fetchSubmission.language],
+      verdict: verdictMap[fetchSubmission.verdict],
+      createdAt: readableTime,
+    };
+  });
 
   return (
     <div className="d-flex-flex-column">
@@ -112,19 +104,19 @@ export default function SubmissionList() {
             className="d-flex justify-content-between gap-2"
             style={{ minHeight: "83vh" }}
           >
-            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+            <div className="container p-4 border rounded-4 round shadow-sm bg-white">
               <div className="d-flex gap-2 mb-3">
                 <Button
                   variant="secondary"
-                  onClick={() => navigate(`/problems/${id}/description`)}
+                  onClick={() => navigate(`/problems/${problemId}/description`)}
                 >
                   Description
                 </Button>
                 <Button
                   variant="secondary"
-                  onClick={() => navigate(`/problems/${id}/submissions`)}
+                  onClick={() => navigate(`/problems/${problemId}/submissions`)}
                 >
-                  Submission
+                  Submissions
                 </Button>
               </div>
               <Table striped bordered hover className="mt-3">
@@ -143,7 +135,7 @@ export default function SubmissionList() {
                       Language
                     </th>
                     {/* </div> */}
-                    <th className="text-center" style={{ width: "35%" }}>
+                    <th className="text-center" style={{ width: "30%" }}>
                       Verdict
                     </th>
                     <th className="text-center">Submit time</th>
@@ -177,7 +169,20 @@ export default function SubmissionList() {
 
                       {/*Language*/}
                       <td className="text-center">{submission.language}</td>
-                      <td className="text-center">{submission.verdict}</td>
+                      <td className="text-center">
+                        <span
+                          className={
+                            submission.verdict === "Accepted"
+                              ? "badge text-success"
+                              : "badge text-danger"
+                          }
+                          style={{
+                            fontSize: "14px",
+                          }}
+                        >
+                          {submission.verdict}
+                        </span>
+                      </td>
 
                       <td className="text-center">{submission.createdAt}</td>
                     </tr>

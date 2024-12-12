@@ -445,6 +445,37 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GetSubmissionsInterface": {
+				"properties": {
+					"submissions": {
+						"items": {
+							"$ref": "#/components/schemas/Submission"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"submissions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetSubmissionsInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetSubmissionsInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Problem": {
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
 				"description": "Model Problem"
@@ -873,6 +904,38 @@
 					}
 				},
 				"description": "Fetch a single problem with user account data (status included).",
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/problems/{problem_id}/submissions": {
+			"get": {
+				"operationId": "GetSubmissionsFromProblem",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from problem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetSubmissionsInterface_"
+								}
+							}
+						}
+					}
+				},
 				"tags": [
 					"Problems"
 				],

@@ -96,3 +96,7 @@ export interface ContributionResponseInterface {
 export interface ContributionListResponseInterface {
   contributions: Problem[];
 }
+
+export interface GetSubmissionsInterface {
+  submissions: Submission[];
+}

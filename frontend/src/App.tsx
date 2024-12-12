@@ -29,9 +29,12 @@ export default function App() {
           <Route path="/accounts/register" element={<Register />} />
           <Route path="/u/:username" element={<Profile />} />
           <Route path="/problems" element={<ProblemList />} />
-          <Route path="/problems/:id/description" element={<Problem />} />
           <Route
-            path="/problems/:id/submissions"
+            path="/problems/:problemId/description"
+            element={<Problem />}
+          />
+          <Route
+            path="/problems/:problemId/submissions"
             element={<SubmissionList />}
           />
 

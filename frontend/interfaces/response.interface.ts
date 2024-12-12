@@ -42,3 +42,7 @@ export interface OneProblemResponseInterface {
 export interface ProblemListResponseInterface {
   problems: ProblemWithUserStatusInterface[];
 }
+
+export interface SubmissionListResponseInterface {
+  submissions: SubmissionInterface[];
+}

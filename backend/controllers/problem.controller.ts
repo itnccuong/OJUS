@@ -23,8 +23,10 @@ import {
   SuccessResponseInterface,
   GetAllProblemInterface,
   GetOneProblemInterface,
+  GetSubmissionsInterface,
 } from "../interfaces/api-interface";
 import {
+  findSubmissionsProblem,
   getUserStatus,
   queryProblems,
   queryProblemStatus,
@@ -226,6 +228,21 @@ export class SubmissionController extends Controller {
     return {
       message: "Problem fetched successfully!",
       data: { problem: resProblem },
+    };
+  }
+
+  @Get("/{problem_id}/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getSubmissionsFromProblem(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetSubmissionsInterface>> {
+    const userId = req.userId;
+    const submissions = await findSubmissionsProblem(problem_id, userId);
+    return {
+      message: "Problem fetched successfully!",
+      data: { submissions: submissions },
     };
   }
 }
