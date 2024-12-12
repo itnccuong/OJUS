@@ -103,6 +103,7 @@ export interface GetAllSubmissionsInterface {
 
 export interface GetOneSubmissionInterface {
   submission: Submission;
-  result: Result[];
+  results: Result[];
   testcases: TestcaseInterface;
+  problem: Problem;
 }

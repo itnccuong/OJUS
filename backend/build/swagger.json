@@ -121,12 +121,75 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DefaultSelection_Prisma._36_ProblemPayload_": {
+				"properties": {
+					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"authorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"memoryLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"timeLimit": {
+						"type": "number",
+						"format": "double"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"fileId",
+					"authorId",
+					"memoryLimit",
+					"timeLimit",
+					"tags",
+					"difficulty",
+					"status",
+					"description",
+					"title",
+					"createdAt",
+					"problemId"
+				],
+				"type": "object"
+			},
+			"Problem": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
+				"description": "Model Problem"
+			},
 			"GetOneSubmissionInterface": {
 				"properties": {
 					"submission": {
 						"$ref": "#/components/schemas/Submission"
 					},
-					"result": {
+					"results": {
 						"items": {
 							"$ref": "#/components/schemas/Result"
 						},
@@ -134,12 +197,16 @@
 					},
 					"testcases": {
 						"$ref": "#/components/schemas/TestcaseInterface"
+					},
+					"problem": {
+						"$ref": "#/components/schemas/Problem"
 					}
 				},
 				"required": [
 					"submission",
-					"result",
-					"testcases"
+					"results",
+					"testcases",
+					"problem"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -302,65 +369,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DefaultSelection_Prisma._36_ProblemPayload_": {
-				"properties": {
-					"fileId": {
-						"type": "number",
-						"format": "double"
-					},
-					"authorId": {
-						"type": "number",
-						"format": "double"
-					},
-					"memoryLimit": {
-						"type": "number",
-						"format": "double"
-					},
-					"timeLimit": {
-						"type": "number",
-						"format": "double"
-					},
-					"tags": {
-						"type": "string"
-					},
-					"difficulty": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"description": {
-						"type": "string"
-					},
-					"title": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"problemId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"fileId",
-					"authorId",
-					"memoryLimit",
-					"timeLimit",
-					"tags",
-					"difficulty",
-					"status",
-					"description",
-					"title",
-					"createdAt",
-					"problemId"
-				],
-				"type": "object"
-			},
 			"ProblemWithUserStatusInterface": {
 				"properties": {
 					"fileId": {
@@ -514,10 +522,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"Problem": {
-				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
-				"description": "Model Problem"
 			},
 			"ContributionResponseInterface": {
 				"properties": {

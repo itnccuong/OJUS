@@ -18,6 +18,7 @@ import ContributionList from "./pages/Contribution/ContributionList.tsx";
 import Contribution from "./pages/Contribution/Contribution.tsx";
 import Problem from "./pages/Problem/Problem.tsx";
 import SubmissionList from "./pages/Problem/SubmissionList.tsx";
+import Submission from "./pages/Problem/Submission.tsx";
 
 export default function App() {
   return (
@@ -37,7 +38,7 @@ export default function App() {
             path="/problems/:problemId/submissions"
             element={<SubmissionList />}
           />
-
+          <Route path="/submissions/:submissionId" element={<Submission />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassword />} />
           <Route path="/showprofile" element={<ShowProfile />} />

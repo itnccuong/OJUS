@@ -48,8 +48,9 @@ export class SubmissionController extends Controller {
       message: "Get submission successfully!",
       data: {
         submission: submission,
-        result: results,
+        results: results,
         testcases: testcases,
+        problem: problem,
       },
     };
   }

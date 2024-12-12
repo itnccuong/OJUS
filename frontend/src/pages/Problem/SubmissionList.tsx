@@ -145,7 +145,9 @@ export default function SubmissionList() {
                   {submissions.map((submission) => (
                     <tr
                       key={submission.submissionId}
-                      onClick={() => console.log("okok")}
+                      onClick={() =>
+                        navigate(`/submissions/${submission.submissionId}`)
+                      }
                       style={{ cursor: "pointer" }}
                     >
                       {/*Submission id*/}

@@ -1,0 +1,201 @@
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+import NavBar from "../../components/NavBar.tsx";
+import {
+  Button,
+  Dropdown,
+  DropdownButton,
+  OverlayTrigger,
+} from "react-bootstrap";
+import ReactMarkdown from "react-markdown";
+import React, { useEffect, useState } from "react";
+
+import CodeMirror from "@uiw/react-codemirror";
+// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { vscodeLight } from "@uiw/codemirror-theme-vscode";
+// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
+import { javascript } from "@codemirror/lang-javascript";
+import { toast } from "react-toastify";
+import {
+  GetSubmissionResponseInterface,
+  ResponseInterface,
+} from "../../../interfaces/response.interface.ts";
+import axiosInstance from "../../../utils/getURL.ts";
+import {
+  ProblemInterface,
+  ResultInterface,
+  SubmissionInterface,
+  TestcaseInterface,
+} from "../../../interfaces/model.interface.ts";
+import Loader from "../../components/Loader.tsx";
+import { AxiosError } from "axios";
+import Footer from "../../components/Footer.tsx";
+
+export default function Submission() {
+  const { submissionId } = useParams();
+  const [fetchSubmission, setFetchSubmission] = useState<SubmissionInterface>();
+  const [results, setResults] = useState<ResultInterface[]>([]);
+  const [testcases, setTestcases] = useState<TestcaseInterface>();
+  const [problem, setProblem] = useState<ProblemInterface>();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axiosInstance.get<
+          ResponseInterface<GetSubmissionResponseInterface>
+        >(`/api/submissions/${submissionId}`, {});
+
+        console.log(res.data);
+        setFetchSubmission(res.data.data.submission);
+        setResults(res.data.data.results);
+        setTestcases(res.data.data.testcases);
+        setProblem(res.data.data.problem);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading || !fetchSubmission || !problem || !testcases) {
+    return <Loader />;
+  }
+
+  const languageMap: Record<string, string> = {
+    py: "Python",
+    c: "C",
+    cpp: "C++",
+    java: "Java",
+    js: "JavaScript",
+  };
+
+  const verdictMap: Record<string, string> = {
+    OK: "Accepted",
+    WRONG_ANSWER: "Wrong Answer",
+    TIME_LIMIT_EXCEEDED: "Time Limit Exceeded",
+    RUNTIME_ERROR: "Runtime Error",
+    COMPILE_ERROR: "Compile Error",
+  };
+
+  const date = new Date(fetchSubmission.createdAt);
+
+  const readableTime = date.toLocaleString("en-US", {
+    // weekday: "long", // e.g., "Friday"
+    year: "numeric", // e.g., "2024"
+    month: "long", // e.g., "December"
+    day: "numeric", // e.g., "6"
+    // hour: "numeric", // e.g., "8 AM"
+    // minute: "numeric", // e.g., "57"
+    // second: "numeric", // e.g., "20"
+    // hour12: true, // 12-hour clock (AM/PM)
+  });
+
+  const submission = {
+    ...fetchSubmission,
+    language: languageMap[fetchSubmission.language],
+    verdict: verdictMap[fetchSubmission.verdict],
+    createdAt: readableTime,
+  };
+
+  const totalTime = results.reduce((sum, result) => sum + result.time, 0);
+  const totalMemory = results.reduce((sum, result) => sum + result.memory, 0);
+
+  return (
+    console.log(results),
+    (
+      <div className="d-flex-flex-column">
+        <NavBar />
+
+        <div className="p-3">
+          <div
+            className="container"
+            style={{
+              minHeight: "83vh",
+            }}
+          >
+            <h4 className="text-primary">
+              <Link
+                to={`/problems/${submission.problemId}/description`}
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                {problem.title}
+              </Link>
+            </h4>
+            <h3 className="mt-4">Submission Detail</h3>
+            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <div className="mb-2">
+                    <span className="fw-bold">
+                      {submission.verdict === "Accepted"
+                        ? `${testcases.input.length}`
+                        : submission.verdict === "Compile Error"
+                          ? "0"
+                          : `${results.length - 1}`}
+                      /{testcases.input.length}
+                    </span>
+                    <span> test cases passed</span>
+                  </div>
+                  <div>
+                    <span>Runtime: </span>
+                    <span className="fw-bold">{totalTime} ms</span>
+                  </div>
+                  <div>
+                    <span>Memory: </span>
+                    <span className="fw-bold">{totalMemory} MB</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-2">
+                    <span>Verdict:</span>
+                    <span
+                      className={
+                        submission.verdict === "Accepted"
+                          ? "badge text-success"
+                          : "badge text-danger"
+                      }
+                      style={{
+                        fontSize: "18px",
+                      }}
+                    >
+                      {submission.verdict}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Submitted: </span>
+                    <span className="fw-bold">{submission.createdAt}</span>
+                  </div>
+                  <div>
+                    <span>Language: </span>
+                    <span className="fw-bold">{submission.language}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 className="mt-3">Code</h4>
+            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
+              <CodeMirror
+                value={submission.code}
+                theme={vscodeLight}
+                extensions={[javascript()]}
+                style={{ fontSize: "16px" }}
+                editable={false}
+              />
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  );
+}

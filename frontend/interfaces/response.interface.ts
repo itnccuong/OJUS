@@ -46,3 +46,10 @@ export interface ProblemListResponseInterface {
 export interface SubmissionListResponseInterface {
   submissions: SubmissionInterface[];
 }
+
+export interface GetSubmissionResponseInterface {
+  submission: SubmissionInterface;
+  results: ResultInterface[];
+  testcases: TestcaseInterface;
+  problem: ProblemInterface;
+}
