@@ -83,5 +83,6 @@ model Result {
   verdict       String
   time          Float
   memory        Int
+  stderr        String     @db.LongText
   createdAt     DateTime   @default(now())
 }

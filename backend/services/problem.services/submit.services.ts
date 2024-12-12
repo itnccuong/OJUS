@@ -168,6 +168,7 @@ export const createResult = async (
   verdict: string,
   time: number,
   memory: number,
+  stderr: string,
 ) => {
   await prisma.result.create({
     data: {
@@ -177,6 +178,7 @@ export const createResult = async (
       verdict: verdict,
       time: time,
       memory: memory,
+      stderr: stderr,
     },
   });
 };

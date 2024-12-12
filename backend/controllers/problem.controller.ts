@@ -123,6 +123,7 @@ export class ProblemController extends Controller {
         result.verdict,
         0,
         0,
+        result.stderr,
       );
 
       if (result.verdict !== "OK") {

@@ -1,14 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  OverlayTrigger,
-} from "react-bootstrap";
-import ReactMarkdown from "react-markdown";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import CodeMirror from "@uiw/react-codemirror";
 // import { vscodeDark } from "@uiw/codemirror-theme-vscode";
@@ -92,10 +85,6 @@ export default function Submission() {
     year: "numeric", // e.g., "2024"
     month: "long", // e.g., "December"
     day: "numeric", // e.g., "6"
-    // hour: "numeric", // e.g., "8 AM"
-    // minute: "numeric", // e.g., "57"
-    // second: "numeric", // e.g., "20"
-    // hour12: true, // 12-hour clock (AM/PM)
   });
 
   const submission = {
@@ -181,6 +170,9 @@ export default function Submission() {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
+              ok
             </div>
             <h4 className="mt-3">Code</h4>
             <div className="container border border-dark-subtle rounded-4 p-3 mt-3">

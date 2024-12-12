@@ -52,6 +52,9 @@
 			},
 			"DefaultSelection_Prisma._36_ResultPayload_": {
 				"properties": {
+					"stderr": {
+						"type": "string"
+					},
 					"memory": {
 						"type": "number",
 						"format": "double"
@@ -84,6 +87,7 @@
 					}
 				},
 				"required": [
+					"stderr",
 					"memory",
 					"time",
 					"testcaseIndex",

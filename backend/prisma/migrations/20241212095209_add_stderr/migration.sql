@@ -1,0 +1,2 @@
+ALTER TABLE `Result` ADD COLUMN `stderr` LONGTEXT NOT NULL;
+
