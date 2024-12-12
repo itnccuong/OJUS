@@ -2,7 +2,7 @@ import NavBar from "../../components/NavBar.tsx";
 import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ProblemListResponseInterface,
   ResponseInterface,
@@ -20,6 +20,7 @@ interface Tag {
 }
 
 export default function ProblemList() {
+  const navigate = useNavigate();
   const token = getToken();
   const initialTags: Tag[] = [
     { label: "Array", selected: false },
@@ -312,7 +313,7 @@ export default function ProblemList() {
                 </th>
                 {/* </div> */}
                 <th style={{ width: "40%" }}>Tags</th>
-                <th>Difficulty</th>
+                <th className="text-center">Difficulty</th>
               </tr>
             </thead>
             <tbody>
@@ -324,12 +325,18 @@ export default function ProblemList() {
                 </tr>
               ) : (
                 filteredProblems.map((problem) => (
-                  <tr key={problem.problemId}>
+                  <tr
+                    key={problem.problemId}
+                    onClick={() =>
+                      navigate(`/problems/${problem.problemId}/description`)
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
                     <td className="text-center">
                       {problem.userStatus === "Solved" ? (
-                        <img src="/accept.png" width="24" height="24" />
+                        <img src="/accept.png" width="20" height="20" />
                       ) : (
-                        <img src="/reject.png" width="24" height="24" />
+                        <img src="/reject.png" width="20" height="20" />
                       )}
                     </td>
                     <td>
@@ -361,9 +368,9 @@ export default function ProblemList() {
                       ))}
                     </td>
 
-                    <td>
+                    <td className="text-center">
                       <span
-                        className={`badge ${
+                        className={`badge fs-6 ${
                           problem.difficulty === "Bronze"
                             ? "text-warning-emphasis"
                             : problem.difficulty === "Platinum"

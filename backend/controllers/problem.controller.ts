@@ -23,8 +23,10 @@ import {
   SuccessResponseInterface,
   GetAllProblemInterface,
   GetOneProblemInterface,
+  GetAllSubmissionsInterface,
 } from "../interfaces/api-interface";
 import {
+  findSubmissionsProblem,
   getUserStatus,
   queryProblems,
   queryProblemStatus,
@@ -49,7 +51,7 @@ import prisma from "../prisma/client";
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
-export class SubmissionController extends Controller {
+export class ProblemController extends Controller {
   @Post("{problem_id}/")
   @Middlewares(verifyToken)
   @SuccessResponse(200, "All testcases passed")
@@ -87,6 +89,7 @@ export class SubmissionController extends Controller {
       submission = await updateSubmissionVerdict(
         submission.submissionId,
         "COMPILE_ERROR",
+        compileResult.stderr,
       );
 
       return CompileErrorResponse(400, {
@@ -127,6 +130,7 @@ export class SubmissionController extends Controller {
         submission = await updateSubmissionVerdict(
           submission.submissionId,
           result.verdict,
+          result.stderr,
         );
 
         //Query all result
@@ -150,7 +154,11 @@ export class SubmissionController extends Controller {
     }
 
     // Step 6: Update final verdict
-    submission = await updateSubmissionVerdict(submission.submissionId, "OK");
+    submission = await updateSubmissionVerdict(
+      submission.submissionId,
+      "OK",
+      "",
+    );
     await updateUserProblemStatus(userId, problem_id);
 
     const results = await prisma.result.findMany({
@@ -226,6 +234,21 @@ export class SubmissionController extends Controller {
     return {
       message: "Problem fetched successfully!",
       data: { problem: resProblem },
+    };
+  }
+
+  @Get("/{problem_id}/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getSubmissionsFromProblem(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsInterface>> {
+    const userId = req.userId;
+    const submissions = await findSubmissionsProblem(problem_id, userId);
+    return {
+      message: "Problem fetched successfully!",
+      data: { submissions: submissions },
     };
   }
 }

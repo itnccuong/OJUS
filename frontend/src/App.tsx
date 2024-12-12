@@ -17,7 +17,8 @@ import Contribute from "./pages/Contribution/Contribute.tsx";
 import ContributionList from "./pages/Contribution/ContributionList.tsx";
 import Contribution from "./pages/Contribution/Contribution.tsx";
 import Problem from "./pages/Problem/Problem.tsx";
-import Submission from "./pages/Profile/Submission.tsx";
+import SubmissionList from "./pages/Problem/SubmissionList.tsx";
+import Submission from "./pages/Problem/Submission.tsx";
 
 export default function App() {
   return (
@@ -29,7 +30,15 @@ export default function App() {
           <Route path="/accounts/register" element={<Register />} />
           <Route path="/u/:username" element={<Profile />} />
           <Route path="/problems" element={<ProblemList />} />
-          <Route path="/problems/:id/:page" element={<Problem />} />
+          <Route
+            path="/problems/:problemId/description"
+            element={<Problem />}
+          />
+          <Route
+            path="/problems/:problemId/submissions"
+            element={<SubmissionList />}
+          />
+          <Route path="/submissions/:submissionId" element={<Submission />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassword />} />
           <Route path="/showprofile" element={<ShowProfile />} />
@@ -45,7 +54,6 @@ export default function App() {
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<ContributionList />} />
           <Route path="/contributions/:id/:page" element={<Contribution />} />
-          <Route path="/submissions" element={<Submission />} />
         </Routes>
       </Router>
       <ToastContainer

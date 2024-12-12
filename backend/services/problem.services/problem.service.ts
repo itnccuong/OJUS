@@ -50,3 +50,16 @@ export const getUserStatus = async (userId: number, problemId: number) => {
     userStatus: !!userProblemStatus,
   };
 };
+
+export const findSubmissionsProblem = async (
+  problem_id: number,
+  userId: number,
+) => {
+  const submissions = await prisma.submission.findMany({
+    where: {
+      problemId: problem_id,
+      userId: userId,
+    },
+  });
+  return submissions;
+};

@@ -32,6 +32,7 @@ export interface SubmissionInterface {
   userId: number;
   problemId: number;
   submissionId: number;
+  stderr: string;
 }
 
 export interface ResultInterface {

@@ -71,6 +71,7 @@ model Submission {
   language     String
   verdict      String
   createdAt    DateTime @default(now())
+  stderr       String   @db.LongText
   Result       Result[]
 }
 

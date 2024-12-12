@@ -29,7 +29,7 @@ import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
 
 export default function Problem() {
-  const { id } = useParams();
+  const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
@@ -49,11 +49,11 @@ export default function Problem() {
         if (!token) {
           res = await axiosInstance.get<
             ResponseInterface<OneProblemResponseInterface>
-          >(`/api/problems/no-account/${id}`, {});
+          >(`/api/problems/no-account/${problemId}`, {});
         } else {
           res = await axiosInstance.get<
             ResponseInterface<OneProblemResponseInterface>
-          >(`/api/problems/with-account/${id}`, {
+          >(`/api/problems/with-account/${problemId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -122,7 +122,7 @@ export default function Problem() {
     try {
       const res = await toast.promise(
         axiosInstance.post(
-          `/api/problems/${id}`,
+          `/api/problems/${problemId}`,
           {
             code: code,
             language: languageMap[language],
@@ -163,19 +163,19 @@ export default function Problem() {
             className="d-flex justify-content-between gap-2"
             style={{ minHeight: "83vh" }}
           >
-            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+            <div className="container p-4 border rounded-4 round shadow-sm bg-white">
               <div className="d-flex gap-2 mb-3">
                 <Button
                   variant="secondary"
-                  onClick={() => navigate(`/problems/${id}/description`)}
+                  onClick={() => navigate(`/problems/${problemId}/description`)}
                 >
                   Description
                 </Button>
                 <Button
                   variant="secondary"
-                  onClick={() => navigate(`/problems/${id}/submissions`)}
+                  onClick={() => navigate(`/problems/${problemId}/submissions`)}
                 >
-                  Submission
+                  Submissions
                 </Button>
               </div>
               <h3 className="mb-3">{problem.title}</h3>
@@ -210,7 +210,7 @@ export default function Problem() {
                 {problem.description}
               </ReactMarkdown>
             </div>
-            <div className="container p-3 border rounded-4 round shadow-sm bg-white">
+            <div className="container p-4 border rounded-4 round shadow-sm bg-white">
               <div className="mb-3 d-flex justify-content-between">
                 <Button onClick={() => handleSubmit()}>Submit</Button>
 
