@@ -71,6 +71,7 @@ model Submission {
   language     String
   verdict      String
   createdAt    DateTime @default(now())
+  stderr       String   @db.LongText
   Result       Result[]
 }
 
@@ -83,6 +84,5 @@ model Result {
   verdict       String
   time          Float
   memory        Int
-  stderr        String     @db.LongText
   createdAt     DateTime   @default(now())
 }

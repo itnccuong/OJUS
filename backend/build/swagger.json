@@ -9,6 +9,9 @@
 		"schemas": {
 			"DefaultSelection_Prisma._36_SubmissionPayload_": {
 				"properties": {
+					"stderr": {
+						"type": "string"
+					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -36,6 +39,7 @@
 					}
 				},
 				"required": [
+					"stderr",
 					"createdAt",
 					"verdict",
 					"language",
@@ -52,9 +56,6 @@
 			},
 			"DefaultSelection_Prisma._36_ResultPayload_": {
 				"properties": {
-					"stderr": {
-						"type": "string"
-					},
 					"memory": {
 						"type": "number",
 						"format": "double"
@@ -87,7 +88,6 @@
 					}
 				},
 				"required": [
-					"stderr",
 					"memory",
 					"time",
 					"testcaseIndex",

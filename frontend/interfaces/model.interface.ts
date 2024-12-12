@@ -32,6 +32,7 @@ export interface SubmissionInterface {
   userId: number;
   problemId: number;
   submissionId: number;
+  stderr: string;
 }
 
 export interface ResultInterface {
@@ -43,7 +44,6 @@ export interface ResultInterface {
   createdAt: string;
   verdict: string;
   submissionId: number;
-  stderr: string;
 }
 
 export interface TestcaseInterface {

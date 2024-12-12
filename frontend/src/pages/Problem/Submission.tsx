@@ -121,7 +121,7 @@ export default function Submission() {
               </Link>
             </h4>
             <h3 className="mt-4">Submission Detail</h3>
-            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
+            <div className="container border border-dark-subtle shadow-sm rounded-4 p-3 mt-3">
               <div className="d-flex justify-content-between">
                 <div>
                   <div className="mb-2">
@@ -171,11 +171,40 @@ export default function Submission() {
                 </div>
               </div>
             </div>
-            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
-              ok
-            </div>
+            {/*Log err*/}
+            {(submission.stderr || submission.verdict === "Wrong Answer") && (
+              <div className="container border border-danger shadow-sm rounded-4 p-3 mt-3">
+                {submission.stderr ? (
+                  <div className="text-danger fw-medium">
+                    {submission.stderr}
+                  </div>
+                ) : submission.verdict === "Wrong Answer" ? (
+                  <>
+                    <div className="border-bottom border-danger pb-3">
+                      <span className="text-danger fw-medium">Input: </span>
+                      <span className="fw-bold">
+                        {testcases.input[results.length - 1]}
+                      </span>
+                    </div>
+                    <div className="border-bottom border-danger pb-3 pt-3">
+                      <span className="text-danger fw-medium">Expected: </span>
+                      <span className="fw-bold text-success">
+                        {testcases.output[results.length - 1]}
+                      </span>
+                    </div>
+                    <div className="pt-3">
+                      <span className="text-danger fw-medium">Output: </span>
+                      <span className="fw-bold text-danger">
+                        {results[results.length - 1].output}
+                      </span>
+                    </div>
+                  </>
+                ) : null}
+              </div>
+            )}
+
             <h4 className="mt-3">Code</h4>
-            <div className="container border border-dark-subtle rounded-4 p-3 mt-3">
+            <div className="container border border-dark-subtle shadow-sm rounded-4 p-3 mt-3">
               <CodeMirror
                 value={submission.code}
                 theme={vscodeLight}

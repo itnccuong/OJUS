@@ -89,6 +89,7 @@ export class ProblemController extends Controller {
       submission = await updateSubmissionVerdict(
         submission.submissionId,
         "COMPILE_ERROR",
+        compileResult.stderr,
       );
 
       return CompileErrorResponse(400, {
@@ -123,13 +124,13 @@ export class ProblemController extends Controller {
         result.verdict,
         0,
         0,
-        result.stderr,
       );
 
       if (result.verdict !== "OK") {
         submission = await updateSubmissionVerdict(
           submission.submissionId,
           result.verdict,
+          result.stderr,
         );
 
         //Query all result
@@ -153,7 +154,11 @@ export class ProblemController extends Controller {
     }
 
     // Step 6: Update final verdict
-    submission = await updateSubmissionVerdict(submission.submissionId, "OK");
+    submission = await updateSubmissionVerdict(
+      submission.submissionId,
+      "OK",
+      "",
+    );
     await updateUserProblemStatus(userId, problem_id);
 
     const results = await prisma.result.findMany({

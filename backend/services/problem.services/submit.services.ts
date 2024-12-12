@@ -26,6 +26,7 @@ export const createSubmission = async (
       code: code,
       language: language,
       verdict: "",
+      stderr: "",
     },
   });
   return submission;
@@ -149,6 +150,7 @@ export const saveCodeToFile = (
 export const updateSubmissionVerdict = async (
   submissionId: number,
   verdict: string,
+  stderr: string,
 ) => {
   const submission = await prisma.submission.update({
     where: {
@@ -156,6 +158,7 @@ export const updateSubmissionVerdict = async (
     },
     data: {
       verdict: verdict,
+      stderr: stderr,
     },
   });
   return submission;
@@ -168,7 +171,6 @@ export const createResult = async (
   verdict: string,
   time: number,
   memory: number,
-  stderr: string,
 ) => {
   await prisma.result.create({
     data: {
@@ -178,7 +180,6 @@ export const createResult = async (
       verdict: verdict,
       time: time,
       memory: memory,
-      stderr: stderr,
     },
   });
 };
