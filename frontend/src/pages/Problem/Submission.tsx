@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import { useEffect, useState } from "react";
@@ -30,7 +30,6 @@ export default function Submission() {
   const [results, setResults] = useState<ResultInterface[]>([]);
   const [testcases, setTestcases] = useState<TestcaseInterface>();
   const [problem, setProblem] = useState<ProblemInterface>();
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
