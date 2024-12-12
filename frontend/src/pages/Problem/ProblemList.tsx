@@ -334,9 +334,9 @@ export default function ProblemList() {
                   >
                     <td className="text-center">
                       {problem.userStatus === "Solved" ? (
-                        <img src="/accept.png" width="24" height="24" />
+                        <img src="/accept.png" width="20" height="20" />
                       ) : (
-                        <img src="/reject.png" width="24" height="24" />
+                        <img src="/reject.png" width="20" height="20" />
                       )}
                     </td>
                     <td>
@@ -370,7 +370,7 @@ export default function ProblemList() {
 
                     <td className="text-center">
                       <span
-                        className={`badge ${
+                        className={`badge fs-6 ${
                           problem.difficulty === "Bronze"
                             ? "text-warning-emphasis"
                             : problem.difficulty === "Platinum"
