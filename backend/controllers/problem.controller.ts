@@ -23,7 +23,7 @@ import {
   SuccessResponseInterface,
   GetAllProblemInterface,
   GetOneProblemInterface,
-  GetSubmissionsInterface,
+  GetAllSubmissionsInterface,
 } from "../interfaces/api-interface";
 import {
   findSubmissionsProblem,
@@ -51,7 +51,7 @@ import prisma from "../prisma/client";
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
-export class SubmissionController extends Controller {
+export class ProblemController extends Controller {
   @Post("{problem_id}/")
   @Middlewares(verifyToken)
   @SuccessResponse(200, "All testcases passed")
@@ -237,7 +237,7 @@ export class SubmissionController extends Controller {
   public async getSubmissionsFromProblem(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetSubmissionsInterface>> {
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsInterface>> {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     return {

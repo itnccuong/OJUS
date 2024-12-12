@@ -97,6 +97,12 @@ export interface ContributionListResponseInterface {
   contributions: Problem[];
 }
 
-export interface GetSubmissionsInterface {
+export interface GetAllSubmissionsInterface {
   submissions: Submission[];
+}
+
+export interface GetOneSubmissionInterface {
+  submission: Submission;
+  result: Result[];
+  testcases: TestcaseInterface;
 }

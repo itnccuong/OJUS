@@ -4,7 +4,9 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { SubmissionController } from './../controllers/problem.controller';
+import { SubmissionController } from './../controllers/submission.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ProblemController } from './../controllers/problem.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContributionController } from './../controllers/contribute.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -43,6 +45,25 @@ const models: TsoaRoute.Models = {
         "properties": {
             "input": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "output": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOneSubmissionInterface": {
+        "dataType": "refObject",
+        "properties": {
+            "submission": {"ref":"Submission","required":true},
+            "result": {"dataType":"array","array":{"dataType":"refAlias","ref":"Result"},"required":true},
+            "testcases": {"ref":"TestcaseInterface","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface_GetOneSubmissionInterface_": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+            "data": {"ref":"GetOneSubmissionInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -174,7 +195,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GetSubmissionsInterface": {
+    "GetAllSubmissionsInterface": {
         "dataType": "refObject",
         "properties": {
             "submissions": {"dataType":"array","array":{"dataType":"refAlias","ref":"Submission"},"required":true},
@@ -182,11 +203,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface_GetSubmissionsInterface_": {
+    "SuccessResponseInterface_GetAllSubmissionsInterface_": {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
-            "data": {"ref":"GetSubmissionsInterface","required":true},
+            "data": {"ref":"GetAllSubmissionsInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -340,11 +361,41 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
     const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
-        app.post('/api/problems/:problem_id',
+        app.get('/api/submissions/:submission_id',
             ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.submit)),
+            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.login)),
 
-            async function SubmissionController_submit(request: ExRequest, response: ExResponse, next: any) {
+            async function SubmissionController_login(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    submission_id: {"in":"path","name":"submission_id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new SubmissionController();
+
+              await templateService.apiHandler({
+                methodName: 'login',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/problems/:problem_id',
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.submit)),
+
+            async function ProblemController_submit(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
                     body: {"in":"body","name":"body","required":true,"ref":"SubmitCodeConfig"},
@@ -359,7 +410,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'submit',
@@ -375,10 +426,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/problems/no-account',
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getAllProblemsNoAccount)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.getAllProblemsNoAccount)),
 
-            async function SubmissionController_getAllProblemsNoAccount(request: ExRequest, response: ExResponse, next: any) {
+            async function ProblemController_getAllProblemsNoAccount(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
             };
 
@@ -388,7 +439,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'getAllProblemsNoAccount',
@@ -404,10 +455,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/problems/with-account',
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getAllProblemsWithAccount)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.getAllProblemsWithAccount)),
 
-            async function SubmissionController_getAllProblemsWithAccount(request: ExRequest, response: ExResponse, next: any) {
+            async function ProblemController_getAllProblemsWithAccount(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
@@ -418,7 +469,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'getAllProblemsWithAccount',
@@ -434,10 +485,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/problems/no-account/:problem_id',
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getOneProblemNoAccount)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.getOneProblemNoAccount)),
 
-            async function SubmissionController_getOneProblemNoAccount(request: ExRequest, response: ExResponse, next: any) {
+            async function ProblemController_getOneProblemNoAccount(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
             };
@@ -448,7 +499,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'getOneProblemNoAccount',
@@ -464,10 +515,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/problems/with-account/:problem_id',
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getOneProblemWithAccount)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.getOneProblemWithAccount)),
 
-            async function SubmissionController_getOneProblemWithAccount(request: ExRequest, response: ExResponse, next: any) {
+            async function ProblemController_getOneProblemWithAccount(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
@@ -479,7 +530,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'getOneProblemWithAccount',
@@ -495,10 +546,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/problems/:problem_id/submissions',
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
-            ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getSubmissionsFromProblem)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController)),
+            ...(fetchMiddlewares<RequestHandler>(ProblemController.prototype.getSubmissionsFromProblem)),
 
-            async function SubmissionController_getSubmissionsFromProblem(request: ExRequest, response: ExResponse, next: any) {
+            async function ProblemController_getSubmissionsFromProblem(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
@@ -510,7 +561,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new SubmissionController();
+                const controller = new ProblemController();
 
               await templateService.apiHandler({
                 methodName: 'getSubmissionsFromProblem',

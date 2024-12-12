@@ -121,6 +121,45 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GetOneSubmissionInterface": {
+				"properties": {
+					"submission": {
+						"$ref": "#/components/schemas/Submission"
+					},
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/Result"
+						},
+						"type": "array"
+					},
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"submission",
+					"result",
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetOneSubmissionInterface_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetOneSubmissionInterface"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SubmitCodeResponseInterface": {
 				"properties": {
 					"submission": {
@@ -445,7 +484,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetSubmissionsInterface": {
+			"GetAllSubmissionsInterface": {
 				"properties": {
 					"submissions": {
 						"items": {
@@ -460,13 +499,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface_GetSubmissionsInterface_": {
+			"SuccessResponseInterface_GetAllSubmissionsInterface_": {
 				"properties": {
 					"message": {
 						"type": "string"
 					},
 					"data": {
-						"$ref": "#/components/schemas/GetSubmissionsInterface"
+						"$ref": "#/components/schemas/GetAllSubmissionsInterface"
 					}
 				},
 				"required": [
@@ -749,6 +788,38 @@
 		"contact": {}
 	},
 	"paths": {
+		"/api/submissions/{submission_id}": {
+			"get": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Get submission successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneSubmissionInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Submission"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "submission_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/api/problems/{problem_id}": {
 			"post": {
 				"operationId": "Submit",
@@ -930,7 +1001,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetSubmissionsInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsInterface_"
 								}
 							}
 						}
