@@ -247,7 +247,7 @@ export class ProblemController extends Controller {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     return {
-      message: "Problem fetched successfully!",
+      message: "Submissions fetched successfully!",
       data: { submissions: submissions },
     };
   }
