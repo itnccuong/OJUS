@@ -45,6 +45,7 @@ jobs:
 
     - name: Set up environment
       run: |
+        mkdir -p ./codeFiles
         touch ./.env
         touch ./.env.test
         echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./.env
@@ -59,7 +60,8 @@ jobs:
         echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> ./.env
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./.env.test
       working-directory: ./backend
-    - run: docker compose -f docker-compose.langs.yaml up -d
+    - name: Run containers
+      run: docker compose -f docker-compose.langs.yaml up -d
       working-directory: ./backend
     - run: npm run build --if-present
       working-directory: ./backend
