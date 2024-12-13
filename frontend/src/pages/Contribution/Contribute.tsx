@@ -18,7 +18,6 @@ export default function Contribute() {
   //Check if user is logged in
   const navigate = useNavigate();
   const token = getToken();
-  console.log(token);
   useEffect(() => {
     if (!token) {
       toast.error("You need to login to contribute");
