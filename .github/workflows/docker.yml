@@ -55,6 +55,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
+          cd OJUS/backend
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 
@@ -63,7 +64,8 @@ jobs:
           docker rm ojus-container
           
           # Run the new container
-          docker run -d --name ojus-container -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/codeFiles:/app/codeFiles --privileged nhathien/ojus-backend:latest
+          # docker run -d --name ojus-container -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/codeFiles:/app/codeFiles --privileged nhathien/ojus-backend:latest
+          docker compose -f docker-compose.ojus.yaml -f docker-compose.langs.yaml up -d
           
           # Remove dangling images (tagged as <none>)
           docker image prune -f
