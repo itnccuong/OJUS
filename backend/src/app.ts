@@ -19,6 +19,7 @@ app.use(
       "http://localhost:5173",
       "https://ojus-se.vercel.app",
       "https://clownfish-app-eisbc.ondigitalocean.app",
+      "https://ojus.online",
     ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,

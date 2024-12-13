@@ -6,7 +6,7 @@ on:
 
 
 jobs:
-  docker:
+  docker-deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -58,9 +58,12 @@ jobs:
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 
+          # Stop and remove the current container
           docker stop ojus-container
           docker rm ojus-container
           
+          # Run the new container
           docker run -d --name ojus-container -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/codeFiles:/app/codeFiles --privileged nhathien/ojus-backend:latest
+          
           # Remove dangling images (tagged as <none>)
           docker image prune -f
