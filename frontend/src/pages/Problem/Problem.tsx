@@ -33,7 +33,7 @@ export default function Problem() {
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
-  const [language, setLanguage] = useState("Python");
+  const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState("");
   const onChange = React.useCallback((val: string) => {
     setCode(val);
@@ -196,14 +196,7 @@ export default function Problem() {
                 placement="right"
                 overlay={popover}
               >
-                <span
-                  className="badge text-dark bg-grey"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Topics
-                </span>
+                <span className="badge text-dark bg-grey">Topics</span>
               </OverlayTrigger>
 
               <ReactMarkdown className="mt-3">
