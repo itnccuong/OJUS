@@ -58,15 +58,12 @@ jobs:
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 
-          # Run the latest container with a temporary name
-          docker run -d --name ojus-container-new -p 8080:8080 nhathien/ojus-backend:latest
-
           # Stop and remove the old container if it exists
           docker stop ojus-container || true
           docker rm ojus-container || true
 
-          # Rename the new container to replace the old one
-          docker rename ojus-container-new ojus-container
+          # Run the latest container with a temporary name
+          docker run -d -p 8080:8080 nhathien/ojus-backend:latest
 
           # Remove dangling images (tagged as <none>)
           docker image prune -f
