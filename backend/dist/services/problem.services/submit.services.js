@@ -37,7 +37,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUserProblemStatus = exports.createResult = exports.updateSubmissionVerdict = exports.saveCodeToFile = exports.downloadTestcase = exports.findFileById = exports.getContainerId = exports.findProblemById = exports.createSubmission = void 0;
 const error_1 = require("../../utils/error");
-const executor_utils_1 = require("../code-executor/executor-utils");
 const fs_1 = __importStar(require("fs"));
 const axios_1 = __importDefault(require("axios"));
 const adm_zip_1 = __importDefault(require("adm-zip"));
@@ -53,6 +52,7 @@ const createSubmission = (problem_id, userId, code, language) => __awaiter(void 
             code: code,
             language: language,
             verdict: "",
+            stderr: "",
         },
     });
     return submission;
@@ -141,22 +141,19 @@ exports.downloadTestcase = downloadTestcase;
 const saveCodeToFile = (submissionId, code, language) => {
     //Use submissionId to generate unique filename
     const filename = `${submissionId}.${language}`;
-    //If code directory not exist, create it
-    if (!fs_1.default.existsSync(executor_utils_1.codeDirectory)) {
-        fs_1.default.mkdirSync(executor_utils_1.codeDirectory);
-    }
-    const filePath = path_1.default.join(executor_utils_1.codeDirectory, filename);
+    const filePath = path_1.default.join("codeFiles", filename);
     fs_1.default.writeFileSync(filePath, code, { encoding: "utf-8" });
     return filename;
 };
 exports.saveCodeToFile = saveCodeToFile;
-const updateSubmissionVerdict = (submissionId, verdict) => __awaiter(void 0, void 0, void 0, function* () {
+const updateSubmissionVerdict = (submissionId, verdict, stderr) => __awaiter(void 0, void 0, void 0, function* () {
     const submission = yield client_1.default.submission.update({
         where: {
             submissionId: submissionId,
         },
         data: {
             verdict: verdict,
+            stderr: stderr,
         },
     });
     return submission;

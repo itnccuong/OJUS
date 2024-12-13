@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.signToken = exports.validateLoginBody = void 0;
 const client_1 = __importDefault(require("../../prisma/client"));
 const constants_1 = require("../../utils/constants");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const error_1 = require("../../utils/error");
 //If the request body is valid, the function will return the user object
@@ -37,9 +37,9 @@ const validateLoginBody = (data) => __awaiter(void 0, void 0, void 0, function* 
         throw new error_1.CustomError("NOT_FOUND", "Your email or username is invalid", constants_1.STATUS_CODE.NOT_FOUND, {});
     }
     // Verify password
-    const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
+    const isPasswordValid = yield bcryptjs_1.default.compare(password, user.password);
     if (!isPasswordValid) {
-        throw new error_1.CustomError("INVALID_PASSWORD", "Invalid password", constants_1.STATUS_CODE.BAD_REQUEST, {});
+        throw new error_1.CustomError("INVALID_PASSWORD", "Invalid password!", constants_1.STATUS_CODE.BAD_REQUEST, {});
     }
     return user;
 });
@@ -47,7 +47,7 @@ exports.validateLoginBody = validateLoginBody;
 const signToken = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const token = jsonwebtoken_1.default.sign({ userId: userId }, // Payload
     process.env.JWT_SECRET, // Secret
-    { expiresIn: "12m" });
+    { expiresIn: "180d" });
     return token;
 });
 exports.signToken = signToken;

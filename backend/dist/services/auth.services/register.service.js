@@ -16,7 +16,7 @@ exports.createUser = exports.hashPassword = exports.validateRegisterBody = void 
 const client_1 = __importDefault(require("../../prisma/client"));
 const error_1 = require("../../utils/error");
 const constants_1 = require("../../utils/constants");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const validateRegisterBody = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, fullname, password, username } = data;
     if (!email || !fullname || !password || !username) {
@@ -35,8 +35,8 @@ const validateRegisterBody = (data) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.validateRegisterBody = validateRegisterBody;
 const hashPassword = (password) => {
-    const salt = bcrypt_1.default.genSaltSync(10);
-    return bcrypt_1.default.hashSync(password, salt);
+    const salt = bcryptjs_1.default.genSaltSync(10);
+    return bcryptjs_1.default.hashSync(password, salt);
 };
 exports.hashPassword = hashPassword;
 const createUser = (email, fullname, hashedPassword, username) => __awaiter(void 0, void 0, void 0, function* () {

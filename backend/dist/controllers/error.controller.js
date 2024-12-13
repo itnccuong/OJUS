@@ -8,6 +8,6 @@ const globalErrorHandler = (err, req, res, next) => {
     if (err instanceof error_1.CustomError) {
         return (0, formatResponse_1.formatResponse)(res, err.name, err.message, err.status, err.data);
     }
-    return (0, formatResponse_1.formatResponse)(res, "INTERNAL_SERVER_ERROR", "Internal server error", constants_1.STATUS_CODE.INTERNAL_SERVER_ERROR, {});
+    return (0, formatResponse_1.formatResponse)(res, "INTERNAL_SERVER_ERROR", err.message, constants_1.STATUS_CODE.INTERNAL_SERVER_ERROR, {});
 };
 exports.default = globalErrorHandler;

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getURL = exports.parseFilename = void 0;
-require("dotenv").config();
+exports.parseFilename = void 0;
 const parseFilename = (filename) => {
     let type = "";
     let number = 0;
@@ -19,7 +18,3 @@ const parseFilename = (filename) => {
     return { type, number };
 };
 exports.parseFilename = parseFilename;
-const getURL = (api) => {
-    return "http://localhost:" + process.env.PORT + api;
-};
-exports.getURL = getURL;

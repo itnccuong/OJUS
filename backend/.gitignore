@@ -7,3 +7,4 @@ mysql_test
 services/problem.services/code-executor/codeFiles
 services/problem.services/testcases
 codeFiles
+dist

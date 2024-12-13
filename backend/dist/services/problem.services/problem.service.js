@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserStatus = exports.queryProblemStatus = exports.queryProblems = void 0;
+exports.findSubmissionsProblem = exports.getUserStatus = exports.queryProblemStatus = exports.queryProblems = void 0;
 const client_1 = __importDefault(require("../../prisma/client"));
 const queryProblems = () => __awaiter(void 0, void 0, void 0, function* () {
     const problems = yield client_1.default.problem.findMany({
@@ -54,3 +54,16 @@ const getUserStatus = (userId, problemId) => __awaiter(void 0, void 0, void 0, f
     };
 });
 exports.getUserStatus = getUserStatus;
+const findSubmissionsProblem = (problem_id, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const submissions = yield client_1.default.submission.findMany({
+        where: {
+            problemId: problem_id,
+            userId: userId,
+        },
+        orderBy: {
+            submissionId: "desc",
+        },
+    });
+    return submissions;
+});
+exports.findSubmissionsProblem = findSubmissionsProblem;
