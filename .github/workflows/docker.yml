@@ -58,12 +58,5 @@ jobs:
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 
-          # Stop and remove the old container if it exists
-          docker stop ojus-container
-          docker rm ojus-container
-
-          # Run the latest container with a temporary name
-          docker compose -f docker-compose.ojus.yaml -f docker-compose.langs.yaml up -d
-
           # Remove dangling images (tagged as <none>)
           docker image prune -f
