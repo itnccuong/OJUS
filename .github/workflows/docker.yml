@@ -47,3 +47,20 @@ jobs:
         push: true
         tags: nhathien/ojus-backend:latest
         context: ./backend
+
+    - name: Pull and update Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          # Pull the latest image
+          docker pull nhathien/ojus-backend:latest
+
+          docker stop ojus-container
+          docker rm ojus-container
+          
+          docker run -d --name ojus-container -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/codeFiles:/app/codeFiles --privileged nhathien/ojus-backend:latest
+          # Remove dangling images (tagged as <none>)
+          docker image prune -f

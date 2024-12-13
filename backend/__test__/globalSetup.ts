@@ -1,12 +1,18 @@
 import { exec } from "child_process";
 import util from "util";
 import { cleanDatabase } from "./test_utils";
+import path from "path";
+import fs from "fs";
 
 const execPromise = util.promisify(exec);
 
 module.exports = async () => {
   console.log("Initializing resources...");
-  // Clean up any existing containers
+  const dir = path.join("codeFiles");
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
   await execPromise("dotenv -e .env.test -- prisma migrate dev");
   await cleanDatabase();
   await execPromise("ts-node prisma/seed.ts");

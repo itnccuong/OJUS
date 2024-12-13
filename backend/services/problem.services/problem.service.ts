@@ -60,6 +60,9 @@ export const findSubmissionsProblem = async (
       problemId: problem_id,
       userId: userId,
     },
+    orderBy: {
+      submissionId: "desc",
+    },
   });
   return submissions;
 };
