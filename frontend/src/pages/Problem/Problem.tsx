@@ -21,6 +21,7 @@ import getToken from "../../../utils/getToken.ts";
 import {
   OneProblemResponseInterface,
   ResponseInterface,
+  SubmitCodeResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
@@ -121,7 +122,7 @@ export default function Problem() {
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
-        axiosInstance.post(
+        axiosInstance.post<ResponseInterface<SubmitCodeResponseInterface>>(
           `/api/problems/${problemId}`,
           {
             code: code,
@@ -150,6 +151,8 @@ export default function Problem() {
         }
       }
       console.error(error);
+    } finally {
+      navigate(`/problems/${problemId}/submissions`);
     }
   };
 

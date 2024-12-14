@@ -13,6 +13,7 @@ import {
   GetAllProblemInterface,
   GetOneProblemInterface,
   GetAllSubmissionsInterface,
+  SubmitCodeResponseInterface,
 } from "../interfaces/api-interface";
 import {
   findSubmissionsProblem,
@@ -45,7 +46,7 @@ export class ProblemController extends Controller {
     @Path() problem_id: number, // Path parameter
     @Body() body: SubmitCodeConfig, // Request body
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<{}>> {
+  ): Promise<SuccessResponseInterface<SubmitCodeResponseInterface>> {
     const { code, language } = body;
     const userId = req.userId;
     const submission = await createSubmission(
@@ -70,7 +71,7 @@ export class ProblemController extends Controller {
 
     await updateSubmissionVerdict(submission.submissionId, "OK", "");
     return {
-      data: {},
+      data: { submissionId: submission.submissionId },
     };
   }
 

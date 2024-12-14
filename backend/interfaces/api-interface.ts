@@ -54,11 +54,9 @@ export interface LoginResponseInterface {
   token: string;
 }
 
-// export interface SubmitCodeResponseInterface {
-//   submission: Submission;
-//   results: Result[];
-//   testcases: TestcaseInterface;
-// }
+export interface SubmitCodeResponseInterface {
+  submissionId: number;
+}
 
 export interface CompileErrorResponseInterface {
   stderr: string;

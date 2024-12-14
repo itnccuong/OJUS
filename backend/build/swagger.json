@@ -227,11 +227,23 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface____": {
+			"SubmitCodeResponseInterface": {
+				"properties": {
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"submissionId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
 				"properties": {
 					"data": {
-						"properties": {},
-						"type": "object"
+						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
 					}
 				},
 				"required": [
@@ -594,6 +606,19 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SuccessResponseInterface____": {
+				"properties": {
+					"data": {
+						"properties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SendResetLinkConfig": {
 				"properties": {
 					"email": {
@@ -671,7 +696,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface____"
+									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
 								}
 							}
 						}

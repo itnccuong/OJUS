@@ -78,10 +78,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface____": {
+    "SubmitCodeResponseInterface": {
         "dataType": "refObject",
         "properties": {
-            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{},"required":true},
+            "submissionId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface_SubmitCodeResponseInterface_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"ref":"SubmitCodeResponseInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -253,6 +261,14 @@ const models: TsoaRoute.Models = {
             "username": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
             "fullname": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface____": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{},"required":true},
         },
         "additionalProperties": false,
     },

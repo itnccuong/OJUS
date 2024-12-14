@@ -30,9 +30,7 @@ export interface ContributionListResponseInterface {
 }
 
 export interface SubmitCodeResponseInterface {
-  submission: SubmissionInterface;
-  results: ResultInterface[];
-  testcases: TestcaseInterface;
+  submissionId: number;
 }
 
 export interface OneProblemResponseInterface {
