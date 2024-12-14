@@ -84,7 +84,6 @@ export class ContributionController extends Controller {
 
     // Step 6: Return a success response
     return {
-      message: "Contribute submitted successfully",
       data: { contribution: contribution },
     };
   }
@@ -99,7 +98,6 @@ export class ContributionController extends Controller {
 
     // Return a success response with the fetched contributions
     return {
-      message: "Get all contributions successfully",
       data: { contributions: contributions },
     };
   }
@@ -114,7 +112,6 @@ export class ContributionController extends Controller {
 
     // Return a success response with the fetched contribution
     return {
-      message: "Contribute fetched successfully",
       data: { contribution: contribution },
     };
   }
@@ -139,7 +136,6 @@ export class ContributionController extends Controller {
 
     // Return success response
     return {
-      message: "Contribute accepted successfully",
       data: { contribution: updateContribution },
     };
   }
@@ -164,7 +160,6 @@ export class ContributionController extends Controller {
 
     // Return success response
     return {
-      message: "Contribute rejected successfully",
       data: { contribution: updateContribution },
     };
   }

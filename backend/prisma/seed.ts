@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import prisma from "./client";
-import { Files, Problem, User, UserProblemStatus } from "@prisma/client";
+import { Files, Problem, User } from "@prisma/client";
 import { numAccept, numPending, numReject } from "../__test__/test_data";
 
 async function main() {

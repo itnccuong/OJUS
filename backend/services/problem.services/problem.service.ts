@@ -1,4 +1,5 @@
 import prisma from "../../prisma/client";
+import { verdict } from "../../utils/constants";
 
 export const queryProblems = async () => {
   const problems = await prisma.problem.findMany({
@@ -22,15 +23,20 @@ export const queryProblemStatus = async (userId: number) => {
   });
   const problemsWithStatus = await Promise.all(
     problems.map(async (problem) => {
-      const userProblemStatus = await prisma.userProblemStatus.findFirst({
+      const submission = await prisma.submission.findMany({
         where: {
           userId: userId,
           problemId: problem.problemId,
         },
       });
+      let userStatus = false;
+      //If at least one submission is correct, return true
+      if (submission.some((sub) => sub.verdict === verdict.OK)) {
+        userStatus = true;
+      }
       return {
         ...problem,
-        userStatus: userProblemStatus ? true : false,
+        userStatus: userStatus,
       };
     }),
   );
@@ -39,15 +45,19 @@ export const queryProblemStatus = async (userId: number) => {
 };
 
 export const getUserStatus = async (userId: number, problemId: number) => {
-  const userProblemStatus = await prisma.userProblemStatus.findFirst({
+  const submission = await prisma.submission.findMany({
     where: {
       userId: userId,
       problemId: problemId,
     },
   });
-
+  let userStatus = false;
+  //If at least one submission is correct, return true
+  if (submission.some((sub) => sub.verdict === verdict.OK)) {
+    userStatus = true;
+  }
   return {
-    userStatus: !!userProblemStatus,
+    userStatus: userStatus,
   };
 };
 

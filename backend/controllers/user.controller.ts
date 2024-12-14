@@ -20,22 +20,10 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
   });
 
   if (!user) {
-    return formatResponse(
-      res,
-      "USERNAME_NOT_EXISTS",
-      "Username not exists!",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
+    return formatResponse(res, "Username not exists!", STATUS_CODE.BAD_REQUEST);
   }
 
-  return formatResponse(
-    res,
-    "SUCCESS",
-    "Get profile successfully!",
-    STATUS_CODE.SUCCESS,
-    { user: user },
-  );
+  return formatResponse(res, "Get profile successfully!", STATUS_CODE.SUCCESS);
 };
 
 export { getProfileByName };

@@ -1,5 +1,5 @@
 import prisma from "../../prisma/client";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 
 export const findSubmissionById = async (submission_id: number) => {
@@ -10,12 +10,7 @@ export const findSubmissionById = async (submission_id: number) => {
   });
 
   if (!submission) {
-    throw new CustomError(
-      "NOT_FOUND",
-      "Submission not exists",
-      STATUS_CODE.NOT_FOUND,
-      {},
-    );
+    throw new CustomError("Submission not exists", STATUS_CODE.NOT_FOUND);
   }
   return submission;
 };

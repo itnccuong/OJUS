@@ -1,7 +1,7 @@
 import prisma from "../../prisma/client";
 import { formatResponse } from "../../utils/formatResponse";
 import { STATUS_CODE } from "../../utils/constants";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { decodedResetTokenInterface } from "../../interfaces/api-interface";
@@ -13,12 +13,7 @@ export const fineUserByEmail = async (email: string) => {
     },
   });
   if (!user) {
-    throw new CustomError(
-      "ERROR",
-      "Cannot find user by email",
-      STATUS_CODE.NOT_FOUND,
-      { email: email },
-    );
+    throw new CustomError("Cannot find user by email", STATUS_CODE.NOT_FOUND);
   }
   return user;
 };
@@ -60,12 +55,7 @@ export const decodeResetToken = (token: string) => {
   ) as decodedResetTokenInterface;
 
   if (!decodedToken || !decodedToken.email) {
-    throw new CustomError(
-      "INVALID_TOKEN",
-      "Invalid token",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
+    throw new CustomError("Invalid token", STATUS_CODE.BAD_REQUEST);
   }
   return decodedToken;
 };

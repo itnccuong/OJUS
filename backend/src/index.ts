@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { initAllDockerContainers } from "../services/problem.services/code-executor/executor-utils";
+import { initAllDockerContainers } from "../utils/codeExecutorUtils";
 import fs from "fs";
 import path from "path";
 const dir = path.join("codeFiles");

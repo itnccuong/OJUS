@@ -22,7 +22,7 @@ import {
 } from "../services/auth.services/login.service";
 
 import { Body, Controller, Post, Route, SuccessResponse, Tags } from "tsoa";
-import { CustomError } from "../utils/error";
+import { CustomError } from "../utils/errorClass";
 import {
   decodeResetToken,
   fineUserByEmail,
@@ -42,7 +42,6 @@ export class AuthController extends Controller {
     // Generate a token
     const token = await signToken(user.userId);
     return {
-      message: "Login successfully!",
       data: {
         user: user,
         token: token,
@@ -67,7 +66,6 @@ export class AuthController extends Controller {
     const user = await createUser(email, fullname, hashedPassword, username);
 
     return {
-      message: "Register successfully",
       data: { user: user },
     };
   }
@@ -97,7 +95,6 @@ export class AuthController extends Controller {
 
     // Respond with a success message
     return {
-      message: "Password reset link sent to your email",
       data: {},
     };
   }
@@ -128,7 +125,6 @@ export class AuthController extends Controller {
 
     // Respond with a success message
     return {
-      message: "Password changed successfully",
       data: {},
     };
   }

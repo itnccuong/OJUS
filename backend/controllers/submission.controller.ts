@@ -23,10 +23,10 @@ import {
   findSubmissionById,
 } from "../services/submission.services/submission.service";
 import {
-  downloadTestcase,
   findFileById,
   findProblemById,
 } from "../services/problem.services/submit.services";
+import { downloadTestcase } from "../utils/general";
 
 @Route("/api/submissions") // Base path for authentication-related routes
 @Tags("Submission") // Group this endpoint under "Authentication" in Swagger
@@ -45,7 +45,6 @@ export class SubmissionController extends Controller {
     const testcases = await downloadTestcase(fileUrl);
 
     return {
-      message: "Get submission successfully!",
       data: {
         submission: submission,
         results: results,

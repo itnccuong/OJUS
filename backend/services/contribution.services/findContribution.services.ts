@@ -1,5 +1,5 @@
 import prisma from "../../prisma/client";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import { formatResponse } from "../../utils/formatResponse";
 
@@ -12,10 +12,8 @@ export const findPendingContribution = async (contributionId: number) => {
   });
   if (!res) {
     throw new CustomError(
-      "ERROR",
       "Cannot find pending contribution",
       STATUS_CODE.NOT_FOUND,
-      { contributionId: contributionId },
     );
   }
   return res;

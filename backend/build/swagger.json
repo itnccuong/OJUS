@@ -217,15 +217,11 @@
 			},
 			"SuccessResponseInterface_GetOneSubmissionInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/GetOneSubmissionInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -233,38 +229,24 @@
 			},
 			"SubmitCodeResponseInterface": {
 				"properties": {
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					},
-					"results": {
-						"items": {
-							"$ref": "#/components/schemas/Result"
-						},
-						"type": "array"
-					},
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
+					"submissionId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"submission",
-					"results",
-					"testcases"
+					"submissionId"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
 			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -282,93 +264,6 @@
 				"required": [
 					"code",
 					"language"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CompileErrorResponseInterface": {
-				"properties": {
-					"stderr": {
-						"type": "string"
-					},
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					},
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
-					}
-				},
-				"required": [
-					"stderr",
-					"submission",
-					"testcases"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ErrorResponseInterface_CompileErrorResponseInterface_": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"message": {
-						"type": "string"
-					},
-					"data": {
-						"$ref": "#/components/schemas/CompileErrorResponseInterface"
-					}
-				},
-				"required": [
-					"name",
-					"message",
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"FailTestResponseInterface": {
-				"properties": {
-					"stderr": {
-						"type": "string"
-					},
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					},
-					"results": {
-						"items": {
-							"$ref": "#/components/schemas/Result"
-						},
-						"type": "array"
-					},
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
-					}
-				},
-				"required": [
-					"stderr",
-					"submission",
-					"results",
-					"testcases"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ErrorResponseInterface_FailTestResponseInterface_": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"message": {
-						"type": "string"
-					},
-					"data": {
-						"$ref": "#/components/schemas/FailTestResponseInterface"
-					}
-				},
-				"required": [
-					"name",
-					"message",
-					"data"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -454,15 +349,11 @@
 			},
 			"SuccessResponseInterface_GetAllProblemInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/GetAllProblemInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -482,15 +373,11 @@
 			},
 			"SuccessResponseInterface_GetOneProblemInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/GetOneProblemInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -513,15 +400,11 @@
 			},
 			"SuccessResponseInterface_GetAllSubmissionsInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/GetAllSubmissionsInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -541,15 +424,11 @@
 			},
 			"SuccessResponseInterface_ContributionResponseInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/ContributionResponseInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -557,9 +436,6 @@
 			},
 			"SuccessResponseInterface__contributions-Problem-Array__": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"properties": {
 							"contributions": {
@@ -576,7 +452,6 @@
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -584,9 +459,6 @@
 			},
 			"SuccessResponseInterface__contribution-Problem__": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"properties": {
 							"contribution": {
@@ -600,7 +472,6 @@
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -661,15 +532,11 @@
 			},
 			"SuccessResponseInterface_LoginResponseInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/LoginResponseInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -705,15 +572,11 @@
 			},
 			"SuccessResponseInterface_RegisterResponseInterface_": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"$ref": "#/components/schemas/RegisterResponseInterface"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -745,16 +608,12 @@
 			},
 			"SuccessResponseInterface____": {
 				"properties": {
-					"message": {
-						"type": "string"
-					},
 					"data": {
 						"properties": {},
 						"type": "object"
 					}
 				},
 				"required": [
-					"message",
 					"data"
 				],
 				"type": "object",
@@ -838,26 +697,6 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseInterface_CompileErrorResponseInterface_"
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseInterface_FailTestResponseInterface_"
 								}
 							}
 						}
