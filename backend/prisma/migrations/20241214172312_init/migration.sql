@@ -16,8 +16,8 @@ CREATE TABLE `User` (
 CREATE TABLE `Problem` (
     `problemId` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
-    `isActive` BOOLEAN NOT NULL DEFAULT false,
+    `description` TEXT NOT NULL,
+    `status` INTEGER NOT NULL DEFAULT 0,
     `difficulty` INTEGER NOT NULL,
     `tags` VARCHAR(191) NOT NULL,
     `timeLimit` INTEGER NOT NULL,
@@ -52,6 +52,7 @@ CREATE TABLE `Submission` (
     `language` VARCHAR(191) NOT NULL,
     `verdict` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `stderr` LONGTEXT NOT NULL,
 
     PRIMARY KEY (`submissionId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
