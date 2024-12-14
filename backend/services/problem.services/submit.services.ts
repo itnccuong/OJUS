@@ -76,7 +76,7 @@ export const updateSubmissionVerdict = async (
   verdict: string,
   stderr: string,
 ) => {
-  const submission = await prisma.submission.update({
+  await prisma.submission.update({
     where: {
       submissionId: submissionId,
     },
@@ -85,7 +85,6 @@ export const updateSubmissionVerdict = async (
       stderr: stderr,
     },
   });
-  return submission;
 };
 
 export const createResult = async (
@@ -134,7 +133,7 @@ export const executeCodeService = async (
       index,
       result.stdout,
       result.verdict,
-      0,
+      result.time,
       0,
     );
 

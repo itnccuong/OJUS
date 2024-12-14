@@ -67,11 +67,6 @@ const languageDetails: Record<string, LanguageDetail> = {
   },
 };
 
-/**
- * Get container id
- * @param container_name - The container ID or name.
- * @returns Promise<string> - Returns the container ID.
- */
 const getContainerIdByName = async (container_name: string) => {
   const running = await execAsync(
     `docker container ps --filter "name=${container_name}" --format "{{.ID}}"`,
@@ -80,18 +75,11 @@ const getContainerIdByName = async (container_name: string) => {
   return running.stdout.trim();
 };
 
-/**
- * Create new container if not created yet
- * @param container - Container configuration with name and image.
- */
 const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
   container.id = await getContainerIdByName(name);
 };
 
-/**
- * Initialize all docker from container list
- */
 const initAllDockerContainers = async () => {
   await Promise.all(
     Object.values(containers).map((container) =>
@@ -109,12 +97,7 @@ export const getContainerId = (container: ContainerConfig) => {
   }
   return containerId;
 };
-/**
- * Compiles the code inside a Docker container. Return new filename that removed the extension. Ex: main.cpp -> main
- * @param filename - The file name to compile.
- * @param language - The language of the file.
- * @returns Promise<string | null> - Returns the filename if compile successfully, otherwise null.
- */
+
 const compile = async (filename: string, language: string) => {
   const filenameWithoutExtension = filename.split(".")[0];
   const command = languageDetails[language].compilerCmd
@@ -138,15 +121,6 @@ const compile = async (filename: string, language: string) => {
   }
 };
 
-/**
- * Executes the compiled code or code inside a Docker container.
- * @param filename - The file name to execute.
- * @param input - The input to pass to the program.
- * @param expectedOutput - Expected output
- * @param language - The language of the file.
- * @param timeLimit - Time limit
- * @returns Promise<string> - Returns the verdict
- */
 const executeAgainstTestcase = async (
   filename: string,
   input: string,
@@ -181,6 +155,8 @@ const executeAgainstTestcase = async (
       cmd.kill();
     }, timeLimit);
 
+    const startTime = process.hrtime(); // Start tracking time
+
     cmd.stdin.on("error", (err) => {
       reject(new Error(err.message));
     });
@@ -201,11 +177,20 @@ const executeAgainstTestcase = async (
     cmd.on("exit", (exitCode) => {
       stdout = stdout.trim();
       clearTimeout(timeoutId);
+
+      // Calculate execution time
+      const [seconds, nanoseconds] = process.hrtime(startTime);
+      const executionTime = Math.min(
+        timeLimit,
+        Math.floor(seconds * 1000 + nanoseconds / 1e6),
+      );
+
       if (isTimeout) {
         resolve({
           stderr: stderr,
           stdout: stdout,
           verdict: "TIME_LIMIT_EXCEEDED",
+          time: executionTime,
         });
       }
       if (exitCode !== 0) {
@@ -213,6 +198,7 @@ const executeAgainstTestcase = async (
           stderr: stderr,
           stdout: "",
           verdict: "RUNTIME_ERROR",
+          time: executionTime,
         });
       }
       if (stdout !== expectedOutput) {
@@ -220,12 +206,14 @@ const executeAgainstTestcase = async (
           stderr: stderr,
           stdout: stdout,
           verdict: "WRONG_ANSWER",
+          time: executionTime,
         });
       }
       resolve({
         stderr: stderr,
         stdout: stdout,
         verdict: "OK",
+        time: executionTime,
       });
     });
   });
