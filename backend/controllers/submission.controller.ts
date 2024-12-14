@@ -45,7 +45,6 @@ export class SubmissionController extends Controller {
     const testcases = await downloadTestcase(fileUrl);
 
     return {
-      message: "Get submission successfully!",
       data: {
         submission: submission,
         results: results,

@@ -10,12 +10,7 @@ export const findSubmissionById = async (submission_id: number) => {
   });
 
   if (!submission) {
-    throw new CustomError(
-      "NOT_FOUND",
-      "Submission not exists",
-      STATUS_CODE.NOT_FOUND,
-      {},
-    );
+    throw new CustomError("Submission not exists", STATUS_CODE.NOT_FOUND);
   }
   return submission;
 };

@@ -41,12 +41,8 @@ export const findProblemById = async (problem_id: number) => {
   if (!problem) {
     // throw new FindByIdError("Problem not found", problem_id, "Problem");
     throw new CustomError(
-      "PROBLEM_NOT_FOUND",
       "Problem not found in database!",
       STATUS_CODE.NOT_FOUND,
-      {
-        problemId: problem_id,
-      },
     );
   }
   return problem;
@@ -56,12 +52,7 @@ export const getContainerId = (container: ContainerConfig) => {
   const containerId = container.id;
 
   if (!containerId) {
-    throw new CustomError(
-      "NOT_FOUND",
-      "Container id not found",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
+    throw new CustomError("Container id not found", STATUS_CODE.BAD_REQUEST);
   }
   return containerId;
 };
@@ -73,14 +64,7 @@ export const findFileById = async (fileId: number) => {
     },
   });
   if (!file) {
-    throw new CustomError(
-      "FILE_NOT_FOUND",
-      "File not found in database!",
-      STATUS_CODE.NOT_FOUND,
-      {
-        fileId: fileId,
-      },
-    );
+    throw new CustomError("File not found in database!", STATUS_CODE.NOT_FOUND);
   }
   return file;
 };

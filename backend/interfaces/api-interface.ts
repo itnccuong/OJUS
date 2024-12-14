@@ -3,14 +3,11 @@ import { TestcaseInterface } from "./code-executor-interface";
 import type { User, Problem, Result, Submission } from "@prisma/client";
 
 export interface SuccessResponseInterface<T> {
-  message: string;
   data: T;
 }
 
 export interface ErrorResponseInterface<T> {
-  name: string;
   message: string;
-  data: T;
 }
 
 export interface ResponseInterfaceForTest<T> {

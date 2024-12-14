@@ -32,21 +32,9 @@ export const verifyToken = (
   jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
-        return formatResponse(
-          res,
-          "UNAUTHORIZED",
-          "Token expired",
-          STATUS_CODE.UNAUTHORIZED,
-          {},
-        );
+        return formatResponse(res, "Token expired", STATUS_CODE.UNAUTHORIZED);
       } else {
-        return formatResponse(
-          res,
-          "UNAUTHORIZED",
-          "Invalid token",
-          STATUS_CODE.UNAUTHORIZED,
-          {},
-        );
+        return formatResponse(res, "Invalid token", STATUS_CODE.UNAUTHORIZED);
       }
     } else {
       req.userId = (decoded as DecodeToken).userId;

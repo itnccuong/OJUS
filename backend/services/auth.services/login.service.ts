@@ -23,22 +23,15 @@ export const validateLoginBody = async (data: LoginInterface) => {
 
   if (!user) {
     throw new CustomError(
-      "NOT_FOUND",
       "Your email or username is invalid",
       STATUS_CODE.NOT_FOUND,
-      {},
     );
   }
 
   // Verify password
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new CustomError(
-      "INVALID_PASSWORD",
-      "Invalid password!",
-      STATUS_CODE.BAD_REQUEST,
-      {},
-    );
+    throw new CustomError("Invalid password!", STATUS_CODE.BAD_REQUEST);
   }
 
   return user;

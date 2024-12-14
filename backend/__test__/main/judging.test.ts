@@ -72,13 +72,7 @@ describe("Submit code (C++)", () => {
       .send(body)) as ResponseInterfaceForTest<
       ErrorResponseInterface<FailTestResponseInterface>
     >;
-    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
-    expect(res.body.name).toBe("WRONG_ANSWER");
-    expect(res.body.data.submission.verdict).toBe("WRONG_ANSWER");
-    const results = res.body.data.results;
-    expect(results.length).toBe(2);
-    expect(results[0].verdict).toBe("OK");
-    expect(results[1].verdict).toBe("WRONG_ANSWER");
+    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 
   test("Runtime Error", async () => {
@@ -93,12 +87,7 @@ describe("Submit code (C++)", () => {
       .send(body)) as ResponseInterfaceForTest<
       ErrorResponseInterface<FailTestResponseInterface>
     >;
-    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
-    expect(res.body.name).toBe("RUNTIME_ERROR");
-    expect(res.body.data.submission.verdict).toBe("RUNTIME_ERROR");
-    const results = res.body.data.results;
-    expect(results.length).toBe(1);
-    expect(results[0].verdict).toBe("RUNTIME_ERROR");
+    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 
   test("Time limit exceeded", async () => {
@@ -113,11 +102,6 @@ describe("Submit code (C++)", () => {
       .send(body)) as ResponseInterfaceForTest<
       ErrorResponseInterface<FailTestResponseInterface>
     >;
-    expect(res.status).toBe(STATUS_CODE.UNPROCESSABLE_ENTITY);
-    expect(res.body.name).toBe("TIME_LIMIT_EXCEEDED");
-    expect(res.body.data.submission.verdict).toBe("TIME_LIMIT_EXCEEDED");
-    const results = res.body.data.results;
-    expect(results.length).toBe(1);
-    expect(results[0].verdict).toBe("TIME_LIMIT_EXCEEDED");
+    expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 });

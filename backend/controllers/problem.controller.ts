@@ -66,7 +66,7 @@ export class ProblemController extends Controller {
     >,
     @Res()
     FailTestResponse: TsoaResponse<
-      422,
+      400,
       ErrorResponseInterface<FailTestResponseInterface>
     >,
   ): Promise<SuccessResponseInterface<SubmitCodeResponseInterface>> {
@@ -94,12 +94,6 @@ export class ProblemController extends Controller {
 
       return CompileErrorResponse(400, {
         message: "Compile error",
-        name: "COMPILE_ERROR",
-        data: {
-          stderr: compileResult.stderr,
-          submission: submission,
-          testcases: testcases,
-        },
       });
     }
 
@@ -140,15 +134,8 @@ export class ProblemController extends Controller {
           },
         });
 
-        return FailTestResponse(422, {
+        return FailTestResponse(400, {
           message: result.verdict,
-          name: result.verdict,
-          data: {
-            stderr: result.stderr,
-            submission: submission,
-            results: results,
-            testcases: testcases,
-          },
         });
       }
     }
@@ -168,7 +155,6 @@ export class ProblemController extends Controller {
     });
 
     return {
-      message: "All testcases passed",
       data: { submission: submission, results: results, testcases: testcases },
     };
   }
@@ -181,7 +167,6 @@ export class ProblemController extends Controller {
     const problems = await queryProblems();
 
     return {
-      message: "Get all problems successfully",
       data: { problems },
     };
   }
@@ -196,7 +181,6 @@ export class ProblemController extends Controller {
     const userId = req.userId;
     const responseData = await queryProblemStatus(userId);
     return {
-      message: "Get all problems with account successfully",
       data: { problems: responseData },
     };
   }
@@ -212,7 +196,6 @@ export class ProblemController extends Controller {
     const problem = await findProblemById(problem_id);
     const resProblem = { ...problem, userStatus: false };
     return {
-      message: "Problem fetched successfully!",
       data: { problem: resProblem },
     };
   }
@@ -232,7 +215,6 @@ export class ProblemController extends Controller {
     const userStatus = await getUserStatus(userId, problem.problemId);
     const resProblem = { ...problem, userStatus: userStatus.userStatus };
     return {
-      message: "Problem fetched successfully!",
       data: { problem: resProblem },
     };
   }
@@ -247,7 +229,6 @@ export class ProblemController extends Controller {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     return {
-      message: "Submissions fetched successfully!",
       data: { submissions: submissions },
     };
   }

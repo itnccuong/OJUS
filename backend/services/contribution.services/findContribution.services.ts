@@ -12,10 +12,8 @@ export const findPendingContribution = async (contributionId: number) => {
   });
   if (!res) {
     throw new CustomError(
-      "ERROR",
       "Cannot find pending contribution",
       STATUS_CODE.NOT_FOUND,
-      { contributionId: contributionId },
     );
   }
   return res;
