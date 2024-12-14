@@ -12,7 +12,6 @@ import {
   findProblemById,
   saveCodeToFile,
   updateSubmissionVerdict,
-  updateUserProblemStatus,
 } from "../services/problem.services/submit.services";
 import {
   SubmitCodeConfig,
@@ -146,7 +145,6 @@ export class ProblemController extends Controller {
       "OK",
       "",
     );
-    await updateUserProblemStatus(userId, problem_id);
 
     const results = await prisma.result.findMany({
       where: {

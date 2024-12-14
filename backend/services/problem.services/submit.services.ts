@@ -1,5 +1,4 @@
 import { CustomError } from "../../utils/error";
-import { codeDirectory, languageDetails } from "./code-executor/executor-utils";
 import fs, { readFileSync } from "fs";
 import axios from "axios";
 import AdmZip from "adm-zip";
@@ -164,25 +163,6 @@ export const createResult = async (
       verdict: verdict,
       time: time,
       memory: memory,
-    },
-  });
-};
-
-export const updateUserProblemStatus = async (
-  userId: number,
-  problemId: number,
-) => {
-  await prisma.userProblemStatus.upsert({
-    where: {
-      userId_problemId: {
-        userId: userId,
-        problemId: problemId,
-      },
-    },
-    update: {}, // Leave empty if you don't want to update existing records
-    create: {
-      userId: userId,
-      problemId: problemId,
     },
   });
 };
