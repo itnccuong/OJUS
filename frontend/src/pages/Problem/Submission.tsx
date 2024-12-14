@@ -92,7 +92,7 @@ export default function Submission() {
   };
 
   // const totalTime = results.reduce((sum, result) => sum + result.time, 0);
-  const maxTime = Math.max(...results.map((result) => result.time));
+  const maxTime = Math.max(0, ...results.map((result) => result.time));
   const totalMemory = results.reduce((sum, result) => sum + result.memory, 0);
 
   return (
