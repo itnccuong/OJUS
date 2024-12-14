@@ -227,33 +227,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SubmitCodeResponseInterface": {
-				"properties": {
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					},
-					"results": {
-						"items": {
-							"$ref": "#/components/schemas/Result"
-						},
-						"type": "array"
-					},
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
-					}
-				},
-				"required": [
-					"submission",
-					"results",
-					"testcases"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
+			"SuccessResponseInterface____": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+						"properties": {},
+						"type": "object"
 					}
 				},
 				"required": [
@@ -274,30 +252,6 @@
 				"required": [
 					"code",
 					"language"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ErrorResponseInterface_CompileErrorResponseInterface_": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ErrorResponseInterface_FailTestResponseInterface_": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -640,19 +594,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface____": {
-				"properties": {
-					"data": {
-						"properties": {},
-						"type": "object"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"SendResetLinkConfig": {
 				"properties": {
 					"email": {
@@ -730,17 +671,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ErrorResponseInterface_FailTestResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface____"
 								}
 							}
 						}

@@ -1,19 +1,14 @@
 import { exec, spawn } from "child_process";
-import path from "path";
 import { promisify } from "node:util";
 import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
 } from "../../../interfaces/code-executor-interface";
-import { getContainerId } from "../submit.services";
+import { CustomError } from "../../../utils/error";
+import { STATUS_CODE } from "../../../utils/constants";
 
-const STDOUT = "stdout";
-const STDERR = "stderr";
 const codeFiles = "codeFiles";
-const codeDirectory = path.join(__dirname, codeFiles);
-
-// const codeDirectory = path.join(
 
 //Convert callback function to promise to use await
 const execAsync = promisify(exec);
@@ -73,20 +68,6 @@ const languageDetails: Record<string, LanguageDetail> = {
 };
 
 /**
- * Creates a Docker container.
- * @param container - Container configuration with name and image.
- * @returns Promise<string> - Returns the container ID.
- */
-
-const createContainer = async (container: ContainerConfig) => {
-  const { name, image } = container;
-  const result = await execAsync(
-    `docker run -i -d --rm --mount type=bind,src="${codeDirectory}",dst=/${codeFiles} --name ${name} --label oj=oj ${image}`,
-  );
-  return result.stdout.trim();
-};
-
-/**
  * Get container id
  * @param container_name - The container ID or name.
  * @returns Promise<string> - Returns the container ID.
@@ -100,27 +81,12 @@ const getContainerIdByName = async (container_name: string) => {
 };
 
 /**
- * Stop a running container
- * @param container_name
- */
-const killContainer = async (container_name: string) => {
-  await execAsync(`docker kill ${container_name}`);
-};
-
-/**
  * Create new container if not created yet
  * @param container - Container configuration with name and image.
  */
 const initDockerContainer = async (container: ContainerConfig) => {
   const name = container.name;
   container.id = await getContainerIdByName(name);
-
-  // if (container_id) {
-  //   await killContainer(container_id);
-  //   // console.log(`Container ${name} stopped`);
-  // }
-  // container.id = await createContainer(container);
-  // console.log(`Container ${name} created`);
 };
 
 /**
@@ -135,6 +101,14 @@ const initAllDockerContainers = async () => {
   console.log("\nAll containers initialized");
 };
 
+export const getContainerId = (container: ContainerConfig) => {
+  const containerId = container.id;
+
+  if (!containerId) {
+    throw new CustomError("Container id not found", STATUS_CODE.BAD_REQUEST);
+  }
+  return containerId;
+};
 /**
  * Compiles the code inside a Docker container. Return new filename that removed the extension. Ex: main.cpp -> main
  * @param filename - The file name to compile.
@@ -258,10 +232,8 @@ const executeAgainstTestcase = async (
 };
 
 export {
-  createContainer,
   compile,
   executeAgainstTestcase,
-  codeDirectory,
   initAllDockerContainers,
   languageDetails,
 };

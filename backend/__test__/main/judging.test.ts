@@ -10,7 +10,6 @@ import {
   ErrorResponseInterface,
   FailTestResponseInterface,
   ResponseInterfaceForTest,
-  SubmitCodeResponseInterface,
   SuccessResponseInterface,
 } from "../../interfaces/api-interface";
 import { testCompile, testCorrect } from "../test_services";
@@ -69,9 +68,7 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterfaceForTest<
-      ErrorResponseInterface<FailTestResponseInterface>
-    >;
+      .send(body)) as ResponseInterfaceForTest<ErrorResponseInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 
@@ -84,9 +81,7 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterfaceForTest<
-      ErrorResponseInterface<FailTestResponseInterface>
-    >;
+      .send(body)) as ResponseInterfaceForTest<ErrorResponseInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 
@@ -99,9 +94,7 @@ describe("Submit code (C++)", () => {
     const res = (await request(app)
       .post(`/api/problems/1`)
       .set("Authorization", `Bearer ${fake_token}`)
-      .send(body)) as ResponseInterfaceForTest<
-      ErrorResponseInterface<FailTestResponseInterface>
-    >;
+      .send(body)) as ResponseInterfaceForTest<ErrorResponseInterface>;
     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
   });
 });

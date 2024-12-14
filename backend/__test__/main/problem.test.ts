@@ -8,11 +8,9 @@ import {
   ResponseInterfaceForTest,
   SuccessResponseInterface,
 } from "../../interfaces/api-interface";
-import prisma from "../../prisma/client";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
-import { STATUS_CODE } from "../../utils/constants";
 import { numAccept, numPending } from "../test_data";
 
 jest.setTimeout(60000);

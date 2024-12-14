@@ -6,7 +6,7 @@ export interface SuccessResponseInterface<T> {
   data: T;
 }
 
-export interface ErrorResponseInterface<T> {
+export interface ErrorResponseInterface {
   message: string;
 }
 
@@ -54,11 +54,11 @@ export interface LoginResponseInterface {
   token: string;
 }
 
-export interface SubmitCodeResponseInterface {
-  submission: Submission;
-  results: Result[];
-  testcases: TestcaseInterface;
-}
+// export interface SubmitCodeResponseInterface {
+//   submission: Submission;
+//   results: Result[];
+//   testcases: TestcaseInterface;
+// }
 
 export interface CompileErrorResponseInterface {
   stderr: string;

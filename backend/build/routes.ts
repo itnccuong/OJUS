@@ -78,20 +78,10 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SubmitCodeResponseInterface": {
+    "SuccessResponseInterface____": {
         "dataType": "refObject",
         "properties": {
-            "submission": {"ref":"Submission","required":true},
-            "results": {"dataType":"array","array":{"dataType":"refAlias","ref":"Result"},"required":true},
-            "testcases": {"ref":"TestcaseInterface","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface_SubmitCodeResponseInterface_": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"ref":"SubmitCodeResponseInterface","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{},"required":true},
         },
         "additionalProperties": false,
     },
@@ -101,22 +91,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "code": {"dataType":"string","required":true},
             "language": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ErrorResponseInterface_CompileErrorResponseInterface_": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ErrorResponseInterface_FailTestResponseInterface_": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -283,14 +257,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface____": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SendResetLinkConfig": {
         "dataType": "refObject",
         "properties": {
@@ -365,8 +331,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                     problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
                     body: {"in":"body","name":"body","required":true,"ref":"SubmitCodeConfig"},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    CompileErrorResponse: {"in":"res","name":"400","required":true,"ref":"ErrorResponseInterface_CompileErrorResponseInterface_"},
-                    FailTestResponse: {"in":"res","name":"400","required":true,"ref":"ErrorResponseInterface_FailTestResponseInterface_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
