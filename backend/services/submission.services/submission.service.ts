@@ -1,5 +1,5 @@
 import prisma from "../../prisma/client";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 
 export const findSubmissionById = async (submission_id: number) => {

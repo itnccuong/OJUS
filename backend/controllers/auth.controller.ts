@@ -22,7 +22,7 @@ import {
 } from "../services/auth.services/login.service";
 
 import { Body, Controller, Post, Route, SuccessResponse, Tags } from "tsoa";
-import { CustomError } from "../utils/error";
+import { CustomError } from "../utils/errorClass";
 import {
   decodeResetToken,
   fineUserByEmail,

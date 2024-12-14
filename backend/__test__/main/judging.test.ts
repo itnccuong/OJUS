@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import request from "supertest";
 import { app } from "../../src/app";
 import { STATUS_CODE } from "../../utils/constants";
-import { initAllDockerContainers } from "../../services/problem.services/code-executor/executor-utils";
+import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
 import jwt from "jsonwebtoken";
 
 import { compileFailAnswer, correctAnswers } from "../test_data";

@@ -1,7 +1,7 @@
 import prisma from "../../prisma/client";
 import { formatResponse } from "../../utils/formatResponse";
 import { STATUS_CODE } from "../../utils/constants";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { decodedResetTokenInterface } from "../../interfaces/api-interface";

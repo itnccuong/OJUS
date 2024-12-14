@@ -1,6 +1,6 @@
 import { RegisterConfig } from "../../interfaces/api-interface";
 import prisma from "../../prisma/client";
-import { CustomError } from "../../utils/error";
+import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcryptjs";
 

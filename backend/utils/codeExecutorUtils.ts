@@ -4,9 +4,9 @@ import {
   ContainerConfig,
   ExecuteInterface,
   LanguageDetail,
-} from "../../../interfaces/code-executor-interface";
-import { CustomError } from "../../../utils/error";
-import { STATUS_CODE } from "../../../utils/constants";
+} from "../interfaces/code-executor-interface";
+import { CustomError } from "./errorClass";
+import { STATUS_CODE } from "./constants";
 
 const codeFiles = "codeFiles";
 
