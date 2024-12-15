@@ -369,11 +369,62 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SubmissionWithResults": {
+				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/Result"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"stderr",
+					"createdAt",
+					"verdict",
+					"language",
+					"code",
+					"userId",
+					"problemId",
+					"submissionId",
+					"results"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetAllSubmissionsInterface": {
 				"properties": {
 					"submissions": {
 						"items": {
-							"$ref": "#/components/schemas/Submission"
+							"$ref": "#/components/schemas/SubmissionWithResults"
 						},
 						"type": "array"
 					}

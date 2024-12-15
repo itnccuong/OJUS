@@ -50,3 +50,7 @@ export interface TestcaseInterface {
   input: string[];
   output: string[];
 }
+
+export interface SubmissionWithResults extends SubmissionInterface {
+  results: ResultInterface[];
+}

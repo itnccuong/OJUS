@@ -153,10 +153,26 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SubmissionWithResults": {
+        "dataType": "refObject",
+        "properties": {
+            "stderr": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "verdict": {"dataType":"string","required":true},
+            "language": {"dataType":"string","required":true},
+            "code": {"dataType":"string","required":true},
+            "userId": {"dataType":"double","required":true},
+            "problemId": {"dataType":"double","required":true},
+            "submissionId": {"dataType":"double","required":true},
+            "results": {"dataType":"array","array":{"dataType":"refAlias","ref":"Result"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetAllSubmissionsInterface": {
         "dataType": "refObject",
         "properties": {
-            "submissions": {"dataType":"array","array":{"dataType":"refAlias","ref":"Submission"},"required":true},
+            "submissions": {"dataType":"array","array":{"dataType":"refObject","ref":"SubmissionWithResults"},"required":true},
         },
         "additionalProperties": false,
     },

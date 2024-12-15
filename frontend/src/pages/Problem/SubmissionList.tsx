@@ -11,7 +11,7 @@ import {
   SubmissionListResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { SubmissionInterface } from "../../../interfaces/model.interface.ts";
+import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
@@ -20,7 +20,7 @@ export default function SubmissionList() {
   const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionInterface[]
+    SubmissionWithResults[]
   >([]);
 
   const navigate = useNavigate();
@@ -71,10 +71,10 @@ export default function SubmissionList() {
 
     const verdictMap: Record<string, string> = {
       OK: "Accepted",
-      WRONG_ANSWER: "Wrong Answer",
-      TIME_LIMIT_EXCEEDED: "Time Limit Exceeded",
-      RUNTIME_ERROR: "Runtime Error",
-      COMPILE_ERROR: "Compile Error",
+      WRONG_ANSWER: "Wrong answer",
+      TIME_LIMIT_EXCEEDED: "Time limit exceeded",
+      RUNTIME_ERROR: "Runtime error",
+      COMPILE_ERROR: "Compile error",
     };
 
     const date = new Date(fetchSubmission.createdAt);
@@ -186,7 +186,11 @@ export default function SubmissionList() {
                             fontSize: "14px",
                           }}
                         >
-                          {submission.verdict}
+                          {submission.verdict === "Wrong answer" ||
+                          submission.verdict === "Runtime error" ||
+                          submission.verdict === "Time limit exceeded"
+                            ? `${submission.verdict} on test ${submission.results.length}`
+                            : submission.verdict}
                         </span>
                       </td>
 

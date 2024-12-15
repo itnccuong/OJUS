@@ -18,6 +18,7 @@ import {
   GetTestcasesInterface,
 } from "../interfaces/api-interface";
 import {
+  addResultsToSubmissions,
   findSubmissionsProblem,
   getUserStatus,
   queryProblems,
@@ -146,8 +147,9 @@ export class ProblemController extends Controller {
   ): Promise<SuccessResponseInterface<GetAllSubmissionsInterface>> {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
+    const submissionsWithResults = await addResultsToSubmissions(submissions);
     return {
-      data: { submissions: submissions },
+      data: { submissions: submissionsWithResults },
     };
   }
 

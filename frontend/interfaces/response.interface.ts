@@ -3,6 +3,7 @@ import {
   ProblemWithUserStatusInterface,
   ResultInterface,
   SubmissionInterface,
+  SubmissionWithResults,
   TestcaseInterface,
   UserInterface,
 } from "./model.interface.ts";
@@ -42,7 +43,7 @@ export interface ProblemListResponseInterface {
 }
 
 export interface SubmissionListResponseInterface {
-  submissions: SubmissionInterface[];
+  submissions: SubmissionWithResults[];
 }
 
 export interface GetSubmissionResponseInterface {
