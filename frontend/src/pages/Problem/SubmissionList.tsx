@@ -41,8 +41,12 @@ export default function SubmissionList() {
         setFetchSubmissions(res.data.data.submissions);
       } catch (error) {
         if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
+          if (error.response?.status === 401) {
+            toast.error("You need to login to view submissions");
+          } else {
+            const errorMessage = error.response?.data?.message;
+            toast.error(errorMessage);
+          }
         }
         console.error(error);
       } finally {
