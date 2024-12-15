@@ -9,13 +9,10 @@ import {
   Popover,
 } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import CodeMirror from "@uiw/react-codemirror";
-// import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-// import { vscodeDarkStyle } from "@uiw/codemirror-theme-vscode";
-import { javascript } from "@codemirror/lang-javascript";
+import Editor from "@monaco-editor/react";
+
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import {
@@ -30,15 +27,16 @@ import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
 
 export default function Problem() {
+  // const editorRef = useRef();
+  // const onMount = (editor) => {
+  //   editorRef.current = editor;
+  // };
   const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
   const [language, setLanguage] = useState("C++");
-  const [code, setCode] = useState("");
-  const onChange = React.useCallback((val: string) => {
-    setCode(val);
-  }, []);
+  const [code, setCode] = useState<string | undefined>("");
 
   const navigate = useNavigate();
 
@@ -111,12 +109,20 @@ export default function Problem() {
     </Popover>
   );
 
-  const languageMap: Record<string, string> = {
+  const languageMapBackend: Record<string, string> = {
     Python: "py",
     "C++": "cpp",
     C: "c",
     Java: "java",
     Javascript: "js",
+  };
+
+  const languageMapEditor: Record<string, string> = {
+    Python: "python",
+    "C++": "cpp",
+    C: "c",
+    Java: "java",
+    Javascript: "javascript",
   };
 
   const handleSubmit = async () => {
@@ -126,7 +132,7 @@ export default function Problem() {
           `/api/problems/${problemId}`,
           {
             code: code,
-            language: languageMap[language],
+            language: languageMapBackend[language],
           },
           {
             headers: {
@@ -140,19 +146,18 @@ export default function Problem() {
         },
       );
       console.log("Submit response: ", res.data);
+      navigate(`/problems/${problemId}/submissions`);
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.response?.data?.name === "UNAUTHORIZED") {
+        if (error.response?.status === 401) {
           toast.error("Please login to submit your code");
-          navigate("/accounts/login");
         } else {
           const errorMessage = error.response?.data?.message;
           toast.error(errorMessage);
+          navigate(`/problems/${problemId}/submissions`);
         }
       }
       console.error(error);
-    } finally {
-      navigate(`/problems/${problemId}/submissions`);
     }
   };
 
@@ -206,8 +211,8 @@ export default function Problem() {
                 {problem.description}
               </ReactMarkdown>
             </div>
-            <div className="container p-4 border rounded-4 round shadow-sm bg-white">
-              <div className="mb-3 d-flex justify-content-between">
+            <div className="col-6 border rounded-4 round shadow-sm bg-white">
+              <div className="p-4 d-flex justify-content-between">
                 <Button onClick={() => handleSubmit()}>Submit</Button>
 
                 <DropdownButton variant="secondary" title={language}>
@@ -235,13 +240,19 @@ export default function Problem() {
                   </div>
                 </DropdownButton>
               </div>
-              <div>
-                <CodeMirror
+              <div
+                style={{
+                  height: "83vh",
+                }}
+              >
+                <Editor
+                  height="80vh"
+                  language={languageMapEditor[language]}
                   value={code}
-                  theme={vscodeLight}
-                  extensions={[javascript()]}
-                  style={{ fontSize: "16px" }}
-                  onChange={onChange}
+                  onChange={(value) => setCode(value)}
+                  options={{
+                    minimap: { enabled: false },
+                  }}
                 />
               </div>
             </div>
@@ -250,6 +261,5 @@ export default function Problem() {
       </div>
       <Footer />
     </div>
-    // </div>
   );
 }

@@ -1,5 +1,7 @@
 import prisma from "../../prisma/client";
 import { verdict } from "../../utils/constants";
+import { Submission } from "@prisma/client";
+import { findResultBySubmissionId } from "../submission.services/submission.service";
 
 export const queryProblems = async () => {
   const problems = await prisma.problem.findMany({
@@ -75,4 +77,17 @@ export const findSubmissionsProblem = async (
     },
   });
   return submissions;
+};
+
+export const addResultsToSubmissions = async (submissions: Submission[]) => {
+  const submissionsWithResults = await Promise.all(
+    submissions.map(async (submission) => {
+      const results = await findResultBySubmissionId(submission.submissionId);
+      return {
+        ...submission,
+        results: results,
+      };
+    }),
+  );
+  return submissionsWithResults;
 };

@@ -92,13 +92,25 @@ export interface ContributionListResponseInterface {
   contributions: Problem[];
 }
 
+export interface SubmissionWithResults extends Submission {
+  results: Result[];
+}
+
 export interface GetAllSubmissionsInterface {
-  submissions: Submission[];
+  submissions: SubmissionWithResults[];
 }
 
 export interface GetOneSubmissionInterface {
   submission: Submission;
+  // results: Result[];
+  // testcases: TestcaseInterface;
+  // problem: Problem;
+}
+
+export interface GetResultsInterface {
   results: Result[];
+}
+
+export interface GetTestcasesInterface {
   testcases: TestcaseInterface;
-  problem: Problem;
 }

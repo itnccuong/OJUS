@@ -3,12 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar.tsx";
 import { useEffect, useState } from "react";
 
-import CodeMirror from "@uiw/react-codemirror";
-import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { javascript } from "@codemirror/lang-javascript";
 import { toast } from "react-toastify";
 import {
+  GetResultsResponseInterface,
   GetSubmissionResponseInterface,
+  GetTestcasesResponseInterface,
+  OneProblemResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
@@ -21,6 +21,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
+import Editor from "@monaco-editor/react";
 
 export default function Submission() {
   const { submissionId } = useParams();
@@ -33,15 +34,38 @@ export default function Submission() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axiosInstance.get<
+        //Fetch submission
+        const resSubmission = await axiosInstance.get<
           ResponseInterface<GetSubmissionResponseInterface>
-        >(`/api/submissions/${submissionId}`, {});
+        >(`/api/submissions/${submissionId}`);
 
-        console.log(res.data);
-        setFetchSubmission(res.data.data.submission);
-        setResults(res.data.data.results);
-        setTestcases(res.data.data.testcases);
-        setProblem(res.data.data.problem);
+        setFetchSubmission(resSubmission.data.data.submission);
+        console.log("Submission", resSubmission.data.data.submission);
+
+        //Fetch problem
+        const resProblem = await axiosInstance.get<
+          ResponseInterface<OneProblemResponseInterface>
+        >(
+          `/api/problems/no-account/${resSubmission.data.data.submission.problemId}`,
+        );
+        setProblem(resProblem.data.data.problem);
+        console.log("Problem", resProblem.data.data.problem);
+
+        //Fetch results
+        const resResults = await axiosInstance.get<
+          ResponseInterface<GetResultsResponseInterface>
+        >(`/api/submissions/${submissionId}/results`);
+        setResults(resResults.data.data.results);
+        console.log("Results", resResults.data.data.results);
+
+        //Fetch testcases
+        const resTestcases = await axiosInstance.get<
+          ResponseInterface<GetTestcasesResponseInterface>
+        >(
+          `/api/problems/${resSubmission.data.data.submission.problemId}/testcases`,
+        );
+        setTestcases(resTestcases.data.data.testcases);
+        console.log("Testcases", resTestcases.data.data.testcases);
       } catch (error) {
         if (error instanceof AxiosError) {
           const errorMessage = error.response?.data?.message;
@@ -65,6 +89,14 @@ export default function Submission() {
     cpp: "C++",
     java: "Java",
     js: "JavaScript",
+  };
+
+  const languageMapEditor: Record<string, string> = {
+    Python: "python",
+    C: "c",
+    "C++": "cpp",
+    Java: "java",
+    JavaScript: "javascript",
   };
 
   const verdictMap: Record<string, string> = {
@@ -202,14 +234,25 @@ export default function Submission() {
             )}
 
             <h4 className="mt-3">Code</h4>
-            <div className="container border border-dark-subtle shadow-sm rounded-4 p-3 mt-3">
-              <CodeMirror
-                value={submission.code}
-                theme={vscodeLight}
-                extensions={[javascript()]}
-                style={{ fontSize: "16px" }}
-                editable={false}
-              />
+            <div
+              className="border border-dark-subtle shadow-sm rounded-4 mt-3"
+              style={{
+                height: "40vh",
+              }}
+            >
+              <div className="mt-3 mb-3">
+                <Editor
+                  height="35vh"
+                  language={languageMapEditor[submission.language]}
+                  value={submission.code}
+                  // theme={"github"}
+                  options={{
+                    minimap: { enabled: false },
+                    readOnly: true,
+                    scrollbar: { vertical: "hidden", horizontal: "hidden" },
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
