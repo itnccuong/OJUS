@@ -3,9 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar.tsx";
 import { useEffect, useState } from "react";
 
-import CodeMirror from "@uiw/react-codemirror";
-import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { javascript } from "@codemirror/lang-javascript";
 import { toast } from "react-toastify";
 import {
   GetSubmissionResponseInterface,
@@ -21,6 +18,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
+import Editor from "@monaco-editor/react";
 
 export default function Submission() {
   const { submissionId } = useParams();
@@ -65,6 +63,14 @@ export default function Submission() {
     cpp: "C++",
     java: "Java",
     js: "JavaScript",
+  };
+
+  const languageMapEditor: Record<string, string> = {
+    Python: "python",
+    C: "c",
+    "C++": "cpp",
+    Java: "java",
+    JavaScript: "javascript",
   };
 
   const verdictMap: Record<string, string> = {
@@ -202,14 +208,25 @@ export default function Submission() {
             )}
 
             <h4 className="mt-3">Code</h4>
-            <div className="container border border-dark-subtle shadow-sm rounded-4 p-3 mt-3">
-              <CodeMirror
-                value={submission.code}
-                theme={vscodeLight}
-                extensions={[javascript()]}
-                style={{ fontSize: "16px" }}
-                editable={false}
-              />
+            <div
+              className="border border-dark-subtle shadow-sm rounded-4 mt-3"
+              style={{
+                height: "40vh",
+              }}
+            >
+              <div className="mt-3 mb-3">
+                <Editor
+                  height="35vh"
+                  language={languageMapEditor[submission.language]}
+                  value={submission.code}
+                  // theme={"github"}
+                  options={{
+                    minimap: { enabled: false },
+                    readOnly: true,
+                    scrollbar: { vertical: "hidden", horizontal: "hidden" },
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

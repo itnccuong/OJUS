@@ -9,7 +9,7 @@ import {
   Popover,
 } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Editor from "@monaco-editor/react";
 
@@ -241,9 +241,13 @@ export default function Problem() {
                   </div>
                 </DropdownButton>
               </div>
-              <div>
+              <div
+                style={{
+                  height: "83vh",
+                }}
+              >
                 <Editor
-                  height="86vh"
+                  height="80vh"
                   language={languageMapEditor[language]}
                   value={code}
                   // theme={"github"}
