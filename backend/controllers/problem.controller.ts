@@ -4,6 +4,7 @@ import {
   compileService,
   createSubmission,
   executeCodeService,
+  findFileById,
   findProblemById,
   updateSubmissionVerdict,
 } from "../services/problem.services/submit.services";
@@ -14,6 +15,7 @@ import {
   GetOneProblemInterface,
   GetAllSubmissionsInterface,
   SubmitCodeResponseInterface,
+  GetTestcasesInterface,
 } from "../interfaces/api-interface";
 import {
   findSubmissionsProblem,
@@ -35,6 +37,7 @@ import {
   Middlewares,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
+import { downloadTestcase } from "../utils/general";
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
@@ -145,6 +148,20 @@ export class ProblemController extends Controller {
     const submissions = await findSubmissionsProblem(problem_id, userId);
     return {
       data: { submissions: submissions },
+    };
+  }
+
+  @Get("/{problem_id}/testcases")
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getTestcases(
+    @Path() problem_id: number,
+  ): Promise<SuccessResponseInterface<GetTestcasesInterface>> {
+    const problem = await findProblemById(problem_id);
+    const file = await findFileById(problem.fileId);
+    const fileUrl = file.location;
+    const testcases = await downloadTestcase(fileUrl);
+    return {
+      data: { testcases: testcases },
     };
   }
 }

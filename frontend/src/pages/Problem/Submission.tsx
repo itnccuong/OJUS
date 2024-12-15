@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import {
+  GetResultsResponseInterface,
   GetSubmissionResponseInterface,
+  GetTestcasesResponseInterface,
+  OneProblemResponseInterface,
   ResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
@@ -31,15 +34,38 @@ export default function Submission() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axiosInstance.get<
+        //Fetch submission
+        const resSubmission = await axiosInstance.get<
           ResponseInterface<GetSubmissionResponseInterface>
-        >(`/api/submissions/${submissionId}`, {});
+        >(`/api/submissions/${submissionId}`);
 
-        console.log(res.data);
-        setFetchSubmission(res.data.data.submission);
-        setResults(res.data.data.results);
-        setTestcases(res.data.data.testcases);
-        setProblem(res.data.data.problem);
+        setFetchSubmission(resSubmission.data.data.submission);
+        console.log("Submission", resSubmission.data.data.submission);
+
+        //Fetch problem
+        const resProblem = await axiosInstance.get<
+          ResponseInterface<OneProblemResponseInterface>
+        >(
+          `/api/problems/no-account/${resSubmission.data.data.submission.problemId}`,
+        );
+        setProblem(resProblem.data.data.problem);
+        console.log("Problem", resProblem.data.data.problem);
+
+        //Fetch results
+        const resResults = await axiosInstance.get<
+          ResponseInterface<GetResultsResponseInterface>
+        >(`/api/submissions/${submissionId}/results`);
+        setResults(resResults.data.data.results);
+        console.log("Results", resResults.data.data.results);
+
+        //Fetch testcases
+        const resTestcases = await axiosInstance.get<
+          ResponseInterface<GetTestcasesResponseInterface>
+        >(
+          `/api/problems/${resSubmission.data.data.submission.problemId}/testcases`,
+        );
+        setTestcases(resTestcases.data.data.testcases);
+        console.log("Testcases", resTestcases.data.data.testcases);
       } catch (error) {
         if (error instanceof AxiosError) {
           const errorMessage = error.response?.data?.message;

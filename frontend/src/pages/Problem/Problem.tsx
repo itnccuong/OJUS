@@ -263,6 +263,5 @@ export default function Problem() {
       </div>
       <Footer />
     </div>
-    // </div>
   );
 }

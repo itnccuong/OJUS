@@ -54,6 +54,30 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
 				"description": "Model Submission"
 			},
+			"GetOneSubmissionInterface": {
+				"properties": {
+					"submission": {
+						"$ref": "#/components/schemas/Submission"
+					}
+				},
+				"required": [
+					"submission"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetOneSubmissionInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetOneSubmissionInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DefaultSelection_Prisma._36_ResultPayload_": {
 				"properties": {
 					"memory": {
@@ -103,24 +127,70 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ResultPayload_",
 				"description": "Model Result"
 			},
-			"TestcaseInterface": {
+			"GetResultsInterface": {
 				"properties": {
-					"input": {
+					"results": {
 						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"output": {
-						"items": {
-							"type": "string"
+							"$ref": "#/components/schemas/Result"
 						},
 						"type": "array"
 					}
 				},
 				"required": [
-					"input",
-					"output"
+					"results"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetResultsInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetResultsInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeResponseInterface": {
+				"properties": {
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"submissionId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubmitCodeConfig": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"language"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -183,90 +253,6 @@
 					"problemId"
 				],
 				"type": "object"
-			},
-			"Problem": {
-				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
-				"description": "Model Problem"
-			},
-			"GetOneSubmissionInterface": {
-				"properties": {
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					},
-					"results": {
-						"items": {
-							"$ref": "#/components/schemas/Result"
-						},
-						"type": "array"
-					},
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
-					},
-					"problem": {
-						"$ref": "#/components/schemas/Problem"
-					}
-				},
-				"required": [
-					"submission",
-					"results",
-					"testcases",
-					"problem"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetOneSubmissionInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetOneSubmissionInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SubmitCodeResponseInterface": {
-				"properties": {
-					"submissionId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"submissionId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SubmitCodeConfig": {
-				"properties": {
-					"code": {
-						"type": "string"
-					},
-					"language": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"code",
-					"language"
-				],
-				"type": "object",
-				"additionalProperties": false
 			},
 			"ProblemWithUserStatusInterface": {
 				"properties": {
@@ -409,6 +395,56 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"TestcaseInterface": {
+				"properties": {
+					"input": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"output": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"input",
+					"output"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetTestcasesInterface": {
+				"properties": {
+					"testcases": {
+						"$ref": "#/components/schemas/TestcaseInterface"
+					}
+				},
+				"required": [
+					"testcases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetTestcasesInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetTestcasesInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Problem": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
+				"description": "Model Problem"
 			},
 			"ContributionResponseInterface": {
 				"properties": {
@@ -657,7 +693,7 @@
 	"paths": {
 		"/api/submissions/{submission_id}": {
 			"get": {
-				"operationId": "Login",
+				"operationId": "GetSubmission",
 				"responses": {
 					"200": {
 						"description": "Get submission successfully",
@@ -665,6 +701,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneSubmissionInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Submission"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "submission_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/submissions/{submission_id}/results": {
+			"get": {
+				"operationId": "GetResults",
+				"responses": {
+					"200": {
+						"description": "Get results of submission successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetResultsInterface_"
 								}
 							}
 						}
@@ -849,6 +917,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/problems/{problem_id}/testcases": {
+			"get": {
+				"operationId": "GetTestcases",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from problem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetTestcasesInterface_"
 								}
 							}
 						}
