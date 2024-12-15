@@ -58,6 +58,10 @@ jobs:
           cd OJUS/backend
           git pull
 
+          touch .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          npx prisma migrate dev --skip-generate
+
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 

@@ -146,19 +146,18 @@ export default function Problem() {
         },
       );
       console.log("Submit response: ", res.data);
+      navigate(`/problems/${problemId}/submissions`);
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.response?.data?.name === "UNAUTHORIZED") {
+        if (error.response?.status === 401) {
           toast.error("Please login to submit your code");
-          navigate("/accounts/login");
         } else {
           const errorMessage = error.response?.data?.message;
           toast.error(errorMessage);
+          navigate(`/problems/${problemId}/submissions`);
         }
       }
       console.error(error);
-    } finally {
-      navigate(`/problems/${problemId}/submissions`);
     }
   };
 
@@ -250,7 +249,6 @@ export default function Problem() {
                   height="80vh"
                   language={languageMapEditor[language]}
                   value={code}
-                  // theme={"github"}
                   onChange={(value) => setCode(value)}
                   options={{
                     minimap: { enabled: false },
