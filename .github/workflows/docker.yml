@@ -58,8 +58,6 @@ jobs:
           cd OJUS/backend
           git pull
 
-          prisma migrate dev
-          
           # Pull the latest image
           docker pull nhathien/ojus-backend:latest
 
