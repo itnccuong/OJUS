@@ -245,7 +245,7 @@ export default function EditProfile() {
           <h2 className="text-center mb-4">Edit Profile</h2>
 
           {/* Full Name */}
-          <Form.Group className="mb-3">
+          <div className="mb-3">
             <div className="d-flex align-items-center border-bottom pb-3">
               <span className="w-25 fw-bold">Full Name</span>
               {editingFields.fullname ? (
@@ -264,16 +264,21 @@ export default function EditProfile() {
                   </Form.Control.Feedback>
                 </div>
               ) : (
-                <span className="w-50 ms-3">
+                <span
+                  className="w-50"
+                  style={{
+                    marginLeft: "21px",
+                  }}
+                >
                   {profile.fullname ? profile.fullname : "Not set"}
                 </span>
               )}
               {editingFields.fullname ? (
                 <>
                   <Button
-                    className="ms-3"
+                    className="ms-4"
                     style={{
-                      width: "15%",
+                      width: "75px",
                     }}
                     variant="success"
                     onClick={() => handleFieldSubmit("fullname")}
@@ -281,9 +286,9 @@ export default function EditProfile() {
                     Save
                   </Button>
                   <Button
-                    className="ms-3"
+                    className="ms-2"
                     style={{
-                      width: "15%",
+                      width: "75px",
                     }}
                     variant="outline-danger"
                     onClick={() => toggleEditField("fullname")}
@@ -294,16 +299,16 @@ export default function EditProfile() {
               ) : (
                 <>
                   <span
-                    className="ms-3"
+                    className="ms-4"
                     style={{
-                      width: "15%",
+                      width: "75px",
                     }}
                   />
 
                   <Button
-                    className="ms-3"
+                    className="ms-2"
                     style={{
-                      width: "15%",
+                      width: "75px",
                     }}
                     variant="outline-primary"
                     onClick={() => toggleEditField("fullname")}
@@ -313,176 +318,177 @@ export default function EditProfile() {
                 </>
               )}
             </div>
-          </Form.Group>
-
-          {/* Gender */}
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Gender</Form.Label>
-              <Button variant="link" onClick={() => toggleEditField("gender")}>
-                {editingFields.gender ? "Cancel" : "Edit"}
-              </Button>
-            </div>
-            {editingFields.gender ? (
-              <>
-                <Form.Select
-                  name="gender"
-                  value={profile.gender}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleProfileChange(e)
-                  }
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </Form.Select>
-                <Button
-                  variant="primary"
-                  className="mt-2 w-100"
-                  onClick={() => handleFieldSubmit("gender")}
-                >
-                  Save Gender
-                </Button>
-              </>
-            ) : (
-              <Form.Control
-                plaintext
-                readOnly
-                defaultValue={profile.gender || "Not set"}
-              />
-            )}
-          </Form.Group>
-
-          {/* Birthday */}
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Birthday</Form.Label>
-              <Button
-                variant="link"
-                onClick={() => toggleEditField("birthday")}
-              >
-                {editingFields.birthday ? "Cancel" : "Edit"}
-              </Button>
-            </div>
-            {editingFields.birthday ? (
-              <>
-                <Form.Control
-                  type="date"
-                  name="birthday"
-                  value={profile.birthday}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleProfileChange(e)
-                  }
-                />
-                <Button
-                  variant="primary"
-                  className="mt-2 w-100"
-                  onClick={() => handleFieldSubmit("birthday")}
-                >
-                  Save Birthday
-                </Button>
-              </>
-            ) : (
-              <Form.Control
-                plaintext
-                readOnly
-                defaultValue={
-                  profile.birthday
-                    ? new Date(profile.birthday).toLocaleDateString()
-                    : "Not set"
-                }
-              />
-            )}
-          </Form.Group>
+          </div>
 
           {/* Facebook Link */}
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Facebook</Form.Label>
-              <Button
-                variant="link"
-                onClick={() => toggleEditField("facebookLink")}
-              >
-                {editingFields.facebookLink ? "Cancel" : "Edit"}
-              </Button>
-            </div>
-            {editingFields.facebookLink ? (
-              <>
-                <Form.Control
-                  type="url"
-                  name="facebookLink"
-                  value={profile.facebookLink}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleProfileChange(e)
-                  }
-                  placeholder="https://facebook.com/your-profile"
-                />
-                <Button
-                  variant="primary"
-                  className="mt-2 w-100"
-                  onClick={() => handleFieldSubmit("facebookLink")}
+          <div className="mb-3">
+            <div className="d-flex align-items-center border-bottom pb-3">
+              <span className="w-25 fw-bold">Facebook</span>
+              {editingFields.facebookLink ? (
+                <div>
+                  <Form.Control
+                    placeholder={"Enter your Facebook link"}
+                    type="text"
+                    name="facebookLink"
+                    value={profile.facebookLink}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleProfileChange(e)
+                    }
+                    isInvalid={!!errors.facebookLink}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.facebookLink}
+                  </Form.Control.Feedback>
+                </div>
+              ) : (
+                <span
+                  className="w-50"
+                  style={{
+                    marginLeft: "21px",
+                  }}
                 >
-                  Save Facebook Link
-                </Button>
-              </>
-            ) : (
-              <Form.Control
-                plaintext
-                readOnly
-                defaultValue={profile.facebookLink || "Not set"}
-              />
-            )}
-          </Form.Group>
+                  {profile.facebookLink ? profile.facebookLink : "Not set"}
+                </span>
+              )}
+              {editingFields.facebookLink ? (
+                <>
+                  <Button
+                    className="ms-4"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="success"
+                    onClick={() => handleFieldSubmit("facebookLink")}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    className="ms-2"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="outline-danger"
+                    onClick={() => toggleEditField("facebookLink")}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <span
+                    className="ms-4"
+                    style={{
+                      width: "75px",
+                    }}
+                  />
+
+                  <Button
+                    className="ms-2"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="outline-primary"
+                    onClick={() => toggleEditField("facebookLink")}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
 
           {/* GitHub Link */}
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>GitHub</Form.Label>
-              <Button
-                variant="link"
-                onClick={() => toggleEditField("githubLink")}
-              >
-                {editingFields.githubLink ? "Cancel" : "Edit"}
-              </Button>
-            </div>
-            {editingFields.githubLink ? (
-              <>
-                <Form.Control
-                  type="url"
-                  name="githubLink"
-                  value={profile.githubLink}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleProfileChange(e)
-                  }
-                  placeholder="https://github.com/your-username"
-                />
-                <Button
-                  variant="primary"
-                  className="mt-2 w-100"
-                  onClick={() => handleFieldSubmit("githubLink")}
+          <div className="mb-3">
+            <div className="d-flex align-items-center border-bottom pb-3">
+              <span className="w-25 fw-bold">Github</span>
+              {editingFields.githubLink ? (
+                <div>
+                  <Form.Control
+                    placeholder={"Enter your github link"}
+                    type="text"
+                    name="githubLink"
+                    value={profile.githubLink}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleProfileChange(e)
+                    }
+                    isInvalid={!!errors.githubLink}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.githubLink}
+                  </Form.Control.Feedback>
+                </div>
+              ) : (
+                <span
+                  className="w-50"
+                  style={{
+                    marginLeft: "21px",
+                  }}
                 >
-                  Save GitHub Link
-                </Button>
-              </>
-            ) : (
-              <Form.Control
-                plaintext
-                readOnly
-                defaultValue={profile.githubLink || "Not set"}
-              />
-            )}
-          </Form.Group>
+                  {profile.githubLink ? profile.githubLink : "Not set"}
+                </span>
+              )}
+              {editingFields.githubLink ? (
+                <>
+                  <Button
+                    className="ms-4"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="success"
+                    onClick={() => handleFieldSubmit("githubLink")}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    className="ms-2"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="outline-danger"
+                    onClick={() => toggleEditField("githubLink")}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <span
+                    className="ms-4"
+                    style={{
+                      width: "75px",
+                    }}
+                  />
+
+                  <Button
+                    className="ms-2"
+                    style={{
+                      width: "75px",
+                    }}
+                    variant="outline-primary"
+                    onClick={() => toggleEditField("githubLink")}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
 
           {/* Change Password */}
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Change Password</Form.Label>
+          <div>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <span className="fw-bold">Password</span>
               <Button
-                variant="link"
+                className="ms-2"
+                style={{
+                  width: "67px",
+                }}
+                variant={
+                  editingFields.password ? "outline-danger" : "outline-primary"
+                }
                 onClick={() => toggleEditField("password")}
               >
-                {editingFields.password ? "Cancel" : "Change Password"}
+                {editingFields.password ? "Cancel" : "Edit"}
               </Button>
             </div>
             {editingFields.password && (
@@ -544,7 +550,7 @@ export default function EditProfile() {
                 </Button>
               </>
             )}
-          </Form.Group>
+          </div>
         </Container>
       </div>
       <Footer />
