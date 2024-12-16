@@ -162,9 +162,9 @@ export default function Profile() {
                 minHeight: "81vh",
               }}
             >
-              <div className="container">
+              <div className="container pt-2">
                 {/* Profile Picture */}
-                <div className="d-flex align-items-center">
+                <div className="header d-flex align-items-center">
                   {/* Profile Picture */}
                   <div className="profile-pic">
                     <img
@@ -182,40 +182,63 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div>
+                <div className="edit-button mt-4 border-bottom pb-3">
                   <Button
                     disabled={!shouldShowEditButton}
                     variant={shouldShowEditButton ? "success" : "secondary"}
                     onClick={() => navigate("/profile")}
-                    className="w-100 mt-3"
+                    className="w-100"
                   >
                     Edit Profile
                   </Button>
                 </div>
 
-                {/* Problem Solving Stats */}
-                <div className="stats-box">
-                  <div className="stat-item">
-                    <h4>Total Solved</h4>
-                    <p>{totalSolved}</p>
+                <div className="stat-header mt-3">
+                  <h4>Problem Stats</h4>
+                </div>
+                <div className="stat-body">
+                  <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+                    <img
+                      className="rounded-circle"
+                      src="/challenger.png"
+                      width="48"
+                      height="48"
+                    />
+                    <h5 className="text-warning fw-bold">Total solved </h5>
+                    <h4>{totalSolved}</h4>
                   </div>
-                  <div className="stat-item easy">
-                    <h4>Easy</h4>
-                    <p>
-                      {bronzeSolved} <span className="checkmark">&#10004;</span>
-                    </p>
+
+                  <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+                    <img
+                      className="rounded-circle"
+                      src="/bronze.png"
+                      width="48"
+                      height="48"
+                    />
+                    <h5 className="text-warning-emphasis fw-bold">Bronze </h5>
+                    <h4>{bronzeSolved}</h4>
                   </div>
-                  <div className="stat-item medium">
-                    <h4>Medium</h4>
-                    <p>
-                      {platinumSolved} <span className="circle">&#8226;</span>
-                    </p>
+
+                  <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+                    <img
+                      className="rounded-circle"
+                      src="/platinum.png"
+                      width="48"
+                      height="48"
+                    />
+                    <h5 className="text-primary fw-bold">Platinum </h5>
+                    <h4>{platinumSolved}</h4>
                   </div>
-                  <div className="stat-item hard">
-                    <h4>Hard</h4>
-                    <p>
-                      {masterSolved} <span className="cross">&#10060;</span>
-                    </p>
+
+                  <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+                    <img
+                      className="rounded-circle"
+                      src="/master.png"
+                      width="48"
+                      height="48"
+                    />
+                    <h5 className="text-danger fw-bold">Master </h5>
+                    <h4>{masterSolved}</h4>
                   </div>
                 </div>
               </div>
@@ -223,7 +246,7 @@ export default function Profile() {
 
             {/* Right Side - Recent AC Submissions */}
             <div className="col-md-8 p-3 border rounded-4 shadow">
-              <div className="container">
+              <div className="container pt-2">
                 <div className="d-flex justify-content-between">
                   <h4>Recent AC</h4>
                   <Button>View all submissions</Button>
