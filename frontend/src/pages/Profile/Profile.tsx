@@ -156,49 +156,42 @@ export default function Profile() {
         <div className="container mt-3">
           {/* Left Side - Profile Box */}
           <div className="d-flex justify-content-between gap-4">
-            <div className="col-md-4 p-3 border rounded-4 shadow">
-              <div className="profile-box">
+            <div
+              className="col-md-4 p-3 border rounded-4 shadow"
+              style={{
+                minHeight: "81vh",
+              }}
+            >
+              <div className="container">
                 {/* Profile Picture */}
-                <div className="profile-pic">
-                  <img
-                    src={profilePic}
-                    alt="Profile"
-                    className="profile-img rounded-circle"
-                  />
-                </div>
-                <div className="profile-info">
-                  <h3 className="profile-name">{user.fullname}</h3>
-                  <p className="profile-username">{user.username}</p>
+                <div className="d-flex align-items-center">
+                  {/* Profile Picture */}
+                  <div className="profile-pic">
+                    <img
+                      src={profilePic}
+                      alt="Profile"
+                      className="profile-img rounded-circle"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+
+                  {/* Fullname Section */}
+                  <div className="flex-grow-1 d-flex justify-content-center">
+                    <h4>{user.fullname}</h4>
+                  </div>
                 </div>
 
-                {shouldShowEditButton && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      width: "100%",
-                      marginBottom: "10px",
-                    }}
+                <div>
+                  <Button
+                    disabled={!shouldShowEditButton}
+                    variant={shouldShowEditButton ? "success" : "secondary"}
+                    onClick={() => navigate("/profile")}
+                    className="w-100 mt-3"
                   >
-                    <Button
-                      variant="primary"
-                      onClick={() => navigate("/profile")}
-                      style={{
-                        backgroundColor: "#e4dff0",
-                        color: "#0b665e",
-                        width: "100%",
-                        fontSize: "20px",
-                        padding: "5px 20px",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Edit Profile
-                    </Button>
-                  </div>
-                )}
+                    Edit Profile
+                  </Button>
+                </div>
 
                 {/* Problem Solving Stats */}
                 <div className="stats-box">
@@ -230,9 +223,9 @@ export default function Profile() {
 
             {/* Right Side - Recent AC Submissions */}
             <div className="col-md-8 p-3 border rounded-4 shadow">
-              <div className="recent-ac-box">
+              <div className="container">
                 <div className="d-flex justify-content-between">
-                  <h4>Recent AC Submissions</h4>
+                  <h4>Recent AC</h4>
                   <Button>View all submissions</Button>
                 </div>
                 <Table striped bordered hover className="mt-3">
