@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 import getToken from "../../../utils/getToken";
 import axiosInstance from "../../../utils/getURL";
 import Loader from "../../components/Loader.tsx";
+import { ProfilePayloadInterface } from "../../../interfaces/model.interface.ts";
 
 interface UserProfile {
   fullname: string;
@@ -161,11 +162,8 @@ export default function EditProfile() {
   };
 
   const handleFieldSubmit = async (field: string) => {
-    // setGeneralError("");
-    // setSuccessMessage("");
-
     let isValid = true;
-    let payload: any = {};
+    const payload: ProfilePayloadInterface = {};
 
     switch (field) {
       case "fullname":
@@ -196,20 +194,14 @@ export default function EditProfile() {
     if (!isValid) return;
 
     try {
-      const response: { data: { message?: string } } =
-        await axiosInstance.patch("/api/user", payload, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      await axiosInstance.patch("/api/user", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setEditingFields((prev) => ({
         ...prev,
         [field]: false,
       }));
-
-      // setSuccessMessage(
-      //   response.data.message ||
-      //     `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`,
-      // );
 
       if (field === "password") {
         setPasswordFields({
@@ -218,15 +210,8 @@ export default function EditProfile() {
           confirmNewPassword: "",
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Update error", error);
-
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        `Failed to update ${field}. Please try again.`;
-
-      // setGeneralError(errorMessage);
     }
   };
   console.log("Profile data before showed: ", profile);

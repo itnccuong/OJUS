@@ -58,3 +58,13 @@ export interface SubmissionWithResults extends SubmissionInterface {
 export interface SubmissionWithProblem extends SubmissionInterface {
   problem: ProblemInterface;
 }
+
+export interface ProfilePayloadInterface {
+  fullname?: string; // Optional, as not all cases set this
+  gender?: string; // Assuming gender is a string
+  birthday?: Date | null; // Can be a Date or null
+  facebookLink?: string | null; // Can be a string or null
+  githubLink?: string | null; // Can be a string or null
+  currentPassword?: string; // For password updates
+  newPassword?: string; // For password updates
+}

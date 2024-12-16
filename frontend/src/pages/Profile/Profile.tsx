@@ -159,10 +159,10 @@ export default function Profile() {
             <div
               className="col-md-4 p-3 border rounded-4 shadow"
               style={{
-                minHeight: "81vh",
+                minHeight: "83vh",
               }}
             >
-              <div className="container pt-2">
+              <div className="container pt-2 pb-2">
                 {/* Profile Picture */}
                 <div className="header d-flex align-items-center">
                   {/* Profile Picture */}
