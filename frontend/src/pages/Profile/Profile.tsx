@@ -153,13 +153,13 @@ export default function Profile() {
     <div className="d-flex flex-column">
       <NavBar />
       <div className="p-3">
-        <div className="container mt-3">
+        <div className="container mt-3 mb-3">
           {/* Left Side - Profile Box */}
           <div className="d-flex justify-content-between gap-4">
             <div
               className="col-md-4 p-3 border rounded-4 shadow"
               style={{
-                minHeight: "83vh",
+                minHeight: "79vh",
               }}
             >
               <div className="container pt-2 pb-2">
@@ -168,7 +168,7 @@ export default function Profile() {
                   {/* Profile Picture */}
                   <div className="profile-pic">
                     <img
-                      src={profilePic}
+                      src="https://scontent.fsgn24-2.fna.fbcdn.net/v/t39.30808-1/466420221_1234042217704872_5671806366656552737_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeFMDpuEykRmY_UHMR9rjRnVhkqNKbZxII6GSo0ptnEgjuMXPcfO7A6YhrLFRfc8JZj81qgG4dnDn-gdUKbU7eEh&_nc_ohc=a2xRioY1kcwQ7kNvgExFTLd&_nc_zt=24&_nc_ht=scontent.fsgn24-2.fna&_nc_gid=Acb5pNkD_GxJHDQQdLz2GfV&oh=00_AYCqKLj4LLg-nTWfestuOFP7Rp4vpeqz3mIzDzGGYb6ImA&oe=676629B8"
                       alt="Profile"
                       className="profile-img rounded-circle"
                       width={100}
@@ -201,8 +201,8 @@ export default function Profile() {
                     <img
                       className="rounded-circle"
                       src="/challenger.png"
-                      width="48"
-                      height="48"
+                      width="40"
+                      height="40"
                     />
                     <h5 className="text-warning fw-bold">Total solved </h5>
                     <h4>{totalSolved}</h4>
@@ -212,8 +212,8 @@ export default function Profile() {
                     <img
                       className="rounded-circle"
                       src="/bronze.png"
-                      width="48"
-                      height="48"
+                      width="40"
+                      height="40"
                     />
                     <h5 className="text-warning-emphasis fw-bold">Bronze </h5>
                     <h4>{bronzeSolved}</h4>
@@ -223,8 +223,8 @@ export default function Profile() {
                     <img
                       className="rounded-circle"
                       src="/platinum.png"
-                      width="48"
-                      height="48"
+                      width="40"
+                      height="40"
                     />
                     <h5 className="text-primary fw-bold">Platinum </h5>
                     <h4>{platinumSolved}</h4>
@@ -234,8 +234,8 @@ export default function Profile() {
                     <img
                       className="rounded-circle"
                       src="/master.png"
-                      width="48"
-                      height="48"
+                      width="40"
+                      height="40"
                     />
                     <h5 className="text-danger fw-bold">Master </h5>
                     <h4>{masterSolved}</h4>

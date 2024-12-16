@@ -228,7 +228,7 @@ export default function EditProfile() {
         style={{ minHeight: "87vh" }}
       >
         <Container
-          className="bg-white shadow rounded p-4"
+          className="bg-white shadow rounded-4 p-4"
           style={{ maxWidth: "500px" }}
         >
           <h2 className="text-center mb-4">Edit Profile</h2>
