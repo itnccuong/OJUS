@@ -10,7 +10,6 @@ export default function Footer() {
 
         <div className="container d-flex gap-3 justify-content-end">
           <a
-            className="text-body-secondary"
             href="https://www.facebook.com/profile.php?id=61557169305419"
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
@@ -18,7 +17,6 @@ export default function Footer() {
             <img src="/facebook.svg" width="30" height="24" />
           </a>
           <a
-            className="text-body-secondary"
             href="https://youtu.be/4Ntc2lTu7LQ?si=cPA79t3sZV6rahV5"
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
@@ -31,7 +29,6 @@ export default function Footer() {
             />
           </a>
           <a
-            className="text-body-secondary"
             href="https://github.com/VuongNhatHien/Vua-Leetcode"
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab

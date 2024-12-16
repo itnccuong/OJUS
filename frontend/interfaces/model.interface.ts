@@ -3,6 +3,8 @@ export interface UserInterface {
   email: string;
   fullname: string;
   username: string;
+  githubLink: string;
+  facebookLink: string;
   created_at: string;
 }
 

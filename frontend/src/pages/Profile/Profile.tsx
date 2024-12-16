@@ -177,8 +177,26 @@ export default function Profile() {
                   </div>
 
                   {/* Fullname Section */}
-                  <div className="flex-grow-1 d-flex justify-content-center">
-                    <h4>{user.fullname}</h4>
+                  <div className="flex-grow-1 d-flex flex-column">
+                    <h4 className="text-center">{user.fullname}</h4>
+                    <div className="d-flex justify-content-center gap-3">
+                      {/*Add github link*/}
+                      <a
+                        href={user.githubLink}
+                        target="_blank" // Open in new tab
+                        rel="noopener noreferrer" // Open in new tab
+                      >
+                        <img src="/github-mark.svg" width="24" height="24" />
+                      </a>
+
+                      <a
+                        href={user.facebookLink}
+                        target="_blank" // Open in new tab
+                        rel="noopener noreferrer" // Open in new tab
+                      >
+                        <img src="/facebook.svg" width="26" height="26" />
+                      </a>
+                    </div>
                   </div>
                 </div>
 
@@ -187,7 +205,7 @@ export default function Profile() {
                     disabled={!shouldShowEditButton}
                     variant={shouldShowEditButton ? "success" : "secondary"}
                     onClick={() => navigate("/profile")}
-                    className="w-100"
+                    className="w-100 rounded-4"
                   >
                     Edit Profile
                   </Button>
