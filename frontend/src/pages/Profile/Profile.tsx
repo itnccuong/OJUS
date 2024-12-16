@@ -1,7 +1,6 @@
-// Profile.tsx
 import { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Table } from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 
 import axiosInstance from "../../../utils/getURL.ts";
@@ -20,88 +19,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
 import getToken from "../../../utils/getToken.ts";
 
-// Profile component
 export default function Profile() {
-  // const recentACSubmissions: Submission[] = [
-  //   {
-  //     title: "Binary Tree Traversal",
-  //     difficulty: "Medium",
-  //     language: "Python",
-  //     date: "2h ago",
-  //   },
-  //   {
-  //     title: "Dynamic Array Implementation",
-  //     difficulty: "Easy",
-  //     language: "Java",
-  //     date: "5h ago",
-  //   },
-  //   {
-  //     title: "Graph Shortest Path",
-  //     difficulty: "Medium",
-  //     language: "C++",
-  //     date: "1d ago",
-  //   },
-  //   {
-  //     title: "String Manipulation",
-  //     difficulty: "Hard",
-  //     language: "JavaScript",
-  //     date: "1d ago",
-  //   },
-  //   {
-  //     title: "Longest Palindromic String",
-  //     difficulty: "Easy",
-  //     language: "Python",
-  //     date: "2d ago",
-  //   },
-  //   {
-  //     title: "Zigzag Conversion",
-  //     difficulty: "Medium",
-  //     language: "C++",
-  //     date: "3d ago",
-  //   },
-  //   {
-  //     title: "Merge K Sorted List",
-  //     difficulty: "Hard",
-  //     language: "C++",
-  //     date: "3d ago",
-  //   },
-  //   {
-  //     title: "Valid Sudoku",
-  //     difficulty: "Easy",
-  //     language: "C++",
-  //     date: "3d ago",
-  //   },
-  //   {
-  //     title: "First Missing",
-  //     difficulty: "Easy",
-  //     language: "Java",
-  //     date: "5d ago",
-  //   },
-  //   {
-  //     title: "Wildcard Matching",
-  //     difficulty: "Hard",
-  //     language: "Python",
-  //     date: "7d ago",
-  //   },
-  //   {
-  //     title: "Group Anagrams",
-  //     difficulty: "Medium",
-  //     language: "Python",
-  //     date: "7d ago",
-  //   },
-  //   {
-  //     title: "Trapping Rain Water",
-  //     difficulty: "Hard",
-  //     language: "C++",
-  //     date: "10d ago",
-  //   },
-  //   {
-  //     title: "Search Insert Position",
-  //     difficulty: "Easy",
-  //     language: "C++",
-  //     date: "10d ago",
-  //   },
-  // ];
   const navigate = useNavigate();
   const { username } = useParams();
 
@@ -219,7 +137,10 @@ export default function Profile() {
 
     return {
       ...fetchSubmission,
-      difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
+      problem: {
+        ...fetchSubmission.problem,
+        difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
+      },
       language: languageMap[fetchSubmission.language],
       createdAt: readableTime,
     };
@@ -310,42 +231,80 @@ export default function Profile() {
             {/* Right Side - Recent AC Submissions */}
             <div className="col-md-8 p-3 border rounded-4 shadow">
               <div className="recent-ac-box">
-                <h4>Recent AC Submissions</h4>
-                <table className="table">
+                <div className="d-flex justify-content-between">
+                  <h4>Recent AC Submissions</h4>
+                  <Button>View all submissions</Button>
+                </div>
+                <Table striped bordered hover className="mt-3">
                   <thead>
                     <tr>
-                      <th>Title</th>
-                      <th>Difficulty</th>
-                      <th>Language</th>
-                      <th>Date</th>
+                      {/* <div className="d-flex"> */}
+                      <th
+                        className="text-center"
+                        style={{
+                          width: "35%",
+                        }}
+                      >
+                        Title
+                      </th>
+                      <th className="text-center" style={{ width: "20%" }}>
+                        Language
+                      </th>
+                      {/* </div> */}
+                      <th className="text-center" style={{ width: "20%" }}>
+                        Difficulty
+                      </th>
+                      <th className="text-center">Submit time</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {recentACSubmissions.map((submission, index) => (
-                      <tr key={index}>
-                        <td>{submission.problem.title}</td>
-                        <td
-                          style={{
-                            color: getDifficultyColor(submission.difficulty),
-                          }}
-                        >
-                          {submission.difficulty}
+                    {recentACSubmissions.map((submission) => (
+                      <tr
+                        key={submission.submissionId}
+                        onClick={() =>
+                          navigate(`/submissions/${submission.submissionId}`)
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td className="text-center">
+                          <Link
+                            to={`/submissions/${submission.submissionId}`}
+                            style={{
+                              textDecoration: "none",
+                              color: "black",
+                            }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.color = "blue")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.color = "black")
+                            }
+                          >
+                            {submission.problem.title}
+                          </Link>
                         </td>
-                        <td
-                          style={{
-                            color: getLanguageColor(submission.language),
-                          }}
-                        >
-                          {submission.language}
+
+                        {/*Language*/}
+                        <td className="text-center">{submission.language}</td>
+                        <td className="text-center">
+                          <span
+                            className={`badge fs-6 ${
+                              submission.problem.difficulty === "Bronze"
+                                ? "text-warning-emphasis"
+                                : submission.problem.difficulty === "Platinum"
+                                  ? "text-primary"
+                                  : "text-danger"
+                            }`}
+                          >
+                            {submission.problem.difficulty}
+                          </span>
                         </td>
-                        <td>{submission.createdAt}</td>
+
+                        <td className="text-center">{submission.createdAt}</td>
                       </tr>
                     ))}
                   </tbody>
-                </table>
-                <a href="#" className="view-all-link">
-                  View All Submissions
-                </a>
+                </Table>
               </div>
             </div>
           </div>
@@ -354,19 +313,4 @@ export default function Profile() {
       <Footer />
     </div>
   );
-}
-
-// Helper functions to assign colors based on difficulty and language
-function getDifficultyColor(difficulty: string) {
-  if (difficulty === "Easy") return "green";
-  if (difficulty === "Medium") return "orange";
-  if (difficulty === "Hard") return "red";
-  return "gray";
-}
-
-function getLanguageColor(language: string) {
-  if (language === "Python") return "darkblue";
-  if (language === "Java") return "green";
-  if (language === "C++") return "darkgray";
-  return "gray";
 }
