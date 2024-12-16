@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import {
   ResponseInterface,
-  SubmissionListResponseInterface,
+  SubmissionListFromProblemResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
@@ -30,7 +30,7 @@ export default function SubmissionList() {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<SubmissionListResponseInterface>
+          ResponseInterface<SubmissionListFromProblemResponseInterface>
         >(`/api/problems/${problemId}/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export default function SubmissionList() {
     fetchData();
   }, []);
 
-  if (loading || !fetchSubmissions) {
+  if (loading) {
     return <Loader />;
   }
 

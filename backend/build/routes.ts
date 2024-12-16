@@ -4,6 +4,8 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { UserController } from './../controllers/user.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SubmissionController } from './../controllers/submission.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProblemController } from './../controllers/problem.controller';
@@ -28,6 +30,64 @@ const models: TsoaRoute.Models = {
     "Submission": {
         "dataType": "refAlias",
         "type": {"ref":"DefaultSelection_Prisma._36_SubmissionPayload_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetAllSubmissionsFromUserInterface": {
+        "dataType": "refObject",
+        "properties": {
+            "submissions": {"dataType":"array","array":{"dataType":"refAlias","ref":"Submission"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface_GetAllSubmissionsFromUserInterface_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"ref":"GetAllSubmissionsFromUserInterface","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DefaultSelection_Prisma._36_ProblemPayload_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"fileId":{"dataType":"double","required":true},"authorId":{"dataType":"double","required":true},"memoryLimit":{"dataType":"double","required":true},"timeLimit":{"dataType":"double","required":true},"tags":{"dataType":"string","required":true},"difficulty":{"dataType":"double","required":true},"status":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"problemId":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Problem": {
+        "dataType": "refAlias",
+        "type": {"ref":"DefaultSelection_Prisma._36_ProblemPayload_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SubmissionWithProblem": {
+        "dataType": "refObject",
+        "properties": {
+            "stderr": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "verdict": {"dataType":"string","required":true},
+            "language": {"dataType":"string","required":true},
+            "code": {"dataType":"string","required":true},
+            "userId": {"dataType":"double","required":true},
+            "problemId": {"dataType":"double","required":true},
+            "submissionId": {"dataType":"double","required":true},
+            "problem": {"ref":"Problem","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetAllACSubmissionsFromUserInterface": {
+        "dataType": "refObject",
+        "properties": {
+            "submissions": {"dataType":"array","array":{"dataType":"refObject","ref":"SubmissionWithProblem"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface_GetAllACSubmissionsFromUserInterface_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"ref":"GetAllACSubmissionsFromUserInterface","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetOneSubmissionInterface": {
@@ -97,11 +157,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DefaultSelection_Prisma._36_ProblemPayload_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"fileId":{"dataType":"double","required":true},"authorId":{"dataType":"double","required":true},"memoryLimit":{"dataType":"double","required":true},"timeLimit":{"dataType":"double","required":true},"tags":{"dataType":"string","required":true},"difficulty":{"dataType":"double","required":true},"status":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"problemId":{"dataType":"double","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProblemWithUserStatusInterface": {
         "dataType": "refObject",
         "properties": {
@@ -169,7 +224,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GetAllSubmissionsInterface": {
+    "GetAllSubmissionsFromProblemInterface": {
         "dataType": "refObject",
         "properties": {
             "submissions": {"dataType":"array","array":{"dataType":"refObject","ref":"SubmissionWithResults"},"required":true},
@@ -177,10 +232,10 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface_GetAllSubmissionsInterface_": {
+    "SuccessResponseInterface_GetAllSubmissionsFromProblemInterface_": {
         "dataType": "refObject",
         "properties": {
-            "data": {"ref":"GetAllSubmissionsInterface","required":true},
+            "data": {"ref":"GetAllSubmissionsFromProblemInterface","required":true},
         },
         "additionalProperties": false,
     },
@@ -208,11 +263,6 @@ const models: TsoaRoute.Models = {
             "data": {"ref":"GetTestcasesInterface","required":true},
         },
         "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Problem": {
-        "dataType": "refAlias",
-        "type": {"ref":"DefaultSelection_Prisma._36_ProblemPayload_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ContributionResponseInterface": {
@@ -353,6 +403,66 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
     const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
+        app.get('/api/user/submissions',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.getSubmissionsFromUser)),
+
+            async function UserController_getSubmissionsFromUser(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'getSubmissionsFromUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/user/:userId/submissions/AC',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.getACSubmissionsFromUser)),
+
+            async function UserController_getACSubmissionsFromUser(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'getACSubmissionsFromUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/submissions/:submission_id',
             ...(fetchMiddlewares<RequestHandler>(SubmissionController)),
             ...(fetchMiddlewares<RequestHandler>(SubmissionController.prototype.getSubmission)),

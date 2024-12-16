@@ -4,21 +4,47 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { Request as RequestExpress, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
+import {
+  Controller,
+  Get,
+  Middlewares,
+  Path,
+  Route,
+  SuccessResponse,
+  Request,
+  Tags,
+} from "tsoa";
+import { verifyToken } from "../middlewares/verify-token";
+import {
+  GetAllACSubmissionsFromUserInterface,
+  GetAllSubmissionsFromProblemInterface,
+  GetAllSubmissionsFromUserInterface,
+  SuccessResponseInterface,
+} from "../interfaces/api-interface";
+import {
+  addResultsToSubmissions,
+  findSubmissionsProblem,
+} from "../services/problem.services/problem.service";
+import {
+  addProblemToSubmissions,
+  filterSubmissionsAC,
+  findSubmissionsUser,
+} from "../services/user.services/user.services";
 
-interface ProfileRequest extends Request {
+interface ProfileRequest extends RequestExpress {
   params: {
     username: string;
   };
 }
-interface UserRequest extends Request {
+interface UserRequest extends RequestExpress {
   params: {
     userId: string;
   };
 }
-interface UpdateProfileRequest extends Request {
+interface UpdateProfileRequest extends RequestExpress {
   body: {
     fullname?: string;
     gender?: string;
@@ -147,15 +173,6 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
         STATUS_CODE.BAD_REQUEST,
       );
     }
-
-    // return formatResponse(
-    //   res,
-    //   {
-    //     user: user,
-    //   },
-    //   STATUS_CODE.SUCCESS,
-    //   "Get profile successfully!",
-    // );
     return res.status(200).json({
       message: "Get profile successfully!",
       data: {
@@ -207,5 +224,36 @@ const getUserByID = async (req: UserRequest, res: Response) => {
     );
   }
 };
+
+@Route("/api/user") // Base path for submission-related routes
+@Tags("User") // Group this endpoint under "Submission" in Swagger
+export class UserController extends Controller {
+  @Get("/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getSubmissionsFromUser(
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromUserInterface>> {
+    const userId = req.userId;
+    const submissions = await findSubmissionsUser(userId);
+    return {
+      data: { submissions: submissions },
+    };
+  }
+
+  @Get("/{userId}/submissions/AC")
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getACSubmissionsFromUser(
+    @Path() userId: number,
+  ): Promise<SuccessResponseInterface<GetAllACSubmissionsFromUserInterface>> {
+    const submissions = await findSubmissionsUser(userId);
+    const submissionFilteredAC = await filterSubmissionsAC(submissions);
+    const submissionsWithProblem =
+      await addProblemToSubmissions(submissionFilteredAC);
+    return {
+      data: { submissions: submissionsWithProblem },
+    };
+  }
+}
 
 export { updateProfile, getUserByID, getProfileByName };

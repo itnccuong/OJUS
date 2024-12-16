@@ -3,6 +3,7 @@ import {
   ProblemWithUserStatusInterface,
   ResultInterface,
   SubmissionInterface,
+  SubmissionWithProblem,
   SubmissionWithResults,
   TestcaseInterface,
   UserInterface,
@@ -11,6 +12,10 @@ import {
 export interface ResponseInterface<T> {
   message: string;
   data: T;
+}
+
+export interface UserResponseInterface {
+  user: UserInterface;
 }
 
 export interface LoginResponseInterface {
@@ -42,8 +47,12 @@ export interface ProblemListResponseInterface {
   problems: ProblemWithUserStatusInterface[];
 }
 
-export interface SubmissionListResponseInterface {
+export interface SubmissionListFromProblemResponseInterface {
   submissions: SubmissionWithResults[];
+}
+
+export interface SubmissionListFromUserResponseInterface {
+  submissions: SubmissionWithProblem[];
 }
 
 export interface GetSubmissionResponseInterface {

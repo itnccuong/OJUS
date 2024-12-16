@@ -1,7 +1,7 @@
 export interface UserInterface {
-  user_id: number;
+  userId: number;
   email: string;
-  full_name: string;
+  fullname: string;
   username: string;
   created_at: string;
 }
@@ -53,4 +53,8 @@ export interface TestcaseInterface {
 
 export interface SubmissionWithResults extends SubmissionInterface {
   results: ResultInterface[];
+}
+
+export interface SubmissionWithProblem extends SubmissionInterface {
+  problem: ProblemInterface;
 }

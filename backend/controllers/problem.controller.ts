@@ -13,7 +13,7 @@ import {
   SuccessResponseInterface,
   GetAllProblemInterface,
   GetOneProblemInterface,
-  GetAllSubmissionsInterface,
+  GetAllSubmissionsFromProblemInterface,
   SubmitCodeResponseInterface,
   GetTestcasesInterface,
 } from "../interfaces/api-interface";
@@ -144,7 +144,7 @@ export class ProblemController extends Controller {
   public async getSubmissionsFromProblem(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllSubmissionsInterface>> {
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromProblemInterface>> {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     const submissionsWithResults = await addResultsToSubmissions(submissions);

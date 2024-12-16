@@ -96,8 +96,20 @@ export interface SubmissionWithResults extends Submission {
   results: Result[];
 }
 
-export interface GetAllSubmissionsInterface {
+export interface SubmissionWithProblem extends Submission {
+  problem: Problem;
+}
+
+export interface GetAllSubmissionsFromProblemInterface {
   submissions: SubmissionWithResults[];
+}
+
+export interface GetAllSubmissionsFromUserInterface {
+  submissions: Submission[];
+}
+
+export interface GetAllACSubmissionsFromUserInterface {
+  submissions: SubmissionWithProblem[];
 }
 
 export interface GetOneSubmissionInterface {
