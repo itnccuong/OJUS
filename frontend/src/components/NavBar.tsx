@@ -70,7 +70,7 @@ function NavBar() {
         </div>
 
         <div className="d-flex container gap-2 justify-content-end">
-          {token ? (
+          {username ? (
             <>
               <Nav>
                 {/*Use token to get username, for now this is hardcoded*/}
@@ -96,12 +96,6 @@ function NavBar() {
               <Nav>
                 <Nav.Link as={NavLink} to="/accounts/login">
                   Sign In
-                </Nav.Link>
-              </Nav>
-
-              <Nav>
-                <Nav.Link as={NavLink} to="/showProfile">
-                  Profile
                 </Nav.Link>
               </Nav>
             </>

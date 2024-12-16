@@ -5,6 +5,7 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import getToken from "../../../utils/getToken";
 import axiosInstance from "../../../utils/getURL";
+import Loader from "../../components/Loader.tsx";
 
 interface UserProfile {
   fullname: string;
@@ -43,8 +44,9 @@ export default function EditProfile() {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [generalError, setGeneralError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [generalError, setGeneralError] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) {
@@ -90,12 +92,18 @@ export default function EditProfile() {
         console.log("Profile showed:", profile);
       } catch (error) {
         console.error("Error fetching profile", error);
-        setGeneralError("Failed to load profile. Please try again.");
+        // setGeneralError("Failed to load profile. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserProfile();
   }, [token, navigate]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const toggleEditField = (field: keyof typeof editingFields) => {
     setEditingFields((prev) => ({
@@ -107,7 +115,7 @@ export default function EditProfile() {
       delete newErrors[field];
       return newErrors;
     });
-    setSuccessMessage("");
+    // setSuccessMessage("");
   };
 
   const handleProfileChange = (
@@ -153,8 +161,8 @@ export default function EditProfile() {
   };
 
   const handleFieldSubmit = async (field: string) => {
-    setGeneralError("");
-    setSuccessMessage("");
+    // setGeneralError("");
+    // setSuccessMessage("");
 
     let isValid = true;
     let payload: any = {};
@@ -198,10 +206,10 @@ export default function EditProfile() {
         [field]: false,
       }));
 
-      setSuccessMessage(
-        response.data.message ||
-          `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`,
-      );
+      // setSuccessMessage(
+      //   response.data.message ||
+      //     `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`,
+      // );
 
       if (field === "password") {
         setPasswordFields({
@@ -218,7 +226,7 @@ export default function EditProfile() {
         error.message ||
         `Failed to update ${field}. Please try again.`;
 
-      setGeneralError(errorMessage);
+      // setGeneralError(errorMessage);
     }
   };
   console.log("Profile data before showed: ", profile);
@@ -227,63 +235,84 @@ export default function EditProfile() {
     <div>
       <NavBar />
       <div
-        className="d-flex justify-content-center align-items-center bg-light"
+        className="d-flex justify-content-center align-items-center bg-light p-5"
         style={{ minHeight: "87vh" }}
       >
         <Container
           className="bg-white shadow rounded p-4"
-          style={{ maxWidth: "500px", width: "100%" }}
+          style={{ maxWidth: "500px" }}
         >
           <h2 className="text-center mb-4">Edit Profile</h2>
 
-          {generalError && (
-            <div className="alert alert-danger">{generalError}</div>
-          )}
-
-          {successMessage && (
-            <div className="alert alert-success">{successMessage}</div>
-          )}
-
           {/* Full Name */}
           <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Full Name</Form.Label>
-              <Button
-                variant="link"
-                onClick={() => toggleEditField("fullname")}
-              >
-                {editingFields.fullname ? "Cancel" : "Edit"}
-              </Button>
+            <div className="d-flex align-items-center border-bottom pb-3">
+              <span className="w-25 fw-bold">Full Name</span>
+              {editingFields.fullname ? (
+                <div>
+                  <Form.Control
+                    type="text"
+                    name="fullname"
+                    value={profile.fullname}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleProfileChange(e)
+                    }
+                    isInvalid={!!errors.fullname}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.fullname}
+                  </Form.Control.Feedback>
+                </div>
+              ) : (
+                <span className="w-50 ms-3">
+                  {profile.fullname ? profile.fullname : "Not set"}
+                </span>
+              )}
+              {editingFields.fullname ? (
+                <>
+                  <Button
+                    className="ms-3"
+                    style={{
+                      width: "15%",
+                    }}
+                    variant="success"
+                    onClick={() => handleFieldSubmit("fullname")}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    className="ms-3"
+                    style={{
+                      width: "15%",
+                    }}
+                    variant="outline-danger"
+                    onClick={() => toggleEditField("fullname")}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <span
+                    className="ms-3"
+                    style={{
+                      width: "15%",
+                    }}
+                  />
+
+                  <Button
+                    className="ms-3"
+                    style={{
+                      width: "15%",
+                    }}
+                    variant="outline-primary"
+                    onClick={() => toggleEditField("fullname")}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
             </div>
-            {editingFields.fullname ? (
-              <>
-                <Form.Control
-                  type="text"
-                  name="fullname"
-                  value={profile.fullname}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleProfileChange(e)
-                  }
-                  isInvalid={!!errors.fullname}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.fullname}
-                </Form.Control.Feedback>
-                <Button
-                  variant="primary"
-                  className="mt-2 w-100"
-                  onClick={() => handleFieldSubmit("fullname")}
-                >
-                  Save Full Name
-                </Button>
-              </>
-            ) : (
-              <Form.Control
-                plaintext
-                readOnly
-                defaultValue={profile.fullname ? profile.fullname : "Not set"}
-              />
-            )}
           </Form.Group>
 
           {/* Gender */}
@@ -370,7 +399,7 @@ export default function EditProfile() {
           {/* Facebook Link */}
           <Form.Group className="mb-3">
             <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>Facebook Link</Form.Label>
+              <Form.Label>Facebook</Form.Label>
               <Button
                 variant="link"
                 onClick={() => toggleEditField("facebookLink")}
@@ -409,7 +438,7 @@ export default function EditProfile() {
           {/* GitHub Link */}
           <Form.Group className="mb-3">
             <div className="d-flex justify-content-between align-items-center">
-              <Form.Label>GitHub Link</Form.Label>
+              <Form.Label>GitHub</Form.Label>
               <Button
                 variant="link"
                 onClick={() => toggleEditField("githubLink")}
