@@ -1,17 +1,42 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
 import storageKeyMap from "../../utils/storageKeyMap.ts";
+import axiosInstance from "../../utils/getURL";
 
 function NavBar() {
   const navigate = useNavigate();
-  const token = getToken(); // Get token from localStorage
+  const [username, setUsername] = useState("");
+  const token = getToken();
+
   // Initialize navigate
   const handleSignOut = () => {
     localStorage.removeItem(storageKeyMap.token); // Remove token from localStorage
     navigate("/accounts/login"); // Redirect to login
   };
+  useEffect(() => {
+    if (token) {
+      getUserProfile(); // Retrieve profile using userId from the token
+    }
+  }, [token]);
+
+  const getUserProfile = async () => {
+    try {
+      const response = await axiosInstance.get("/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in the Authorization header
+        },
+      });
+      console.log("res get profile", response);
+      setUsername(response.data.data.user.username); // Assuming response structure has data -> user -> username
+      console.log("User Profile:", response.data);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
+
   return (
     <Navbar className="bg-body-tertiary border-bottom d-flex">
       <div className="d-flex container">
@@ -49,7 +74,7 @@ function NavBar() {
             <>
               <Nav>
                 {/*Use token to get username, for now this is hardcoded*/}
-                <Nav.Link as={NavLink} to={`/u/duygay`}>
+                <Nav.Link as={NavLink} to={`/u/${username}`}>
                   Profile
                 </Nav.Link>
               </Nav>

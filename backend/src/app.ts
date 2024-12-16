@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 
 RegisterRoutes(app);
 // routes
-app.use("/src", router);
+app.use("/api", router);
 
 // // temorary route for upload
 // app.get("/upload", (req, res) => {
