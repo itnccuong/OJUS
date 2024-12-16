@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { Request as RequestExpress, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
 import { STATUS_CODE } from "../utils/constants";
@@ -71,15 +71,16 @@ const updateProfile = async (req: UpdateProfileRequest, res: Response) => {
     }
 
     const userId = req.userId;
-    const {
-      fullname,
-      gender,
-      birthday,
-      facebookLink,
-      githubLink,
-      currentPassword,
-      newPassword,
-    } = req.body;
+    const { fullname, facebookLink, githubLink, currentPassword, newPassword } =
+      req.body;
+
+    if (fullname === null) {
+      return formatResponse(
+        res,
+        "Fullname is required!",
+        STATUS_CODE.BAD_REQUEST,
+      );
+    }
 
     // Find the existing user
     const existingUser = await prisma.user.findUnique({
@@ -114,36 +115,31 @@ const updateProfile = async (req: UpdateProfileRequest, res: Response) => {
       }
     }
 
-    // Prepare update data
-    const updateData: any = {
-      fullname,
-      gender,
-      birthday,
-      facebookLink,
-      githubLink,
-    };
-
     // Hash new password if provided
+    let updatePassword = existingUser.password;
     if (newPassword) {
       const saltRounds = 10;
-      updateData.password = await bcrypt.hash(newPassword, saltRounds);
+      updatePassword = await bcrypt.hash(newPassword, saltRounds);
     }
+    const updateUserData: User = {
+      ...existingUser,
+      fullname: fullname === undefined ? existingUser.fullname : fullname,
+      facebookLink:
+        facebookLink === undefined ? existingUser.facebookLink : facebookLink,
+      githubLink:
+        githubLink === undefined ? existingUser.githubLink : githubLink,
+      password: updatePassword,
+    };
 
     // Update user profile
     const updatedUser = await prisma.user.update({
       where: { userId },
-      data: updateData,
+      data: updateUserData,
     });
 
     // Remove sensitive information before sending response
     const { password, ...safeUser } = updatedUser;
 
-    // return formatResponse(
-    //   res,
-    //   { user: safeUser },
-    //   STATUS_CODE.SUCCESS,
-    //   "Profile updated successfully!",
-    // );
     return res.status(200).json({
       message: "Profile updated successfully!",
       data: {
@@ -187,7 +183,6 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
 const getUserByID = async (req: UserRequest, res: Response) => {
   try {
     const userId = req.userId;
-    console.log(userId);
 
     // Find user in the database by userId
     const user = await prisma.user.findUnique({

@@ -9,24 +9,18 @@ datasource db {
 }
 
 model User {
-  userId         Int        @id @default(autoincrement())
-  username       String     @unique
-  email          String     @unique
-  fullname       String
-  gender         String?    
-  password       String
-  createdAt      DateTime   @default(now())
-  birthday       DateTime?  
-  facebookLink   String?    
-  githubLink     String?    
-  easySolved     Int        @default(0) 
-  mediumSolved   Int        @default(0) 
-  hardSolved     Int        @default(0)
-  
-  problems       Problem[]  // Relation to Problem model (many-to-many)
-  Submission     Submission[] // Relation to Submission model (many-to-many)
-}
+  userId       Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  fullname     String
+  password     String
+  createdAt    DateTime @default(now())
+  facebookLink String?
+  githubLink   String?
 
+  problems   Problem[] // Relation to Problem model (many-to-many)
+  Submission Submission[] // Relation to Submission model (many-to-many)
+}
 
 model Problem {
   problemId   Int      @id @default(autoincrement())

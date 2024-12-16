@@ -668,6 +668,12 @@
 			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
+					"githubLink": {
+						"type": "string"
+					},
+					"facebookLink": {
+						"type": "string"
+					},
 					"password": {
 						"type": "string"
 					},
@@ -690,6 +696,8 @@
 					}
 				},
 				"required": [
+					"githubLink",
+					"facebookLink",
 					"password",
 					"fullname",
 					"email",

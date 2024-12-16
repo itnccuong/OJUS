@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Form, FloatingLabel, Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
@@ -7,7 +7,7 @@ import getToken from "../../../utils/getToken";
 import axiosInstance from "../../../utils/getURL";
 import Loader from "../../components/Loader.tsx";
 import { ProfilePayloadInterface } from "../../../interfaces/model.interface.ts";
-
+import { toast } from "react-toastify";
 interface UserProfile {
   fullname: string;
   gender: string;
@@ -45,8 +45,6 @@ export default function EditProfile() {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  // const [generalError, setGeneralError] = useState("");
-  // const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -194,9 +192,15 @@ export default function EditProfile() {
     if (!isValid) return;
 
     try {
-      await axiosInstance.patch("/api/user", payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await toast.promise(
+        axiosInstance.patch("/api/user", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        {
+          pending: "Updating...",
+          success: "Update profile successfully",
+        },
+      );
 
       setEditingFields((prev) => ({
         ...prev,
@@ -238,6 +242,7 @@ export default function EditProfile() {
                   <Form.Control
                     type="text"
                     name="fullname"
+                    required={true}
                     value={profile.fullname}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleProfileChange(e)
@@ -326,14 +331,20 @@ export default function EditProfile() {
                   </Form.Control.Feedback>
                 </div>
               ) : (
-                <span
-                  className="w-50"
+                <Link
+                  to={profile.facebookLink ? profile.facebookLink : "#"}
+                  className="w-50 text-truncate"
                   style={{
                     marginLeft: "21px",
+                    display: "inline-block", // Required for text truncation
+                    whiteSpace: "nowrap", // Prevents text wrapping
+                    overflow: "hidden", // Hides overflow content
+                    textOverflow: "ellipsis", // Adds the three dots
+                    textDecoration: "none",
                   }}
                 >
                   {profile.facebookLink ? profile.facebookLink : "Not set"}
-                </span>
+                </Link>
               )}
               {editingFields.facebookLink ? (
                 <>
@@ -403,14 +414,20 @@ export default function EditProfile() {
                   </Form.Control.Feedback>
                 </div>
               ) : (
-                <span
-                  className="w-50"
+                <Link
+                  to={profile.githubLink ? profile.githubLink : "#"}
+                  className="w-50 text-truncate"
                   style={{
                     marginLeft: "21px",
+                    display: "inline-block", // Required for text truncation
+                    whiteSpace: "nowrap", // Prevents text wrapping
+                    overflow: "hidden", // Hides overflow content
+                    textOverflow: "ellipsis", // Adds the three dots
+                    textDecoration: "none",
                   }}
                 >
                   {profile.githubLink ? profile.githubLink : "Not set"}
-                </span>
+                </Link>
               )}
               {editingFields.githubLink ? (
                 <>

@@ -1,8 +1,0 @@
--- -- AlterTable
--- ALTER TABLE `User` ADD COLUMN `birthday` DATETIME(3) NULL,
---     ADD COLUMN `easySolved` INTEGER NOT NULL DEFAULT 0,
---     ADD COLUMN `facebookLink` VARCHAR(191) NULL,
---     ADD COLUMN `gender` VARCHAR(191) NULL,
---     ADD COLUMN `githubLink` VARCHAR(191) NULL,
---     ADD COLUMN `hardSolved` INTEGER NOT NULL DEFAULT 0,
---     ADD COLUMN `mediumSolved` INTEGER NOT NULL DEFAULT 0;
