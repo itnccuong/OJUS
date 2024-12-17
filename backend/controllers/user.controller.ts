@@ -16,9 +16,14 @@ import {
   SuccessResponse,
   Request,
   Tags,
+  Post,
+  FormField,
+  UploadedFile,
+  Patch,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import {
+  ContributionResponseInterface,
   GetAllACSubmissionsFromUserInterface,
   GetAllSubmissionsFromProblemInterface,
   GetAllSubmissionsFromUserInterface,
@@ -33,6 +38,7 @@ import {
   filterSubmissionsAC,
   findSubmissionsUser,
 } from "../services/user.services/user.services";
+import { uploadFile } from "../utils/uploadFileUtils";
 
 interface ProfileRequest extends RequestExpress {
   params: {
@@ -265,6 +271,18 @@ export class UserController extends Controller {
     return {
       data: { submissions: submissionsWithProblem },
     };
+  }
+
+  @SuccessResponse("200", "Update avatar successfully")
+  @Patch("/avatar")
+  @Middlewares(verifyToken) // Middleware to verify the user's token
+  public async submitContribute(
+    @Request() req: RequestExpress, // Request object for user ID and file
+    @UploadedFile()
+    file: Express.Multer.File,
+  ): Promise<SuccessResponseInterface<{}>> {
+    const path = await uploadFile("ojus-bucket", "root", file);
+    return { data: {} };
   }
 }
 

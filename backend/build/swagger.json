@@ -219,6 +219,19 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SuccessResponseInterface____": {
+				"properties": {
+					"data": {
+						"properties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetOneSubmissionInterface": {
 				"properties": {
 					"submission": {
@@ -808,19 +821,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface____": {
-				"properties": {
-					"data": {
-						"properties": {},
-						"type": "object"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"SendResetLinkConfig": {
 				"properties": {
 					"email": {
@@ -909,6 +909,47 @@
 						}
 					}
 				]
+			}
+		},
+		"/api/user/avatar": {
+			"patch": {
+				"operationId": "SubmitContribute",
+				"responses": {
+					"200": {
+						"description": "Update avatar successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface____"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/submissions/{submission_id}": {

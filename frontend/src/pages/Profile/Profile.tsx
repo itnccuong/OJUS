@@ -153,7 +153,7 @@ export default function Profile() {
   const hanldeUpdateAvatar = async () => {
     const formData = new FormData();
     if (file) {
-      formData.append("avatar", file);
+      formData.append("file", file);
     } else {
       console.log("No file");
       return;

@@ -29,3 +29,8 @@ export const verdict = {
   RUNTIME_ERROR: "RUNTIME_ERROR",
   COMPILE_ERROR: "COMPILE_ERROR",
 };
+
+export const DO_endpoint = "https://sgp1.digitaloceanspaces.com";
+export const DO_region = "sgp1";
+export const DO_location =
+  "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com";
