@@ -175,6 +175,36 @@ export default function Profile() {
       setFile(null);
       getUserFromName();
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
+      console.error(error);
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    try {
+      const response = await toast.promise(
+        axiosInstance.delete("/api/user/avatar", {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }),
+        {
+          pending: "Updating...",
+          success: "Update avatar successfully",
+        },
+      );
+      console.log("Update avatar", response);
+      setShow(false);
+      setFile(null);
+      getUserFromName();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
       console.error(error);
     } finally {
       setShow(false);
@@ -200,7 +230,7 @@ export default function Profile() {
                   {/* Profile Picture */}
                   <div className="profile-pic">
                     <img
-                      src={user.avatar ? user.avatar.location : "/user.png"}
+                      src={user.avatar ? user.avatar.url : "/user.png"}
                       alt="Profile"
                       className="profile-img rounded-circle"
                       width={100}
@@ -224,7 +254,7 @@ export default function Profile() {
                               file
                                 ? URL.createObjectURL(file)
                                 : user.avatar
-                                  ? user.avatar.location
+                                  ? user.avatar.url
                                   : "/user.png"
                             }
                             alt="Profile"
@@ -260,7 +290,11 @@ export default function Profile() {
                       </div>
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button variant="danger" onClick={() => setShow(false)}>
+                      <Button
+                        disabled={!user.avatar}
+                        variant="danger"
+                        onClick={() => handleDeleteAvatar()}
+                      >
                         Delete avatar
                       </Button>
                       <Button

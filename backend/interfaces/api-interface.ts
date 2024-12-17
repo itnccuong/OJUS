@@ -134,3 +134,7 @@ export interface GetResultsInterface {
 export interface GetTestcasesInterface {
   testcases: TestcaseInterface;
 }
+
+export interface UserResponseInterface {
+  user: User;
+}

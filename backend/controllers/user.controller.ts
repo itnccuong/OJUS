@@ -20,6 +20,7 @@ import {
   FormField,
   UploadedFile,
   Patch,
+  Delete,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import {
@@ -29,6 +30,7 @@ import {
   GetAllSubmissionsFromUserInterface,
   SuccessResponseInterface,
   UpdateAvatarInterface,
+  UserResponseInterface,
   UserWithAvatarInterface,
 } from "../interfaces/api-interface";
 import {
@@ -37,11 +39,15 @@ import {
 } from "../services/problem.services/problem.service";
 import {
   addProblemToSubmissions,
+  deleteAvatar,
   filterSubmissionsAC,
+  findAvatarById,
   findSubmissionsUser,
+  findUserById,
   uploadAvatar,
 } from "../services/user.services/user.services";
 import { uploadFile } from "../utils/uploadFileUtils";
+import { findFileById } from "../services/problem.services/submit.services";
 
 interface ProfileRequest extends RequestExpress {
   params: {
@@ -279,7 +285,7 @@ export class UserController extends Controller {
   @SuccessResponse("200", "Update avatar successfully")
   @Patch("/avatar")
   @Middlewares(verifyToken) // Middleware to verify the user's token
-  public async submitContribute(
+  public async uploadAvatar(
     @Request() req: RequestExpress, // Request object for user ID and file
     @UploadedFile()
     file: Express.Multer.File,
@@ -300,6 +306,30 @@ export class UserController extends Controller {
           ...user,
           avatar: avatar,
         },
+      },
+    };
+  }
+
+  @SuccessResponse("200", "Delete avatar successfully")
+  @Delete("/avatar")
+  @Middlewares(verifyToken) // Middleware to verify the user's token
+  public async deleteAvatar(
+    @Request() req: RequestExpress, // Request object for user ID and file
+  ): Promise<SuccessResponseInterface<UserResponseInterface>> {
+    //update avatarId in user table
+    const userId = req.userId;
+    const user = await findUserById(userId);
+    const avatar = await findAvatarById(user.avatarId);
+    await deleteAvatar(avatar);
+    await prisma.user.update({
+      where: { userId },
+      data: {
+        avatarId: null,
+      },
+    });
+    return {
+      data: {
+        user: user,
       },
     };
   }

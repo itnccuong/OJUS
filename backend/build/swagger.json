@@ -386,6 +386,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"User": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
+				"description": "Model User"
+			},
+			"UserResponseInterface": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_UserResponseInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/UserResponseInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetOneSubmissionInterface": {
 				"properties": {
 					"submission": {
@@ -833,10 +861,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"User": {
-				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
-				"description": "Model User"
-			},
 			"LoginResponseInterface": {
 				"properties": {
 					"user": {
@@ -1034,7 +1058,7 @@
 		},
 		"/api/user/avatar": {
 			"patch": {
-				"operationId": "SubmitContribute",
+				"operationId": "UploadAvatar",
 				"responses": {
 					"200": {
 						"description": "Update avatar successfully",
@@ -1071,6 +1095,26 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "DeleteAvatar",
+				"responses": {
+					"200": {
+						"description": "Delete avatar successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_UserResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/api/submissions/{submission_id}": {

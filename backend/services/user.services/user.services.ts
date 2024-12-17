@@ -1,9 +1,44 @@
 import prisma from "../../prisma/client";
-import { Submission } from "@prisma/client";
+import { Files, Submission, User } from "@prisma/client";
 import { findResultBySubmissionId } from "../submission.services/submission.service";
 import { findProblemById } from "../problem.services/submit.services";
-import { digitalOceanConfig, verdict } from "../../utils/constants";
-import { uploadFile } from "../../utils/uploadFileUtils";
+import {
+  digitalOceanConfig,
+  STATUS_CODE,
+  verdict,
+} from "../../utils/constants";
+import { deleteFile, uploadFile } from "../../utils/uploadFileUtils";
+import { CustomError } from "../../utils/errorClass";
+
+export const findUserById = async (userId: number) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      userId,
+    },
+  });
+  if (!user) {
+    throw new CustomError("User not found in database!", STATUS_CODE.NOT_FOUND);
+  }
+  return user;
+};
+
+export const findAvatarById = async (avatarId: number | null) => {
+  if (!avatarId) {
+    throw new CustomError("User does not have avatar", STATUS_CODE.NOT_FOUND);
+  }
+  const avatar = await prisma.files.findUnique({
+    where: {
+      fileId: avatarId,
+    },
+  });
+  if (!avatar) {
+    throw new CustomError(
+      "Avatar not found in database!",
+      STATUS_CODE.NOT_FOUND,
+    );
+  }
+  return avatar;
+};
 
 export const findSubmissionsUser = async (userId: number) => {
   const submissions = await prisma.submission.findMany({
@@ -49,4 +84,15 @@ export const uploadAvatar = async (file: Express.Multer.File) => {
     },
   });
   return avatar;
+};
+
+export const deleteAvatar = async (file: Files) => {
+  const bucket = file.bucket;
+  const key = file.key;
+  await deleteFile(bucket, key);
+  await prisma.files.delete({
+    where: {
+      fileId: file.fileId,
+    },
+  });
 };

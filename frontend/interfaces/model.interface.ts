@@ -14,8 +14,10 @@ export interface FileInterface {
   filename: string;
   filesize: number;
   fileType: string;
-  location: string;
+  url: string;
   createdAt: string;
+  bucket: string;
+  key: string;
 }
 
 export interface UserWithAvatarInterface extends UserInterface {
