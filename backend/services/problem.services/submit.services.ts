@@ -115,7 +115,7 @@ export const executeCodeService = async (
 ) => {
   const problem = await findProblemById(problem_id);
   const file = await findFileById(problem.fileId);
-  const fileUrl = file.location;
+  const fileUrl = file.url;
   const testcases = await downloadTestcase(fileUrl);
 
   const testcaseLength = testcases.input.length;

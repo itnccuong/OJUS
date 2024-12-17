@@ -62,9 +62,11 @@ export class ContributionController extends Controller {
     const createFile = await prisma.files.create({
       data: {
         filename: filename,
-        location: url,
+        url: url,
         filesize: file.size,
         fileType: file.mimetype,
+        bucket: "temp",
+        key: "temp",
       },
     });
 

@@ -160,7 +160,7 @@ export class ProblemController extends Controller {
   ): Promise<SuccessResponseInterface<GetTestcasesInterface>> {
     const problem = await findProblemById(problem_id);
     const file = await findFileById(problem.fileId);
-    const fileUrl = file.location;
+    const fileUrl = file.url;
     const testcases = await downloadTestcase(fileUrl);
     return {
       data: { testcases: testcases },

@@ -221,7 +221,13 @@
 			},
 			"DefaultSelection_Prisma._36_FilesPayload_": {
 				"properties": {
-					"location": {
+					"url": {
+						"type": "string"
+					},
+					"key": {
+						"type": "string"
+					},
+					"bucket": {
 						"type": "string"
 					},
 					"fileType": {
@@ -244,7 +250,9 @@
 					}
 				},
 				"required": [
-					"location",
+					"url",
+					"key",
+					"bucket",
 					"fileType",
 					"filesize",
 					"filename",

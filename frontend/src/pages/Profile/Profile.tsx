@@ -10,7 +10,6 @@ import {
   UserWithAvatarInterface,
 } from "../../../interfaces/model.interface.ts";
 import {
-  LoginResponseInterface,
   ResponseInterface,
   SubmissionListFromUserResponseInterface,
   UserResponseInterface,

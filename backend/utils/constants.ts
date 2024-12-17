@@ -30,8 +30,9 @@ export const verdict = {
   COMPILE_ERROR: "COMPILE_ERROR",
 };
 
-export const DO_bucket = "ojus-bucket";
-export const DO_endpoint = "https://sgp1.digitaloceanspaces.com";
-export const DO_region = "sgp1";
-export const DO_location =
-  "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com";
+export const digitalOceanConfig = {
+  bucket: "ojus-bucket",
+  region: "sgp1",
+  endpoint: `https://sgp1.digitaloceanspaces.com`,
+  location: `https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com`,
+};

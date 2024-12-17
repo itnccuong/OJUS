@@ -1,12 +1,16 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { DO_endpoint, DO_location, DO_region } from "./constants";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import crypto from "crypto";
+import { digitalOceanConfig } from "./constants";
 
 // connect to digitalocean spaces
 const s3 = new S3Client({
-  endpoint: DO_endpoint,
+  endpoint: digitalOceanConfig.endpoint,
   forcePathStyle: false,
-  region: DO_region,
+  region: digitalOceanConfig.region,
   credentials: {
     accessKeyId: process.env.DO_ACCESS as string,
     secretAccessKey: process.env.DO_SECRET as string,
@@ -14,11 +18,11 @@ const s3 = new S3Client({
 });
 
 // upload to digitalocean spaces
-export async function uploadFile(
+export const uploadFile = async (
   bucket: string,
   location: string,
   file: Express.Multer.File,
-): Promise<string> {
+) => {
   const randomPrefix = crypto.randomBytes(8).toString("hex");
   const randomFilename = `${randomPrefix}_${file.originalname}`;
   let key = `${location}/${randomFilename}`;
@@ -30,5 +34,13 @@ export async function uploadFile(
     ContentType: file.mimetype,
   });
   await s3.send(command);
-  return `${DO_location}/${key}`;
-}
+  return { url: `${digitalOceanConfig.location}/${key}`, key: key };
+};
+
+export const deleteFile = async (bucket: string, key: string) => {
+  const command = new DeleteObjectCommand({
+    Bucket: bucket,
+    Key: key,
+  });
+  await s3.send(command);
+};

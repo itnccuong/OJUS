@@ -62,7 +62,7 @@ describe("Contribute", () => {
     if (file) {
       expect(file.filename).toContain("Contribution_Title");
       expect(file.fileType).toContain("zip");
-      expect(file.location).toBeTruthy();
+      expect(file.url).toBeTruthy();
     }
   });
 });
