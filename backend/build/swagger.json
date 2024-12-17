@@ -219,11 +219,157 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface____": {
+			"DefaultSelection_Prisma._36_FilesPayload_": {
+				"properties": {
+					"location": {
+						"type": "string"
+					},
+					"fileType": {
+						"type": "string"
+					},
+					"filesize": {
+						"type": "number",
+						"format": "double"
+					},
+					"filename": {
+						"type": "string"
+					},
+					"fileId": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"location",
+					"fileType",
+					"filesize",
+					"filename",
+					"fileId",
+					"createdAt"
+				],
+				"type": "object"
+			},
+			"Files": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_FilesPayload_",
+				"description": "Model Files"
+			},
+			"DefaultSelection_Prisma._36_UserPayload_": {
+				"properties": {
+					"avatarId": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubLink": {
+						"type": "string"
+					},
+					"facebookLink": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"fullname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"avatarId",
+					"githubLink",
+					"facebookLink",
+					"password",
+					"fullname",
+					"email",
+					"username",
+					"createdAt",
+					"userId"
+				],
+				"type": "object"
+			},
+			"UserWithAvatarInterface": {
+				"properties": {
+					"avatarId": {
+						"type": "number",
+						"format": "double"
+					},
+					"githubLink": {
+						"type": "string"
+					},
+					"facebookLink": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"fullname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"avatar": {
+						"$ref": "#/components/schemas/Files"
+					}
+				},
+				"required": [
+					"avatarId",
+					"githubLink",
+					"facebookLink",
+					"password",
+					"fullname",
+					"email",
+					"username",
+					"createdAt",
+					"userId",
+					"avatar"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateAvatarInterface": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/UserWithAvatarInterface"
+					}
+				},
+				"required": [
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_UpdateAvatarInterface_": {
 				"properties": {
 					"data": {
-						"properties": {},
-						"type": "object"
+						"$ref": "#/components/schemas/UpdateAvatarInterface"
 					}
 				},
 				"required": [
@@ -679,52 +825,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DefaultSelection_Prisma._36_UserPayload_": {
-				"properties": {
-					"avatarId": {
-						"type": "number",
-						"format": "double"
-					},
-					"githubLink": {
-						"type": "string"
-					},
-					"facebookLink": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"fullname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"username": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"avatarId",
-					"githubLink",
-					"facebookLink",
-					"password",
-					"fullname",
-					"email",
-					"username",
-					"createdAt",
-					"userId"
-				],
-				"type": "object"
-			},
 			"User": {
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
 				"description": "Model User"
@@ -817,6 +917,19 @@
 					"username",
 					"password",
 					"fullname"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface____": {
+				"properties": {
+					"data": {
+						"properties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"data"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -920,7 +1033,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface____"
+									"$ref": "#/components/schemas/SuccessResponseInterface_UpdateAvatarInterface_"
 								}
 							}
 						}

@@ -30,6 +30,7 @@ export const verdict = {
   COMPILE_ERROR: "COMPILE_ERROR",
 };
 
+export const DO_bucket = "ojus-bucket";
 export const DO_endpoint = "https://sgp1.digitaloceanspaces.com";
 export const DO_region = "sgp1";
 export const DO_location =

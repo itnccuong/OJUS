@@ -6,7 +6,7 @@ dotenv.config();
 import { PrismaClient, User } from "@prisma/client";
 import { Request as RequestExpress, Response } from "express";
 import { formatResponse } from "../utils/formatResponse";
-import { STATUS_CODE } from "../utils/constants";
+import { DO_bucket, STATUS_CODE } from "../utils/constants";
 import {
   Controller,
   Get,
@@ -28,6 +28,8 @@ import {
   GetAllSubmissionsFromProblemInterface,
   GetAllSubmissionsFromUserInterface,
   SuccessResponseInterface,
+  UpdateAvatarInterface,
+  UserWithAvatarInterface,
 } from "../interfaces/api-interface";
 import {
   addResultsToSubmissions,
@@ -280,9 +282,34 @@ export class UserController extends Controller {
     @Request() req: RequestExpress, // Request object for user ID and file
     @UploadedFile()
     file: Express.Multer.File,
-  ): Promise<SuccessResponseInterface<{}>> {
-    const path = await uploadFile("ojus-bucket", "root", file);
-    return { data: {} };
+  ): Promise<SuccessResponseInterface<UpdateAvatarInterface>> {
+    const location = await uploadFile(DO_bucket, "root", file);
+
+    const avatar = await prisma.files.create({
+      data: {
+        filename: file.originalname,
+        location: location,
+        filesize: file.size,
+        fileType: file.mimetype,
+      },
+    });
+
+    //update avatarId in user table
+    const userId = req.userId;
+    const user = await prisma.user.update({
+      where: { userId },
+      data: {
+        avatarId: avatar.fileId,
+      },
+    });
+    return {
+      data: {
+        user: {
+          ...user,
+          avatar: avatar,
+        },
+      },
+    };
   }
 }
 

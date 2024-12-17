@@ -1,6 +1,6 @@
 import { TestcaseInterface } from "./code-executor-interface";
 
-import type { User, Problem, Result, Submission } from "@prisma/client";
+import type { User, Problem, Result, Submission, Files } from "@prisma/client";
 
 export interface SuccessResponseInterface<T> {
   data: T;
@@ -98,6 +98,14 @@ export interface SubmissionWithResults extends Submission {
 
 export interface SubmissionWithProblem extends Submission {
   problem: Problem;
+}
+
+export interface UserWithAvatarInterface extends User {
+  avatar: Files;
+}
+
+export interface UpdateAvatarInterface {
+  user: UserWithAvatarInterface;
 }
 
 export interface GetAllSubmissionsFromProblemInterface {

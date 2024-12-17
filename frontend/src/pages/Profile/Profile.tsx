@@ -10,6 +10,7 @@ import {
   UserWithAvatarInterface,
 } from "../../../interfaces/model.interface.ts";
 import {
+  LoginResponseInterface,
   ResponseInterface,
   SubmissionListFromUserResponseInterface,
   UserResponseInterface,
@@ -159,13 +160,20 @@ export default function Profile() {
       return;
     }
     try {
-      const response = await axiosInstance.patch("/api/user/avatar", formData, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
+      const response = await toast.promise(
+        axiosInstance.patch("/api/user/avatar", formData, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }),
+        {
+          pending: "Updating...",
+          success: "Update avatar successfully",
         },
-      });
+      );
       console.log("Update avatar", response);
       setShow(false);
+      setFile(null);
       getUserFromName();
     } catch (error) {
       console.error(error);
