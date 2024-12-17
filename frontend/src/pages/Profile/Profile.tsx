@@ -7,7 +7,7 @@ import axiosInstance from "../../../utils/getURL.ts";
 import Footer from "../../components/Footer.tsx";
 import {
   SubmissionWithProblem,
-  UserInterface,
+  UserWithAvatarInterface,
 } from "../../../interfaces/model.interface.ts";
 import {
   ResponseInterface,
@@ -25,9 +25,8 @@ export default function Profile() {
 
   const [show, setShow] = useState(false);
   // State variables for profile data and recent submissions
-  const [user, setUser] = useState<UserInterface>();
+  const [user, setUser] = useState<UserWithAvatarInterface>();
 
-  const [profilePic, setProfilePic] = useState(""); // Assuming profile picture is part of the response
   const [file, setFile] = useState<File | null>(null);
 
   const [usernameFromToken, SetUsernameFromToken] = useState("");
@@ -47,7 +46,6 @@ export default function Profile() {
       >(`/api/user/${username}`);
       console.log("Get user from name", data);
       setUser(data.data.user);
-      setProfilePic("https://via.placeholder.com/150");
     } catch (error) {
       console.error(error);
     }
@@ -152,6 +150,30 @@ export default function Profile() {
   // Only show the "Edit Profile" button if the usernames match
   const shouldShowEditButton = usernameFromToken == username;
 
+  const hanldeUpdateAvatar = async () => {
+    const formData = new FormData();
+    if (file) {
+      formData.append("avatar", file);
+    } else {
+      console.log("No file");
+      return;
+    }
+    try {
+      const response = await axiosInstance.patch("/api/user/avatar", formData, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      console.log("Update avatar", response);
+      setShow(false);
+      getUserFromName();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setShow(false);
+    }
+  };
+
   return (
     <div className="d-flex flex-column">
       <NavBar />
@@ -171,7 +193,7 @@ export default function Profile() {
                   {/* Profile Picture */}
                   <div className="profile-pic">
                     <img
-                      src="https://scontent.fsgn24-2.fna.fbcdn.net/v/t39.30808-1/466420221_1234042217704872_5671806366656552737_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeFMDpuEykRmY_UHMR9rjRnVhkqNKbZxII6GSo0ptnEgjuMXPcfO7A6YhrLFRfc8JZj81qgG4dnDn-gdUKbU7eEh&_nc_ohc=a2xRioY1kcwQ7kNvgExFTLd&_nc_zt=24&_nc_ht=scontent.fsgn24-2.fna&_nc_gid=Acb5pNkD_GxJHDQQdLz2GfV&oh=00_AYCqKLj4LLg-nTWfestuOFP7Rp4vpeqz3mIzDzGGYb6ImA&oe=676629B8"
+                      src={user.avatar ? user.avatar.location : "/user.png"}
                       alt="Profile"
                       className="profile-img rounded-circle"
                       width={100}
@@ -191,7 +213,13 @@ export default function Profile() {
                       <div className="d-flex flex-column justify-content-center align-items-center p-3">
                         <div className="profile-pic border rounded-circle p-1 bg-white">
                           <img
-                            src="https://scontent.fsgn24-2.fna.fbcdn.net/v/t39.30808-1/466420221_1234042217704872_5671806366656552737_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeFMDpuEykRmY_UHMR9rjRnVhkqNKbZxII6GSo0ptnEgjuMXPcfO7A6YhrLFRfc8JZj81qgG4dnDn-gdUKbU7eEh&_nc_ohc=a2xRioY1kcwQ7kNvgExFTLd&_nc_zt=24&_nc_ht=scontent.fsgn24-2.fna&_nc_gid=Acb5pNkD_GxJHDQQdLz2GfV&oh=00_AYCqKLj4LLg-nTWfestuOFP7Rp4vpeqz3mIzDzGGYb6ImA&oe=676629B8"
+                            src={
+                              file
+                                ? URL.createObjectURL(file)
+                                : user.avatar
+                                  ? user.avatar.location
+                                  : "/user.png"
+                            }
                             alt="Profile"
                             className="profile-img rounded-circle"
                             width={150}
@@ -225,13 +253,14 @@ export default function Profile() {
                       </div>
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button
-                        variant="secondary"
-                        onClick={() => setShow(false)}
-                      >
-                        Close
+                      <Button variant="danger" onClick={() => setShow(false)}>
+                        Delete avatar
                       </Button>
-                      <Button variant="primary" onClick={() => setShow(false)}>
+                      <Button
+                        disabled={!file}
+                        variant="primary"
+                        onClick={() => hanldeUpdateAvatar()}
+                      >
                         Save Changes
                       </Button>
                     </Modal.Footer>

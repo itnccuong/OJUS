@@ -7,6 +7,7 @@ import {
   SubmissionWithResults,
   TestcaseInterface,
   UserInterface,
+  UserWithAvatarInterface,
 } from "./model.interface.ts";
 
 export interface ResponseInterface<T> {
@@ -15,7 +16,7 @@ export interface ResponseInterface<T> {
 }
 
 export interface UserResponseInterface {
-  user: UserInterface;
+  user: UserWithAvatarInterface;
 }
 
 export interface LoginResponseInterface {

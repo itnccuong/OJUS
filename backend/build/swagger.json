@@ -668,6 +668,10 @@
 			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
+					"avatarId": {
+						"type": "number",
+						"format": "double"
+					},
 					"githubLink": {
 						"type": "string"
 					},
@@ -696,6 +700,7 @@
 					}
 				},
 				"required": [
+					"avatarId",
 					"githubLink",
 					"facebookLink",
 					"password",

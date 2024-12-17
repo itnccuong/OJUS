@@ -299,7 +299,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DefaultSelection_Prisma._36_UserPayload_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"githubLink":{"dataType":"string","required":true},"facebookLink":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"fullname":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"userId":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatarId":{"dataType":"double","required":true},"githubLink":{"dataType":"string","required":true},"facebookLink":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"fullname":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"userId":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "User": {

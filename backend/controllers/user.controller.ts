@@ -169,10 +169,22 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
         STATUS_CODE.BAD_REQUEST,
       );
     }
+
+    let avatar = null;
+    if (user.avatarId) {
+      avatar = await prisma.files.findFirst({
+        where: {
+          fileId: user.avatarId,
+        },
+      });
+    }
     return res.status(200).json({
       message: "Get profile successfully!",
       data: {
-        user: user,
+        user: {
+          ...user,
+          avatar: avatar,
+        },
       },
     });
   } catch (err: any) {
@@ -199,16 +211,21 @@ const getUserByID = async (req: UserRequest, res: Response) => {
       );
     }
 
-    // return formatResponse(
-    //   res,
-    //   { user: user },
-    //   STATUS_CODE.SUCCESS,
-    //   "User fetched successfully!",
-    // );
+    let avatar = null;
+    if (user.avatarId) {
+      avatar = await prisma.files.findFirst({
+        where: {
+          fileId: user.avatarId,
+        },
+      });
+    }
     return res.status(200).json({
-      message: "User fetched successfully!",
+      message: "Get profile successfully!",
       data: {
-        user: user,
+        user: {
+          ...user,
+          avatar: avatar,
+        },
       },
     });
   } catch (err: any) {

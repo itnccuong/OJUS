@@ -5,7 +5,21 @@ export interface UserInterface {
   username: string;
   githubLink: string;
   facebookLink: string;
+  avatarId: number;
   created_at: string;
+}
+
+export interface FileInterface {
+  fileId: number;
+  filename: string;
+  filesize: number;
+  fileType: string;
+  location: string;
+  createdAt: string;
+}
+
+export interface UserWithAvatarInterface extends UserInterface {
+  avatar: FileInterface;
 }
 
 export interface ProblemInterface {
