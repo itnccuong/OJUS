@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, Form, Modal, Table } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 
@@ -23,9 +23,12 @@ export default function Profile() {
   const navigate = useNavigate();
   const { username } = useParams();
 
+  const [show, setShow] = useState(false);
   // State variables for profile data and recent submissions
   const [user, setUser] = useState<UserInterface>();
+
   const [profilePic, setProfilePic] = useState(""); // Assuming profile picture is part of the response
+  const [file, setFile] = useState<File | null>(null);
 
   const [usernameFromToken, SetUsernameFromToken] = useState("");
 
@@ -173,8 +176,66 @@ export default function Profile() {
                       className="profile-img rounded-circle"
                       width={100}
                       height={100}
+                      onClick={() => setShow(true)}
+                      style={{
+                        cursor: "pointer",
+                      }}
                     />
                   </div>
+
+                  <Modal show={show} onHide={() => setShow(false)}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Upload a New Avatar</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="bg-dark">
+                      <div className="d-flex flex-column justify-content-center align-items-center p-3">
+                        <div className="profile-pic border rounded-circle p-1 bg-white">
+                          <img
+                            src="https://scontent.fsgn24-2.fna.fbcdn.net/v/t39.30808-1/466420221_1234042217704872_5671806366656552737_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeFMDpuEykRmY_UHMR9rjRnVhkqNKbZxII6GSo0ptnEgjuMXPcfO7A6YhrLFRfc8JZj81qgG4dnDn-gdUKbU7eEh&_nc_ohc=a2xRioY1kcwQ7kNvgExFTLd&_nc_zt=24&_nc_ht=scontent.fsgn24-2.fna&_nc_gid=Acb5pNkD_GxJHDQQdLz2GfV&oh=00_AYCqKLj4LLg-nTWfestuOFP7Rp4vpeqz3mIzDzGGYb6ImA&oe=676629B8"
+                            alt="Profile"
+                            className="profile-img rounded-circle"
+                            width={150}
+                            height={150}
+                          />
+                        </div>
+                        <Form.Group>
+                          <div className="custom-file">
+                            <Form.Control
+                              style={{
+                                display: "none",
+                              }}
+                              required
+                              id="customFile"
+                              type="file"
+                              onChange={(e) =>
+                                setFile(
+                                  (e.target as HTMLInputElement).files?.[0] ||
+                                    null,
+                                )
+                              }
+                            />
+                            <Form.Label
+                              htmlFor="customFile"
+                              className="custom-file-label btn btn-light mt-3"
+                            >
+                              Choose image
+                            </Form.Label>
+                          </div>
+                        </Form.Group>
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShow(false)}
+                      >
+                        Close
+                      </Button>
+                      <Button variant="primary" onClick={() => setShow(false)}>
+                        Save Changes
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
 
                   {/* Fullname Section */}
                   <div className="flex-grow-1 d-flex flex-column">
