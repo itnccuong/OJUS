@@ -101,7 +101,7 @@ export interface SubmissionWithProblem extends Submission {
 }
 
 export interface UserWithAvatarInterface extends User {
-  avatar: Files;
+  avatar: Files | null;
 }
 
 export interface UpdateAvatarInterface {
@@ -137,4 +137,8 @@ export interface GetTestcasesInterface {
 
 export interface UserResponseInterface {
   user: User;
+}
+
+export interface UserWithAvatarResponseInterface {
+  user: UserWithAvatarInterface;
 }

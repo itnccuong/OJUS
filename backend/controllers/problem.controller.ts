@@ -7,7 +7,7 @@ import {
   findFileById,
   findProblemById,
   updateSubmissionVerdict,
-} from "../services/problem.services/submit.services";
+} from "../services/problem.services/judging.services";
 import {
   SubmitCodeConfig,
   SuccessResponseInterface,

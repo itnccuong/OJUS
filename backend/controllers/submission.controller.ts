@@ -26,7 +26,7 @@ import {
 import {
   findFileById,
   findProblemById,
-} from "../services/problem.services/submit.services";
+} from "../services/problem.services/judging.services";
 import { downloadTestcase } from "../utils/general";
 
 @Route("/api/submissions") // Base path for authentication-related routes

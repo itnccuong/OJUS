@@ -1,6 +1,6 @@
 import prisma from "../../prisma/client";
 import { Submission } from "@prisma/client";
-import { findProblemById } from "../problem.services/submit.services";
+import { findProblemById } from "../problem.services/judging.services";
 import { STATUS_CODE, verdict } from "../../utils/constants";
 import { uploadFile } from "../../utils/uploadFileUtils";
 import { CustomError } from "../../utils/errorClass";
@@ -19,7 +19,7 @@ export const findUserById = async (userId: number) => {
 
 export const findAvatarById = async (avatarId: number | null) => {
   if (!avatarId) {
-    throw new CustomError("User does not have avatar", STATUS_CODE.NOT_FOUND);
+    return null;
   }
   const avatar = await prisma.files.findUnique({
     where: {

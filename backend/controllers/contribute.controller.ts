@@ -1,10 +1,5 @@
 import { Request as RequestExpress } from "express";
 import {
-  completeUpload,
-  startUpload,
-  uploadToS3,
-} from "../services/contribution.services/uploadFile.service";
-import {
   Controller,
   Get,
   Path,
@@ -29,7 +24,7 @@ import { Problem } from "@prisma/client";
 import {
   findAllPendingContributions,
   findPendingContribution,
-} from "../services/contribution.services/findContribution.services";
+} from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
 
 @Route("/api/contributions") // Base path for contribution-related routes

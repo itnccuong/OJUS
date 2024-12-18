@@ -16,8 +16,6 @@ import {
   SuccessResponse,
   Request,
   Tags,
-  Post,
-  FormField,
   UploadedFile,
   Patch,
   Delete,
@@ -29,16 +27,17 @@ import {
   SuccessResponseInterface,
   UpdateAvatarInterface,
   UserResponseInterface,
+  UserWithAvatarInterface,
+  UserWithAvatarResponseInterface,
 } from "../interfaces/api-interface";
 import {
   addProblemToSubmissions,
   filterSubmissionsAC,
+  findAvatarById,
   findSubmissionsUser,
   findUserById,
   uploadAvatar,
 } from "../services/user.services/user.services";
-import { uploadFile } from "../utils/uploadFileUtils";
-import { findFileById } from "../services/problem.services/submit.services";
 
 interface ProfileRequest extends RequestExpress {
   params: {
@@ -198,54 +197,28 @@ const getProfileByName = async (req: ProfileRequest, res: Response) => {
   }
 };
 
-const getUserByID = async (req: UserRequest, res: Response) => {
-  try {
+@Route("/api/user")
+@Tags("User")
+export class UserController extends Controller {
+  @Get("/")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched user profile")
+  public async getUserProfile(
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<UserWithAvatarResponseInterface>> {
     const userId = req.userId;
-
-    // Find user in the database by userId
-    const user = await prisma.user.findUnique({
-      where: {
-        userId: userId, // Assuming `id` is the primary key for users in the Prisma schema
-      },
-    });
-
-    if (!user) {
-      return formatResponse(
-        res,
-        "User ID does not exist!",
-        STATUS_CODE.BAD_REQUEST,
-      );
-    }
-
-    let avatar = null;
-    if (user.avatarId) {
-      avatar = await prisma.files.findFirst({
-        where: {
-          fileId: user.avatarId,
-        },
-      });
-    }
-    return res.status(200).json({
-      message: "Get profile successfully!",
+    const user = await findUserById(userId);
+    const avatar = await findAvatarById(user.avatarId);
+    return {
       data: {
         user: {
           ...user,
           avatar: avatar,
         },
       },
-    });
-  } catch (err: any) {
-    return formatResponse(
-      res,
-      `Error in backend${err.message}`,
-      STATUS_CODE.INTERNAL_SERVER_ERROR,
-    );
+    };
   }
-};
 
-@Route("/api/user") // Base path for submission-related routes
-@Tags("User") // Group this endpoint under "Submission" in Swagger
-export class UserController extends Controller {
   @Get("/submissions")
   @Middlewares(verifyToken)
   @SuccessResponse(200, "Successfully fetched submissions from user")
@@ -323,4 +296,4 @@ export class UserController extends Controller {
   }
 }
 
-export { updateProfile, getUserByID, getProfileByName };
+export { updateProfile, getProfileByName };
