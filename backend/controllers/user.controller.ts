@@ -36,6 +36,7 @@ import {
   findAvatarById,
   findSubmissionsUser,
   findUserById,
+  findUserByName,
   uploadAvatar,
 } from "../services/user.services/user.services";
 
@@ -157,45 +158,45 @@ const updateProfile = async (req: UpdateProfileRequest, res: Response) => {
   }
 };
 
-const getProfileByName = async (req: ProfileRequest, res: Response) => {
-  try {
-    const username = req.params.username;
-
-    const user = await prisma.user.findFirst({
-      where: {
-        username: username,
-      },
-    });
-
-    if (!user) {
-      return formatResponse(
-        res,
-        "Username not exists!",
-        STATUS_CODE.BAD_REQUEST,
-      );
-    }
-
-    let avatar = null;
-    if (user.avatarId) {
-      avatar = await prisma.files.findFirst({
-        where: {
-          fileId: user.avatarId,
-        },
-      });
-    }
-    return res.status(200).json({
-      message: "Get profile successfully!",
-      data: {
-        user: {
-          ...user,
-          avatar: avatar,
-        },
-      },
-    });
-  } catch (err: any) {
-    return formatResponse(res, err.message, STATUS_CODE.INTERNAL_SERVER_ERROR);
-  }
-};
+// const getProfileByName = async (req: ProfileRequest, res: Response) => {
+//   try {
+//     const username = req.params.username;
+//
+//     const user = await prisma.user.findFirst({
+//       where: {
+//         username: username,
+//       },
+//     });
+//
+//     if (!user) {
+//       return formatResponse(
+//         res,
+//         "Username not exists!",
+//         STATUS_CODE.BAD_REQUEST,
+//       );
+//     }
+//
+//     let avatar = null;
+//     if (user.avatarId) {
+//       avatar = await prisma.files.findFirst({
+//         where: {
+//           fileId: user.avatarId,
+//         },
+//       });
+//     }
+//     return res.status(200).json({
+//       message: "Get profile successfully!",
+//       data: {
+//         user: {
+//           ...user,
+//           avatar: avatar,
+//         },
+//       },
+//     });
+//   } catch (err: any) {
+//     return formatResponse(res, err.message, STATUS_CODE.INTERNAL_SERVER_ERROR);
+//   }
+// };
 
 @Route("/api/user")
 @Tags("User")
@@ -208,6 +209,23 @@ export class UserController extends Controller {
   ): Promise<SuccessResponseInterface<UserWithAvatarResponseInterface>> {
     const userId = req.userId;
     const user = await findUserById(userId);
+    const avatar = await findAvatarById(user.avatarId);
+    return {
+      data: {
+        user: {
+          ...user,
+          avatar: avatar,
+        },
+      },
+    };
+  }
+
+  @Get("/{username}")
+  @SuccessResponse(200, "Successfully fetched user profile")
+  public async getUserByName(
+    @Path() username: string,
+  ): Promise<SuccessResponseInterface<UserWithAvatarResponseInterface>> {
+    const user = await findUserByName(username);
     const avatar = await findAvatarById(user.avatarId);
     return {
       data: {
@@ -296,4 +314,4 @@ export class UserController extends Controller {
   }
 }
 
-export { updateProfile, getProfileByName };
+export { updateProfile };

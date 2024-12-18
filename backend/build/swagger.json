@@ -1045,6 +1045,37 @@
 				"parameters": []
 			}
 		},
+		"/api/user/{username}": {
+			"get": {
+				"operationId": "GetUserByName",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched user profile",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_UserWithAvatarResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "username",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/user/submissions": {
 			"get": {
 				"operationId": "GetSubmissionsFromUser",

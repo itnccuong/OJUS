@@ -17,6 +17,18 @@ export const findUserById = async (userId: number) => {
   return user;
 };
 
+export const findUserByName = async (username: string) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      username: username,
+    },
+  });
+  if (!user) {
+    throw new CustomError("User not found in database!", STATUS_CODE.NOT_FOUND);
+  }
+  return user;
+};
+
 export const findAvatarById = async (avatarId: number | null) => {
   if (!avatarId) {
     return null;
