@@ -102,16 +102,28 @@ export default function Profile() {
     return <Loader />;
   }
 
-  const totalSolved = fetchSubmissions.length;
-  const bronzeSolved = fetchSubmissions.filter(
-    (submission) => submission.problem.difficulty === 1,
-  ).length;
-  const platinumSolved = fetchSubmissions.filter(
-    (submission) => submission.problem.difficulty === 2,
-  ).length;
-  const masterSolved = fetchSubmissions.filter(
-    (submission) => submission.problem.difficulty === 3,
-  ).length;
+  const uniqueProblems = new Set();
+  const bronzeProblems = new Set();
+  const platinumProblems = new Set();
+  const masterProblems = new Set();
+
+  fetchSubmissions.forEach((submission) => {
+    const problemId = submission.problem.problemId; // Assuming each problem has a unique ID
+    uniqueProblems.add(problemId);
+
+    if (submission.problem.difficulty === 1) {
+      bronzeProblems.add(problemId);
+    } else if (submission.problem.difficulty === 2) {
+      platinumProblems.add(problemId);
+    } else if (submission.problem.difficulty === 3) {
+      masterProblems.add(problemId);
+    }
+  });
+
+  const totalSolved = uniqueProblems.size;
+  const bronzeSolved = bronzeProblems.size;
+  const platinumSolved = platinumProblems.size;
+  const masterSolved = masterProblems.size;
 
   const recentACSubmissions = fetchSubmissions.map((fetchSubmission) => {
     const languageMap: Record<string, string> = {
