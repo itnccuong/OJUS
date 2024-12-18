@@ -245,7 +245,7 @@ export default function Profile() {
 
                   <Modal show={show} onHide={() => setShow(false)}>
                     <Modal.Header closeButton>
-                      <Modal.Title>Upload a New Avatar</Modal.Title>
+                      <Modal.Title>Avatar</Modal.Title>
                     </Modal.Header>
                     <Modal.Body className="bg-dark">
                       <div className="d-flex flex-column justify-content-center align-items-center p-3">

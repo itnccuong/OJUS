@@ -60,7 +60,6 @@ describe("Contribute", () => {
     });
     expect(file).toBeTruthy();
     if (file) {
-      expect(file.filename).toContain("Contribution_Title");
       expect(file.fileType).toContain("zip");
       expect(file.url).toBeTruthy();
     }

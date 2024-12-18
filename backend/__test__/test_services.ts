@@ -1,7 +1,6 @@
 import request from "supertest";
 import { app } from "../src/app";
 import {
-  CompileErrorResponseInterface,
   ErrorResponseInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
@@ -46,13 +45,6 @@ export const testCorrect = async (
       code,
       language,
     })) as ResponseInterfaceForTest<SuccessResponseInterface<{}>>;
+  console.log("Res correct", res);
   expect(res.status).toBe(STATUS_CODE.SUCCESS);
-  // expect(res.body.data.submission.verdict).toBe("OK");
-  // const results = res.body.data.results;
-  // const testcases = res.body.data.testcases;
-  // expect(results.length).toBe(testcases.input.length);
-  // results.map((result, index: number) => {
-  //   expect(result.output).toBe(testcases.output[index]);
-  //   expect(result.verdict).toBe("OK");
-  // });
 };

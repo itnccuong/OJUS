@@ -8,9 +8,7 @@ import jwt from "jsonwebtoken";
 import { compileFailAnswer, correctAnswers } from "../test_data";
 import {
   ErrorResponseInterface,
-  FailTestResponseInterface,
   ResponseInterfaceForTest,
-  SuccessResponseInterface,
 } from "../../interfaces/api-interface";
 import { testCompile, testCorrect } from "../test_services";
 import { cleanDatabase } from "../test_utils";

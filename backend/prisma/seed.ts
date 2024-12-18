@@ -27,6 +27,9 @@ async function main() {
     password: hashedPassword,
     fullname: "Hien",
     username: "hien",
+    avatarId: null,
+    facebookLink: null,
+    githubLink: null,
     createdAt: new Date(),
   };
 
@@ -36,8 +39,7 @@ async function main() {
     filename: `testcase_${index + 1}`,
     filesize: 1057,
     fileType: "application/x-zip-compressed",
-    location:
-      "https://hien-leetcode-test.s3.ap-southeast-2.amazonaws.com/64164fde-9909-4777-845a-f6df3eb31cb1%2Ftestcases.zip",
+    url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
     createdAt: new Date(),
   }));
 
