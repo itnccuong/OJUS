@@ -110,7 +110,6 @@ export default function Submission() {
   const date = new Date(fetchSubmission.createdAt);
 
   const readableTime = date.toLocaleString("en-US", {
-    // weekday: "long", // e.g., "Friday"
     year: "numeric", // e.g., "2024"
     month: "long", // e.g., "December"
     day: "numeric", // e.g., "6"

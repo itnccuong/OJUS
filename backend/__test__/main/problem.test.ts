@@ -20,7 +20,7 @@ let fake_token = "";
 const execPromise = util.promisify(exec);
 beforeEach(async () => {
   await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
+  await execPromise("ts-node prisma/seed-test.ts");
 
   fake_token = jwt.sign(
     { userId: 1 }, // Payload

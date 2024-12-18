@@ -1,10 +1,5 @@
 import { Request as RequestExpress } from "express";
 import {
-  completeUpload,
-  startUpload,
-  uploadToS3,
-} from "../services/contribution.services/uploadFile.service";
-import {
   Controller,
   Get,
   Path,
@@ -29,7 +24,8 @@ import { Problem } from "@prisma/client";
 import {
   findAllPendingContributions,
   findPendingContribution,
-} from "../services/contribution.services/findContribution.services";
+} from "../services/contribution.services/contribution.services";
+import { uploadFile } from "../utils/uploadFileUtils";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -49,20 +45,21 @@ export class ContributionController extends Controller {
     file: Express.Multer.File,
   ): Promise<SuccessResponseInterface<ContributionResponseInterface>> {
     // Step 1: Start file upload process
-    const details = await startUpload(file);
-
-    // Step 2: Upload chunks to S3
-    const etags = await uploadToS3(file, details.chunk_size, details.urls);
-
-    // Step 3: Complete file upload and get the file URL
-    const url = await completeUpload(details.key, details.upload_id!, etags);
-
-    // Step 4: Save file information to the database
-    const filename = `${title.replace(/\s+/g, "_")}_${Date.now()}`;
+    // const details = await startUpload(file);
+    //
+    // // Step 2: Upload chunks to S3
+    // const etags = await uploadToS3(file, details.chunk_size, details.urls);
+    //
+    // // Step 3: Complete file upload and get the file URL
+    // const url = await completeUpload(details.key, details.upload_id!, etags);
+    //
+    // // Step 4: Save file information to the database
+    // const filename = `${title.replace(/\s+/g, "_")}_${Date.now()}`;
+    const url = await uploadFile("testcases", file);
     const createFile = await prisma.files.create({
       data: {
-        filename: filename,
-        location: url,
+        filename: file.originalname,
+        url: url,
         filesize: file.size,
         fileType: file.mimetype,
       },

@@ -65,7 +65,7 @@ export default function Register() {
         }}
       >
         <Form
-          className="p-4 rounded w-25 bg-white shadow"
+          className="p-4 rounded-4 w-25 bg-white shadow"
           onSubmit={handleSubmit}
         >
           <Container className="d-flex justify-content-center align-items-center mb-4">

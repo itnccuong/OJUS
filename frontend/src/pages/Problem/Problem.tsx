@@ -25,6 +25,7 @@ import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interf
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
+import ProblemNav from "../../components/ProblemNav.tsx";
 
 export default function Problem() {
   // const editorRef = useRef();
@@ -172,21 +173,8 @@ export default function Problem() {
             style={{ minHeight: "83vh" }}
           >
             <div className="container p-4 border rounded-4 round shadow-sm bg-white">
-              <div className="d-flex gap-2 mb-3">
-                <Button
-                  variant="secondary"
-                  onClick={() => navigate(`/problems/${problemId}/description`)}
-                >
-                  Description
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => navigate(`/problems/${problemId}/submissions`)}
-                >
-                  Submissions
-                </Button>
-              </div>
-              <h3 className="mb-3">{problem.title}</h3>
+              <ProblemNav problemId={problemId as string} />
+              <h3 className="mb-3 mt-3">{problem.title}</h3>
               <span
                 className={`badge bg-grey me-2 ${
                   problem.difficulty === "Bronze"

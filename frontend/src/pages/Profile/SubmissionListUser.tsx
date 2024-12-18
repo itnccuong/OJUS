@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import { Table } from "react-bootstrap";
@@ -8,31 +8,36 @@ import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import {
   ResponseInterface,
-  SubmissionListWithResultResponseInterface,
+  SubmissionListWithProblemResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
+import { SubmissionWithProblem } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
-import ProblemNav from "../../components/ProblemNav.tsx";
 
-export default function SubmissionList() {
-  const { problemId } = useParams();
+export default function SubmissionListUser() {
   const token = getToken(); // Get token from localStorage
   const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithResults[]
+    SubmissionWithProblem[]
   >([]);
 
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      toast.error("You need to login to view submission");
+      navigate("/accounts/login");
+    }
+  }, [token, navigate]);
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<SubmissionListWithResultResponseInterface>
-        >(`/api/problems/${problemId}/submissions`, {
+          ResponseInterface<SubmissionListWithProblemResponseInterface>
+        >(`/api/user/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,7 +48,7 @@ export default function SubmissionList() {
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.response?.status === 401) {
-            toast.error("You need to login to view submissions");
+            // toast.error("You need to login to view submissions");
           } else {
             const errorMessage = error.response?.data?.message;
             toast.error(errorMessage);
@@ -81,20 +86,24 @@ export default function SubmissionList() {
     const date = new Date(fetchSubmission.createdAt);
 
     const readableTime = date.toLocaleString("en-US", {
-      weekday: "long", // e.g., "Friday"
       year: "numeric", // e.g., "2024"
       month: "long", // e.g., "December"
       day: "numeric", // e.g., "6"
-      hour: "numeric", // e.g., "8 AM"
-      minute: "numeric", // e.g., "57"
-      second: "numeric", // e.g., "20"
-      hour12: true, // 12-hour clock (AM/PM)
     });
 
+    const difficultyMapping: Record<number, string> = {
+      1: "Bronze",
+      2: "Platinum",
+      3: "Master",
+    };
     return {
       ...fetchSubmission,
-      language: languageMap[fetchSubmission.language],
+      problem: {
+        ...fetchSubmission.problem,
+        difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
+      },
       verdict: verdictMap[fetchSubmission.verdict],
+      language: languageMap[fetchSubmission.language],
       createdAt: readableTime,
     };
   });
@@ -110,24 +119,25 @@ export default function SubmissionList() {
             style={{ minHeight: "83vh" }}
           >
             <div className="container p-4 border rounded-4 round shadow-sm bg-white">
-              <ProblemNav problemId={problemId as string} />
+              <h4 className="mb-4">All My Submissions</h4>
               <Table striped bordered hover className="mt-3">
                 <thead>
                   <tr>
-                    {/* <div className="d-flex"> */}
                     <th
                       className="text-center"
                       style={{
-                        width: "8%",
+                        width: "30%",
                       }}
                     >
-                      ID
+                      Title
                     </th>
-                    <th className="text-center" style={{ width: "20%" }}>
+                    <th className="text-center" style={{ width: "15%" }}>
+                      Difficulty
+                    </th>
+                    <th className="text-center" style={{ width: "15%" }}>
                       Language
                     </th>
-                    {/* </div> */}
-                    <th className="text-center" style={{ width: "30%" }}>
+                    <th className="text-center" style={{ width: "15%" }}>
                       Verdict
                     </th>
                     <th className="text-center">Submit time</th>
@@ -142,7 +152,6 @@ export default function SubmissionList() {
                       }
                       style={{ cursor: "pointer" }}
                     >
-                      {/*Submission id*/}
                       <td className="text-center">
                         <Link
                           to={`/submissions/${submission.submissionId}`}
@@ -157,8 +166,22 @@ export default function SubmissionList() {
                             (e.currentTarget.style.color = "black")
                           }
                         >
-                          {submission.submissionId}
+                          {submission.problem.title}
                         </Link>
+                      </td>
+
+                      <td className="text-center">
+                        <span
+                          className={`badge fs-6 ${
+                            submission.problem.difficulty === "Bronze"
+                              ? "text-warning-emphasis"
+                              : submission.problem.difficulty === "Platinum"
+                                ? "text-primary"
+                                : "text-danger"
+                          }`}
+                        >
+                          {submission.problem.difficulty}
+                        </span>
                       </td>
 
                       {/*Language*/}
@@ -174,11 +197,7 @@ export default function SubmissionList() {
                             fontSize: "14px",
                           }}
                         >
-                          {submission.verdict === "Wrong answer" ||
-                          submission.verdict === "Runtime error" ||
-                          submission.verdict === "Time limit exceeded"
-                            ? `${submission.verdict} on test ${submission.results.length}`
-                            : submission.verdict}
+                          {submission.verdict}
                         </span>
                       </td>
 

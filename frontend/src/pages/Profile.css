@@ -1,0 +1,117 @@
+/* Profile.css */
+
+/* General Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Profile Box */
+  .profile-box {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-pic {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 5px solid red;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    color: darkblue;
+  }
+  
+  .profile-username {
+    color: lightblue;  
+    text-align: center;
+  }
+  
+  .stats-box {
+    margin-top: 20px;
+  }
+  
+  .stat-item {
+    margin-bottom: 10px;
+  }
+  
+  .stat-item h4 {
+    margin: 0;
+  }
+  
+  .stat-item p {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .easy {
+    text-align: center;
+    color: green;
+  }
+  
+  .medium {
+    text-align: center;
+    color: orange;
+  }
+  
+  .hard {
+    text-align: center;
+    color: red;
+  }
+  
+  .checkmark {
+    text-align: center;
+    color: green;
+  }
+  
+  .circle {
+    text-align: center;
+    color: orange;
+  }
+  
+  .cross {
+    text-align: center;
+    color: red;
+  }
+  
+  /* Recent AC Box */
+  .recent-ac-box {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recent-ac-box h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: darkblue;
+  }
+  
+  .table th {
+    color: darkblue;
+  }
+  
+  .table td {
+    color: gray;
+    
+  }
+  
+  .view-all-link {
+    color: darkblue;
+    display: inline-block;
+    margin-top: 20px;
+  }
+  

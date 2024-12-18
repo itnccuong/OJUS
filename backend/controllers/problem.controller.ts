@@ -7,13 +7,13 @@ import {
   findFileById,
   findProblemById,
   updateSubmissionVerdict,
-} from "../services/problem.services/submit.services";
+} from "../services/problem.services/judging.services";
 import {
   SubmitCodeConfig,
   SuccessResponseInterface,
   GetAllProblemInterface,
   GetOneProblemInterface,
-  GetAllSubmissionsInterface,
+  GetAllSubmissionsFromProblemInterface,
   SubmitCodeResponseInterface,
   GetTestcasesInterface,
 } from "../interfaces/api-interface";
@@ -144,7 +144,7 @@ export class ProblemController extends Controller {
   public async getSubmissionsFromProblem(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllSubmissionsInterface>> {
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromProblemInterface>> {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     const submissionsWithResults = await addResultsToSubmissions(submissions);
@@ -160,7 +160,7 @@ export class ProblemController extends Controller {
   ): Promise<SuccessResponseInterface<GetTestcasesInterface>> {
     const problem = await findProblemById(problem_id);
     const file = await findFileById(problem.fileId);
-    const fileUrl = file.location;
+    const fileUrl = file.url;
     const testcases = await downloadTestcase(fileUrl);
     return {
       data: { testcases: testcases },

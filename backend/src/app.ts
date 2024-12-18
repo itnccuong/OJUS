@@ -1,17 +1,13 @@
 import express, { NextFunction } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import router from "../routes/index.route";
 import globalErrorHandler from "../controllers/error.controller";
 
-import path from "path";
-import upload from "../upload/upload.route";
 import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import { Response as ExResponse, Request as ExRequest } from "express";
 
 const app = express();
-// middlewares
 app.use(express.json());
 app.use(
   cors({
@@ -30,15 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 RegisterRoutes(app);
-// routes
-app.use("/src", router);
-
-// // temorary route for upload
-// app.get("/upload", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../upload/test.html"));
-// });
-//
-// app.use("/upload", upload);
 
 app.use(globalErrorHandler);
 

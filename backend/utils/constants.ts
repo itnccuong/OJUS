@@ -29,3 +29,10 @@ export const verdict = {
   RUNTIME_ERROR: "RUNTIME_ERROR",
   COMPILE_ERROR: "COMPILE_ERROR",
 };
+
+export const digitalOceanConfig = {
+  bucket: "ojus-bucket",
+  region: "sgp1",
+  endpoint: `https://sgp1.digitaloceanspaces.com`,
+  location: `https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com`,
+};

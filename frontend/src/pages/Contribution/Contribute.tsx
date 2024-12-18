@@ -169,9 +169,9 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 onChange={(e) => setDifficulty(Number(e.target.value))}
                 className="w-50 mb-2"
               >
-                <option value={1}>Easy</option>
-                <option value={2}>Medium</option>
-                <option value={3}>Hard</option>
+                <option value={1}>Bronze</option>
+                <option value={2}>Platinum</option>
+                <option value={3}>Master</option>
               </Form.Select>
 
               <Accordion className="mt-3 mb-3 w-50">

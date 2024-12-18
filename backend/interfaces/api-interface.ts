@@ -1,6 +1,6 @@
 import { TestcaseInterface } from "./code-executor-interface";
 
-import type { User, Problem, Result, Submission } from "@prisma/client";
+import type { User, Problem, Result, Submission, Files } from "@prisma/client";
 
 export interface SuccessResponseInterface<T> {
   data: T;
@@ -96,8 +96,28 @@ export interface SubmissionWithResults extends Submission {
   results: Result[];
 }
 
-export interface GetAllSubmissionsInterface {
+export interface SubmissionWithProblem extends Submission {
+  problem: Problem;
+}
+
+export interface UserWithAvatarInterface extends User {
+  avatar: Files | null;
+}
+
+export interface UpdateAvatarInterface {
+  user: UserWithAvatarInterface;
+}
+
+export interface GetAllSubmissionsFromProblemInterface {
   submissions: SubmissionWithResults[];
+}
+
+export interface GetAllSubmissionsFromUserInterface {
+  submissions: SubmissionWithProblem[];
+}
+
+export interface GetAllACSubmissionsFromUserInterface {
+  submissions: SubmissionWithProblem[];
 }
 
 export interface GetOneSubmissionInterface {
@@ -113,4 +133,20 @@ export interface GetResultsInterface {
 
 export interface GetTestcasesInterface {
   testcases: TestcaseInterface;
+}
+
+export interface UserResponseInterface {
+  user: User;
+}
+
+export interface UserWithAvatarResponseInterface {
+  user: UserWithAvatarInterface;
+}
+
+export interface UpdateUserRequestInterface {
+  fullname?: string;
+  facebookLink?: string;
+  githubLink?: string;
+  currentPassword?: string;
+  newPassword?: string;
 }

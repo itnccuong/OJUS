@@ -6,9 +6,13 @@ CREATE TABLE `User` (
     `fullname` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `facebookLink` VARCHAR(191) NULL,
+    `githubLink` VARCHAR(191) NULL,
+    `avatarId` INTEGER NULL,
 
     UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
+    UNIQUE INDEX `User_avatarId_key`(`avatarId`),
     PRIMARY KEY (`userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -37,7 +41,7 @@ CREATE TABLE `Files` (
     `filename` VARCHAR(191) NOT NULL,
     `filesize` INTEGER NOT NULL,
     `fileType` VARCHAR(191) NOT NULL,
-    `location` VARCHAR(191) NOT NULL,
+    `url` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`fileId`)
@@ -70,6 +74,9 @@ CREATE TABLE `Result` (
 
     PRIMARY KEY (`resultId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_avatarId_fkey` FOREIGN KEY (`avatarId`) REFERENCES `Files`(`fileId`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Problem` ADD CONSTRAINT `Problem_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `User`(`userId`) ON DELETE RESTRICT ON UPDATE CASCADE;
