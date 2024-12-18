@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
 import {
@@ -25,7 +25,6 @@ import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interf
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
-import Nav from "react-bootstrap/Nav";
 import ProblemNav from "../../components/ProblemNav.tsx";
 
 export default function Problem() {

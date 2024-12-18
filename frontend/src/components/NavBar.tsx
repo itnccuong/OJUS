@@ -54,6 +54,9 @@ function NavBar() {
             <Nav.Link as={NavLink} to={"/problems"}>
               Problems
             </Nav.Link>
+            <Nav.Link as={NavLink} to={"/submissions"}>
+              Submissions
+            </Nav.Link>
             <Nav.Link as={NavLink} to={"/contribute"}>
               Contribute
             </Nav.Link>

@@ -48,11 +48,11 @@ export interface ProblemListResponseInterface {
   problems: ProblemWithUserStatusInterface[];
 }
 
-export interface SubmissionListFromProblemResponseInterface {
+export interface SubmissionListWithResultResponseInterface {
   submissions: SubmissionWithResults[];
 }
 
-export interface SubmissionListFromUserResponseInterface {
+export interface SubmissionListWithProblemResponseInterface {
   submissions: SubmissionWithProblem[];
 }
 

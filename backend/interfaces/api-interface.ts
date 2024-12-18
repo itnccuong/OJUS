@@ -113,7 +113,7 @@ export interface GetAllSubmissionsFromProblemInterface {
 }
 
 export interface GetAllSubmissionsFromUserInterface {
-  submissions: Submission[];
+  submissions: SubmissionWithProblem[];
 }
 
 export interface GetAllACSubmissionsFromUserInterface {

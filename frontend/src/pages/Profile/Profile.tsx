@@ -11,7 +11,7 @@ import {
 } from "../../../interfaces/model.interface.ts";
 import {
   ResponseInterface,
-  SubmissionListFromUserResponseInterface,
+  SubmissionListWithProblemResponseInterface,
   UserResponseInterface,
 } from "../../../interfaces/response.interface.ts";
 import { AxiosError } from "axios";
@@ -43,7 +43,7 @@ export default function Profile() {
     try {
       const { data } = await axiosInstance.get<
         ResponseInterface<UserResponseInterface>
-      >(`/api/user/${username}`);
+      >(`/api/user/by-name/${username}`);
       console.log("Get user from name", data);
       setUser(data.data.user);
     } catch (error) {
@@ -74,7 +74,7 @@ export default function Profile() {
         return;
       }
       const res = await axiosInstance.get<
-        ResponseInterface<SubmissionListFromUserResponseInterface>
+        ResponseInterface<SubmissionListWithProblemResponseInterface>
       >(`/api/user/${user.userId}/submissions/AC`);
 
       console.log("Fetch AC submission", res.data);
@@ -418,7 +418,11 @@ export default function Profile() {
               <div className="container pt-2">
                 <div className="d-flex justify-content-between">
                   <h4>Recent AC</h4>
-                  <Button>View all submissions</Button>
+                  {shouldShowEditButton && (
+                    <Button onClick={() => navigate(`/submissions`)}>
+                      View all submissions
+                    </Button>
+                  )}
                 </div>
                 <Table striped bordered hover className="mt-3">
                   <thead>

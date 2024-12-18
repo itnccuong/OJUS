@@ -38,18 +38,9 @@ export class SubmissionController extends Controller {
     @Path() submission_id: number,
   ): Promise<SuccessResponseInterface<GetOneSubmissionInterface>> {
     const submission = await findSubmissionById(submission_id);
-    const results = await findResultBySubmissionId(submission_id);
-    // const problem = await findProblemById(submission.problemId);
-    // const file = await findFileById(problem.fileId);
-    // const fileUrl = file.location;
-    // const testcases = await downloadTestcase(fileUrl);
-
     return {
       data: {
         submission: submission,
-        // results: results,
-        // testcases: testcases,
-        // problem: problem,
       },
     };
   }

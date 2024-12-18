@@ -62,7 +62,7 @@ export class UserController extends Controller {
     };
   }
 
-  @Get("/{username}")
+  @Get("/by-name/{username}")
   @SuccessResponse(200, "Successfully fetched user profile")
   public async getUserByName(
     @Path() username: string,
@@ -101,9 +101,11 @@ export class UserController extends Controller {
     @Request() req: RequestExpress,
   ): Promise<SuccessResponseInterface<GetAllSubmissionsFromUserInterface>> {
     const userId = req.userId;
+    console.log("User iddd", userId);
     const submissions = await findSubmissionsUser(userId);
+    const submissionsWithProblem = await addProblemToSubmissions(submissions);
     return {
-      data: { submissions: submissions },
+      data: { submissions: submissionsWithProblem },
     };
   }
 

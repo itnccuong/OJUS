@@ -19,6 +19,7 @@ import Contribution from "./pages/Contribution/Contribution.tsx";
 import Problem from "./pages/Problem/Problem.tsx";
 import SubmissionList from "./pages/Problem/SubmissionList.tsx";
 import Submission from "./pages/Problem/Submission.tsx";
+import SubmissionListUser from "./pages/Profile/SubmissionListUser.tsx";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/submissions" element={<SubmissionListUser />} />
           <Route path="/accounts/login" element={<Login />} />
           <Route path="/accounts/register" element={<Register />} />
           <Route path="/u/:username" element={<Profile />} />

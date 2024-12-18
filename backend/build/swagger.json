@@ -220,80 +220,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DefaultSelection_Prisma._36_SubmissionPayload_": {
-				"properties": {
-					"stderr": {
-						"type": "string"
-					},
-					"verdict": {
-						"type": "string"
-					},
-					"language": {
-						"type": "string"
-					},
-					"code": {
-						"type": "string"
-					},
-					"problemId": {
-						"type": "number",
-						"format": "double"
-					},
-					"submissionId": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"stderr",
-					"verdict",
-					"language",
-					"code",
-					"problemId",
-					"submissionId",
-					"createdAt",
-					"userId"
-				],
-				"type": "object"
-			},
-			"Submission": {
-				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
-				"description": "Model Submission"
-			},
-			"GetAllSubmissionsFromUserInterface": {
-				"properties": {
-					"submissions": {
-						"items": {
-							"$ref": "#/components/schemas/Submission"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"submissions"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetAllSubmissionsFromUserInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetAllSubmissionsFromUserInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"DefaultSelection_Prisma._36_ProblemPayload_": {
 				"properties": {
 					"authorId": {
@@ -357,6 +283,49 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ProblemPayload_",
 				"description": "Model Problem"
 			},
+			"DefaultSelection_Prisma._36_SubmissionPayload_": {
+				"properties": {
+					"stderr": {
+						"type": "string"
+					},
+					"verdict": {
+						"type": "string"
+					},
+					"language": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					},
+					"problemId": {
+						"type": "number",
+						"format": "double"
+					},
+					"submissionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"stderr",
+					"verdict",
+					"language",
+					"code",
+					"problemId",
+					"submissionId",
+					"createdAt",
+					"userId"
+				],
+				"type": "object"
+			},
 			"SubmissionWithProblem": {
 				"properties": {
 					"stderr": {
@@ -401,6 +370,33 @@
 					"createdAt",
 					"userId",
 					"problem"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetAllSubmissionsFromUserInterface": {
+				"properties": {
+					"submissions": {
+						"items": {
+							"$ref": "#/components/schemas/SubmissionWithProblem"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"submissions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_GetAllSubmissionsFromUserInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetAllSubmissionsFromUserInterface"
+					}
+				},
+				"required": [
+					"data"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -455,6 +451,10 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Submission": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
+				"description": "Model Submission"
 			},
 			"GetOneSubmissionInterface": {
 				"properties": {
@@ -1096,7 +1096,7 @@
 				}
 			}
 		},
-		"/api/user/{username}": {
+		"/api/user/by-name/{username}": {
 			"get": {
 				"operationId": "GetUserByName",
 				"responses": {
