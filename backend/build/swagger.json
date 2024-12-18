@@ -224,12 +224,6 @@
 					"url": {
 						"type": "string"
 					},
-					"key": {
-						"type": "string"
-					},
-					"bucket": {
-						"type": "string"
-					},
 					"fileType": {
 						"type": "string"
 					},
@@ -251,8 +245,6 @@
 				},
 				"required": [
 					"url",
-					"key",
-					"bucket",
 					"fileType",
 					"filesize",
 					"filename",

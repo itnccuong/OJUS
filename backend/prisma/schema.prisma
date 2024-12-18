@@ -47,8 +47,6 @@ model Files {
   filename  String
   filesize  Int
   fileType  String
-  bucket    String
-  key       String
   url       String
   createdAt DateTime @default(now())
   problem   Problem?

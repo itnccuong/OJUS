@@ -272,6 +272,7 @@ export default function Profile() {
                               required
                               id="customFile"
                               type="file"
+                              accept="image/*"
                               onChange={(e) =>
                                 setFile(
                                   (e.target as HTMLInputElement).files?.[0] ||

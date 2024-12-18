@@ -65,8 +65,6 @@ export class ContributionController extends Controller {
         url: url,
         filesize: file.size,
         fileType: file.mimetype,
-        bucket: "temp",
-        key: "temp",
       },
     });
 

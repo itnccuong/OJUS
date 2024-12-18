@@ -1,13 +1,8 @@
 import prisma from "../../prisma/client";
-import { Files, Submission, User } from "@prisma/client";
-import { findResultBySubmissionId } from "../submission.services/submission.service";
+import { Submission } from "@prisma/client";
 import { findProblemById } from "../problem.services/submit.services";
-import {
-  digitalOceanConfig,
-  STATUS_CODE,
-  verdict,
-} from "../../utils/constants";
-import { deleteFile, uploadFile } from "../../utils/uploadFileUtils";
+import { STATUS_CODE, verdict } from "../../utils/constants";
+import { uploadFile } from "../../utils/uploadFileUtils";
 import { CustomError } from "../../utils/errorClass";
 
 export const findUserById = async (userId: number) => {
@@ -70,29 +65,15 @@ export const filterSubmissionsAC = async (submissions: Submission[]) => {
 };
 
 export const uploadAvatar = async (file: Express.Multer.File) => {
-  const bucket = digitalOceanConfig.bucket;
   const location = "avatars";
-  const resUploadFile = await uploadFile(bucket, location, file);
+  const resUploadFile = await uploadFile(location, file);
   const avatar = await prisma.files.create({
     data: {
       filename: file.originalname,
-      url: resUploadFile.url,
       filesize: file.size,
       fileType: file.mimetype,
-      bucket: bucket,
-      key: resUploadFile.key,
+      url: resUploadFile.url,
     },
   });
   return avatar;
-};
-
-export const deleteAvatar = async (file: Files) => {
-  const bucket = file.bucket;
-  const key = file.key;
-  await deleteFile(bucket, key);
-  await prisma.files.delete({
-    where: {
-      fileId: file.fileId,
-    },
-  });
 };

@@ -24,24 +24,15 @@ import {
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import {
-  ContributionResponseInterface,
   GetAllACSubmissionsFromUserInterface,
-  GetAllSubmissionsFromProblemInterface,
   GetAllSubmissionsFromUserInterface,
   SuccessResponseInterface,
   UpdateAvatarInterface,
   UserResponseInterface,
-  UserWithAvatarInterface,
 } from "../interfaces/api-interface";
 import {
-  addResultsToSubmissions,
-  findSubmissionsProblem,
-} from "../services/problem.services/problem.service";
-import {
   addProblemToSubmissions,
-  deleteAvatar,
   filterSubmissionsAC,
-  findAvatarById,
   findSubmissionsUser,
   findUserById,
   uploadAvatar,
@@ -316,11 +307,8 @@ export class UserController extends Controller {
   public async deleteAvatar(
     @Request() req: RequestExpress, // Request object for user ID and file
   ): Promise<SuccessResponseInterface<UserResponseInterface>> {
-    //update avatarId in user table
     const userId = req.userId;
     const user = await findUserById(userId);
-    const avatar = await findAvatarById(user.avatarId);
-    await deleteAvatar(avatar);
     await prisma.user.update({
       where: { userId },
       data: {

@@ -41,8 +41,6 @@ CREATE TABLE `Files` (
     `filename` VARCHAR(191) NOT NULL,
     `filesize` INTEGER NOT NULL,
     `fileType` VARCHAR(191) NOT NULL,
-    `bucket` VARCHAR(191) NOT NULL,
-    `key` VARCHAR(191) NOT NULL,
     `url` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
