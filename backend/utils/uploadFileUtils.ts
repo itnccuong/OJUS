@@ -20,7 +20,6 @@ export const uploadFile = async (
   const randomPrefix = crypto.randomBytes(8).toString("hex");
   const randomFilename = `${randomPrefix}_${file.originalname}`;
   let key = `${location}/${randomFilename}`;
-  const bucket = digitalOceanConfig.bucket;
   const command = new PutObjectCommand({
     Key: key,
     Body: file.buffer,
@@ -29,7 +28,5 @@ export const uploadFile = async (
     ContentType: file.mimetype,
   });
   await s3.send(command);
-  return {
-    url: `${digitalOceanConfig.location}/${key}`,
-  };
+  return `${process.env.DO_CDN_URL}/${key}`;
 };

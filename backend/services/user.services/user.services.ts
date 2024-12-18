@@ -66,13 +66,13 @@ export const filterSubmissionsAC = async (submissions: Submission[]) => {
 
 export const uploadAvatar = async (file: Express.Multer.File) => {
   const location = "avatars";
-  const resUploadFile = await uploadFile(location, file);
+  const url = await uploadFile(location, file);
   const avatar = await prisma.files.create({
     data: {
       filename: file.originalname,
       filesize: file.size,
       fileType: file.mimetype,
-      url: resUploadFile.url,
+      url: url,
     },
   });
   return avatar;
