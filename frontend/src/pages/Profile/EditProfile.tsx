@@ -8,6 +8,7 @@ import axiosInstance from "../../../utils/getURL";
 import Loader from "../../components/Loader.tsx";
 import { ProfilePayloadInterface } from "../../../interfaces/model.interface.ts";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 interface UserProfile {
   fullname: string;
   gender: string;
@@ -90,8 +91,11 @@ export default function EditProfile() {
         });
         console.log("Profile showed:", profile);
       } catch (error) {
-        console.error("Error fetching profile", error);
-        // setGeneralError("Failed to load profile. Please try again.");
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -145,12 +149,23 @@ export default function EditProfile() {
         }
         break;
       case "password":
-        if (passwordFields.newPassword !== passwordFields.confirmNewPassword) {
-          newErrors.confirmNewPassword = "Passwords do not match";
-        }
         if (!passwordFields.currentPassword) {
           newErrors.currentPassword =
             "Current password is required to change password";
+        }
+        if (!passwordFields.newPassword) {
+          newErrors.newPassword = "New password is required to change password";
+        }
+        if (!passwordFields.confirmNewPassword) {
+          newErrors.confirmNewPassword =
+            "Confirm password is required to change password";
+        }
+        if (
+          passwordFields.newPassword &&
+          passwordFields.confirmNewPassword &&
+          passwordFields.newPassword !== passwordFields.confirmNewPassword
+        ) {
+          newErrors.confirmNewPassword = "Passwords do not match";
         }
         break;
     }
@@ -215,7 +230,11 @@ export default function EditProfile() {
         });
       }
     } catch (error) {
-      console.error("Update error", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
+      console.error(error);
     }
   };
   console.log("Profile data before showed: ", profile);

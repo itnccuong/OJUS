@@ -1,9 +1,11 @@
 import prisma from "../../prisma/client";
-import { Submission } from "@prisma/client";
+import { Submission, User } from "@prisma/client";
 import { findProblemById } from "../problem.services/judging.services";
 import { STATUS_CODE, verdict } from "../../utils/constants";
 import { uploadFile } from "../../utils/uploadFileUtils";
 import { CustomError } from "../../utils/errorClass";
+import { UpdateUserRequestInterface } from "../../interfaces/api-interface";
+import bcrypt from "bcryptjs";
 
 export const findUserById = async (userId: number) => {
   const user = await prisma.user.findUnique({
@@ -27,6 +29,59 @@ export const findUserByName = async (username: string) => {
     throw new CustomError("User not found in database!", STATUS_CODE.NOT_FOUND);
   }
   return user;
+};
+
+export const updateUserService = async (
+  userId: number,
+  body: UpdateUserRequestInterface,
+) => {
+  const existingUser = await findUserById(userId);
+  let { fullname, facebookLink, githubLink, password } = existingUser;
+  if (body.facebookLink !== undefined) {
+    facebookLink = body.facebookLink;
+  }
+  if (body.githubLink !== undefined) {
+    githubLink = body.githubLink;
+  }
+  if (body.fullname !== undefined) {
+    if (body.fullname === "") {
+      throw new CustomError("Fullname is required!", STATUS_CODE.BAD_REQUEST);
+    }
+    fullname = body.fullname;
+  }
+  if (body.currentPassword !== undefined && body.newPassword !== undefined) {
+    console.log("body curpass", body.currentPassword);
+    if (body.newPassword === "" || body.currentPassword === "") {
+      throw new CustomError(
+        "New password is required!",
+        STATUS_CODE.BAD_REQUEST,
+      );
+    }
+    const isPasswordValid = await bcrypt.compare(
+      body.currentPassword,
+      password,
+    );
+
+    if (!isPasswordValid) {
+      throw new CustomError(
+        "Current password is incorrect!",
+        STATUS_CODE.BAD_REQUEST,
+      );
+    }
+    password = await bcrypt.hash(body.newPassword, 10);
+  }
+  const updatedUser = await prisma.user.update({
+    where: {
+      userId: existingUser.userId,
+    },
+    data: {
+      fullname,
+      facebookLink,
+      githubLink,
+      password,
+    },
+  });
+  return updatedUser;
 };
 
 export const findAvatarById = async (avatarId: number | null) => {

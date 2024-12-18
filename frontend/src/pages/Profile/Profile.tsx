@@ -235,7 +235,10 @@ export default function Profile() {
                       className="profile-img rounded-circle"
                       width={100}
                       height={100}
-                      onClick={() => setShow(true)}
+                      onClick={() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        shouldShowEditButton && setShow(true);
+                      }}
                       style={{
                         cursor: "pointer",
                         objectFit: "cover", // Ensures the image covers the container

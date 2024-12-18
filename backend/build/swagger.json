@@ -171,6 +171,55 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"User": {
+				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
+				"description": "Model User"
+			},
+			"UserResponseInterface": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface_UserResponseInterface_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/UserResponseInterface"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateUserRequestInterface": {
+				"properties": {
+					"fullname": {
+						"type": "string"
+					},
+					"facebookLink": {
+						"type": "string"
+					},
+					"githubLink": {
+						"type": "string"
+					},
+					"currentPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DefaultSelection_Prisma._36_SubmissionPayload_": {
 				"properties": {
 					"stderr": {
@@ -399,34 +448,6 @@
 				"properties": {
 					"data": {
 						"$ref": "#/components/schemas/UpdateAvatarInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"User": {
-				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
-				"description": "Model User"
-			},
-			"UserResponseInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/User"
-					}
-				},
-				"required": [
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_UserResponseInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/UserResponseInterface"
 					}
 				},
 				"required": [
@@ -1043,6 +1064,36 @@
 				],
 				"security": [],
 				"parameters": []
+			},
+			"patch": {
+				"operationId": "UpdateProfile",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched user profile",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_UserResponseInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateUserRequestInterface"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/user/{username}": {

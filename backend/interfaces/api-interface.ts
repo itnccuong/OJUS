@@ -142,3 +142,11 @@ export interface UserResponseInterface {
 export interface UserWithAvatarResponseInterface {
   user: UserWithAvatarInterface;
 }
+
+export interface UpdateUserRequestInterface {
+  fullname?: string;
+  facebookLink?: string;
+  githubLink?: string;
+  currentPassword?: string;
+  newPassword?: string;
+}
