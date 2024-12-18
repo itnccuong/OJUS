@@ -50,19 +50,13 @@ function NavBar() {
             />
           </Navbar.Brand>
 
-          <Nav>
+          <Nav variant="underline">
             <Nav.Link as={NavLink} to={"/problems"}>
               Problems
             </Nav.Link>
-          </Nav>
-
-          <Nav>
             <Nav.Link as={NavLink} to={"/contribute"}>
               Contribute
             </Nav.Link>
-          </Nav>
-
-          <Nav>
             <Nav.Link as={NavLink} to={"/contributions"}>
               Contributions
             </Nav.Link>
@@ -72,14 +66,10 @@ function NavBar() {
         <div className="d-flex container gap-2 justify-content-end">
           {username ? (
             <>
-              <Nav>
-                {/*Use token to get username, for now this is hardcoded*/}
+              <Nav variant="underline">
                 <Nav.Link as={NavLink} to={`/u/${username}`}>
                   Profile
                 </Nav.Link>
-              </Nav>
-
-              <Nav>
                 <Nav.Link href="#" onClick={handleSignOut}>
                   Sign Out
                 </Nav.Link>
@@ -87,13 +77,10 @@ function NavBar() {
             </>
           ) : (
             <>
-              <Nav>
+              <Nav variant="underline">
                 <Nav.Link as={NavLink} to="/accounts/register">
                   Register
                 </Nav.Link>
-              </Nav>
-
-              <Nav>
                 <Nav.Link as={NavLink} to="/accounts/login">
                   Sign In
                 </Nav.Link>

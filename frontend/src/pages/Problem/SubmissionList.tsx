@@ -1,7 +1,7 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../../components/NavBar.tsx";
-import { Button, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
@@ -15,6 +15,7 @@ import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Footer from "../../components/Footer.tsx";
+import ProblemNav from "../../components/ProblemNav.tsx";
 
 export default function SubmissionList() {
   const { problemId } = useParams();
@@ -109,20 +110,7 @@ export default function SubmissionList() {
             style={{ minHeight: "83vh" }}
           >
             <div className="container p-4 border rounded-4 round shadow-sm bg-white">
-              <div className="d-flex gap-2 mb-3">
-                <Button
-                  variant="secondary"
-                  onClick={() => navigate(`/problems/${problemId}/description`)}
-                >
-                  Description
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => navigate(`/problems/${problemId}/submissions`)}
-                >
-                  Submissions
-                </Button>
-              </div>
+              <ProblemNav problemId={problemId as string} />
               <Table striped bordered hover className="mt-3">
                 <thead>
                   <tr>
