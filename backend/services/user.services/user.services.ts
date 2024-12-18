@@ -107,6 +107,9 @@ export const findSubmissionsUser = async (userId: number) => {
     where: {
       userId,
     },
+    orderBy: {
+      submissionId: "desc",
+    },
   });
   return submissions;
 };

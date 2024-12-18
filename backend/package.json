@@ -6,7 +6,8 @@
     "build": "tsoa spec-and-routes && tsc",
     "start": "ts-node src/index.ts",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "seed-test": "ts-node prisma/seed-test.ts"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

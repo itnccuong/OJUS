@@ -15,5 +15,5 @@ module.exports = async () => {
   }
   await execPromise("dotenv -e .env.test -- prisma migrate dev --name init");
   await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
+  await execPromise("ts-node prisma/seed-test.ts");
 };

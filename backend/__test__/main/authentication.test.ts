@@ -25,7 +25,7 @@ jest.setTimeout(60000);
 const execPromise = util.promisify(exec);
 beforeAll(async () => {
   await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
+  await execPromise("ts-node prisma/seed-test.ts");
 });
 
 describe("Register", () => {

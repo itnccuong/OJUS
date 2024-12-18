@@ -22,7 +22,7 @@ const execPromise = util.promisify(exec);
 beforeAll(async () => {
   await initAllDockerContainers();
   await cleanDatabase();
-  await execPromise("ts-node prisma/seed.ts");
+  await execPromise("ts-node prisma/seed-test.ts");
   fake_token = jwt.sign(
     { userId: 1 }, // Payload
     process.env.JWT_SECRET as string, // Secret
