@@ -337,7 +337,7 @@ export default function Profile() {
                         target="_blank" // Open in new tab
                         rel="noopener noreferrer" // Open in new tab
                       >
-                        <img src="/github-mark.svg" width="24" height="24" />
+                        <img src="/github-mark.svg" width="30" height="30" />
                       </a>
 
                       <a
@@ -345,7 +345,7 @@ export default function Profile() {
                         target="_blank" // Open in new tab
                         rel="noopener noreferrer" // Open in new tab
                       >
-                        <img src="/facebook.svg" width="26" height="26" />
+                        <img src="/facebook.svg" width="32" height="32" />
                       </a>
                     </div>
                   </div>
