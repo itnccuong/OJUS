@@ -238,6 +238,7 @@ export default function Profile() {
                       onClick={() => setShow(true)}
                       style={{
                         cursor: "pointer",
+                        objectFit: "cover", // Ensures the image covers the container
                       }}
                     />
                   </div>
@@ -261,6 +262,9 @@ export default function Profile() {
                             className="profile-img rounded-circle"
                             width={150}
                             height={150}
+                            style={{
+                              objectFit: "cover", // Ensures the image covers the container
+                            }}
                           />
                         </div>
                         <Form.Group>
