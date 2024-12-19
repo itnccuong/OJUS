@@ -1,6 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import NavBar from "../../components/NavBar.tsx";
 import {
   Button,
   Dropdown,
