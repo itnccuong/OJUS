@@ -1,6 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-
-import NavBar from "../../components/NavBar.tsx";
 import {
   Button,
   Dropdown,
@@ -24,14 +22,9 @@ import axiosInstance from "../../../utils/getURL.ts";
 import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
-import Footer from "../../components/Footer.tsx";
 import ProblemNav from "../../components/ProblemNav.tsx";
 
 export default function Problem() {
-  // const editorRef = useRef();
-  // const onMount = (editor) => {
-  //   editorRef.current = editor;
-  // };
   const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchProblem, setFetchProblem] =
@@ -163,88 +156,68 @@ export default function Problem() {
   };
 
   return (
-    <div className="d-flex-flex-column">
-      <div className="bg-light p-3">
-        <div className="container">
-          <div
-            className="d-flex justify-content-between gap-2"
-            style={{ minHeight: "83vh" }}
-          >
-            <div className="container p-4 border rounded-4 round shadow-sm bg-white">
-              <ProblemNav problemId={problemId as string} />
-              <h3 className="mb-3 mt-3">{problem.title}</h3>
-              <span
-                className={`badge bg-grey me-2 ${
-                  problem.difficulty === "Bronze"
-                    ? "text-warning-emphasis"
-                    : problem.difficulty === "Platinum"
-                      ? "text-primary"
-                      : "text-danger"
-                }`}
-              >
-                {problem.difficulty}
-              </span>
+    <div className="d-flex justify-content-between flex-grow-1 bg-light px-5 py-4 gap-3">
+      <div className="col-6 p-4 border rounded-4 round shadow-sm bg-white">
+        <ProblemNav problemId={problemId as string} />
+        <h3 className="mb-3 mt-3">{problem.title}</h3>
+        <span
+          className={`badge bg-grey me-2 ${
+            problem.difficulty === "Bronze"
+              ? "text-warning-emphasis"
+              : problem.difficulty === "Platinum"
+                ? "text-primary"
+                : "text-danger"
+          }`}
+        >
+          {problem.difficulty}
+        </span>
 
-              <OverlayTrigger
-                trigger="hover"
-                placement="right"
-                overlay={popover}
-              >
-                <span className="badge text-dark bg-grey">Topics</span>
-              </OverlayTrigger>
+        <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
+          <span className="badge text-dark bg-grey">Topics</span>
+        </OverlayTrigger>
 
-              <ReactMarkdown className="mt-3">
-                {problem.description}
-              </ReactMarkdown>
-            </div>
-            <div className="col-6 border rounded-4 round shadow-sm bg-white">
-              <div className="p-4 d-flex justify-content-between">
-                <Button variant="primary" onClick={() => handleSubmit()}>
-                  Submit
-                </Button>
+        <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
+      </div>
+      <div className="col-6 border rounded-4 round shadow-sm bg-white ">
+        <div className="p-4 d-flex justify-content-between">
+          <Button variant="primary" onClick={() => handleSubmit()}>
+            Submit
+          </Button>
 
-                <DropdownButton variant="secondary" title={language}>
-                  <div className="d-flex flex-column">
-                    {Language.map((lang, index) => (
-                      <Dropdown.Item
-                        key={index}
-                        onClick={() => {
-                          setLanguage(lang);
-                        }}
-                      >
-                        <Button variant="white">{lang}</Button>
-                        <span className="ms-4">
-                          {language === lang ? (
-                            <img
-                              src="/done.svg"
-                              width="30"
-                              height="24"
-                              alt="done"
-                            />
-                          ) : null}
-                        </span>
-                      </Dropdown.Item>
-                    ))}
-                  </div>
-                </DropdownButton>
-              </div>
-              <div
-                style={{
-                  height: "83vh",
-                }}
-              >
-                <Editor
-                  height="80vh"
-                  language={languageMapEditor[language]}
-                  value={code}
-                  onChange={(value) => setCode(value)}
-                  options={{
-                    minimap: { enabled: false },
+          <DropdownButton variant="secondary" title={language}>
+            <div className="d-flex flex-column">
+              {Language.map((lang, index) => (
+                <Dropdown.Item
+                  key={index}
+                  onClick={() => {
+                    setLanguage(lang);
                   }}
-                />
-              </div>
+                >
+                  <Button variant="white">{lang}</Button>
+                  <span className="ms-4">
+                    {language === lang ? (
+                      <img src="/done.svg" width="30" height="24" alt="done" />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
+              ))}
             </div>
-          </div>
+          </DropdownButton>
+        </div>
+        <div
+        // style={{
+        //   height: "83vh",
+        // }}
+        >
+          <Editor
+            height="73vh"
+            language={languageMapEditor[language]}
+            value={code}
+            onChange={(value) => setCode(value)}
+            options={{
+              minimap: { enabled: false },
+            }}
+          />
         </div>
       </div>
     </div>
