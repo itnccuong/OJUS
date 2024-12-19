@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Form, Modal, Table } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import axiosInstance from "../../../utils/getURL.ts";
@@ -16,6 +15,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
 import getToken from "../../../utils/getToken.ts";
+import { Button, Form, Modal, Table } from "react-bootstrap";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -219,268 +219,261 @@ export default function Profile() {
   };
 
   return (
-    <div className="vh-100">
+    <div className="h-100 p-5">
       {/* Left Side - Profile Box */}
-      <div className="d-flex justify-content-between gap-4">
-        <div className="col-md-4 border rounded-4 shadow">
-          <div>
+      <div className="h-100 row justify-content-center gap-4">
+        <div className="col-4 border rounded-4 shadow p-4">
+          <div className="header d-flex align-items-center">
             {/* Profile Picture */}
-            <div className="header d-flex align-items-center">
-              {/* Profile Picture */}
-              <div className="profile-pic">
-                <img
-                  src={user.avatar ? user.avatar.url : "/user.png"}
-                  alt="Profile"
-                  className="profile-img rounded-circle"
-                  width={100}
-                  height={100}
-                  onClick={() => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    shouldShowEditButton && setShow(true);
-                  }}
-                  style={{
-                    cursor: "pointer",
-                    objectFit: "cover", // Ensures the image covers the container
-                  }}
-                />
-              </div>
-
-              <Modal show={show} onHide={() => setShow(false)}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Avatar</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="bg-dark">
-                  <div className="d-flex flex-column justify-content-center align-items-center p-3">
-                    <div className="profile-pic border rounded-circle p-1 bg-white">
-                      <img
-                        src={
-                          file
-                            ? URL.createObjectURL(file)
-                            : user.avatar
-                              ? user.avatar.url
-                              : "/user.png"
-                        }
-                        alt="Profile"
-                        className="profile-img rounded-circle"
-                        width={150}
-                        height={150}
-                        style={{
-                          objectFit: "cover", // Ensures the image covers the container
-                        }}
-                      />
-                    </div>
-                    <Form.Group>
-                      <div className="custom-file">
-                        <Form.Control
-                          style={{
-                            display: "none",
-                          }}
-                          required
-                          id="customFile"
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            setFile(
-                              (e.target as HTMLInputElement).files?.[0] || null,
-                            )
-                          }
-                        />
-                        <Form.Label
-                          htmlFor="customFile"
-                          className="custom-file-label btn btn-light mt-3"
-                        >
-                          Choose image
-                        </Form.Label>
-                      </div>
-                    </Form.Group>
-                  </div>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    disabled={!user.avatar}
-                    variant="danger"
-                    onClick={() => handleDeleteAvatar()}
-                  >
-                    Delete avatar
-                  </Button>
-                  <Button
-                    disabled={!file}
-                    variant="primary"
-                    onClick={() => hanldeUpdateAvatar()}
-                  >
-                    Save Changes
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-              {/* Fullname Section */}
-              <div className="flex-grow-1 d-flex flex-column">
-                <h4 className="text-center">{user.fullname}</h4>
-                <div className="d-flex justify-content-center gap-3">
-                  {/*Add github link*/}
-                  <a
-                    href={user.githubLink}
-                    target="_blank" // Open in new tab
-                    rel="noopener noreferrer" // Open in new tab
-                  >
-                    <img src="/github-mark.svg" width="30" height="30" />
-                  </a>
-
-                  <a
-                    href={user.facebookLink}
-                    target="_blank" // Open in new tab
-                    rel="noopener noreferrer" // Open in new tab
-                  >
-                    <img src="/facebook.svg" width="32" height="32" />
-                  </a>
-                </div>
-              </div>
+            <div className="profile-pic">
+              <img
+                src={user.avatar ? user.avatar.url : "/user.png"}
+                alt="Profile"
+                className="profile-img rounded-circle"
+                width={100}
+                height={100}
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  shouldShowEditButton && setShow(true);
+                }}
+                style={{
+                  cursor: "pointer",
+                  objectFit: "cover", // Ensures the image covers the container
+                }}
+              />
             </div>
+            {/* Fullname Section */}
+            <div className="flex-grow-1 d-flex flex-column">
+              <h4 className="text-center">{user.fullname}</h4>
+              <div className="d-flex justify-content-center gap-3">
+                {/*Add github link*/}
+                <a
+                  href={user.githubLink}
+                  target="_blank" // Open in new tab
+                  rel="noopener noreferrer" // Open in new tab
+                >
+                  <img src="/github-mark.svg" width="30" height="30" />
+                </a>
 
-            <div className="edit-button mt-4 border-bottom pb-3">
-              <Button
-                disabled={!shouldShowEditButton}
-                variant={shouldShowEditButton ? "success" : "secondary"}
-                onClick={() => navigate("/profile")}
-                className="w-100 rounded-5"
-              >
-                Edit Profile
-              </Button>
-            </div>
-
-            <div className="stat-header mt-3">
-              <h4>Problem Stats</h4>
-            </div>
-            <div className="stat-body">
-              <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
-                <img
-                  className="rounded-circle"
-                  src="/challenger.png"
-                  width="40"
-                  height="40"
-                />
-                <h5 className="text-warning fw-bold">Total solved </h5>
-                <h4>{totalSolved}</h4>
-              </div>
-
-              <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
-                <img
-                  className="rounded-circle"
-                  src="/bronze.png"
-                  width="40"
-                  height="40"
-                />
-                <h5 className="text-warning-emphasis fw-bold">Bronze </h5>
-                <h4>{bronzeSolved}</h4>
-              </div>
-
-              <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
-                <img
-                  className="rounded-circle"
-                  src="/platinum.png"
-                  width="40"
-                  height="40"
-                />
-                <h5 className="text-primary fw-bold">Platinum </h5>
-                <h4>{platinumSolved}</h4>
-              </div>
-
-              <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
-                <img
-                  className="rounded-circle"
-                  src="/master.png"
-                  width="40"
-                  height="40"
-                />
-                <h5 className="text-danger fw-bold">Master </h5>
-                <h4>{masterSolved}</h4>
+                <a
+                  href={user.facebookLink}
+                  target="_blank" // Open in new tab
+                  rel="noopener noreferrer" // Open in new tab
+                >
+                  <img src="/facebook.svg" width="32" height="32" />
+                </a>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Side - Recent AC Submissions */}
-        <div className="col-md-8 border rounded-4 shadow">
-          <Container className="">
-            <div className="d-flex justify-content-between">
-              <h4>Recent AC</h4>
-              {shouldShowEditButton && (
-                <Button onClick={() => navigate(`/submissions`)}>
-                  View all submissions
-                </Button>
-              )}
-            </div>
-            <Table striped bordered hover className="mt-3">
-              <thead>
-                <tr>
-                  {/* <div className="d-flex"> */}
-                  <th
-                    className="text-center"
-                    style={{
-                      width: "35%",
-                    }}
-                  >
-                    Title
-                  </th>
-                  <th className="text-center" style={{ width: "20%" }}>
-                    Language
-                  </th>
-                  {/* </div> */}
-                  <th className="text-center" style={{ width: "20%" }}>
-                    Difficulty
-                  </th>
-                  <th className="text-center">Submit time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentACSubmissions.map((submission) => (
-                  <tr
-                    key={submission.submissionId}
-                    onClick={() =>
-                      navigate(`/submissions/${submission.submissionId}`)
+          <div className="edit-button mt-4 border-bottom pb-3">
+            <Button
+              disabled={!shouldShowEditButton}
+              variant={shouldShowEditButton ? "success" : "secondary"}
+              onClick={() => navigate("/profile")}
+              className="w-100 rounded-5"
+            >
+              Edit Profile
+            </Button>
+          </div>
+
+          <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Avatar</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bg-dark">
+              <div className="d-flex flex-column justify-content-center align-items-center p-3">
+                <div className="profile-pic border rounded-circle p-1 bg-white">
+                  <img
+                    src={
+                      file
+                        ? URL.createObjectURL(file)
+                        : user.avatar
+                          ? user.avatar.url
+                          : "/user.png"
                     }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td className="text-center">
-                      <Link
-                        to={`/submissions/${submission.submissionId}`}
-                        style={{
-                          textDecoration: "none",
-                          color: "black",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = "blue")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color = "black")
-                        }
-                      >
-                        {submission.problem.title}
-                      </Link>
-                    </td>
+                    alt="Profile"
+                    className="profile-img rounded-circle"
+                    width={150}
+                    height={150}
+                    style={{
+                      objectFit: "cover", // Ensures the image covers the container
+                    }}
+                  />
+                </div>
+                <Form.Group>
+                  <div className="custom-file">
+                    <Form.Control
+                      style={{
+                        display: "none",
+                      }}
+                      required
+                      id="customFile"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setFile(
+                          (e.target as HTMLInputElement).files?.[0] || null,
+                        )
+                      }
+                    />
+                    <Form.Label
+                      htmlFor="customFile"
+                      className="custom-file-label btn btn-light mt-3"
+                    >
+                      Choose image
+                    </Form.Label>
+                  </div>
+                </Form.Group>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                disabled={!user.avatar}
+                variant="danger"
+                onClick={() => handleDeleteAvatar()}
+              >
+                Delete avatar
+              </Button>
+              <Button
+                disabled={!file}
+                variant="primary"
+                onClick={() => hanldeUpdateAvatar()}
+              >
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
-                    {/*Language*/}
-                    <td className="text-center">{submission.language}</td>
-                    <td className="text-center">
-                      <span
-                        className={`badge fs-6 ${
-                          submission.problem.difficulty === "Bronze"
-                            ? "text-warning-emphasis"
-                            : submission.problem.difficulty === "Platinum"
-                              ? "text-primary"
-                              : "text-danger"
-                        }`}
-                      >
-                        {submission.problem.difficulty}
-                      </span>
-                    </td>
+          <div className="stat-header mt-3">
+            <h4>Problem Stats</h4>
+          </div>
+          <div className="stat-body">
+            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+              <img
+                className="rounded-circle"
+                src="/challenger.png"
+                width="40"
+                height="40"
+              />
+              <h5 className="text-warning fw-bold">Total solved </h5>
+              <h4>{totalSolved}</h4>
+            </div>
 
-                    <td className="text-center">{submission.createdAt}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Container>
+            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+              <img
+                className="rounded-circle"
+                src="/bronze.png"
+                width="40"
+                height="40"
+              />
+              <h5 className="text-warning-emphasis fw-bold">Bronze </h5>
+              <h4>{bronzeSolved}</h4>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+              <img
+                className="rounded-circle"
+                src="/platinum.png"
+                width="40"
+                height="40"
+              />
+              <h5 className="text-primary fw-bold">Platinum </h5>
+              <h4>{platinumSolved}</h4>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+              <img
+                className="rounded-circle"
+                src="/master.png"
+                width="40"
+                height="40"
+              />
+              <h5 className="text-danger fw-bold">Master </h5>
+              <h4>{masterSolved}</h4>
+            </div>
+          </div>
+        </div>
+        {/*Right Side - Recent AC Submissions*/}
+        <div className="col-7 border rounded-4 shadow p-4">
+          <div className="d-flex justify-content-between">
+            <h4>Recent AC</h4>
+            {shouldShowEditButton && (
+              <Button onClick={() => navigate(`/submissions`)}>
+                View all submissions
+              </Button>
+            )}
+          </div>
+          <Table striped bordered hover className="mt-3">
+            <thead>
+              <tr>
+                {/* <div className="d-flex"> */}
+                <th
+                  className="text-center"
+                  style={{
+                    width: "35%",
+                  }}
+                >
+                  Title
+                </th>
+                <th className="text-center" style={{ width: "20%" }}>
+                  Language
+                </th>
+                {/* </div> */}
+                <th className="text-center" style={{ width: "20%" }}>
+                  Difficulty
+                </th>
+                <th className="text-center">Submit time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentACSubmissions.map((submission) => (
+                <tr
+                  key={submission.submissionId}
+                  onClick={() =>
+                    navigate(`/submissions/${submission.submissionId}`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <td className="text-center">
+                    <Link
+                      to={`/submissions/${submission.submissionId}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "blue")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "black")
+                      }
+                    >
+                      {submission.problem.title}
+                    </Link>
+                  </td>
+
+                  {/*Language*/}
+                  <td className="text-center">{submission.language}</td>
+                  <td className="text-center">
+                    <span
+                      className={`badge fs-6 ${
+                        submission.problem.difficulty === "Bronze"
+                          ? "text-warning-emphasis"
+                          : submission.problem.difficulty === "Platinum"
+                            ? "text-primary"
+                            : "text-danger"
+                      }`}
+                    >
+                      {submission.problem.difficulty}
+                    </span>
+                  </td>
+
+                  <td className="text-center">{submission.createdAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
     </div>

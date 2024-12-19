@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <div className="bg-body-tertiary border-bottom d-flex px-3 py-2">
+    <div className="bg-body-tertiary border-bottom px-5 py-2">
       <div className="container d-flex justify-content-start">
         <span className="text-body-secondary">Copyright &copy; 2024 OJUS</span>
       </div>
