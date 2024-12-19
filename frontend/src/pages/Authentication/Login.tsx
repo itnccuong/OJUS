@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
+import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import storageKeyMap from "../../../utils/storageKeyMap.ts";
 import axiosInstance from "../../../utils/getURL.ts";
@@ -53,9 +53,9 @@ export default function Login() {
       >
         {/* <h3 className="text-center mb-3">Sign In</h3>
          */}
-        <Container className="d-flex justify-content-center align-items-center mb-4">
+        <div className="d-flex justify-content-center align-items-center mb-4">
           <img src="/ojus.png" width="72" height="48" />
-        </Container>
+        </div>
         <FloatingLabel
           className="mb-3"
           label="Username or E-mail"

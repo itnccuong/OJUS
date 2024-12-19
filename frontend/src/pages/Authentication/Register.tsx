@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
+import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import {
@@ -58,9 +58,9 @@ export default function Register() {
         className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"
         onSubmit={handleSubmit}
       >
-        <Container className="d-flex justify-content-center align-items-center mb-4">
+        <div className="d-flex justify-content-center align-items-center mb-4">
           <img src="/ojus.png" width="72" height="48" />
-        </Container>
+        </div>
 
         <FloatingLabel
           className="mb-3"
