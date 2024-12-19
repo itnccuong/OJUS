@@ -108,7 +108,7 @@ export default function SubmissionListUser() {
 
   return (
     <div className="d-flex flex-grow-1 bg-light px-5 py-4">
-      <div className="container p-4 border rounded-4 round shadow-sm bg-white w-100">
+      <div className="p-4 border rounded-4 round shadow-sm bg-white w-100">
         <h4 className="mb-4">All My Submissions</h4>
         <Table striped bordered hover className="mt-3">
           <thead>
