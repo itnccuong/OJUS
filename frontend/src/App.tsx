@@ -5,7 +5,6 @@ import Register from "./pages/Authentication/Register.tsx";
 import Profile from "./pages/Profile/Profile.tsx";
 import ProblemList from "./pages/Problem/ProblemList.tsx";
 import EditProfile from "./pages/Profile/EditProfile.tsx";
-import ShowProfile from "./pages/Profile/ShowProfile.tsx";
 
 import { Slide, ToastContainer } from "react-toastify";
 
@@ -46,7 +45,6 @@ export default function App() {
           <Route path="/submissions/:submissionId" element={<Submission />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassword />} />
-          <Route path="/showprofile" element={<ShowProfile />} />
 
           <Route
             path="/accounts/password/reset/done"

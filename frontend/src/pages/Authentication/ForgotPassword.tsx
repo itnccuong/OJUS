@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
+import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import { AxiosError } from "axios";
@@ -43,10 +43,10 @@ export default function ForgotPassword() {
         >
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
-          <Container className="d-flex justify-content-center align-items-center mb-4 border-bottom">
+          <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
             <h3 className="mb-3">Password Reset</h3>
-          </Container>
-          <Container
+          </div>
+          <div
             className="p-2 mb-4 border border-warning"
             style={{
               background: "#ffffe0",
@@ -56,7 +56,7 @@ export default function ForgotPassword() {
               Forgotten your password? Enter your e-mail address below, and
               we'll send you an e-mail allowing you to reset it.
             </p>
-          </Container>
+          </div>
           <FloatingLabel
             className="mb-3"
             label="E-mail address"
