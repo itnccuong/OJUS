@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
+import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import { AxiosError } from "axios";
@@ -38,24 +36,17 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <NavBar />
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{
-          backgroundColor: "#eceff1",
-          height: "87vh",
-        }}
-      >
+      <div className="d-flex flex-grow-1 justify-content-center align-items-center">
         <Form
-          className="p-4 rounded w-25 bg-white shadow"
+          className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
           onSubmit={handleSubmit}
         >
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
-          <Container className="d-flex justify-content-center align-items-center mb-4 border-bottom">
+          <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
             <h3 className="mb-3">Password Reset</h3>
-          </Container>
-          <Container
+          </div>
+          <div
             className="p-2 mb-4 border border-warning"
             style={{
               background: "#ffffe0",
@@ -65,7 +56,7 @@ export default function ForgotPassword() {
               Forgotten your password? Enter your e-mail address below, and
               we'll send you an e-mail allowing you to reset it.
             </p>
-          </Container>
+          </div>
           <FloatingLabel
             className="mb-3"
             label="E-mail address"
@@ -92,7 +83,6 @@ export default function ForgotPassword() {
           </div>
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

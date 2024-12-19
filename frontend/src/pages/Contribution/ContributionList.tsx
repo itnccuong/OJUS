@@ -1,7 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -140,7 +136,6 @@ export default function ContributionList() {
   return (
     <>
       <div className="d-flex flex-column">
-        <NavBar />
         <div
           className="container d-flex flex-column"
           style={{
@@ -316,7 +311,6 @@ export default function ContributionList() {
             </tbody>
           </Table>
         </div>
-        <Footer />
       </div>
     </>
   );

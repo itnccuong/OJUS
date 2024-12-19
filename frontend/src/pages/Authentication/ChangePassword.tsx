@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, FloatingLabel, Form } from "react-bootstrap";
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
+import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import { AxiosError } from "axios";
@@ -45,23 +43,21 @@ export default function ChangePassword() {
 
   return (
     <>
-      <NavBar />
       <div
-        className="d-flex justify-content-center align-items-center"
+        className="d-flex flex-grow-1 justify-content-center align-items-center"
         style={{
           backgroundColor: "#eceff1",
-          height: "87vh",
         }}
       >
         <Form
-          className="p-4 rounded w-25 bg-white shadow"
+          className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
           onSubmit={handleSubmit}
         >
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
-          <Container className="d-flex justify-content-center align-items-center mb-4 border-bottom">
+          <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
             <h3 className="mb-3">Change Password</h3>
-          </Container>
+          </div>
           <FloatingLabel
             className="mb-3"
             label="New Password"
@@ -99,7 +95,6 @@ export default function ChangePassword() {
           </div>
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

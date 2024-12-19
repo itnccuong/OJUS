@@ -5,7 +5,6 @@ import Register from "./pages/Authentication/Register.tsx";
 import Profile from "./pages/Profile/Profile.tsx";
 import ProblemList from "./pages/Problem/ProblemList.tsx";
 import EditProfile from "./pages/Profile/EditProfile.tsx";
-import ShowProfile from "./pages/Profile/ShowProfile.tsx";
 
 import { Slide, ToastContainer } from "react-toastify";
 
@@ -20,11 +19,14 @@ import Problem from "./pages/Problem/Problem.tsx";
 import SubmissionList from "./pages/Problem/SubmissionList.tsx";
 import Submission from "./pages/Problem/Submission.tsx";
 import SubmissionListUser from "./pages/Profile/SubmissionListUser.tsx";
+import NavBar from "./components/NavBar.tsx";
+import Footer from "./components/Footer.tsx";
 
 export default function App() {
   return (
-    <>
+    <div className="d-flex flex-column vh-100">
       <Router>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/submissions" element={<SubmissionListUser />} />
@@ -43,7 +45,6 @@ export default function App() {
           <Route path="/submissions/:submissionId" element={<Submission />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassword />} />
-          <Route path="/showprofile" element={<ShowProfile />} />
 
           <Route
             path="/accounts/password/reset/done"
@@ -57,10 +58,11 @@ export default function App() {
           <Route path="/contributions" element={<ContributionList />} />
           <Route path="/contributions/:id/:page" element={<Contribution />} />
         </Routes>
+        <Footer />
       </Router>
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar
         newestOnTop={false}
         closeOnClick
@@ -71,6 +73,6 @@ export default function App() {
         theme="light"
         transition={Slide}
       />
-    </>
+    </div>
   );
 }

@@ -1,13 +1,10 @@
-import NavBar from "../components/NavBar";
-import { Container } from "react-bootstrap";
-
 export default function Home() {
   return (
     <>
-      <NavBar />
-      <Container>
+      {/*<NavBar />*/}
+      <div className="flex-grow-1 px-5">
         <h1>Coming soon...</h1>
-      </Container>
+      </div>
     </>
   );
 }
