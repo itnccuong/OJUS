@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import NavBar from "../../components/NavBar.tsx";
 import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
@@ -14,7 +13,6 @@ import axiosInstance from "../../../utils/getURL.ts";
 import { SubmissionWithProblem } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
-import Footer from "../../components/Footer.tsx";
 
 export default function SubmissionListUser() {
   const token = getToken(); // Get token from localStorage

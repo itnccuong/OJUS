@@ -1,7 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

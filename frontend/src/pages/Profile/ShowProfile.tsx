@@ -1,8 +1,6 @@
 import React from "react";
 import { Card, ListGroup, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 

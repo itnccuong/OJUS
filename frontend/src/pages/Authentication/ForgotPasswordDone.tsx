@@ -1,6 +1,4 @@
 import { Container, Form } from "react-bootstrap";
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
 
 export default function ForgotPasswordDone() {
   return (

@@ -1,13 +1,11 @@
 import { Accordion, Button, Container, Form } from "react-bootstrap";
-import NavBar from "../../components/NavBar.tsx";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import Footer from "../../components/Footer.tsx";
-import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../utils/getURL.ts";
 import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface Tag {
   label: string;
