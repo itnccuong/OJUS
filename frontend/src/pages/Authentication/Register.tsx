@@ -53,9 +53,9 @@ export default function Register() {
     }
   };
   return (
-    <div className="vh-100 d-flex justify-content-center align-items-center bg-grey">
+    <div className="flex-grow-1 d-flex justify-content-center align-items-center bg-grey">
       <Form
-        className="p-4 rounded-4 w-25 bg-white shadow"
+        className="p-4 rounded-4 w-25 bg-white shadow my-5"
         onSubmit={handleSubmit}
       >
         <Container className="d-flex justify-content-center align-items-center mb-4">

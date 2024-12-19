@@ -219,9 +219,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="h-100 p-5">
+    <div className="flex-grow-1 p-5">
       {/* Left Side - Profile Box */}
-      <div className="h-100 row justify-content-center gap-4">
+      <div className="d-flex justify-content-center gap-4">
         <div className="col-4 border rounded-4 shadow p-4">
           <div className="header d-flex align-items-center">
             {/* Profile Picture */}
