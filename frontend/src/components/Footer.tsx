@@ -1,11 +1,11 @@
 export default function Footer() {
   return (
-    <div className="bg-body-tertiary border-bottom px-5 py-2">
-      <div className="container d-flex justify-content-start">
+    <div className="bg-body-tertiary d-flex justify-content-between border-top px-5 py-2">
+      <div className="d-flex">
         <span className="text-body-secondary">Copyright &copy; 2024 OJUS</span>
       </div>
 
-      <div className="container d-flex gap-3 justify-content-end">
+      <div className="d-flex gap-3">
         <a
           href="https://www.facebook.com/profile.php?id=61557169305419"
           target="_blank" // Open in new tab
