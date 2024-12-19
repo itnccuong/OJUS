@@ -352,6 +352,8 @@ export default function EditProfile() {
               ) : (
                 <Link
                   to={profile.facebookLink ? profile.facebookLink : "#"}
+                  target="_blank" // Open in new tab
+                  rel="noopener noreferrer" // Open in new tab
                   className="w-50 text-truncate"
                   style={{
                     marginLeft: "21px",
@@ -435,6 +437,8 @@ export default function EditProfile() {
               ) : (
                 <Link
                   to={profile.githubLink ? profile.githubLink : "#"}
+                  target="_blank" // Open in new tab
+                  rel="noopener noreferrer" // Open in new tab
                   className="w-50 text-truncate"
                   style={{
                     marginLeft: "21px",

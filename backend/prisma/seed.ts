@@ -15,8 +15,8 @@ async function main() {
     fullname: "Nhat Hien",
     username: "hien",
     avatarId: null,
-    facebookLink: null,
-    githubLink: null,
+    facebookLink: "https://www.facebook.com/nhathien03042004",
+    githubLink: "https://github.com/VuongNhatHien",
     createdAt: new Date(),
   };
 

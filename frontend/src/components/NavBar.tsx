@@ -73,9 +73,7 @@ function NavBar() {
                 <Nav.Link as={NavLink} to={`/u/${username}`}>
                   Profile
                 </Nav.Link>
-                <Nav.Link href="#" onClick={handleSignOut}>
-                  Sign Out
-                </Nav.Link>
+                <Nav.Link onClick={handleSignOut}>Sign Out</Nav.Link>
               </Nav>
             </>
           ) : (
