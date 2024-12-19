@@ -243,7 +243,6 @@ export default function Contribution() {
 
   return (
     <div className="d-flex-flex-column">
-      <NavBar />
       <div
         className="d-flex gap-2"
         style={{

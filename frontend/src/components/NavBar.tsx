@@ -15,6 +15,7 @@ function NavBar() {
   const handleSignOut = () => {
     localStorage.removeItem(storageKeyMap.token); // Remove token from localStorage
     navigate("/accounts/login"); // Redirect to login
+    location.reload();
   };
   useEffect(() => {
     if (token) {
@@ -38,57 +39,55 @@ function NavBar() {
   };
 
   return (
-    <Navbar className="bg-body-tertiary border-bottom d-flex">
-      <div className="d-flex container">
-        <div className="container d-flex gap-3 justify-content-start">
-          <Navbar.Brand as={NavLink} to={"/"}>
-            <img
-              src="/ojus.png"
-              width="48"
-              height="32"
-              className="d-inline-block align-top"
-            />
-          </Navbar.Brand>
+    <Navbar className="bg-body-tertiary border-bottom d-flex px-4">
+      <div className="d-flex gap-3 justify-content-start">
+        <Navbar.Brand as={NavLink} to={"/"}>
+          <img
+            src="/ojus.png"
+            width="48"
+            height="32"
+            className="d-inline-block align-top"
+          />
+        </Navbar.Brand>
 
-          <Nav variant="underline">
-            <Nav.Link as={NavLink} to={"/problems"}>
-              Problems
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={"/submissions"}>
-              Submissions
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={"/contribute"}>
-              Contribute
-            </Nav.Link>
-            <Nav.Link as={NavLink} to={"/contributions"}>
-              Contributions
-            </Nav.Link>
-          </Nav>
-        </div>
+        <Nav variant="underline">
+          <Nav.Link as={NavLink} to={"/problems"}>
+            Problems
+          </Nav.Link>
+          <Nav.Link as={NavLink} to={"/submissions"}>
+            Submissions
+          </Nav.Link>
+          <Nav.Link as={NavLink} to={"/contribute"}>
+            Contribute
+          </Nav.Link>
+          <Nav.Link as={NavLink} to={"/contributions"}>
+            Contributions
+          </Nav.Link>
+        </Nav>
+      </div>
 
-        <div className="d-flex container gap-2 justify-content-end">
-          {username ? (
-            <>
-              <Nav variant="underline">
-                <Nav.Link as={NavLink} to={`/u/${username}`}>
-                  Profile
-                </Nav.Link>
-                <Nav.Link onClick={handleSignOut}>Sign Out</Nav.Link>
-              </Nav>
-            </>
-          ) : (
-            <>
-              <Nav variant="underline">
-                <Nav.Link as={NavLink} to="/accounts/register">
-                  Register
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/accounts/login">
-                  Sign In
-                </Nav.Link>
-              </Nav>
-            </>
-          )}
-        </div>
+      <div className="d-flex w-100 gap-2 justify-content-end">
+        {username ? (
+          <>
+            <Nav variant="underline">
+              <Nav.Link as={NavLink} to={`/u/${username}`}>
+                Profile
+              </Nav.Link>
+              <Nav.Link onClick={handleSignOut}>Sign Out</Nav.Link>
+            </Nav>
+          </>
+        ) : (
+          <>
+            <Nav variant="underline">
+              <Nav.Link as={NavLink} to="/accounts/register">
+                Register
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/accounts/login">
+                Sign In
+              </Nav.Link>
+            </Nav>
+          </>
+        )}
       </div>
     </Navbar>
   );

@@ -110,7 +110,7 @@ export default function SubmissionListUser() {
 
   return (
     <div className="d-flex-flex-column">
-      <NavBar />
+      {/*<NavBar />*/}
 
       <div className="bg-light p-3">
         <div className="container">
@@ -210,7 +210,6 @@ export default function SubmissionListUser() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

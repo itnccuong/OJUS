@@ -1,6 +1,4 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-import NavBar from "../../components/NavBar.tsx";
 import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
@@ -14,7 +12,6 @@ import axiosInstance from "../../../utils/getURL.ts";
 import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
-import Footer from "../../components/Footer.tsx";
 import ProblemNav from "../../components/ProblemNav.tsx";
 
 export default function SubmissionList() {
@@ -101,8 +98,6 @@ export default function SubmissionList() {
 
   return (
     <div className="d-flex-flex-column">
-      <NavBar />
-
       <div className="bg-light p-3">
         <div className="container">
           <div
@@ -191,7 +186,6 @@ export default function SubmissionList() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

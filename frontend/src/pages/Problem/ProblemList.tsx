@@ -1,5 +1,3 @@
-import NavBar from "../../components/NavBar.tsx";
-import Footer from "../../components/Footer.tsx";
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -139,14 +137,8 @@ export default function ProblemList() {
 
   return (
     <>
-      <div className="d-flex flex-column">
-        <NavBar />
-        <div
-          className="container d-flex flex-column"
-          style={{
-            height: "87vh",
-          }}
-        >
+      <div className="min-vh-100 d-flex flex-column">
+        <div className="container d-flex flex-column">
           <div className="d-flex flex-row mt-3 align-items-center gap-2">
             <DropdownButton variant="secondary" title="Difficulty">
               <div className="d-flex flex-column">
@@ -387,7 +379,6 @@ export default function ProblemList() {
             </tbody>
           </Table>
         </div>
-        <Footer />
       </div>
     </>
   );

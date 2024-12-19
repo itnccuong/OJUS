@@ -38,7 +38,6 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <NavBar />
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
@@ -92,7 +91,6 @@ export default function ForgotPassword() {
           </div>
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

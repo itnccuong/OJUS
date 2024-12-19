@@ -128,7 +128,6 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   `;
   return (
     <div className="d-flex flex-column">
-      <NavBar />
       <div className="d-flex flex-row">
         <div className="d-flex container">
           <Container
@@ -298,7 +297,6 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
           </Container>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

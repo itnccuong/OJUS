@@ -20,11 +20,14 @@ import Problem from "./pages/Problem/Problem.tsx";
 import SubmissionList from "./pages/Problem/SubmissionList.tsx";
 import Submission from "./pages/Problem/Submission.tsx";
 import SubmissionListUser from "./pages/Profile/SubmissionListUser.tsx";
+import NavBar from "./components/NavBar.tsx";
+import Footer from "./components/Footer.tsx";
 
 export default function App() {
   return (
-    <>
+    <div className="d-flex flex-column vh-100">
       <Router>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/submissions" element={<SubmissionListUser />} />
@@ -57,6 +60,7 @@ export default function App() {
           <Route path="/contributions" element={<ContributionList />} />
           <Route path="/contributions/:id/:page" element={<Contribution />} />
         </Routes>
+        <Footer />
       </Router>
       <ToastContainer
         position="top-center"
@@ -71,6 +75,6 @@ export default function App() {
         theme="light"
         transition={Slide}
       />
-    </>
+    </div>
   );
 }

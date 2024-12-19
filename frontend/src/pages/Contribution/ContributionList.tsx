@@ -140,7 +140,6 @@ export default function ContributionList() {
   return (
     <>
       <div className="d-flex flex-column">
-        <NavBar />
         <div
           className="container d-flex flex-column"
           style={{
@@ -316,7 +315,6 @@ export default function ContributionList() {
             </tbody>
           </Table>
         </div>
-        <Footer />
       </div>
     </>
   );

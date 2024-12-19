@@ -241,7 +241,6 @@ export default function EditProfile() {
 
   return (
     <div>
-      <NavBar />
       <div
         className="d-flex justify-content-center align-items-center bg-light p-5"
         style={{ minHeight: "87vh" }}
@@ -578,7 +577,6 @@ export default function EditProfile() {
           </div>
         </Container>
       </div>
-      <Footer />
     </div>
   );
 }

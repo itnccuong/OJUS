@@ -5,7 +5,6 @@ import Footer from "../../components/Footer.tsx";
 export default function ForgotPasswordDone() {
   return (
     <>
-      <NavBar />
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
@@ -25,7 +24,6 @@ export default function ForgotPasswordDone() {
           </p>
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

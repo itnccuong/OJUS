@@ -79,7 +79,6 @@ const ShowProfile: React.FC = () => {
 
   return (
     <>
-      <NavBar />
       <div className="container mt-5 d-flex gap-4">
         {/* Left Section - Avatar and Stats */}
         <div className="col-md-4">
@@ -343,7 +342,6 @@ const ShowProfile: React.FC = () => {
           </Card>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

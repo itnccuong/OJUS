@@ -130,8 +130,6 @@ export default function Submission() {
     console.log(results),
     (
       <div className="d-flex-flex-column">
-        <NavBar />
-
         <div className="p-3">
           <div
             className="container"
@@ -255,7 +253,6 @@ export default function Submission() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     )
   );

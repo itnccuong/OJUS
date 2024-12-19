@@ -45,7 +45,6 @@ export default function ChangePassword() {
 
   return (
     <>
-      <NavBar />
       <div
         className="d-flex justify-content-center align-items-center"
         style={{
@@ -99,7 +98,6 @@ export default function ChangePassword() {
           </div>
         </Form>
       </div>
-      <Footer />
     </>
   );
 }

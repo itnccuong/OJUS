@@ -164,8 +164,6 @@ export default function Problem() {
 
   return (
     <div className="d-flex-flex-column">
-      <NavBar />
-
       <div className="bg-light p-3">
         <div className="container">
           <div
@@ -249,7 +247,6 @@ export default function Problem() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
