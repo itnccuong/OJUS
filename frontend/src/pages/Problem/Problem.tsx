@@ -201,7 +201,9 @@ export default function Problem() {
             </div>
             <div className="col-6 border rounded-4 round shadow-sm bg-white">
               <div className="p-4 d-flex justify-content-between">
-                <Button onClick={() => handleSubmit()}>Submit</Button>
+                <Button variant="primary" onClick={() => handleSubmit()}>
+                  Submit
+                </Button>
 
                 <DropdownButton variant="secondary" title={language}>
                   <div className="d-flex flex-column">

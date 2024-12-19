@@ -14,7 +14,6 @@ const ProblemNav = ({ problemId }: { problemId: string }) => {
       </Nav.Item>
       <Nav.Item>
         <Nav.Link
-          eventKey="link-1"
           as={NavLink}
           to={`/problems/${problemId}/submissions`}
           className="text-dark"

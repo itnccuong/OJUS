@@ -111,7 +111,7 @@ export default function SubmissionList() {
           >
             <div className="container p-4 border rounded-4 round shadow-sm bg-white">
               <ProblemNav problemId={problemId as string} />
-              <Table striped bordered hover className="mt-3">
+              <Table striped bordered hover className="mt-4">
                 <thead>
                   <tr>
                     {/* <div className="d-flex"> */}

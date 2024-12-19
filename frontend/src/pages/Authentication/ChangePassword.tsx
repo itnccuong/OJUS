@@ -54,7 +54,7 @@ export default function ChangePassword() {
         }}
       >
         <Form
-          className="p-4 rounded w-25 bg-white shadow"
+          className="p-4 rounded-4 w-25 bg-white shadow"
           onSubmit={handleSubmit}
         >
           {/* <h3 className="text-center mb-3">Sign In</h3>

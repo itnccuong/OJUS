@@ -356,7 +356,7 @@ export default function Profile() {
                     disabled={!shouldShowEditButton}
                     variant={shouldShowEditButton ? "success" : "secondary"}
                     onClick={() => navigate("/profile")}
-                    className="w-100 rounded-4"
+                    className="w-100 rounded-5"
                   >
                     Edit Profile
                   </Button>

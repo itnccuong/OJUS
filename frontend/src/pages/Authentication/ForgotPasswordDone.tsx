@@ -13,7 +13,7 @@ export default function ForgotPasswordDone() {
           height: "87vh",
         }}
       >
-        <Form className="p-4 rounded w-25 bg-white shadow">
+        <Form className="p-4 rounded-4 w-25 bg-white shadow">
           {/* <h3 className="text-center mb-3">Sign In</h3>
            */}
           <Container className="d-flex justify-content-center align-items-center mb-4 border-bottom">
