@@ -48,7 +48,7 @@ export default function Login() {
   return (
     <div className="flex-grow-1 d-flex justify-content-center align-items-center bg-grey">
       <Form
-        className="p-4 rounded-4 w-25 bg-white shadow my-5"
+        className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"
         onSubmit={handleSubmit}
       >
         {/* <h3 className="text-center mb-3">Sign In</h3>
