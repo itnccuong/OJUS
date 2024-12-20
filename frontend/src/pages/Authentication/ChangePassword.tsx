@@ -44,56 +44,58 @@ export default function ChangePassword() {
   return (
     <>
       <div
-        className="d-flex flex-grow-1 justify-content-center align-items-center"
+        className="d-flex flex-grow-1"
         style={{
           backgroundColor: "#eceff1",
         }}
       >
-        <Form
-          className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
-          onSubmit={handleSubmit}
-        >
-          {/* <h3 className="text-center mb-3">Sign In</h3>
-           */}
-          <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
-            <h3 className="mb-3">Change Password</h3>
-          </div>
-          <FloatingLabel
-            className="mb-3"
-            label="New Password"
-            style={{
-              color: "#666666",
-            }}
+        <div className="container-xxl d-flex justify-content-center align-items-center">
+          <Form
+            className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
+            onSubmit={handleSubmit}
           >
-            <Form.Control
-              required
-              type="password"
-              placeholder="New Password"
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </FloatingLabel>
+            {/* <h3 className="text-center mb-3">Sign In</h3>
+             */}
+            <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
+              <h3 className="mb-3">Change Password</h3>
+            </div>
+            <FloatingLabel
+              className="mb-3"
+              label="New Password"
+              style={{
+                color: "#666666",
+              }}
+            >
+              <Form.Control
+                required
+                type="password"
+                placeholder="New Password"
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </FloatingLabel>
 
-          <FloatingLabel
-            className="mb-3"
-            label="Confirm New Password"
-            style={{
-              color: "#666666",
-            }}
-          >
-            <Form.Control
-              required
-              type="password"
-              placeholder="Confirm New Password"
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-            />
-          </FloatingLabel>
+            <FloatingLabel
+              className="mb-3"
+              label="Confirm New Password"
+              style={{
+                color: "#666666",
+              }}
+            >
+              <Form.Control
+                required
+                type="password"
+                placeholder="Confirm New Password"
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+              />
+            </FloatingLabel>
 
-          <div className="mb-2">
-            <button type="submit" className="btn btn-primary w-100">
-              Change Password
-            </button>
-          </div>
-        </Form>
+            <div className="mb-2">
+              <button type="submit" className="btn btn-primary w-100">
+                Change Password
+              </button>
+            </div>
+          </Form>
+        </div>
       </div>
     </>
   );

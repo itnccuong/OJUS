@@ -36,52 +36,54 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-        <Form
-          className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
-          onSubmit={handleSubmit}
-        >
-          {/* <h3 className="text-center mb-3">Sign In</h3>
-           */}
-          <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
-            <h3 className="mb-3">Password Reset</h3>
-          </div>
-          <div
-            className="p-2 mb-4 border border-warning"
-            style={{
-              background: "#ffffe0",
-            }}
+      <div className="d-flex flex-grow-1">
+        <div className="d-flex container-xxl justify-content-center align-items-center">
+          <Form
+            className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"
+            onSubmit={handleSubmit}
           >
-            <p className="mt-1">
-              Forgotten your password? Enter your e-mail address below, and
-              we'll send you an e-mail allowing you to reset it.
-            </p>
-          </div>
-          <FloatingLabel
-            className="mb-3"
-            label="E-mail address"
-            style={{
-              color: "#666666",
-            }}
-          >
-            <Form.Control
-              required
-              type="email"
-              placeholder="E-mail address"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </FloatingLabel>
-
-          <div className="mb-2">
-            <button
-              type="submit"
-              className="btn btn-primary w-100"
-              disabled={loading}
+            {/* <h3 className="text-center mb-3">Sign In</h3>
+             */}
+            <div className="d-flex justify-content-center align-items-center mb-4 border-bottom">
+              <h3 className="mb-3">Password Reset</h3>
+            </div>
+            <div
+              className="p-2 mb-4 border border-warning"
+              style={{
+                background: "#ffffe0",
+              }}
             >
-              {loading ? "Sending..." : "Reset My Password"}
-            </button>
-          </div>
-        </Form>
+              <p className="mt-1">
+                Forgotten your password? Enter your e-mail address below, and
+                we'll send you an e-mail allowing you to reset it.
+              </p>
+            </div>
+            <FloatingLabel
+              className="mb-3"
+              label="E-mail address"
+              style={{
+                color: "#666666",
+              }}
+            >
+              <Form.Control
+                required
+                type="email"
+                placeholder="E-mail address"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FloatingLabel>
+
+            <div className="mb-2">
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Reset My Password"}
+              </button>
+            </div>
+          </Form>
+        </div>
       </div>
     </>
   );
