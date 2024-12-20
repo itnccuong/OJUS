@@ -93,7 +93,7 @@ export default function Problem() {
           {problem.tags.map((tag, index) => (
             <span
               key={index}
-              className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
+              className={`badge rounded-pill bg-body-secondary text-dark m-1 mx-1`}
             >
               {tag}
             </span>
@@ -161,7 +161,7 @@ export default function Problem() {
         <ProblemNav problemId={problemId as string} />
         <h3 className="mb-3 mt-3">{problem.title}</h3>
         <span
-          className={`badge bg-grey me-2 ${
+          className={`badge bg-body-secondary me-2 ${
             problem.difficulty === "Bronze"
               ? "text-warning-emphasis"
               : problem.difficulty === "Platinum"
@@ -173,7 +173,7 @@ export default function Problem() {
         </span>
 
         <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
-          <span className="badge text-dark bg-grey">Topics</span>
+          <span className="badge bg-body-secondary text-dark">Topics</span>
         </OverlayTrigger>
 
         <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
