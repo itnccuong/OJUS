@@ -156,68 +156,71 @@ export default function Problem() {
   };
 
   return (
-    <div className="d-flex justify-content-between flex-grow-1 bg-body-tertiary px-5 py-4 gap-3">
-      <div className="col-6 p-4 border rounded-4 round shadow-sm bg-white">
-        <ProblemNav problemId={problemId as string} />
-        <h3 className="mb-3 mt-3">{problem.title}</h3>
-        <span
-          className={`badge bg-body-secondary me-2 ${
-            problem.difficulty === "Bronze"
-              ? "text-warning-emphasis"
-              : problem.difficulty === "Platinum"
-                ? "text-primary"
-                : "text-danger"
-          }`}
-        >
-          {problem.difficulty}
-        </span>
+    <div className="d-flex flex-grow-1 bg-body-tertiary px-5 py-4">
+      <div className="container-xxl d-flex justify-content-between gap-3">
+        <div className="col-6 p-4 border rounded-4 round shadow-sm bg-white">
+          <ProblemNav problemId={problemId as string} />
+          <h3 className="mb-3 mt-3">{problem.title}</h3>
+          <span
+            className={`badge bg-body-secondary me-2 ${
+              problem.difficulty === "Bronze"
+                ? "text-warning-emphasis"
+                : problem.difficulty === "Platinum"
+                  ? "text-primary"
+                  : "text-danger"
+            }`}
+          >
+            {problem.difficulty}
+          </span>
 
-        <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
-          <span className="badge bg-body-secondary text-dark">Topics</span>
-        </OverlayTrigger>
+          <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
+            <span className="badge bg-body-secondary text-dark">Topics</span>
+          </OverlayTrigger>
 
-        <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
-      </div>
-      <div className="col-6 border rounded-4 round shadow-sm bg-white ">
-        <div className="p-4 d-flex justify-content-between">
-          <Button variant="primary" onClick={() => handleSubmit()}>
-            Submit
-          </Button>
-
-          <DropdownButton variant="secondary" title={language}>
-            <div className="d-flex flex-column">
-              {Language.map((lang, index) => (
-                <Dropdown.Item
-                  key={index}
-                  onClick={() => {
-                    setLanguage(lang);
-                  }}
-                >
-                  <Button variant="white">{lang}</Button>
-                  <span className="ms-4">
-                    {language === lang ? (
-                      <img src="/done.svg" width="30" height="24" alt="done" />
-                    ) : null}
-                  </span>
-                </Dropdown.Item>
-              ))}
-            </div>
-          </DropdownButton>
+          <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
         </div>
-        <div
-        // style={{
-        //   height: "83vh",
-        // }}
-        >
-          <Editor
-            height="73vh"
-            language={languageMapEditor[language]}
-            value={code}
-            onChange={(value) => setCode(value)}
-            options={{
-              minimap: { enabled: false },
-            }}
-          />
+        <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
+          <div className="p-4 d-flex justify-content-between">
+            <Button variant="primary" onClick={() => handleSubmit()}>
+              Submit
+            </Button>
+
+            <DropdownButton variant="secondary" title={language}>
+              <div className="d-flex flex-column">
+                {Language.map((lang, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    onClick={() => {
+                      setLanguage(lang);
+                    }}
+                  >
+                    <Button variant="white">{lang}</Button>
+                    <span className="ms-4">
+                      {language === lang ? (
+                        <img
+                          src="/done.svg"
+                          width="30"
+                          height="24"
+                          alt="done"
+                        />
+                      ) : null}
+                    </span>
+                  </Dropdown.Item>
+                ))}
+              </div>
+            </DropdownButton>
+          </div>
+          <div>
+            <Editor
+              height="69vh"
+              language={languageMapEditor[language]}
+              value={code}
+              onChange={(value) => setCode(value)}
+              options={{
+                minimap: { enabled: false },
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
