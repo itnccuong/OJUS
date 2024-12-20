@@ -125,9 +125,8 @@ export default function Submission() {
   const totalMemory = results.reduce((sum, result) => sum + result.memory, 0);
 
   return (
-    console.log(results),
-    (
-      <div className="d-flex flex-grow-1 flex-column px-5 py-4">
+    <div className="d-flex flex-grow-1 px-5 py-4">
+      <div className="container-xxl d-flex flex-column">
         <h4 className="text-primary">
           <Link
             to={`/problems/${submission.problemId}/description`}
@@ -241,6 +240,6 @@ export default function Submission() {
           </div>
         </div>
       </div>
-    )
+    </div>
   );
 }

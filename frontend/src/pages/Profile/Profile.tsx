@@ -219,10 +219,10 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex-grow-1 px-5 py-4">
+    <div className="flex-grow-1 py-4 px-5 bg-body-tertiary">
       {/* Left Side - Profile Box */}
-      <div className="d-flex justify-content-center gap-4">
-        <div className="col-4 border rounded-4 shadow p-4">
+      <div className="container-xxl d-flex justify-content-center gap-3">
+        <div className="col-4 border rounded-4 shadow p-4 bg-white">
           <div className="header d-flex align-items-center">
             {/* Profile Picture */}
             <div className="profile-pic">
@@ -349,7 +349,7 @@ export default function Profile() {
             <h4>Problem Stats</h4>
           </div>
           <div className="stat-body">
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/challenger.png"
@@ -360,7 +360,7 @@ export default function Profile() {
               <h4>{totalSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/bronze.png"
@@ -371,7 +371,7 @@ export default function Profile() {
               <h4>{bronzeSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/platinum.png"
@@ -382,7 +382,7 @@ export default function Profile() {
               <h4>{platinumSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/master.png"
@@ -395,7 +395,7 @@ export default function Profile() {
           </div>
         </div>
         {/*Right Side - Recent AC Submissions*/}
-        <div className="col-7 border rounded-4 shadow p-4">
+        <div className="col-8 border rounded-4 shadow p-4 bg-white">
           <div className="d-flex justify-content-between">
             <h4>Recent AC</h4>
             {shouldShowEditButton && (

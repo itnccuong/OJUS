@@ -46,75 +46,77 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-grow-1 d-flex justify-content-center align-items-center bg-grey">
-      <Form
-        className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"
-        onSubmit={handleSubmit}
-      >
-        {/* <h3 className="text-center mb-3">Sign In</h3>
-         */}
-        <div className="d-flex justify-content-center align-items-center mb-4">
-          <img src="/ojus.png" width="72" height="48" />
-        </div>
-        <FloatingLabel
-          className="mb-3"
-          label="Username or E-mail"
-          style={{
-            color: "#666666",
-          }}
+    <div className="d-flex flex-grow-1 bg-body-tertiary">
+      <div className="container-xxl d-flex justify-content-center align-items-center">
+        <Form
+          className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"
+          onSubmit={handleSubmit}
         >
-          <Form.Control
-            required
-            type="text"
-            placeholder="Username or E-mail"
-            onChange={(e) => setUsernameOrEmail(e.target.value)}
-          />
-        </FloatingLabel>
+          {/* <h3 className="text-center mb-3">Sign In</h3>
+           */}
+          <div className="d-flex justify-content-center align-items-center mb-4">
+            <img src="/ojus.png" width="72" height="48" />
+          </div>
+          <FloatingLabel
+            className="mb-3"
+            label="Username or E-mail"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="text"
+              placeholder="Username or E-mail"
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
+            />
+          </FloatingLabel>
 
-        <FloatingLabel
-          className="mb-3"
-          label="Password"
-          style={{
-            color: "#666666",
-          }}
-        >
-          <Form.Control
-            required
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FloatingLabel>
+          <FloatingLabel
+            className="mb-3"
+            label="Password"
+            style={{
+              color: "#666666",
+            }}
+          >
+            <Form.Control
+              required
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FloatingLabel>
 
-        <div className="mb-3">
-          <button type="submit" className="btn btn-primary w-100">
-            Sign In
-          </button>
-        </div>
+          <div className="mb-3">
+            <button type="submit" className="btn btn-primary w-100">
+              Sign In
+            </button>
+          </div>
 
-        <div className="d-flex justify-content-between align-items-center">
-          <p>
-            <Link
-              to="/accounts/password/reset"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              Forgot Password?
-            </Link>
-          </p>
-          <p>
-            <Link
-              to="/accounts/register"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              Sign Up
-            </Link>
-          </p>
-        </div>
-      </Form>
+          <div className="d-flex justify-content-between align-items-center">
+            <p>
+              <Link
+                to="/accounts/password/reset"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Forgot Password?
+              </Link>
+            </p>
+            <p>
+              <Link
+                to="/accounts/register"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 }
