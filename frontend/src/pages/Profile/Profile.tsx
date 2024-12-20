@@ -349,7 +349,7 @@ export default function Profile() {
             <h4>Problem Stats</h4>
           </div>
           <div className="stat-body">
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/challenger.png"
@@ -360,7 +360,7 @@ export default function Profile() {
               <h4>{totalSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/bronze.png"
@@ -371,7 +371,7 @@ export default function Profile() {
               <h4>{bronzeSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/platinum.png"
@@ -382,7 +382,7 @@ export default function Profile() {
               <h4>{platinumSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-grey p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-secondary p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/master.png"

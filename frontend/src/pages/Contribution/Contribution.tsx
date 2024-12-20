@@ -97,7 +97,7 @@ export default function Contribution() {
           {contribution.tags.map((tag, index) => (
             <span
               key={index}
-              className={`badge rounded-pill bg-grey text-dark m-1 mx-1`}
+              className={`badge rounded-pill bg-body-secondary text-dark m-1 mx-1`}
             >
               {tag}
             </span>
@@ -302,7 +302,7 @@ export default function Contribution() {
                 >
                   <h3 className="mb-3">{contribution.title}</h3>
                   <span
-                    className={`badge bg-grey me-2 ${
+                    className={`badge bg-body-secondary me-2 ${
                       contribution.difficulty === "Easy"
                         ? "text-success"
                         : contribution.difficulty === "Medium"
@@ -319,7 +319,7 @@ export default function Contribution() {
                     overlay={popover}
                   >
                     <span
-                      className="badge text-dark bg-grey"
+                      className="badge text-dark bg-body-secondary"
                       style={{
                         cursor: "pointer",
                       }}
