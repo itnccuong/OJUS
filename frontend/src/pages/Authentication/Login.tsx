@@ -46,7 +46,7 @@ export default function Login() {
   };
 
   return (
-    <div className="d-flex flex-grow-1 bg-grey">
+    <div className="d-flex flex-grow-1 bg-body-tertiary">
       <div className="container-xxl d-flex justify-content-center align-items-center">
         <Form
           className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"

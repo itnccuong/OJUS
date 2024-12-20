@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <div className="bg-body-tertiary border-top px-4 py-2">
+    <div className="border-top px-4 py-2">
       <div className="container-xxl d-flex justify-content-between">
         <div className="d-flex">
           <span className="text-body-secondary">

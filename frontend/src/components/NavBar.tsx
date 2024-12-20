@@ -39,7 +39,7 @@ function NavBar() {
   };
 
   return (
-    <Navbar className="bg-body-tertiary border-bottom d-flex px-4">
+    <Navbar className="border-bottom d-flex px-4">
       <div className="container-xxl">
         <div className="d-flex gap-3 justify-content-start">
           <Navbar.Brand as={NavLink} to={"/"}>
