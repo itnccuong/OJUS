@@ -97,7 +97,7 @@ export default function SubmissionList() {
   });
 
   return (
-    <div className="d-flex flex-grow-1 bg-light px-5 py-4">
+    <div className="d-flex flex-grow-1 bg-body-tertiary px-5 py-4">
       <div className="p-4 border rounded-4 round shadow-sm bg-white w-100">
         <ProblemNav problemId={problemId as string} />
         <Table striped bordered hover className="mt-4">

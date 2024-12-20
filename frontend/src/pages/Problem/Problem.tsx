@@ -156,7 +156,7 @@ export default function Problem() {
   };
 
   return (
-    <div className="d-flex justify-content-between flex-grow-1 bg-light px-5 py-4 gap-3">
+    <div className="d-flex justify-content-between flex-grow-1 bg-body-tertiary px-5 py-4 gap-3">
       <div className="col-6 p-4 border rounded-4 round shadow-sm bg-white">
         <ProblemNav problemId={problemId as string} />
         <h3 className="mb-3 mt-3">{problem.title}</h3>
