@@ -97,83 +97,86 @@ export default function SubmissionList() {
   });
 
   return (
-    <div className="d-flex flex-grow-1 bg-body-tertiary px-5 py-4">
-      <div className="p-4 border rounded-4 round shadow-sm bg-white w-100">
-        <ProblemNav problemId={problemId as string} />
-        <Table striped bordered hover className="mt-4">
-          <thead>
-            <tr>
-              {/* <div className="d-flex"> */}
-              <th
-                className="text-center"
-                style={{
-                  width: "8%",
-                }}
-              >
-                ID
-              </th>
-              <th className="text-center" style={{ width: "20%" }}>
-                Language
-              </th>
-              {/* </div> */}
-              <th className="text-center" style={{ width: "30%" }}>
-                Verdict
-              </th>
-              <th className="text-center">Submit time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submissions.map((submission) => (
-              <tr
-                key={submission.submissionId}
-                onClick={() =>
-                  navigate(`/submissions/${submission.submissionId}`)
-                }
-                style={{ cursor: "pointer" }}
-              >
-                {/*Submission id*/}
-                <td className="text-center">
-                  <Link
-                    to={`/submissions/${submission.submissionId}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "blue")}
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.color = "black")
-                    }
-                  >
-                    {submission.submissionId}
-                  </Link>
-                </td>
-
-                {/*Language*/}
-                <td className="text-center">{submission.language}</td>
-                <td className="text-center">
-                  <span
-                    className={
-                      submission.verdict === "Accepted"
-                        ? "badge text-success"
-                        : "badge text-danger"
-                    }
-                    style={{
-                      fontSize: "14px",
-                    }}
-                  >
-                    {submission.verdict === "Wrong answer" ||
-                    submission.verdict === "Runtime error" ||
-                    submission.verdict === "Time limit exceeded"
-                      ? `${submission.verdict} on test ${submission.results.length}`
-                      : submission.verdict}
-                  </span>
-                </td>
-
-                <td className="text-center">{submission.createdAt}</td>
+    <div className="d-flex flex-grow-1 px-5 py-4 bg-body-tertiary">
+      <div className="container-xxl d-flex">
+        <div className="p-4 border rounded-4 round shadow-sm bg-white w-100">
+          <ProblemNav problemId={problemId as string} />
+          <Table striped bordered hover className="mt-4">
+            <thead>
+              <tr>
+                <th
+                  className="text-center"
+                  style={{
+                    width: "8%",
+                  }}
+                >
+                  ID
+                </th>
+                <th className="text-center" style={{ width: "20%" }}>
+                  Language
+                </th>
+                {/* </div> */}
+                <th className="text-center" style={{ width: "30%" }}>
+                  Verdict
+                </th>
+                <th className="text-center">Submit time</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {submissions.map((submission) => (
+                <tr
+                  key={submission.submissionId}
+                  onClick={() =>
+                    navigate(`/submissions/${submission.submissionId}`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  {/*Submission id*/}
+                  <td className="text-center">
+                    <Link
+                      to={`/submissions/${submission.submissionId}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "blue")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "black")
+                      }
+                    >
+                      {submission.submissionId}
+                    </Link>
+                  </td>
+
+                  {/*Language*/}
+                  <td className="text-center">{submission.language}</td>
+                  <td className="text-center">
+                    <span
+                      className={
+                        submission.verdict === "Accepted"
+                          ? "badge text-success"
+                          : "badge text-danger"
+                      }
+                      style={{
+                        fontSize: "14px",
+                      }}
+                    >
+                      {submission.verdict === "Wrong answer" ||
+                      submission.verdict === "Runtime error" ||
+                      submission.verdict === "Time limit exceeded"
+                        ? `${submission.verdict} on test ${submission.results.length}`
+                        : submission.verdict}
+                    </span>
+                  </td>
+
+                  <td className="text-center">{submission.createdAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       </div>
     </div>
   );
