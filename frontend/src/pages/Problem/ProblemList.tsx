@@ -136,7 +136,7 @@ export default function ProblemList() {
   );
 
   return (
-    <div className="flex-grow-1 px-5 py-4">
+    <div className="d-flex flex-column container-lg flex-grow-1 py-4">
       <div className="d-flex flex-row align-items-center gap-2">
         <DropdownButton variant="secondary" title="Difficulty">
           <div className="d-flex flex-column">

@@ -219,9 +219,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex-grow-1 px-5 py-4">
+    <div className="flex-grow-1 py-4 px-3">
       {/* Left Side - Profile Box */}
-      <div className="d-flex justify-content-center gap-4">
+      <div className="container-lg d-flex justify-content-center gap-3">
         <div className="col-4 border rounded-4 shadow p-4">
           <div className="header d-flex align-items-center">
             {/* Profile Picture */}
@@ -395,7 +395,7 @@ export default function Profile() {
           </div>
         </div>
         {/*Right Side - Recent AC Submissions*/}
-        <div className="col-7 border rounded-4 shadow p-4">
+        <div className="col-8 border rounded-4 shadow p-4">
           <div className="d-flex justify-content-between">
             <h4>Recent AC</h4>
             {shouldShowEditButton && (
