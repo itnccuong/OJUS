@@ -133,184 +133,177 @@ export default function ContributionList() {
   );
 
   return (
-    <>
-      <div className="d-flex flex-column">
-        <div
-          className="container d-flex flex-column"
-          style={{
-            height: "87vh",
-          }}
-        >
-          <div className="d-flex flex-row mt-3 align-items-center gap-2">
-            <DropdownButton variant="secondary" title="Difficulty">
-              <div className="d-flex flex-column">
-                {Difficulty.map((diff, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => {
-                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                      difficulty === diff
-                        ? setDifficulty("All")
-                        : setDifficulty(diff);
-                    }}
-                  >
-                    <Button
-                      variant="white"
-                      className={`text-${
-                        diff === "Easy"
-                          ? "success"
-                          : diff === "Medium"
-                            ? "warning"
-                            : "danger"
-                      }`}
-                    >
-                      {diff}
-                    </Button>
-                    <span className="ms-4">
-                      {difficulty === diff ? (
-                        <img src="/done.svg" width="30" height="24" />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-                ))}
-              </div>
-            </DropdownButton>
-
-            <DropdownButton
-              // key="2"
-              variant="secondary"
-              title="Tags"
-            >
-              <div
-                className="mb-3"
-                style={{
-                  width: "300px",
-                }}
-              >
-                {tags.map((tag, index) => (
-                  <Button
-                    variant={tag.selected ? "primary" : "light"}
-                    key={index}
-                    className={`badge rounded-pill m-1 ${
-                      tag.selected ? "" : "text-dark"
-                    } mx-1`}
-                    onClick={() => toggleTag(index)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {tag.label}
-                  </Button>
-                ))}
-              </div>
-              <div className="d-flex justify-content-end border-top">
-                <Button
-                  variant="primary"
-                  className=" w-25 mt-3 me-2"
-                  onClick={() => handleResetTags()}
+    <div className="d-flex flex-grow-1 py-4 px-5">
+      <div className="container-xxl">
+        <div className="d-flex flex-row align-items-center gap-2">
+          <DropdownButton variant="secondary" title="Difficulty">
+            <div className="d-flex flex-column">
+              {Difficulty.map((diff, index) => (
+                <Dropdown.Item
+                  key={index}
+                  onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                    difficulty === diff
+                      ? setDifficulty("All")
+                      : setDifficulty(diff);
+                  }}
                 >
-                  Reset
-                </Button>
-              </div>
-            </DropdownButton>
-            <Form>
-              <Form.Control
-                type=""
-                placeholder="Search questions"
-                className="mr-sm-2 bg-light"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </Form>
+                  <Button
+                    variant="white"
+                    className={`text-${
+                      diff === "Easy"
+                        ? "success"
+                        : diff === "Medium"
+                          ? "warning"
+                          : "danger"
+                    }`}
+                  >
+                    {diff}
+                  </Button>
+                  <span className="ms-4">
+                    {difficulty === diff ? (
+                      <img src="/done.svg" width="30" height="24" />
+                    ) : null}
+                  </span>
+                </Dropdown.Item>
+              ))}
+            </div>
+          </DropdownButton>
+
+          <DropdownButton
+            // key="2"
+            variant="secondary"
+            title="Tags"
+          >
             <div
-              className="d-flex ms-2"
-              onClick={() => pickRandom()}
+              className="mb-3"
               style={{
-                cursor: "pointer",
+                width: "300px",
               }}
             >
-              <img src="/random.svg" width="30" height="24" />
-              <span className="ms-2">Pick Random</span>
+              {tags.map((tag, index) => (
+                <Button
+                  variant={tag.selected ? "primary" : "light"}
+                  key={index}
+                  className={`badge rounded-pill m-1 ${
+                    tag.selected ? "" : "text-dark"
+                  } mx-1`}
+                  onClick={() => toggleTag(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {tag.label}
+                </Button>
+              ))}
             </div>
+            <div className="d-flex justify-content-end border-top">
+              <Button
+                variant="primary"
+                className=" w-25 mt-3 me-2"
+                onClick={() => handleResetTags()}
+              >
+                Reset
+              </Button>
+            </div>
+          </DropdownButton>
+          <Form>
+            <Form.Control
+              type=""
+              placeholder="Search questions"
+              className="mr-sm-2 bg-light"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Form>
+          <div
+            className="d-flex ms-2"
+            onClick={() => pickRandom()}
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            <img src="/random.svg" width="30" height="24" />
+            <span className="ms-2">Pick Random</span>
           </div>
-          <Table striped bordered hover className="mt-3">
-            <thead>
+        </div>
+        <Table striped bordered hover className="mt-3">
+          <thead>
+            <tr>
+              <th style={{ width: "40%" }}>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    alert("implement sort");
+                  }}
+                >
+                  <span>Title</span>
+                  <img src="/sort.svg" alt="React Bootstrap logo" />
+                </div>
+              </th>
+              <th style={{ width: "40%" }}>Tags</th>
+              <th>Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Kiểm tra nếu không có vấn đề nào trong Problems */}
+            {filteredProblems.length === 0 ? (
               <tr>
-                <th style={{ width: "40%" }}>
-                  <div
-                    className="d-flex justify-content-between"
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      alert("implement sort");
-                    }}
-                  >
-                    <span>Title</span>
-                    <img src="/sort.svg" alt="React Bootstrap logo" />
-                  </div>
-                </th>
-                <th style={{ width: "40%" }}>Tags</th>
-                <th>Difficulty</th>
+                <td colSpan={3} className="text-center">
+                  <strong>No problems found</strong>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {/* Kiểm tra nếu không có vấn đề nào trong Problems */}
-              {filteredProblems.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="text-center">
-                    <strong>No problems found</strong>
+            ) : (
+              filteredProblems.map((problem) => (
+                <tr key={problem.id}>
+                  <td>
+                    <Link
+                      to={`/contributions/${problem.id}/description`}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "blue")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "black")
+                      }
+                    >
+                      {problem.title}
+                    </Link>
+                  </td>
+
+                  <td>
+                    {problem.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="badge rounded-pill m-1 bg-secondary"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </td>
+
+                  <td>
+                    <span
+                      className={`badge ${
+                        problem.difficulty === "Easy"
+                          ? "text-success"
+                          : problem.difficulty === "Medium"
+                            ? "text-warning"
+                            : "text-danger"
+                      }`}
+                    >
+                      {problem.difficulty}
+                    </span>
                   </td>
                 </tr>
-              ) : (
-                filteredProblems.map((problem) => (
-                  <tr key={problem.id}>
-                    <td>
-                      <Link
-                        to={`/contributions/${problem.id}/description`}
-                        style={{
-                          textDecoration: "none",
-                          color: "black",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = "blue")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color = "black")
-                        }
-                      >
-                        {problem.title}
-                      </Link>
-                    </td>
-
-                    <td>
-                      {problem.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="badge rounded-pill m-1 bg-secondary"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </td>
-
-                    <td>
-                      <span
-                        className={`badge ${
-                          problem.difficulty === "Easy"
-                            ? "text-success"
-                            : problem.difficulty === "Medium"
-                              ? "text-warning"
-                              : "text-danger"
-                        }`}
-                      >
-                        {problem.difficulty}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </Table>
       </div>
-    </>
+    </div>
   );
 }
