@@ -3,20 +3,15 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import {
-  GetResultsResponseInterface,
-  GetSubmissionResponseInterface,
-  GetTestcasesResponseInterface,
-  OneProblemResponseInterface,
-  ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import {
   ProblemInterface,
+  ProblemWithUserStatusInterface,
+  ResponseInterface,
   ResultInterface,
   SubmissionInterface,
   TestcaseInterface,
-} from "../../../interfaces/model.interface.ts";
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Editor from "@monaco-editor/react";
@@ -34,7 +29,7 @@ export default function Submission() {
       try {
         //Fetch submission
         const resSubmission = await axiosInstance.get<
-          ResponseInterface<GetSubmissionResponseInterface>
+          ResponseInterface<{ submission: SubmissionInterface }>
         >(`/api/submissions/${submissionId}`);
 
         setFetchSubmission(resSubmission.data.data.submission);
@@ -42,7 +37,7 @@ export default function Submission() {
 
         //Fetch problem
         const resProblem = await axiosInstance.get<
-          ResponseInterface<OneProblemResponseInterface>
+          ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
         >(
           `/api/problems/no-account/${resSubmission.data.data.submission.problemId}`,
         );
@@ -51,14 +46,14 @@ export default function Submission() {
 
         //Fetch results
         const resResults = await axiosInstance.get<
-          ResponseInterface<GetResultsResponseInterface>
+          ResponseInterface<{ results: ResultInterface[] }>
         >(`/api/submissions/${submissionId}/results`);
         setResults(resResults.data.data.results);
         console.log("Results", resResults.data.data.results);
 
         //Fetch testcases
         const resTestcases = await axiosInstance.get<
-          ResponseInterface<GetTestcasesResponseInterface>
+          ResponseInterface<{ testcases: TestcaseInterface }>
         >(
           `/api/problems/${resSubmission.data.data.submission.problemId}/testcases`,
         );

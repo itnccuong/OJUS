@@ -4,11 +4,11 @@ import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import storageKeyMap from "../../../utils/storageKeyMap.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import {
-  LoginResponseInterface,
-  ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import { AxiosError } from "axios";
+import {
+  ResponseInterface,
+  UserInterface,
+} from "../../../interfaces/interface.ts";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,13 +21,12 @@ export default function Login() {
 
     try {
       const res = await toast.promise(
-        axiosInstance.post<ResponseInterface<LoginResponseInterface>>(
-          "/api/auth/login",
-          {
-            usernameOrEmail,
-            password,
-          },
-        ),
+        axiosInstance.post<
+          ResponseInterface<{ user: UserInterface; token: string }>
+        >("/api/auth/login", {
+          usernameOrEmail,
+          password,
+        }),
         {
           pending: "Sign in...",
           success: "Sign in successfully",

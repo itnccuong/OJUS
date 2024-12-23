@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
+import axiosInstance from "../../../utils/getURL.ts";
 import {
   ResponseInterface,
-  SubmissionListWithProblemResponseInterface,
-} from "../../../interfaces/response.interface.ts";
-import axiosInstance from "../../../utils/getURL.ts";
-import { SubmissionWithProblem } from "../../../interfaces/model.interface.ts";
+  SubmissionWithProblem,
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 
@@ -34,7 +33,7 @@ export default function SubmissionListUser() {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<SubmissionListWithProblemResponseInterface>
+          ResponseInterface<{ submissions: SubmissionWithProblem[] }>
         >(`/api/user/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,

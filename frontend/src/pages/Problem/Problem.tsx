@@ -13,13 +13,11 @@ import Editor from "@monaco-editor/react";
 
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
-import {
-  OneProblemResponseInterface,
-  ResponseInterface,
-  SubmitCodeResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+import {
+  ProblemWithUserStatusInterface,
+  ResponseInterface,
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
@@ -41,11 +39,11 @@ export default function Problem() {
         let res;
         if (!token) {
           res = await axiosInstance.get<
-            ResponseInterface<OneProblemResponseInterface>
+            ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
           >(`/api/problems/no-account/${problemId}`, {});
         } else {
           res = await axiosInstance.get<
-            ResponseInterface<OneProblemResponseInterface>
+            ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
           >(`/api/problems/with-account/${problemId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -122,7 +120,7 @@ export default function Problem() {
   const handleSubmit = async () => {
     try {
       const res = await toast.promise(
-        axiosInstance.post<ResponseInterface<SubmitCodeResponseInterface>>(
+        axiosInstance.post<ResponseInterface<{ submissionId: number }>>(
           `/api/problems/${problemId}`,
           {
             code: code,

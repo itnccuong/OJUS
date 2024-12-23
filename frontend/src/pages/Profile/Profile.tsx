@@ -3,14 +3,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import axiosInstance from "../../../utils/getURL.ts";
 import {
+  ResponseInterface,
   SubmissionWithProblem,
   UserWithAvatarInterface,
-} from "../../../interfaces/model.interface.ts";
-import {
-  ResponseInterface,
-  SubmissionListWithProblemResponseInterface,
-  UserResponseInterface,
-} from "../../../interfaces/response.interface.ts";
+} from "../../../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
@@ -37,7 +33,7 @@ export default function Profile() {
   const getUserFromName = async () => {
     try {
       const { data } = await axiosInstance.get<
-        ResponseInterface<UserResponseInterface>
+        ResponseInterface<{ user: UserWithAvatarInterface }>
       >(`/api/user/by-name/${username}`);
       console.log("Get user from name", data);
       setUser(data.data.user);
@@ -51,7 +47,9 @@ export default function Profile() {
       if (!token) {
         return;
       }
-      const response = await axiosInstance.get("/api/user", {
+      const response = await axiosInstance.get<
+        ResponseInterface<{ user: UserWithAvatarInterface }>
+      >("/api/user", {
         headers: {
           Authorization: `Bearer ${token}`, // Send token in the Authorization header
         },
@@ -69,7 +67,7 @@ export default function Profile() {
         return;
       }
       const res = await axiosInstance.get<
-        ResponseInterface<SubmissionListWithProblemResponseInterface>
+        ResponseInterface<{ submissions: SubmissionWithProblem[] }>
       >(`/api/user/${user.userId}/submissions/AC`);
 
       console.log("Fetch AC submission", res.data);

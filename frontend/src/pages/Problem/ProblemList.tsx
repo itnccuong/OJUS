@@ -1,13 +1,12 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ProblemListResponseInterface,
-  ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+import {
+  ProblemWithUserStatusInterface,
+  ResponseInterface,
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -68,11 +67,11 @@ export default function ProblemList() {
         let response;
         if (!token) {
           response = await axiosInstance.get<
-            ResponseInterface<ProblemListResponseInterface>
+            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
           >("/api/problems/no-account");
         } else {
           response = await axiosInstance.get<
-            ResponseInterface<ProblemListResponseInterface>
+            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
           >("/api/problems/with-account", {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -5,12 +5,11 @@ import getToken from "../../../utils/getToken.ts";
 
 import { useEffect } from "react";
 
-import {
-  ResponseInterface,
-  ContributionListResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemInterface } from "../../../interfaces/model.interface.ts";
+import {
+  ProblemInterface,
+  ResponseInterface,
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -72,7 +71,7 @@ export default function ContributionList() {
     const fetchContributes = async () => {
       try {
         const { data } = await axiosInstance.get<
-          ResponseInterface<ContributionListResponseInterface>
+          ResponseInterface<{ contributions: ProblemInterface[] }>
         >("/api/contributions/", {
           headers: { Authorization: "Bearer " + token },
         });

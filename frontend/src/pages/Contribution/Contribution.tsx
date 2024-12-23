@@ -15,12 +15,11 @@ import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
-import {
-  OneContributionResponseInterface,
-  ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemInterface } from "../../../interfaces/model.interface.ts";
+import {
+  ProblemInterface,
+  ResponseInterface,
+} from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 
@@ -51,7 +50,7 @@ export default function Contribution() {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<OneContributionResponseInterface>
+          ResponseInterface<{ contribution: ProblemInterface }>
         >(`/api/contributions/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -140,7 +139,9 @@ export default function Contribution() {
   const handleAccept = async () => {
     try {
       const { data } = await toast.promise(
-        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+        axiosInstance.put<
+          ResponseInterface<{ contribution: ProblemInterface }>
+        >(
           `/api/contributions/${id}/accept`,
           {},
           {
@@ -175,7 +176,9 @@ export default function Contribution() {
   const handleReject = async () => {
     try {
       const { data } = await toast.promise(
-        axiosInstance.put<ResponseInterface<OneContributionResponseInterface>>(
+        axiosInstance.put<
+          ResponseInterface<{ contribution: ProblemInterface }>
+        >(
           `/api/contributions/${id}/reject`,
           {},
           {
