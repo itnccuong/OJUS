@@ -56,7 +56,10 @@ export default function App() {
           />
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<ContributionList />} />
-          <Route path="/contributions/:id/:page" element={<Contribution />} />
+          <Route
+            path="/contributions/:contributionId/description"
+            element={<Contribution />}
+          />
         </Routes>
         <Footer />
       </Router>

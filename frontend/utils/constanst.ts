@@ -1,5 +1,26 @@
-export const languageMap = {
-  javascript: "18.15.0",
-  python: "3.10.0",
-  java: "15.0.2",
+export const difficultyMapping: Record<number, string> = {
+  1: "Bronze",
+  2: "Platinum",
+  3: "Master",
 };
+
+export interface Tag {
+  label: string;
+  selected: boolean;
+}
+
+export const initialTags: Tag[] = [
+  { label: "Array", selected: false },
+  { label: "String", selected: false },
+  { label: "Hash Table", selected: false },
+  { label: "Dynamic Programming", selected: false },
+  { label: "Math", selected: false },
+  { label: "Sorting", selected: false },
+  { label: "Greedy", selected: false },
+  { label: "Depth-First Search", selected: false },
+  { label: "Database", selected: false },
+  { label: "Binary Search", selected: false },
+  { label: "Matrix", selected: false },
+  { label: "Tree", selected: false },
+  { label: "Breadth-First Search", selected: false },
+];

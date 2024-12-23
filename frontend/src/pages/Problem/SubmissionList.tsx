@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
@@ -131,23 +131,7 @@ export default function SubmissionList() {
                   style={{ cursor: "pointer" }}
                 >
                   {/*Submission id*/}
-                  <td className="text-center">
-                    <Link
-                      to={`/submissions/${submission.submissionId}`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {submission.submissionId}
-                    </Link>
-                  </td>
+                  <td className="text-center">{submission.submissionId}</td>
 
                   {/*Language*/}
                   <td className="text-center">{submission.language}</td>

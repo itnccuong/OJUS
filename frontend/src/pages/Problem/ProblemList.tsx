@@ -1,6 +1,6 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
 import {
@@ -10,6 +10,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { difficultyMapping } from "../../../utils/constanst.ts";
 
 interface Tag {
   label: string;
@@ -98,12 +99,6 @@ export default function ProblemList() {
   }
 
   const problems = fetchProblems.map((fetchProblem) => {
-    const difficultyMapping: Record<number, string> = {
-      1: "Bronze",
-      2: "Platinum",
-      3: "Master",
-    };
-
     const statusMapping: Record<string, string> = {
       false: "Todo",
       true: "Solved",
@@ -327,23 +322,7 @@ export default function ProblemList() {
                       <img src="/reject.png" width="20" height="20" />
                     )}
                   </td>
-                  <td>
-                    <Link
-                      to={`/problems/${problem.problemId}/description`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {problem.title}
-                    </Link>
-                  </td>
+                  <td>{problem.title}</td>
 
                   <td>
                     {problem.tags.map((tag, index) => (

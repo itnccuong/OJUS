@@ -26,7 +26,7 @@ import { AxiosError } from "axios";
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
   const token = getToken(); // Get token from localStorage
-  const { id, page } = useParams();
+  const { contributionId } = useParams();
   const [code, setCode] = useState("");
   const onChange = React.useCallback((val: string) => {
     setCode(val);
@@ -51,7 +51,7 @@ export default function Contribution() {
       try {
         const res = await axiosInstance.get<
           ResponseInterface<{ contribution: ProblemInterface }>
-        >(`/api/contributions/${id}`, {
+        >(`/api/contributions/${contributionId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -110,7 +110,7 @@ export default function Contribution() {
     try {
       const res = await toast.promise(
         axiosInstance.post(
-          `/api/problems/${id}`,
+          `/api/problems/${contributionId}`,
           {
             code: code,
             language: languageMap[language],
@@ -142,7 +142,7 @@ export default function Contribution() {
         axiosInstance.put<
           ResponseInterface<{ contribution: ProblemInterface }>
         >(
-          `/api/contributions/${id}/accept`,
+          `/api/contributions/${contributionId}/accept`,
           {},
           {
             // Config object
@@ -179,7 +179,7 @@ export default function Contribution() {
         axiosInstance.put<
           ResponseInterface<{ contribution: ProblemInterface }>
         >(
-          `/api/contributions/${id}/reject`,
+          `/api/contributions/${contributionId}/reject`,
           {},
           {
             // Config object
@@ -275,7 +275,7 @@ export default function Contribution() {
             <div className="border rounded bg-white mt-2">
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
                 <Link
-                  to={`/problems/${id}/description`}
+                  to={`/problems/${contributionId}/description`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -285,7 +285,7 @@ export default function Contribution() {
                 </Link>
                 <span className="text-body-tertiary ">|</span>
                 <Link
-                  to={`/problems/${id}/submissions`}
+                  to={`/problems/${contributionId}/submissions`}
                   style={{
                     color: "black",
                     textDecoration: "none",
@@ -294,58 +294,55 @@ export default function Contribution() {
                   Submissions
                 </Link>
               </div>
-
-              {page === "description" ? (
-                <div
-                  className="container p-3"
-                  style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
-                  }}
+              <div
+                className="container p-3"
+                style={{
+                  height: "85vh", // Adjust this height as needed
+                  overflowY: "auto",
+                }}
+              >
+                <h3 className="mb-3">{contribution.title}</h3>
+                <span
+                  className={`badge bg-body-secondary me-2 ${
+                    contribution.difficulty === "Easy"
+                      ? "text-success"
+                      : contribution.difficulty === "Medium"
+                        ? "text-warning"
+                        : "text-danger"
+                  }`}
                 >
-                  <h3 className="mb-3">{contribution.title}</h3>
+                  {contribution.difficulty}
+                </span>
+
+                <OverlayTrigger
+                  trigger="hover"
+                  placement="right"
+                  overlay={popover}
+                >
                   <span
-                    className={`badge bg-body-secondary me-2 ${
-                      contribution.difficulty === "Easy"
-                        ? "text-success"
-                        : contribution.difficulty === "Medium"
-                          ? "text-warning"
-                          : "text-danger"
-                    }`}
+                    className="badge text-dark bg-body-secondary"
+                    style={{
+                      cursor: "pointer",
+                    }}
                   >
-                    {contribution.difficulty}
+                    Topics
                   </span>
+                </OverlayTrigger>
 
-                  <OverlayTrigger
-                    trigger="hover"
-                    placement="right"
-                    overlay={popover}
-                  >
-                    <span
-                      className="badge text-dark bg-body-secondary"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      Topics
-                    </span>
-                  </OverlayTrigger>
-
-                  <ReactMarkdown className="mt-3">
-                    {contribution.description}
-                  </ReactMarkdown>
-                </div>
+                <ReactMarkdown className="mt-3">
+                  {contribution.description}
+                </ReactMarkdown>
+              </div>
               ) : (
-                <div
-                  className="container p-3"
-                  style={{
-                    height: "85vh", // Adjust this height as needed
-                    overflowY: "auto",
-                  }}
-                >
-                  <h3>Submission</h3>
-                </div>
-              )}
+              <div
+                className="container p-3"
+                style={{
+                  height: "85vh", // Adjust this height as needed
+                  overflowY: "auto",
+                }}
+              >
+                <h3>Submission</h3>
+              </div>
             </div>
           </div>
           <div className="container">

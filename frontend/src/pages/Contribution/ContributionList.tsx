@@ -1,6 +1,6 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import getToken from "../../../utils/getToken.ts";
 
 import { useEffect } from "react";
@@ -13,11 +13,11 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-
-interface Tag {
-  label: string;
-  selected: boolean;
-}
+import {
+  difficultyMapping,
+  initialTags,
+  Tag,
+} from "../../../utils/constanst.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();
@@ -31,22 +31,6 @@ export default function ContributionList() {
       navigate("/accounts/login");
     }
   }, [token, navigate]);
-
-  const initialTags: Tag[] = [
-    { label: "Array", selected: false },
-    { label: "String", selected: false },
-    { label: "Hash Table", selected: false },
-    { label: "Dynamic Programming", selected: false },
-    { label: "Math", selected: false },
-    { label: "Sorting", selected: false },
-    { label: "Greedy", selected: false },
-    { label: "Depth-First Search", selected: false },
-    { label: "Database", selected: false },
-    { label: "Binary Search", selected: false },
-    { label: "Matrix", selected: false },
-    { label: "Tree", selected: false },
-    { label: "Breadth-First Search", selected: false },
-  ];
 
   const [tags, setTags] = useState<Tag[]>(initialTags);
   const [search, setSearch] = useState("");
@@ -97,12 +81,6 @@ export default function ContributionList() {
 
   // Chuyển đổi dữ liệu từ contribute thành problem
   const Problems = contributes.map((contribute) => {
-    const difficultyMapping: Record<number, string> = {
-      1: "Easy",
-      2: "Medium",
-      3: "Hard",
-    };
-
     return {
       id: contribute.problemId,
       title: contribute.title,
@@ -120,7 +98,7 @@ export default function ContributionList() {
     navigate(`/contributions/${randomProblem.id}/description`);
   };
 
-  const Difficulty = ["Easy", "Medium", "Hard"];
+  const Difficulty = ["Bronze", "Platinum", "Master"];
 
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
@@ -151,10 +129,10 @@ export default function ContributionList() {
                   <Button
                     variant="white"
                     className={`text-${
-                      diff === "Easy"
-                        ? "success"
-                        : diff === "Medium"
-                          ? "warning"
+                      diff === "Bronze"
+                        ? "warning-emphasis"
+                        : diff === "Platinum"
+                          ? "primary"
                           : "danger"
                     }`}
                   >
@@ -242,7 +220,7 @@ export default function ContributionList() {
                 </div>
               </th>
               <th style={{ width: "40%" }}>Tags</th>
-              <th>Difficulty</th>
+              <th className="text-center">Difficulty</th>
             </tr>
           </thead>
           <tbody>
@@ -255,24 +233,14 @@ export default function ContributionList() {
               </tr>
             ) : (
               filteredProblems.map((problem) => (
-                <tr key={problem.id}>
-                  <td>
-                    <Link
-                      to={`/contributions/${problem.id}/description`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {problem.title}
-                    </Link>
-                  </td>
+                <tr
+                  key={problem.id}
+                  onClick={() =>
+                    navigate(`/contributions/${problem.id}/description`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <td>{problem.title}</td>
 
                   <td>
                     {problem.tags.map((tag, index) => (
@@ -285,13 +253,13 @@ export default function ContributionList() {
                     ))}
                   </td>
 
-                  <td>
+                  <td className="text-center">
                     <span
-                      className={`badge ${
-                        problem.difficulty === "Easy"
-                          ? "text-success"
-                          : problem.difficulty === "Medium"
-                            ? "text-warning"
+                      className={`badge fs-6 ${
+                        problem.difficulty === "Bronze"
+                          ? "text-warning-emphasis"
+                          : problem.difficulty === "Platinum"
+                            ? "text-primary"
                             : "text-danger"
                       }`}
                     >
