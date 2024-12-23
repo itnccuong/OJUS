@@ -1,4 +1,4 @@
-import { Accordion, Button, Container, Form } from "react-bootstrap";
+import { Accordion, Button, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import getToken from "../../../utils/getToken.ts";
@@ -125,174 +125,155 @@ Given \`nums = [2, 7, 11, 15]\`, \`target = 9\`,
 Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   `;
   return (
-    <div className="d-flex flex-column">
-      <div className="d-flex flex-row">
-        <div className="d-flex container">
-          <Container
-            className="d-flex flex-column p-3 border-end border-start"
-            style={
-              {
-                //   minHeight: "100vh",
-              }
-            }
+    <div className="flex-grow-1 d-flex px-5">
+      <div className="d-flex container-xxl">
+        <div className="col-7 d-flex flex-column p-3 border-end border-start">
+          <h2
+          // style={{
+          //   fontSize: "28px",
+          // }}
           >
-            <h2
-            // style={{
-            //   fontSize: "28px",
-            // }}
+            Submit your question
+          </h2>
+
+          <big className="text-muted mb-3">
+            It's good to provide examples which will help users understand
+            easily.
+          </big>
+
+          <h5 className="mt-3 mb-3">Title</h5>
+          <Form onSubmit={handleSubmit}>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Pick a title"
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-50 mb-2"
+            />
+
+            <h5 className="mt-3 mb-3">Difficulty</h5>
+            <Form.Select
+              required
+              aria-label="Default select example"
+              onChange={(e) => setDifficulty(Number(e.target.value))}
+              className="w-50 mb-2"
             >
-              Submit your question
-            </h2>
+              <option value={1}>Bronze</option>
+              <option value={2}>Platinum</option>
+              <option value={3}>Master</option>
+            </Form.Select>
 
-            <big className="text-muted mb-3">
-              It's good to provide examples which will help users understand
-              easily.
-            </big>
-
-            <h5 className="mt-3 mb-3">Title</h5>
-            <Form onSubmit={handleSubmit}>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Pick a title"
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-50 mb-2"
-              />
-
-              <h5 className="mt-3 mb-3">Difficulty</h5>
-              <Form.Select
-                required
-                aria-label="Default select example"
-                onChange={(e) => setDifficulty(Number(e.target.value))}
-                className="w-50 mb-2"
-              >
-                <option value={1}>Bronze</option>
-                <option value={2}>Platinum</option>
-                <option value={3}>Master</option>
-              </Form.Select>
-
-              <Accordion className="mt-3 mb-3 w-50">
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>Tags</Accordion.Header>
-                  <Accordion.Body>
-                    <div className="mb-3">
-                      {tags.map((tag, index) => (
-                        <Button
-                          variant={tag.selected ? "primary" : "light"}
-                          key={index}
-                          className={`badge rounded-pill m-1 ${
-                            tag.selected ? "" : "text-dark"
-                          } mx-1`}
-                          onClick={() => toggleTag(index)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {tag.label}
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="d-flex justify-content-end border-top">
+            <Accordion className="mt-3 mb-3 w-50">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Tags</Accordion.Header>
+                <Accordion.Body>
+                  <div className="mb-3">
+                    {tags.map((tag, index) => (
                       <Button
-                        variant="primary"
-                        className=" w-25 mt-3"
-                        onClick={() => handleResetTags()}
+                        variant={tag.selected ? "primary" : "light"}
+                        key={index}
+                        className={`badge rounded-pill m-1 ${
+                          tag.selected ? "" : "text-dark"
+                        } mx-1`}
+                        onClick={() => toggleTag(index)}
+                        style={{ cursor: "pointer" }}
                       >
-                        Reset
+                        {tag.label}
                       </Button>
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
+                    ))}
+                  </div>
+                  <div className="d-flex justify-content-end border-top">
+                    <Button
+                      variant="primary"
+                      className=" w-25 mt-3"
+                      onClick={() => handleResetTags()}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
 
-              <h5 className="mt-3 mb-3">Description</h5>
-              <Form.Check
-                type="switch"
-                id="custom-switch"
-                label="Markdown Preview"
-                onChange={(e) => setIsMarkdown(e.target.checked)}
-              />
+            <h5 className="mt-3 mb-3">Description</h5>
+            <Form.Check
+              type="switch"
+              id="custom-switch"
+              label="Markdown Preview"
+              onChange={(e) => setIsMarkdown(e.target.checked)}
+            />
 
-              {isMarkdown ? (
-                <>
-                  <Container className="border rounded mb-3 mt-2">
-                    <ReactMarkdown
-                      children={description}
-                      // remarkPlugins={[remarkMath]}
-                      // rehypePlugins={[rehypeKatex]}
-                    />
-                    {/* {description} */}
-                    {/* </ReactMarkdown> */}
-                  </Container>
-                </>
-              ) : (
-                <>
-                  <Form.Control
-                    placeholder="Write your description in markdown"
-                    className="mb-3 mt-2"
-                    required
-                    as="textarea"
-                    rows={8}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+            {isMarkdown ? (
+              <>
+                <div className="border rounded p-2">
+                  <ReactMarkdown
+                    children={description}
+                    // remarkPlugins={[remarkMath]}
+                    // rehypePlugins={[rehypeKatex]}
                   />
-                </>
-              )}
+                  {/* {description} */}
+                  {/* </ReactMarkdown> */}
+                </div>
+              </>
+            ) : (
+              <>
+                <Form.Control
+                  placeholder="Write your description in markdown"
+                  className="mb-3 mt-2"
+                  required
+                  as="textarea"
+                  rows={8}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </>
+            )}
 
-              <h5 className="mt-3 mb-3">Upload tests</h5>
-              <Form.Control
-                required
-                type="file"
-                className="mb-3 w-50"
-                onChange={(e) =>
-                  setFile((e.target as HTMLInputElement).files?.[0] || null)
-                }
-              />
+            <h5 className="mt-3 mb-3">Upload tests</h5>
+            <Form.Control
+              required
+              type="file"
+              className="mb-3 w-50"
+              onChange={(e) =>
+                setFile((e.target as HTMLInputElement).files?.[0] || null)
+              }
+            />
 
-              <h5 className="mt-3 mb-3">Time limit (ms)</h5>
+            <h5 className="mt-3 mb-3">Time limit (ms)</h5>
 
-              <Form.Control
-                required
-                type="text"
-                placeholder="Time limit"
-                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-                className="w-50 mb-2"
-              />
+            <Form.Control
+              required
+              type="text"
+              placeholder="Time limit"
+              onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              className="w-50 mb-2"
+            />
 
-              <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
+            <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
 
-              <Form.Control
-                required
-                type="text"
-                placeholder="Memory limit"
-                onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
-                className="w-50 mb-2"
-              />
+            <Form.Control
+              required
+              type="text"
+              placeholder="Memory limit"
+              onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
+              className="w-50 mb-2"
+            />
 
-              <Container className="d-flex justify-content-center mt-3">
-                <Button className="w-25" type="submit">
-                  Submit
-                </Button>
-              </Container>
-            </Form>
-          </Container>
+            <div className="d-flex justify-content-center mt-3">
+              <Button className="w-25" type="submit">
+                Submit
+              </Button>
+            </div>
+          </Form>
+        </div>
 
-          <Container
-            className="p-3 border-bottom border-end bg-light"
-            style={{
-              width: "550px",
-            }}
-          >
-            <Container
-              className="border border-3 p-3 mt-3"
-              style={{
-                backgroundColor: "white",
-              }}
-            >
-              <div className="mb-3">
-                <img src="/lightbulb.svg" width="36" height="36" />
-              </div>
-              <ReactMarkdown>{markdown}</ReactMarkdown>
-            </Container>
-          </Container>
+        <div className="col-5 container-xxl p-3 border-bottom border-end bg-light">
+          <div className="border border-3 p-3 mt-3 bg-white">
+            <div className="mb-3">
+              <img src="/lightbulb.svg" width="36" height="36" />
+            </div>
+            <ReactMarkdown>{markdown}</ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
