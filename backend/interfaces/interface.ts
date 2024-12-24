@@ -10,7 +10,9 @@ export interface ErrorResponseInterface {
 
 export interface ResponseInterfaceForTest<T> {
   status: number;
-  body: T;
+  body: {
+    data: T;
+  };
 }
 
 export interface ProblemWithUserStatusInterface extends Problem {

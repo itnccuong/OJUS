@@ -46,9 +46,9 @@ describe("Contribute", () => {
       .field("timeLimit", "1000")
       .field("memoryLimit", "1000")
       .attach("file", filePath)
-      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ contribution: Problem }>
-    >;
+      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
+      contribution: Problem;
+    }>;
     expect(res.status).toBe(201);
     expect(res.body.data.contribution.title).toBe("Contribution Title");
     expect(res.body.data.contribution.status).toBe(0);
@@ -72,9 +72,7 @@ describe("Get contributions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ contributions: Problem[] }>
-    >;
+      )) as ResponseInterfaceForTest<{ contributions: Problem[] }>;
     expect(res.status).toBe(200);
     const contributions = res.body.data.contributions;
     expect(contributions.length).toBe(numPending);
@@ -89,9 +87,7 @@ describe("Get contributions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ contribution: Problem }>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
     const contribution = res.body.data.contribution;
     expect(res.status).toBe(200);
     expect(contribution.problemId).toBe(1);
@@ -106,9 +102,7 @@ describe("Admin Contribution Actions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ contribution: Problem }>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
 
     expect(res.status).toBe(200);
     expect(res.body.data.contribution.status).toBe(2);
@@ -116,9 +110,7 @@ describe("Admin Contribution Actions", () => {
     // Verify the contribution status is updated
     const problemRes = (await request(app).get(
       "/api/problems/no-account/1",
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
-    >;
+    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(2);
   });
@@ -129,9 +121,7 @@ describe("Admin Contribution Actions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ contribution: Problem }>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
 
     expect(res.status).toBe(200);
     expect(res.body.data.contribution.status).toBe(1);
@@ -139,9 +129,7 @@ describe("Admin Contribution Actions", () => {
     // Verify the contribution status is updated
     const problemRes = (await request(app).get(
       "/api/problems/1",
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ problem: Problem }>
-    >;
+    )) as ResponseInterfaceForTest<{ problem: Problem }>;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(1);
   });

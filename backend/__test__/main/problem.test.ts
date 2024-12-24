@@ -32,9 +32,9 @@ describe("Get problem list", () => {
   test("No account", async () => {
     const res = (await request(app).get(
       "/api/problems/no-account",
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
-    >;
+    )) as ResponseInterfaceForTest<{
+      problems: ProblemWithUserStatusInterface[];
+    }>;
     expect(res.status).toBe(200);
     const problems = res.body.data.problems;
     expect(problems.length).toBe(numAccept);
@@ -92,9 +92,7 @@ describe("Get one problem", () => {
     const problemId = 8;
     const res = (await request(app).get(
       `/api/problems/no-account/${problemId}`,
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
-    >;
+    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
     expect(res.status).toBe(200);
     const problem = res.body.data.problem;
     expect(problem.problemId).toBe(problemId);

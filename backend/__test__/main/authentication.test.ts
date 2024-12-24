@@ -31,9 +31,7 @@ describe("Register", () => {
   test("Correct all fields", async () => {
     const res = (await request(app)
       .post("/api/auth/register")
-      .send(registerData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ user: User }>
-    >;
+      .send(registerData)) as ResponseInterfaceForTest<{ user: User }>;
     expect(res.status).toBe(STATUS_CODE.CREATED);
     expect(res.body.data.user.password).not.toBe(registerData.password);
     const user = await prisma.user.findFirst({
@@ -51,9 +49,10 @@ describe("Login", () => {
   test("Correct username and password", async () => {
     const res = (await request(app)
       .post("/api/auth/login")
-      .send(loginWithUsernameData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ user: User; token: string }>
-    >;
+      .send(loginWithUsernameData)) as ResponseInterfaceForTest<{
+      user: User;
+      token: string;
+    }>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     const token = res.body.data.token;
 
@@ -74,9 +73,10 @@ describe("Login", () => {
   test("Correct email and password", async () => {
     const res = (await request(app)
       .post("/api/auth/login")
-      .send(loginWithEmailData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<{ user: User; token: string }>
-    >;
+      .send(loginWithEmailData)) as ResponseInterfaceForTest<{
+      user: User;
+      token: string;
+    }>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     const token = res.body.data.token;
 
