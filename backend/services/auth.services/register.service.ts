@@ -1,10 +1,14 @@
-import { RegisterConfig } from "../../interfaces/api-interface";
 import prisma from "../../prisma/client";
 import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcryptjs";
 
-export const validateRegisterBody = async (data: RegisterConfig) => {
+export const validateRegisterBody = async (data: {
+  email: string;
+  username: string;
+  password: string;
+  fullname: string;
+}) => {
   const { email, fullname, password, username } = data;
   if (!email || !fullname || !password || !username) {
     throw new CustomError("Please fill all fields!", STATUS_CODE.BAD_REQUEST);

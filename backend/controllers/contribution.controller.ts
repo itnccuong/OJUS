@@ -15,11 +15,9 @@ import {
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import {
-  ContributionResponseInterface,
-  GetAllSubmissionsFromProblemInterface,
-  GetOneProblemInterface,
+  SubmissionWithResults,
   SuccessResponseInterface,
-} from "../interfaces/api-interface";
+} from "../interfaces/interface";
 
 import prisma from "../prisma/client";
 import { Problem } from "@prisma/client";
@@ -29,12 +27,7 @@ import {
   findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
-import {
-  addResultsToSubmissions,
-  findProblemById,
-  findSubmissionsProblem,
-  getUserStatus,
-} from "../services/problem.services/problem.service";
+import { addResultsToSubmissions } from "../services/problem.services/problem.service";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -52,7 +45,7 @@ export class ContributionController extends Controller {
     @FormField() memoryLimit: string,
     @UploadedFile()
     file: Express.Multer.File,
-  ): Promise<SuccessResponseInterface<ContributionResponseInterface>> {
+  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     const url = await uploadFile("testcases", file);
     const createFile = await prisma.files.create({
       data: {
@@ -101,7 +94,9 @@ export class ContributionController extends Controller {
   public async getSubmissionsFromContribution(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromProblemInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
+  > {
     const userId = req.userId;
     const submissions = await findSubmissionsContribution(problem_id, userId);
     const submissionsWithResults = await addResultsToSubmissions(submissions);

@@ -9,7 +9,7 @@ import { compileFailAnswer, correctAnswers } from "../test_data";
 import {
   ErrorResponseInterface,
   ResponseInterfaceForTest,
-} from "../../interfaces/api-interface";
+} from "../../interfaces/interface";
 import { testCompile, testCorrect } from "../test_services";
 import { cleanDatabase } from "../test_utils";
 import util from "node:util";

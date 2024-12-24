@@ -4,7 +4,7 @@ import {
   ErrorResponseInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
-} from "../interfaces/api-interface";
+} from "../interfaces/interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";
 

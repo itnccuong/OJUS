@@ -8,15 +8,10 @@ import {
   updateSubmissionVerdict,
 } from "../services/problem.services/judging.services";
 import {
-  SubmitCodeConfig,
   SuccessResponseInterface,
-  GetAllProblemInterface,
-  GetOneProblemInterface,
-  GetAllSubmissionsFromProblemInterface,
-  SubmitCodeResponseInterface,
-  GetTestcasesInterface,
   ProblemWithUserStatusInterface,
-} from "../interfaces/api-interface";
+  SubmissionWithResults,
+} from "../interfaces/interface";
 import {
   addResultsToSubmissions,
   findSubmissionsProblem,
@@ -41,7 +36,7 @@ import {
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import { downloadTestcase } from "../utils/general";
-import { Problem } from "@prisma/client";
+import { TestcaseInterface } from "../interfaces/code-executor-interface";
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
@@ -51,9 +46,9 @@ export class ProblemController extends Controller {
   @SuccessResponse(200, "All testcases passed")
   public async submit(
     @Path() problem_id: number, // Path parameter
-    @Body() body: SubmitCodeConfig, // Request body
+    @Body() body: { code: string; language: string }, // Request body
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<SubmitCodeResponseInterface>> {
+  ): Promise<SuccessResponseInterface<{ submissionId: number }>> {
     const { code, language } = body;
     const userId = req.userId;
     const submission = await createSubmission(
@@ -85,7 +80,7 @@ export class ProblemController extends Controller {
   @Get("/no-account")
   @SuccessResponse(200, "Successfully fetched all problems")
   public async getAllProblemsNoAccount(): Promise<
-    SuccessResponseInterface<GetAllProblemInterface>
+    SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
   > {
     const problems = await findAcceptedProblems();
 
@@ -99,7 +94,9 @@ export class ProblemController extends Controller {
   @SuccessResponse(200, "Successfully fetched all problems with account")
   public async getAllProblemsWithAccount(
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllProblemInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
+  > {
     const userId = req.userId;
     const responseData = await queryProblemStatus(userId);
     return {
@@ -114,7 +111,9 @@ export class ProblemController extends Controller {
   @SuccessResponse(200, "Successfully fetched problem without user data")
   public async getOneProblemNoAccount(
     @Path() problem_id: number,
-  ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
+  > {
     const problem = await findAcceptedProblemById(problem_id);
     const resProblem = { ...problem, userStatus: false };
     return {
@@ -131,7 +130,9 @@ export class ProblemController extends Controller {
   public async getOneProblemWithAccount(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
+  > {
     const userId = req.userId;
     const problem = await findAcceptedProblemById(problem_id);
     const userStatus = await getUserStatus(userId, problem.problemId);
@@ -147,7 +148,9 @@ export class ProblemController extends Controller {
   public async getSubmissionsFromProblem(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromProblemInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
+  > {
     const userId = req.userId;
     const submissions = await findSubmissionsProblem(problem_id, userId);
     const submissionsWithResults = await addResultsToSubmissions(submissions);
@@ -160,7 +163,7 @@ export class ProblemController extends Controller {
   @SuccessResponse(200, "Successfully fetched submissions from problem")
   public async getTestcases(
     @Path() problem_id: number,
-  ): Promise<SuccessResponseInterface<GetTestcasesInterface>> {
+  ): Promise<SuccessResponseInterface<{ testcases: TestcaseInterface }>> {
     const problem = await findProblemById(problem_id);
     const file = await findFileById(problem.fileId);
     const fileUrl = file.url;

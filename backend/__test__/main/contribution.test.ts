@@ -4,12 +4,10 @@ import request from "supertest";
 import jwt from "jsonwebtoken";
 import path from "path";
 import {
-  ContributionListResponseInterface,
-  ContributionResponseInterface,
-  GetOneProblemInterface,
+  ProblemWithUserStatusInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
-} from "../../interfaces/api-interface";
+} from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
@@ -49,7 +47,7 @@ describe("Contribute", () => {
       .field("memoryLimit", "1000")
       .attach("file", filePath)
       .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
     expect(res.status).toBe(201);
     expect(res.body.data.contribution.title).toBe("Contribution Title");
@@ -75,7 +73,7 @@ describe("Get contributions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionListResponseInterface>
+      SuccessResponseInterface<{ contributions: Problem[] }>
     >;
     expect(res.status).toBe(200);
     const contributions = res.body.data.contributions;
@@ -92,7 +90,7 @@ describe("Get contributions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
     const contribution = res.body.data.contribution;
     expect(res.status).toBe(200);
@@ -109,7 +107,7 @@ describe("Admin Contribution Actions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
 
     expect(res.status).toBe(200);
@@ -119,7 +117,7 @@ describe("Admin Contribution Actions", () => {
     const problemRes = (await request(app).get(
       "/api/problems/no-account/1",
     )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetOneProblemInterface>
+      SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
     >;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(2);
@@ -132,7 +130,7 @@ describe("Admin Contribution Actions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
 
     expect(res.status).toBe(200);
@@ -154,7 +152,7 @@ describe("Admin Contribution Actions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
     expect(res.status).toBe(STATUS_CODE.NOT_FOUND);
   });

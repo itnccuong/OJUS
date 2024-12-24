@@ -147,22 +147,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserWithAvatarResponseInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/UserWithAvatarInterface"
-					}
-				},
-				"required": [
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_UserWithAvatarResponseInterface_": {
+			"SuccessResponseInterface__user-UserWithAvatarInterface__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/UserWithAvatarResponseInterface"
+						"properties": {
+							"user": {
+								"$ref": "#/components/schemas/UserWithAvatarInterface"
+							}
+						},
+						"required": [
+							"user"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -175,48 +171,23 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_UserPayload_",
 				"description": "Model User"
 			},
-			"UserResponseInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/User"
-					}
-				},
-				"required": [
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_UserResponseInterface_": {
+			"SuccessResponseInterface__user-User__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/UserResponseInterface"
+						"properties": {
+							"user": {
+								"$ref": "#/components/schemas/User"
+							}
+						},
+						"required": [
+							"user"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"data"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateUserRequestInterface": {
-				"properties": {
-					"fullname": {
-						"type": "string"
-					},
-					"facebookLink": {
-						"type": "string"
-					},
-					"githubLink": {
-						"type": "string"
-					},
-					"currentPassword": {
-						"type": "string"
-					},
-					"newPassword": {
-						"type": "string"
-					}
-				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -374,76 +345,21 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetAllSubmissionsFromUserInterface": {
+			"SuccessResponseInterface__submissions-SubmissionWithProblem-Array__": {
 				"properties": {
-					"submissions": {
-						"items": {
-							"$ref": "#/components/schemas/SubmissionWithProblem"
+					"data": {
+						"properties": {
+							"submissions": {
+								"items": {
+									"$ref": "#/components/schemas/SubmissionWithProblem"
+								},
+								"type": "array"
+							}
 						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"submissions"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetAllSubmissionsFromUserInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetAllSubmissionsFromUserInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GetAllACSubmissionsFromUserInterface": {
-				"properties": {
-					"submissions": {
-						"items": {
-							"$ref": "#/components/schemas/SubmissionWithProblem"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"submissions"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetAllACSubmissionsFromUserInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetAllACSubmissionsFromUserInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateAvatarInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/UserWithAvatarInterface"
-					}
-				},
-				"required": [
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_UpdateAvatarInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/UpdateAvatarInterface"
+						"required": [
+							"submissions"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -456,22 +372,18 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_SubmissionPayload_",
 				"description": "Model Submission"
 			},
-			"GetOneSubmissionInterface": {
-				"properties": {
-					"submission": {
-						"$ref": "#/components/schemas/Submission"
-					}
-				},
-				"required": [
-					"submission"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetOneSubmissionInterface_": {
+			"SuccessResponseInterface__submission-Submission__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/GetOneSubmissionInterface"
+						"properties": {
+							"submission": {
+								"$ref": "#/components/schemas/Submission"
+							}
+						},
+						"required": [
+							"submission"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -529,25 +441,21 @@
 				"$ref": "#/components/schemas/DefaultSelection_Prisma._36_ResultPayload_",
 				"description": "Model Result"
 			},
-			"GetResultsInterface": {
+			"SuccessResponseInterface__results-Result-Array__": {
 				"properties": {
-					"results": {
-						"items": {
-							"$ref": "#/components/schemas/Result"
+					"data": {
+						"properties": {
+							"results": {
+								"items": {
+									"$ref": "#/components/schemas/Result"
+								},
+								"type": "array"
+							}
 						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"results"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetResultsInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetResultsInterface"
+						"required": [
+							"results"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -556,43 +464,23 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SubmitCodeResponseInterface": {
-				"properties": {
-					"submissionId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"submissionId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_SubmitCodeResponseInterface_": {
+			"SuccessResponseInterface__submissionId-number__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/SubmitCodeResponseInterface"
+						"properties": {
+							"submissionId": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"submissionId"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SubmitCodeConfig": {
-				"properties": {
-					"code": {
-						"type": "string"
-					},
-					"language": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"code",
-					"language"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -661,25 +549,21 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetAllProblemInterface": {
-				"properties": {
-					"problems": {
-						"items": {
-							"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"problems"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetAllProblemInterface_": {
+			"SuccessResponseInterface__problems-ProblemWithUserStatusInterface-Array__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/GetAllProblemInterface"
+						"properties": {
+							"problems": {
+								"items": {
+									"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"problems"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -688,22 +572,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetOneProblemInterface": {
-				"properties": {
-					"problem": {
-						"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
-					}
-				},
-				"required": [
-					"problem"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetOneProblemInterface_": {
+			"SuccessResponseInterface__problem-ProblemWithUserStatusInterface__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/GetOneProblemInterface"
+						"properties": {
+							"problem": {
+								"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+							}
+						},
+						"required": [
+							"problem"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -763,25 +643,21 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetAllSubmissionsFromProblemInterface": {
-				"properties": {
-					"submissions": {
-						"items": {
-							"$ref": "#/components/schemas/SubmissionWithResults"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"submissions"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetAllSubmissionsFromProblemInterface_": {
+			"SuccessResponseInterface__submissions-SubmissionWithResults-Array__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/GetAllSubmissionsFromProblemInterface"
+						"properties": {
+							"submissions": {
+								"items": {
+									"$ref": "#/components/schemas/SubmissionWithResults"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"submissions"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -812,40 +688,16 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetTestcasesInterface": {
-				"properties": {
-					"testcases": {
-						"$ref": "#/components/schemas/TestcaseInterface"
-					}
-				},
-				"required": [
-					"testcases"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_GetTestcasesInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/GetTestcasesInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface__problem-ProblemWithUserStatusInterface__": {
+			"SuccessResponseInterface__testcases-TestcaseInterface__": {
 				"properties": {
 					"data": {
 						"properties": {
-							"problem": {
-								"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
+							"testcases": {
+								"$ref": "#/components/schemas/TestcaseInterface"
 							}
 						},
 						"required": [
-							"problem"
+							"testcases"
 						],
 						"type": "object"
 					}
@@ -856,22 +708,18 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ContributionResponseInterface": {
-				"properties": {
-					"contribution": {
-						"$ref": "#/components/schemas/Problem"
-					}
-				},
-				"required": [
-					"contribution"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_ContributionResponseInterface_": {
+			"SuccessResponseInterface__contribution-Problem__": {
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/ContributionResponseInterface"
+						"properties": {
+							"contribution": {
+								"$ref": "#/components/schemas/Problem"
+							}
+						},
+						"required": [
+							"contribution"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -903,114 +751,26 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface__contribution-Problem__": {
+			"SuccessResponseInterface__user-User--token-string__": {
 				"properties": {
 					"data": {
 						"properties": {
-							"contribution": {
-								"$ref": "#/components/schemas/Problem"
+							"token": {
+								"type": "string"
+							},
+							"user": {
+								"$ref": "#/components/schemas/User"
 							}
 						},
 						"required": [
-							"contribution"
+							"token",
+							"user"
 						],
 						"type": "object"
 					}
 				},
 				"required": [
 					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginResponseInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"token": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"user",
-					"token"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_LoginResponseInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/LoginResponseInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginInterface": {
-				"properties": {
-					"usernameOrEmail": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"usernameOrEmail",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RegisterResponseInterface": {
-				"properties": {
-					"user": {
-						"$ref": "#/components/schemas/User"
-					}
-				},
-				"required": [
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponseInterface_RegisterResponseInterface_": {
-				"properties": {
-					"data": {
-						"$ref": "#/components/schemas/RegisterResponseInterface"
-					}
-				},
-				"required": [
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RegisterConfig": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"username": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"fullname": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"username",
-					"password",
-					"fullname"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1024,34 +784,6 @@
 				},
 				"required": [
 					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SendResetLinkConfig": {
-				"properties": {
-					"email": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ChangePasswordConfig": {
-				"properties": {
-					"token": {
-						"type": "string"
-					},
-					"newPassword": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"token",
-					"newPassword"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1073,7 +805,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_UserWithAvatarResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-UserWithAvatarInterface__"
 								}
 							}
 						}
@@ -1093,7 +825,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_UserResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-User__"
 								}
 							}
 						}
@@ -1109,7 +841,24 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateUserRequestInterface"
+								"properties": {
+									"newPassword": {
+										"type": "string"
+									},
+									"currentPassword": {
+										"type": "string"
+									},
+									"githubLink": {
+										"type": "string"
+									},
+									"facebookLink": {
+										"type": "string"
+									},
+									"fullname": {
+										"type": "string"
+									}
+								},
+								"type": "object"
 							}
 						}
 					}
@@ -1125,7 +874,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_UserWithAvatarResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-UserWithAvatarInterface__"
 								}
 							}
 						}
@@ -1156,7 +905,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsFromUserInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
 								}
 							}
 						}
@@ -1178,7 +927,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllACSubmissionsFromUserInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
 								}
 							}
 						}
@@ -1210,7 +959,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_UpdateAvatarInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-UserWithAvatarInterface__"
 								}
 							}
 						}
@@ -1249,7 +998,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_UserResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-User__"
 								}
 							}
 						}
@@ -1271,7 +1020,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneSubmissionInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submission-Submission__"
 								}
 							}
 						}
@@ -1303,7 +1052,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetResultsInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__results-Result-Array__"
 								}
 							}
 						}
@@ -1335,7 +1084,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_SubmitCodeResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissionId-number__"
 								}
 							}
 						}
@@ -1361,7 +1110,19 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/SubmitCodeConfig"
+								"properties": {
+									"language": {
+										"type": "string"
+									},
+									"code": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"language",
+									"code"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -1407,7 +1168,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__problems-ProblemWithUserStatusInterface-Array__"
 								}
 							}
 						}
@@ -1429,7 +1190,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__problems-ProblemWithUserStatusInterface-Array__"
 								}
 							}
 						}
@@ -1451,7 +1212,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__problem-ProblemWithUserStatusInterface__"
 								}
 							}
 						}
@@ -1484,7 +1245,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetOneProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__problem-ProblemWithUserStatusInterface__"
 								}
 							}
 						}
@@ -1517,7 +1278,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsFromProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
 								}
 							}
 						}
@@ -1549,7 +1310,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetTestcasesInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__testcases-TestcaseInterface__"
 								}
 							}
 						}
@@ -1581,7 +1342,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_ContributionResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__contribution-Problem__"
 								}
 							}
 						}
@@ -1666,7 +1427,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsFromProblemInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
 								}
 							}
 						}
@@ -1794,7 +1555,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_LoginResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-User--token-string__"
 								}
 							}
 						}
@@ -1810,7 +1571,19 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/LoginInterface"
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"usernameOrEmail": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"usernameOrEmail"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -1826,7 +1599,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface_RegisterResponseInterface_"
+									"$ref": "#/components/schemas/SuccessResponseInterface__user-User__"
 								}
 							}
 						}
@@ -1842,7 +1615,27 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RegisterConfig"
+								"properties": {
+									"fullname": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									},
+									"username": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"fullname",
+									"password",
+									"username",
+									"email"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -1874,7 +1667,15 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/SendResetLinkConfig"
+								"properties": {
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"email"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -1906,7 +1707,19 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ChangePasswordConfig"
+								"properties": {
+									"newPassword": {
+										"type": "string"
+									},
+									"token": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"newPassword",
+									"token"
+								],
+								"type": "object"
 							}
 						}
 					}

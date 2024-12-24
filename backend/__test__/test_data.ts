@@ -1,5 +1,14 @@
-import { LoginInterface, RegisterConfig } from "../interfaces/api-interface";
+interface LoginInterface {
+  usernameOrEmail: string;
+  password: string;
+}
 
+interface RegisterConfig {
+  email: string;
+  username: string;
+  password: string;
+  fullname: string;
+}
 export const compileFailAnswer = [
   {
     language: "c",

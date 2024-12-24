@@ -1,15 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import {
-  ChangePasswordConfig,
-  LoginInterface,
-  LoginResponseInterface,
-  RegisterConfig,
-  RegisterResponseInterface,
-  SendResetLinkConfig,
-  SuccessResponseInterface,
-} from "../interfaces/api-interface";
+import { SuccessResponseInterface } from "../interfaces/interface";
 import prisma from "../prisma/client";
 import {
   createUser,
@@ -28,6 +20,7 @@ import {
   fineUserByEmail,
   sendEmail,
 } from "../services/auth.services/password.services";
+import type { User } from "@prisma/client";
 
 @Route("/api/auth") // Base path for authentication-related routes
 @Tags("Authentication") // Group this endpoint under "Authentication" in Swagger
@@ -35,8 +28,8 @@ export class AuthController extends Controller {
   @SuccessResponse("200", "Login successfully")
   @Post("login")
   public async login(
-    @Body() requestBody: LoginInterface,
-  ): Promise<SuccessResponseInterface<LoginResponseInterface>> {
+    @Body() requestBody: { usernameOrEmail: string; password: string },
+  ): Promise<SuccessResponseInterface<{ user: User; token: string }>> {
     const user = await validateLoginBody(requestBody);
 
     // Generate a token
@@ -52,8 +45,14 @@ export class AuthController extends Controller {
   @Post("register")
   @SuccessResponse("201", "User registered successfully")
   public async register(
-    @Body() requestBody: RegisterConfig, // Request body containing registration details
-  ): Promise<SuccessResponseInterface<RegisterResponseInterface>> {
+    @Body()
+    requestBody: {
+      email: string;
+      username: string;
+      password: string;
+      fullname: string;
+    }, // Request body containing registration details
+  ): Promise<SuccessResponseInterface<{ user: User }>> {
     const { email, fullname, password, username } = requestBody;
 
     // Validate the registration request
@@ -73,7 +72,7 @@ export class AuthController extends Controller {
   @Post("password/reset-link")
   @SuccessResponse("200", "Password reset link sent successfully")
   public async sendResetLink(
-    @Body() requestBody: SendResetLinkConfig, // Request body containing the email
+    @Body() requestBody: { email: string }, // Request body containing the email
   ): Promise<SuccessResponseInterface<{}>> {
     const { email } = requestBody;
 
@@ -102,7 +101,7 @@ export class AuthController extends Controller {
   @Post("password/change")
   @SuccessResponse("200", "Password changed successfully")
   public async changePassword(
-    @Body() requestBody: ChangePasswordConfig, // Request body containing token and new password
+    @Body() requestBody: { token: string; newPassword: string }, // Request body containing token and new password
   ): Promise<SuccessResponseInterface<{}>> {
     const { token, newPassword } = requestBody;
 

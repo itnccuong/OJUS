@@ -2,11 +2,13 @@ import prisma from "../../prisma/client";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { LoginInterface } from "../../interfaces/api-interface";
 import { CustomError } from "../../utils/errorClass";
 
 //If the request body is valid, the function will return the user object
-export const validateLoginBody = async (data: LoginInterface) => {
+export const validateLoginBody = async (data: {
+  usernameOrEmail: string;
+  password: string;
+}) => {
   const { usernameOrEmail, password } = data;
   const user = await prisma.user.findFirst({
     where: {

@@ -3,15 +3,14 @@ import { app } from "../../src/app";
 import request from "supertest";
 import jwt from "jsonwebtoken";
 import {
-  GetAllProblemInterface,
-  GetOneProblemInterface,
+  ProblemWithUserStatusInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
-} from "../../interfaces/api-interface";
+} from "../../interfaces/interface";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
-import { numAccept, numPending } from "../test_data";
+import { numAccept } from "../test_data";
 
 jest.setTimeout(60000);
 
@@ -34,7 +33,7 @@ describe("Get problem list", () => {
     const res = (await request(app).get(
       "/api/problems/no-account",
     )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetAllProblemInterface>
+      SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
     >;
     expect(res.status).toBe(200);
     const problems = res.body.data.problems;
@@ -94,7 +93,7 @@ describe("Get one problem", () => {
     const res = (await request(app).get(
       `/api/problems/no-account/${problemId}`,
     )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetOneProblemInterface>
+      SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
     >;
     expect(res.status).toBe(200);
     const problem = res.body.data.problem;

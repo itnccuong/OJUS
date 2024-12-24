@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type User } from "@prisma/client";
 import { Request as RequestExpress, Response } from "express";
 import {
   Controller,
@@ -19,14 +19,10 @@ import {
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import {
-  GetAllACSubmissionsFromUserInterface,
-  GetAllSubmissionsFromUserInterface,
+  SubmissionWithProblem,
   SuccessResponseInterface,
-  UpdateAvatarInterface,
-  UpdateUserRequestInterface,
-  UserResponseInterface,
-  UserWithAvatarResponseInterface,
-} from "../interfaces/api-interface";
+  UserWithAvatarInterface,
+} from "../interfaces/interface";
 import {
   addProblemToSubmissions,
   filterSubmissionsAC,
@@ -48,7 +44,7 @@ export class UserController extends Controller {
   @SuccessResponse(200, "Successfully fetched user profile")
   public async getUserProfile(
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<UserWithAvatarResponseInterface>> {
+  ): Promise<SuccessResponseInterface<{ user: UserWithAvatarInterface }>> {
     const userId = req.userId;
     const user = await findUserById(userId);
     const avatar = await findAvatarById(user.avatarId);
@@ -66,7 +62,7 @@ export class UserController extends Controller {
   @SuccessResponse(200, "Successfully fetched user profile")
   public async getUserByName(
     @Path() username: string,
-  ): Promise<SuccessResponseInterface<UserWithAvatarResponseInterface>> {
+  ): Promise<SuccessResponseInterface<{ user: UserWithAvatarInterface }>> {
     const user = await findUserByName(username);
     const avatar = await findAvatarById(user.avatarId);
     return {
@@ -84,8 +80,15 @@ export class UserController extends Controller {
   @SuccessResponse(200, "Successfully fetched user profile")
   public async updateProfile(
     @Request() req: RequestExpress,
-    @Body() requestBody: UpdateUserRequestInterface,
-  ): Promise<SuccessResponseInterface<UserResponseInterface>> {
+    @Body()
+    requestBody: {
+      fullname?: string;
+      facebookLink?: string;
+      githubLink?: string;
+      currentPassword?: string;
+      newPassword?: string;
+    },
+  ): Promise<SuccessResponseInterface<{ user: User }>> {
     const updateUser = await updateUserService(req.userId, requestBody);
     return {
       data: {
@@ -99,7 +102,9 @@ export class UserController extends Controller {
   @SuccessResponse(200, "Successfully fetched submissions from user")
   public async getSubmissionsFromUser(
     @Request() req: RequestExpress,
-  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromUserInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
     const userId = req.userId;
     const submissions = await findSubmissionsUser(userId);
     const submissionsWithProblem = await addProblemToSubmissions(submissions);
@@ -112,7 +117,9 @@ export class UserController extends Controller {
   @SuccessResponse(200, "Successfully fetched submissions from user")
   public async getACSubmissionsFromUser(
     @Path() userId: number,
-  ): Promise<SuccessResponseInterface<GetAllACSubmissionsFromUserInterface>> {
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
     const submissions = await findSubmissionsUser(userId);
     const submissionFilteredAC = await filterSubmissionsAC(submissions);
     const submissionsWithProblem =
@@ -129,7 +136,7 @@ export class UserController extends Controller {
     @Request() req: RequestExpress, // Request object for user ID and file
     @UploadedFile()
     file: Express.Multer.File,
-  ): Promise<SuccessResponseInterface<UpdateAvatarInterface>> {
+  ): Promise<SuccessResponseInterface<{ user: UserWithAvatarInterface }>> {
     const avatar = await uploadAvatar(file);
 
     //update avatarId in user table
@@ -155,7 +162,7 @@ export class UserController extends Controller {
   @Middlewares(verifyToken) // Middleware to verify the user's token
   public async deleteAvatar(
     @Request() req: RequestExpress, // Request object for user ID and file
-  ): Promise<SuccessResponseInterface<UserResponseInterface>> {
+  ): Promise<SuccessResponseInterface<{ user: User }>> {
     const userId = req.userId;
     const user = await findUserById(userId);
     await prisma.user.update({
