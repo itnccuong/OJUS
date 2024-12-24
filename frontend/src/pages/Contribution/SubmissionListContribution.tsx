@@ -3,12 +3,12 @@ import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import getToken from "../../../utils/getToken.ts";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import getToken from "../../utils/getToken.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
   SubmissionWithResults,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ContributionNav from "../../components/ContributionNav.tsx";

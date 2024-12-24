@@ -1,19 +1,19 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getToken from "../../../utils/getToken.ts";
+import getToken from "../../utils/getToken.ts";
 
 import { useEffect } from "react";
 
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ProblemInterface,
   ResponseInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { difficultyMapping, TagList, Tag } from "../../../utils/constanst.ts";
+import { difficultyMapping, TagList, Tag } from "../../utils/constanst.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();

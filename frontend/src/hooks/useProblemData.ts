@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import {
   ProblemWithUserStatusInterface,
   ResponseInterface,
-} from "../../interfaces/interface.ts";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
+} from "../interfaces/interface.ts";
+import getToken from "../utils/getToken.ts";
+import axiosInstance from "../utils/axiosInstance.ts";
 
 const useProblemData = (problemId: string) => {
   const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();

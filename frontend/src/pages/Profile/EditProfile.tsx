@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
-import getToken from "../../../utils/getToken";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import getToken from "../../utils/getToken";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import Loader from "../../components/Loader.tsx";
 import {
   ProfilePayloadInterface,
   ResponseInterface,
   UserWithAvatarInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 interface EditProfileInterface {

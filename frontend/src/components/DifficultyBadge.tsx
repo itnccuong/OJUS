@@ -1,4 +1,4 @@
-import { difficultyMapping } from "../../utils/constanst.ts";
+import { difficultyMapping } from "../utils/constanst.ts";
 
 const DifficultyBadge = ({ difficulty }: { difficulty: number }) => {
   const difficultyString = difficultyMapping[difficulty];

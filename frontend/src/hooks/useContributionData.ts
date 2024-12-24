@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import {
   ProblemInterface,
   ResponseInterface,
-} from "../../interfaces/interface.ts";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
+} from "../interfaces/interface.ts";
+import getToken from "../utils/getToken.ts";
+import axiosInstance from "../utils/axiosInstance.ts";
 import { useNavigate } from "react-router-dom";
 
 const useContributionData = (problemId: string) => {

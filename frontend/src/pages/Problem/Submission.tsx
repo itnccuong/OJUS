@@ -3,14 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ProblemInterface,
   ResponseInterface,
   ResultInterface,
   SubmissionInterface,
   TestcaseInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Editor from "@monaco-editor/react";

@@ -6,7 +6,7 @@ import { useState } from "react";
 import Editor from "@monaco-editor/react";
 
 import Loader from "../../components/Loader.tsx";
-import { languageEditorMap } from "../../../utils/constanst.ts";
+import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
@@ -14,13 +14,13 @@ import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import useContributionData from "../../hooks/useContributionData.ts";
 import useSubmitCodeContribution from "../../hooks/useSubmitCodeContribution.ts";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import { toast } from "react-toastify";
 import {
   ProblemInterface,
   ResponseInterface,
-} from "../../../interfaces/interface.ts";
-import getToken from "../../../utils/getToken.ts";
+} from "../../interfaces/interface.ts";
+import getToken from "../../utils/getToken.ts";
 import { AxiosError } from "axios";
 
 export default function Contribution() {

@@ -7,7 +7,7 @@ import Editor from "@monaco-editor/react";
 
 import Loader from "../../components/Loader.tsx";
 import ProblemNav from "../../components/ProblemNav.tsx";
-import { languageEditorMap } from "../../../utils/constanst.ts";
+import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";

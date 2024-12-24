@@ -1,16 +1,16 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getToken from "../../../utils/getToken.ts";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import getToken from "../../utils/getToken.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ProblemWithUserStatusInterface,
   ResponseInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { difficultyMapping } from "../../../utils/constanst.ts";
+import { difficultyMapping } from "../../utils/constanst.ts";
 
 interface Tag {
   label: string;

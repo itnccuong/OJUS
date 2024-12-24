@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 
 export default function ChangePassword() {

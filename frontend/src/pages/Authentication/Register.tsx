@@ -2,12 +2,12 @@ import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 import {
   ResponseInterface,
   UserInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 
 export default function Register() {
   const navigate = useNavigate();

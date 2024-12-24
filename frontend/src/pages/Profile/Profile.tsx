@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import axiosInstance from "../../../utils/axiosInstance.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
   SubmissionWithProblem,
   UserWithAvatarInterface,
-} from "../../../interfaces/interface.ts";
+} from "../../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
-import getToken from "../../../utils/getToken.ts";
+import getToken from "../../utils/getToken.ts";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 
 export default function Profile() {
