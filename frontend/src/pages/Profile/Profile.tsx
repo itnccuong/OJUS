@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import axiosInstance from "../../../utils/getURL.ts";
-import {
-  SubmissionWithProblem,
-  UserWithAvatarInterface,
-} from "../../../interfaces/model.interface.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
-  SubmissionListWithProblemResponseInterface,
-  UserResponseInterface,
-} from "../../../interfaces/response.interface.ts";
+  SubmissionWithProblem,
+  UserWithAvatarInterface,
+} from "../../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
-import getToken from "../../../utils/getToken.ts";
+import getToken from "../../utils/getToken.ts";
 import { Button, Form, Modal, Table } from "react-bootstrap";
+import {
+  difficultyMapping,
+  language_BE_to_FE_map,
+} from "../../utils/constanst.ts";
+import { shortReadableTimeConverter } from "../../utils/general.ts";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function Profile() {
   const getUserFromName = async () => {
     try {
       const { data } = await axiosInstance.get<
-        ResponseInterface<UserResponseInterface>
+        ResponseInterface<{ user: UserWithAvatarInterface }>
       >(`/api/user/by-name/${username}`);
       console.log("Get user from name", data);
       setUser(data.data.user);
@@ -51,7 +52,9 @@ export default function Profile() {
       if (!token) {
         return;
       }
-      const response = await axiosInstance.get("/api/user", {
+      const response = await axiosInstance.get<
+        ResponseInterface<{ user: UserWithAvatarInterface }>
+      >("/api/user", {
         headers: {
           Authorization: `Bearer ${token}`, // Send token in the Authorization header
         },
@@ -69,7 +72,7 @@ export default function Profile() {
         return;
       }
       const res = await axiosInstance.get<
-        ResponseInterface<SubmissionListWithProblemResponseInterface>
+        ResponseInterface<{ submissions: SubmissionWithProblem[] }>
       >(`/api/user/${user.userId}/submissions/AC`);
 
       console.log("Fetch AC submission", res.data);
@@ -121,36 +124,14 @@ export default function Profile() {
   const masterSolved = masterProblems.size;
 
   const recentACSubmissions = fetchSubmissions.map((fetchSubmission) => {
-    const languageMap: Record<string, string> = {
-      py: "Python",
-      c: "C",
-      cpp: "C++",
-      java: "Java",
-      js: "JavaScript",
-    };
-
-    const date = new Date(fetchSubmission.createdAt);
-
-    const readableTime = date.toLocaleString("en-US", {
-      year: "numeric", // e.g., "2024"
-      month: "long", // e.g., "December"
-      day: "numeric", // e.g., "6"
-    });
-
-    const difficultyMapping: Record<number, string> = {
-      1: "Bronze",
-      2: "Platinum",
-      3: "Master",
-    };
-
     return {
       ...fetchSubmission,
       problem: {
         ...fetchSubmission.problem,
         difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
       },
-      language: languageMap[fetchSubmission.language],
-      createdAt: readableTime,
+      language: language_BE_to_FE_map[fetchSubmission.language],
+      createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 
@@ -435,23 +416,7 @@ export default function Profile() {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <td className="text-center">
-                    <Link
-                      to={`/submissions/${submission.submissionId}`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {submission.problem.title}
-                    </Link>
-                  </td>
+                  <td className="text-center">{submission.problem.title}</td>
 
                   {/*Language*/}
                   <td className="text-center">{submission.language}</td>

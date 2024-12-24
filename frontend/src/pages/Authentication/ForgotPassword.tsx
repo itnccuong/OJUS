@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 
 export default function ForgotPassword() {
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <div className="d-flex flex-grow-1">
+      <div className="d-flex flex-grow-1 bg-body-tertiary">
         <div className="d-flex container-xxl justify-content-center align-items-center">
           <Form
             className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow m-5"

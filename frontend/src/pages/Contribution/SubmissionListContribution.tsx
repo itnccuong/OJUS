@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
@@ -8,39 +7,30 @@ import getToken from "../../utils/getToken.ts";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
-  SubmissionWithProblem,
+  SubmissionWithResults,
 } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
-import {
-  difficultyMapping,
-  language_BE_to_FE_map,
-  verdictMap,
-} from "../../utils/constanst.ts";
-import { shortReadableTimeConverter } from "../../utils/general.ts";
+import ContributionNav from "../../components/ContributionNav.tsx";
+import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
+import { longReadableTimeConverter } from "../../utils/general.ts";
 
-export default function SubmissionListUser() {
+export default function SubmissionListContribution() {
+  const { problemId } = useParams();
   const token = getToken(); // Get token from localStorage
   const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithProblem[]
+    SubmissionWithResults[]
   >([]);
 
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!token) {
-      toast.error("You need to login to view submission");
-      navigate("/accounts/login");
-    }
-  }, [token, navigate]);
 
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<{ submissions: SubmissionWithProblem[] }>
-        >(`/api/user/submissions`, {
+          ResponseInterface<{ submissions: SubmissionWithResults[] }>
+        >(`/api/contributions/${problemId}/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -51,7 +41,7 @@ export default function SubmissionListUser() {
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.response?.status === 401) {
-            // toast.error("You need to log to view submissions");
+            toast.error("You need to login to view submissions");
           } else {
             const errorMessage = error.response?.data?.message;
             toast.error(errorMessage);
@@ -63,7 +53,7 @@ export default function SubmissionListUser() {
       }
     };
     fetchData();
-  }, [token]);
+  }, []);
 
   if (loading) {
     return <Loader />;
@@ -72,13 +62,9 @@ export default function SubmissionListUser() {
   const submissions = fetchSubmissions.map((fetchSubmission) => {
     return {
       ...fetchSubmission,
-      problem: {
-        ...fetchSubmission.problem,
-        difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
-      },
-      verdict: verdictMap[fetchSubmission.verdict],
       language: language_BE_to_FE_map[fetchSubmission.language],
-      createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
+      verdict: verdictMap[fetchSubmission.verdict],
+      createdAt: longReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 
@@ -86,25 +72,23 @@ export default function SubmissionListUser() {
     <div className="d-flex flex-grow-1 px-5 py-4 bg-body-tertiary">
       <div className="container-xxl d-flex">
         <div className="p-4 border rounded-4 round shadow-sm bg-white w-100">
-          <h4 className="mb-4">All My Submissions</h4>
-          <Table striped bordered hover className="mt-3">
+          <ContributionNav problemId={problemId as string} />
+          <Table striped bordered hover className="mt-4">
             <thead>
               <tr>
                 <th
                   className="text-center"
                   style={{
-                    width: "30%",
+                    width: "8%",
                   }}
                 >
-                  Title
+                  ID
                 </th>
-                <th className="text-center" style={{ width: "15%" }}>
-                  Difficulty
-                </th>
-                <th className="text-center" style={{ width: "15%" }}>
+                <th className="text-center" style={{ width: "20%" }}>
                   Language
                 </th>
-                <th className="text-center" style={{ width: "15%" }}>
+                {/* </div> */}
+                <th className="text-center" style={{ width: "30%" }}>
                   Verdict
                 </th>
                 <th className="text-center">Submit time</th>
@@ -119,21 +103,8 @@ export default function SubmissionListUser() {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <td className="text-center">{submission.problem.title}</td>
-
-                  <td className="text-center">
-                    <span
-                      className={`badge fs-6 ${
-                        submission.problem.difficulty === "Bronze"
-                          ? "text-warning-emphasis"
-                          : submission.problem.difficulty === "Platinum"
-                            ? "text-primary"
-                            : "text-danger"
-                      }`}
-                    >
-                      {submission.problem.difficulty}
-                    </span>
-                  </td>
+                  {/*Submission id*/}
+                  <td className="text-center">{submission.submissionId}</td>
 
                   {/*Language*/}
                   <td className="text-center">{submission.language}</td>
@@ -148,7 +119,11 @@ export default function SubmissionListUser() {
                         fontSize: "14px",
                       }}
                     >
-                      {submission.verdict}
+                      {submission.verdict === "Wrong answer" ||
+                      submission.verdict === "Runtime error" ||
+                      submission.verdict === "Time limit exceeded"
+                        ? `${submission.verdict} on test ${submission.results.length}`
+                        : submission.verdict}
                     </span>
                   </td>
 

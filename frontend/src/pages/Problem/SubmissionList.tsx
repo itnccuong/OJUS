@@ -1,18 +1,19 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import getToken from "../../../utils/getToken.ts";
+import getToken from "../../utils/getToken.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
-  SubmissionListWithResultResponseInterface,
-} from "../../../interfaces/response.interface.ts";
-import axiosInstance from "../../../utils/getURL.ts";
-import { SubmissionWithResults } from "../../../interfaces/model.interface.ts";
+  SubmissionWithResults,
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
+import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
+import { longReadableTimeConverter } from "../../utils/general.ts";
 
 export default function SubmissionList() {
   const { problemId } = useParams();
@@ -28,7 +29,7 @@ export default function SubmissionList() {
     const fetchData = async () => {
       try {
         const res = await axiosInstance.get<
-          ResponseInterface<SubmissionListWithResultResponseInterface>
+          ResponseInterface<{ submissions: SubmissionWithResults[] }>
         >(`/api/problems/${problemId}/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -52,47 +53,18 @@ export default function SubmissionList() {
       }
     };
     fetchData();
-  }, []);
+  }, [problemId, token]);
 
   if (loading) {
     return <Loader />;
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
-    const languageMap: Record<string, string> = {
-      py: "Python",
-      c: "C",
-      cpp: "C++",
-      java: "Java",
-      js: "JavaScript",
-    };
-
-    const verdictMap: Record<string, string> = {
-      OK: "Accepted",
-      WRONG_ANSWER: "Wrong answer",
-      TIME_LIMIT_EXCEEDED: "Time limit exceeded",
-      RUNTIME_ERROR: "Runtime error",
-      COMPILE_ERROR: "Compile error",
-    };
-
-    const date = new Date(fetchSubmission.createdAt);
-
-    const readableTime = date.toLocaleString("en-US", {
-      weekday: "long", // e.g., "Friday"
-      year: "numeric", // e.g., "2024"
-      month: "long", // e.g., "December"
-      day: "numeric", // e.g., "6"
-      hour: "numeric", // e.g., "8 AM"
-      minute: "numeric", // e.g., "57"
-      second: "numeric", // e.g., "20"
-      hour12: true, // 12-hour clock (AM/PM)
-    });
-
     return {
       ...fetchSubmission,
-      language: languageMap[fetchSubmission.language],
+      language: language_BE_to_FE_map[fetchSubmission.language],
       verdict: verdictMap[fetchSubmission.verdict],
-      createdAt: readableTime,
+      createdAt: longReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 
@@ -132,23 +104,7 @@ export default function SubmissionList() {
                   style={{ cursor: "pointer" }}
                 >
                   {/*Submission id*/}
-                  <td className="text-center">
-                    <Link
-                      to={`/submissions/${submission.submissionId}`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {submission.submissionId}
-                    </Link>
-                  </td>
+                  <td className="text-center">{submission.submissionId}</td>
 
                   {/*Language*/}
                   <td className="text-center">{submission.language}</td>

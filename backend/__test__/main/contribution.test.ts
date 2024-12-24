@@ -4,18 +4,17 @@ import request from "supertest";
 import jwt from "jsonwebtoken";
 import path from "path";
 import {
-  ContributionListResponseInterface,
-  ContributionResponseInterface,
-  GetOneProblemInterface,
+  ProblemWithUserStatusInterface,
   ResponseInterfaceForTest,
   SuccessResponseInterface,
-} from "../../interfaces/api-interface";
+} from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
 import { STATUS_CODE } from "../../utils/constants";
 import { numPending } from "../test_data";
+import { Problem } from "@prisma/client";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
 
@@ -47,9 +46,9 @@ describe("Contribute", () => {
       .field("timeLimit", "1000")
       .field("memoryLimit", "1000")
       .attach("file", filePath)
-      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
-    >;
+      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
+      contribution: Problem;
+    }>;
     expect(res.status).toBe(201);
     expect(res.body.data.contribution.title).toBe("Contribution Title");
     expect(res.body.data.contribution.status).toBe(0);
@@ -73,9 +72,7 @@ describe("Get contributions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionListResponseInterface>
-    >;
+      )) as ResponseInterfaceForTest<{ contributions: Problem[] }>;
     expect(res.status).toBe(200);
     const contributions = res.body.data.contributions;
     expect(contributions.length).toBe(numPending);
@@ -90,9 +87,7 @@ describe("Get contributions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
     const contribution = res.body.data.contribution;
     expect(res.status).toBe(200);
     expect(contribution.problemId).toBe(1);
@@ -107,9 +102,7 @@ describe("Admin Contribution Actions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
 
     expect(res.status).toBe(200);
     expect(res.body.data.contribution.status).toBe(2);
@@ -117,9 +110,7 @@ describe("Admin Contribution Actions", () => {
     // Verify the contribution status is updated
     const problemRes = (await request(app).get(
       "/api/problems/no-account/1",
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetOneProblemInterface>
-    >;
+    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(2);
   });
@@ -130,19 +121,15 @@ describe("Admin Contribution Actions", () => {
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
-      )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
-    >;
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
 
     expect(res.status).toBe(200);
     expect(res.body.data.contribution.status).toBe(1);
 
     // Verify the contribution status is updated
     const problemRes = (await request(app).get(
-      "/api/problems/no-account/1",
-    )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetOneProblemInterface>
-    >;
+      "/api/problems/1",
+    )) as ResponseInterfaceForTest<{ problem: Problem }>;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(1);
   });
@@ -153,7 +140,7 @@ describe("Admin Contribution Actions", () => {
         "Authorization",
         `Bearer ${fake_token}`,
       )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<ContributionResponseInterface>
+      SuccessResponseInterface<{ contribution: Problem }>
     >;
     expect(res.status).toBe(STATUS_CODE.NOT_FOUND);
   });

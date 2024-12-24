@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
-import getToken from "../../../utils/getToken";
-import axiosInstance from "../../../utils/getURL";
+import getToken from "../../utils/getToken";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import Loader from "../../components/Loader.tsx";
-import { ProfilePayloadInterface } from "../../../interfaces/model.interface.ts";
+import {
+  ProfilePayloadInterface,
+  ResponseInterface,
+  UserWithAvatarInterface,
+} from "../../interfaces/interface.ts";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-interface UserProfile {
+interface EditProfileInterface {
   fullname: string;
-  gender: string;
-  birthday: string;
   facebookLink?: string;
   githubLink?: string;
   username: string;
@@ -19,10 +21,8 @@ interface UserProfile {
 export default function EditProfile() {
   const navigate = useNavigate();
   const token = getToken();
-  const [profile, setProfile] = useState<UserProfile>({
+  const [profile, setProfile] = useState<EditProfileInterface>({
     fullname: "",
-    gender: "",
-    birthday: "",
     facebookLink: "",
     githubLink: "",
     username: "",
@@ -54,23 +54,17 @@ export default function EditProfile() {
 
     const fetchUserProfile = async () => {
       try {
-        const response = await axiosInstance.get("/api/user", {
+        const response = await axiosInstance.get<
+          ResponseInterface<{ user: UserWithAvatarInterface }>
+        >("/api/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Data User:", response.data.data.user);
-        const {
-          fullname,
-          gender,
-          birthday,
-          facebookLink,
-          githubLink,
-          username,
-        } = response.data.data.user;
+        const { fullname, facebookLink, githubLink, username } =
+          response.data.data.user;
         console.log(
           "Data init: ",
           fullname,
-          gender,
-          birthday,
           facebookLink,
           githubLink,
           username,
@@ -78,8 +72,6 @@ export default function EditProfile() {
         setProfile(() => {
           const newProfile = {
             fullname,
-            gender,
-            birthday,
             facebookLink,
             githubLink,
             username,
@@ -180,12 +172,6 @@ export default function EditProfile() {
       case "fullname":
         isValid = validateField("fullname", profile.fullname);
         payload.fullname = profile.fullname;
-        break;
-      case "gender":
-        payload.gender = profile.gender;
-        break;
-      case "birthday":
-        payload.birthday = profile.birthday ? new Date(profile.birthday) : null;
         break;
       case "facebookLink":
         payload.facebookLink = profile.facebookLink || null;

@@ -2,9 +2,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import getToken from "../../utils/getToken.ts";
-import storageKeyMap from "../../utils/storageKeyMap.ts";
-import axiosInstance from "../../utils/getURL";
+import getToken from "../utils/getToken.ts";
+import axiosInstance from "../utils/axiosInstance.ts";
+import { storageKeyMap } from "../utils/constanst.ts";
 
 function NavBar() {
   const navigate = useNavigate();

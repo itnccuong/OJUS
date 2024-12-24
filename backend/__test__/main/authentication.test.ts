@@ -8,17 +8,13 @@ import {
   loginWithUsernameData,
   registerData,
 } from "../test_data";
-import {
-  LoginResponseInterface,
-  RegisterResponseInterface,
-  ResponseInterfaceForTest,
-  SuccessResponseInterface,
-} from "../../interfaces/api-interface";
+import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import jwt from "jsonwebtoken";
 import { cleanDatabase } from "../test_utils";
 import util from "node:util";
 import { exec } from "child_process";
+import type { User } from "@prisma/client";
 
 jest.setTimeout(60000);
 
@@ -32,9 +28,7 @@ describe("Register", () => {
   test("Correct all fields", async () => {
     const res = (await request(app)
       .post("/api/auth/register")
-      .send(registerData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<RegisterResponseInterface>
-    >;
+      .send(registerData)) as ResponseInterfaceForTest<{ user: User }>;
     expect(res.status).toBe(STATUS_CODE.CREATED);
     expect(res.body.data.user.password).not.toBe(registerData.password);
     const user = await prisma.user.findFirst({
@@ -52,9 +46,10 @@ describe("Login", () => {
   test("Correct username and password", async () => {
     const res = (await request(app)
       .post("/api/auth/login")
-      .send(loginWithUsernameData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<LoginResponseInterface>
-    >;
+      .send(loginWithUsernameData)) as ResponseInterfaceForTest<{
+      user: User;
+      token: string;
+    }>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     const token = res.body.data.token;
 
@@ -75,9 +70,10 @@ describe("Login", () => {
   test("Correct email and password", async () => {
     const res = (await request(app)
       .post("/api/auth/login")
-      .send(loginWithEmailData)) as ResponseInterfaceForTest<
-      SuccessResponseInterface<LoginResponseInterface>
-    >;
+      .send(loginWithEmailData)) as ResponseInterfaceForTest<{
+      user: User;
+      token: string;
+    }>;
     expect(res.status).toBe(STATUS_CODE.SUCCESS);
     const token = res.body.data.token;
 

@@ -1,16 +1,16 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import getToken from "../../utils/getToken.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
-  ProblemListResponseInterface,
+  ProblemWithUserStatusInterface,
   ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
-import getToken from "../../../utils/getToken.ts";
-import axiosInstance from "../../../utils/getURL.ts";
-import { ProblemWithUserStatusInterface } from "../../../interfaces/model.interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { difficultyMapping, TagListInit } from "../../utils/constanst.ts";
 
 interface Tag {
   label: string;
@@ -20,24 +20,9 @@ interface Tag {
 export default function ProblemList() {
   const navigate = useNavigate();
   const token = getToken();
-  const initialTags: Tag[] = [
-    { label: "Array", selected: false },
-    { label: "String", selected: false },
-    { label: "Hash Table", selected: false },
-    { label: "Dynamic Programming", selected: false },
-    { label: "Math", selected: false },
-    { label: "Sorting", selected: false },
-    { label: "Greedy", selected: false },
-    { label: "Depth-First Search", selected: false },
-    { label: "Database", selected: false },
-    { label: "Binary Search", selected: false },
-    { label: "Matrix", selected: false },
-    { label: "Tree", selected: false },
-    { label: "Breadth-First Search", selected: false },
-  ];
 
   const [loading, setLoading] = useState(true);
-  const [tags, setTags] = useState<Tag[]>(initialTags);
+  const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("All");
   const [status, setStatus] = useState("All");
@@ -51,13 +36,13 @@ export default function ProblemList() {
   };
 
   const handleResetTags = () => {
-    setTags(initialTags);
+    setTags(TagListInit);
   };
 
-  // const pickRandom = () => {
-  //   const randomProblem = problems[Math.floor(Math.random() * problems.length)];
-  //   navigate(`/problems/${randomProblem.id}/description`);
-  // };
+  const pickRandom = () => {
+    const randomProblem = problems[Math.floor(Math.random() * problems.length)];
+    navigate(`/problems/${randomProblem.problemId}/description`);
+  };
 
   const [fetchProblems, setFetchProblems] = useState<
     ProblemWithUserStatusInterface[]
@@ -68,11 +53,11 @@ export default function ProblemList() {
         let response;
         if (!token) {
           response = await axiosInstance.get<
-            ResponseInterface<ProblemListResponseInterface>
+            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
           >("/api/problems/no-account");
         } else {
           response = await axiosInstance.get<
-            ResponseInterface<ProblemListResponseInterface>
+            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
           >("/api/problems/with-account", {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -99,12 +84,6 @@ export default function ProblemList() {
   }
 
   const problems = fetchProblems.map((fetchProblem) => {
-    const difficultyMapping: Record<number, string> = {
-      1: "Bronze",
-      2: "Platinum",
-      3: "Master",
-    };
-
     const statusMapping: Record<string, string> = {
       false: "Todo",
       true: "Solved",
@@ -215,11 +194,7 @@ export default function ProblemList() {
             </div>
           </DropdownButton>
 
-          <DropdownButton
-            // key="2"
-            variant="secondary"
-            title="Tags"
-          >
+          <DropdownButton variant="secondary" title="Tags">
             <div
               className="mb-3"
               style={{
@@ -260,7 +235,7 @@ export default function ProblemList() {
           </Form>
           <div
             className="d-flex ms-2"
-            // onClick={() => pickRandom()}
+            onClick={() => pickRandom()}
             style={{
               cursor: "pointer",
             }}
@@ -328,23 +303,7 @@ export default function ProblemList() {
                       <img src="/reject.png" width="20" height="20" />
                     )}
                   </td>
-                  <td>
-                    <Link
-                      to={`/problems/${problem.problemId}/description`}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "blue")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "black")
-                      }
-                    >
-                      {problem.title}
-                    </Link>
-                  </td>
+                  <td>{problem.title}</td>
 
                   <td>
                     {problem.tags.map((tag, index) => (

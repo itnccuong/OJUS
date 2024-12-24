@@ -1,10 +1,8 @@
 import prisma from "../../prisma/client";
-import { formatResponse } from "../../utils/formatResponse";
 import { STATUS_CODE } from "../../utils/constants";
 import { CustomError } from "../../utils/errorClass";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import { decodedResetTokenInterface } from "../../interfaces/api-interface";
 
 export const fineUserByEmail = async (email: string) => {
   const user = await prisma.user.findFirst({
@@ -49,10 +47,9 @@ export const sendEmail = async (email: string, resetLink: string) => {
 };
 
 export const decodeResetToken = (token: string) => {
-  const decodedToken = jwt.verify(
-    token,
-    process.env.JWT_RESET as string,
-  ) as decodedResetTokenInterface;
+  const decodedToken = jwt.verify(token, process.env.JWT_RESET as string) as {
+    email: string;
+  };
 
   if (!decodedToken || !decodedToken.email) {
     throw new CustomError("Invalid token", STATUS_CODE.BAD_REQUEST);

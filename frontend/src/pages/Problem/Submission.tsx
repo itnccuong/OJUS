@@ -3,23 +3,23 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import {
-  GetResultsResponseInterface,
-  GetSubmissionResponseInterface,
-  GetTestcasesResponseInterface,
-  OneProblemResponseInterface,
-  ResponseInterface,
-} from "../../../interfaces/response.interface.ts";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ProblemInterface,
+  ResponseInterface,
   ResultInterface,
   SubmissionInterface,
   TestcaseInterface,
-} from "../../../interfaces/model.interface.ts";
+} from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Editor from "@monaco-editor/react";
+import {
+  language_BE_to_FE_map,
+  languageEditorMap,
+  verdictMap,
+} from "../../utils/constanst.ts";
+import { shortReadableTimeConverter } from "../../utils/general.ts";
 
 export default function Submission() {
   const { submissionId } = useParams();
@@ -34,7 +34,7 @@ export default function Submission() {
       try {
         //Fetch submission
         const resSubmission = await axiosInstance.get<
-          ResponseInterface<GetSubmissionResponseInterface>
+          ResponseInterface<{ submission: SubmissionInterface }>
         >(`/api/submissions/${submissionId}`);
 
         setFetchSubmission(resSubmission.data.data.submission);
@@ -42,23 +42,21 @@ export default function Submission() {
 
         //Fetch problem
         const resProblem = await axiosInstance.get<
-          ResponseInterface<OneProblemResponseInterface>
-        >(
-          `/api/problems/no-account/${resSubmission.data.data.submission.problemId}`,
-        );
+          ResponseInterface<{ problem: ProblemInterface }>
+        >(`/api/problems/${resSubmission.data.data.submission.problemId}`);
         setProblem(resProblem.data.data.problem);
         console.log("Problem", resProblem.data.data.problem);
 
         //Fetch results
         const resResults = await axiosInstance.get<
-          ResponseInterface<GetResultsResponseInterface>
+          ResponseInterface<{ results: ResultInterface[] }>
         >(`/api/submissions/${submissionId}/results`);
         setResults(resResults.data.data.results);
         console.log("Results", resResults.data.data.results);
 
         //Fetch testcases
         const resTestcases = await axiosInstance.get<
-          ResponseInterface<GetTestcasesResponseInterface>
+          ResponseInterface<{ testcases: TestcaseInterface }>
         >(
           `/api/problems/${resSubmission.data.data.submission.problemId}/testcases`,
         );
@@ -81,43 +79,11 @@ export default function Submission() {
     return <Loader />;
   }
 
-  const languageMap: Record<string, string> = {
-    py: "Python",
-    c: "C",
-    cpp: "C++",
-    java: "Java",
-    js: "JavaScript",
-  };
-
-  const languageMapEditor: Record<string, string> = {
-    Python: "python",
-    C: "c",
-    "C++": "cpp",
-    Java: "java",
-    JavaScript: "javascript",
-  };
-
-  const verdictMap: Record<string, string> = {
-    OK: "Accepted",
-    WRONG_ANSWER: "Wrong Answer",
-    TIME_LIMIT_EXCEEDED: "Time Limit Exceeded",
-    RUNTIME_ERROR: "Runtime Error",
-    COMPILE_ERROR: "Compile Error",
-  };
-
-  const date = new Date(fetchSubmission.createdAt);
-
-  const readableTime = date.toLocaleString("en-US", {
-    year: "numeric", // e.g., "2024"
-    month: "long", // e.g., "December"
-    day: "numeric", // e.g., "6"
-  });
-
   const submission = {
     ...fetchSubmission,
-    language: languageMap[fetchSubmission.language],
+    language: language_BE_to_FE_map[fetchSubmission.language],
     verdict: verdictMap[fetchSubmission.verdict],
-    createdAt: readableTime,
+    createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
   };
 
   // const totalTime = results.reduce((sum, result) => sum + result.time, 0);
@@ -129,7 +95,11 @@ export default function Submission() {
       <div className="container-xxl d-flex flex-column">
         <h4 className="text-primary">
           <Link
-            to={`/problems/${submission.problemId}/description`}
+            to={
+              problem.status === 2
+                ? `/problems/${submission.problemId}/description`
+                : `/contributions/${submission.problemId}/description`
+            }
             style={{
               textDecoration: "none",
             }}
@@ -228,7 +198,7 @@ export default function Submission() {
           <div className="mt-3 mb-3">
             <Editor
               height="35vh"
-              language={languageMapEditor[submission.language]}
+              language={languageEditorMap[submission.language]}
               value={submission.code}
               // theme={"github"}
               options={{

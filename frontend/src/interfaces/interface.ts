@@ -78,11 +78,16 @@ export interface SubmissionWithProblem extends SubmissionInterface {
 }
 
 export interface ProfilePayloadInterface {
-  fullname?: string; // Optional, as not all cases set this
-  gender?: string; // Assuming gender is a string
-  birthday?: Date | null; // Can be a Date or null
-  facebookLink?: string | null; // Can be a string or null
-  githubLink?: string | null; // Can be a string or null
-  currentPassword?: string; // For password updates
-  newPassword?: string; // For password updates
+  fullname?: string;
+  gender?: string;
+  birthday?: Date | null;
+  facebookLink?: string | null;
+  githubLink?: string | null;
+  currentPassword?: string;
+  newPassword?: string;
+}
+
+export interface ResponseInterface<T> {
+  message: string;
+  data: T;
 }

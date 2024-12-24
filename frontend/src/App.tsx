@@ -21,6 +21,7 @@ import Submission from "./pages/Problem/Submission.tsx";
 import SubmissionListUser from "./pages/Profile/SubmissionListUser.tsx";
 import NavBar from "./components/NavBar.tsx";
 import Footer from "./components/Footer.tsx";
+import SubmissionListContribution from "./pages/Contribution/SubmissionListContribution.tsx";
 
 export default function App() {
   return (
@@ -56,7 +57,14 @@ export default function App() {
           />
           <Route path="/contribute" element={<Contribute />} />
           <Route path="/contributions" element={<ContributionList />} />
-          <Route path="/contributions/:id/:page" element={<Contribution />} />
+          <Route
+            path="/contributions/:problemId/description"
+            element={<Contribution />}
+          />
+          <Route
+            path="/contributions/:problemId/submissions"
+            element={<SubmissionListContribution />}
+          />
         </Routes>
         <Footer />
       </Router>
