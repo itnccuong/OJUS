@@ -1,3 +1,7 @@
+export const storageKeyMap = {
+  token: "token",
+};
+
 export const difficultyMapping: Record<number, string> = {
   1: "Bronze",
   2: "Platinum",

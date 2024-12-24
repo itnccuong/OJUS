@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 import {
   ResponseInterface,

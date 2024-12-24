@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
 import { toast } from "react-toastify";
-import axiosInstance from "../../utils/getURL.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 import { ResponseInterface } from "../../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { language_FE_to_BE_map } from "../../utils/constanst.ts";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import {
   ResponseInterface,
   SubmissionWithProblem,

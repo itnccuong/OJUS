@@ -6,7 +6,7 @@ import {
   ResponseInterface,
 } from "../../interfaces/interface.ts";
 import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/getURL.ts";
+import axiosInstance from "../../utils/axiosInstance.ts";
 
 const useProblemData = (problemId: string) => {
   const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();

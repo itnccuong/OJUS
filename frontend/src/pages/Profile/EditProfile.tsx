@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
 import getToken from "../../../utils/getToken";
-import axiosInstance from "../../../utils/getURL";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import Loader from "../../components/Loader.tsx";
 import {
   ProfilePayloadInterface,

@@ -5,7 +5,7 @@ import getToken from "../../../utils/getToken.ts";
 
 import { useEffect } from "react";
 
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import {
   ProblemInterface,
   ResponseInterface,

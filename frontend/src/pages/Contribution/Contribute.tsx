@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import getToken from "../../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 

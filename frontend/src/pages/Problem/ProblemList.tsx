@@ -2,7 +2,7 @@ import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getToken from "../../../utils/getToken.ts";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import {
   ProblemWithUserStatusInterface,
   ResponseInterface,

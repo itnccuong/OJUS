@@ -14,7 +14,7 @@ import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import useContributionData from "../../hooks/useContributionData.ts";
 import useSubmitCodeContribution from "../../hooks/useSubmitCodeContribution.ts";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import { toast } from "react-toastify";
 import {
   ProblemInterface,

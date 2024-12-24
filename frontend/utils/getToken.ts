@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import storageKeyMap from "./storageKeyMap.ts";
+import { storageKeyMap } from "./constanst.ts";
 
 const getToken = () => {
   try {

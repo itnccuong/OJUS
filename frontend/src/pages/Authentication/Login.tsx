@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import storageKeyMap from "../../../utils/storageKeyMap.ts";
-import axiosInstance from "../../../utils/getURL.ts";
+import axiosInstance from "../../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 import {
   ResponseInterface,
   UserInterface,
 } from "../../../interfaces/interface.ts";
+import { storageKeyMap } from "../../../utils/constanst.ts";
 
 export default function Login() {
   const navigate = useNavigate();
