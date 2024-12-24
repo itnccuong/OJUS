@@ -209,11 +209,7 @@ export default function ProblemList() {
             </div>
           </DropdownButton>
 
-          <DropdownButton
-            // key="2"
-            variant="secondary"
-            title="Tags"
-          >
+          <DropdownButton variant="secondary" title="Tags">
             <div
               className="mb-3"
               style={{

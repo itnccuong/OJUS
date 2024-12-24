@@ -127,7 +127,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   return (
     <div className="flex-grow-1 d-flex px-5">
       <div className="d-flex container-xxl">
-        <div className="col-7 d-flex flex-column p-3 border-end border-start">
+        <div className="col-8 d-flex flex-column p-3 border-end border-start">
           <h2
           // style={{
           //   fontSize: "28px",
@@ -267,7 +267,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
           </Form>
         </div>
 
-        <div className="col-5 container-xxl p-3 border-bottom border-end bg-light">
+        <div className="col-4 container-xxl p-3 border-bottom border-end bg-light">
           <div className="border border-3 p-3 mt-3 bg-white">
             <div className="mb-3">
               <img src="/lightbulb.svg" width="36" height="36" />
