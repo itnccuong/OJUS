@@ -1,17 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Editor from "@monaco-editor/react";
 
 import { toast } from "react-toastify";
 import getToken from "../../../utils/getToken.ts";
 import axiosInstance from "../../../utils/getURL.ts";
-import {
-  ProblemWithUserStatusInterface,
-  ResponseInterface,
-} from "../../../interfaces/interface.ts";
+import { ResponseInterface } from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
@@ -22,50 +19,19 @@ import {
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
+import { useProblemData } from "../../hooks/CustomHook.ts";
 
 export default function Problem() {
   const { problemId } = useParams();
   const token = getToken();
-  const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
 
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let res;
-        if (!token) {
-          res = await axiosInstance.get<
-            ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
-          >(`/api/problems/no-account/${problemId}`, {});
-        } else {
-          res = await axiosInstance.get<
-            ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
-          >(`/api/problems/with-account/${problemId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
-        console.log(res.data);
-        setProblem(res.data.data.problem);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const { problem, loading } = useProblemData(problemId as string);
 
-  if (loading || !problem) {
+  if (loading) {
     return <Loader />;
   }
 
@@ -105,6 +71,9 @@ export default function Problem() {
     }
   };
 
+  if (!problem) {
+    return <div>Problem not found</div>;
+  }
   return (
     <div className="d-flex flex-grow-1 bg-body-tertiary px-5 py-4">
       <div className="container-xxl d-flex justify-content-between gap-3">
