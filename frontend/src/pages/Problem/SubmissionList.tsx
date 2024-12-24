@@ -13,6 +13,7 @@ import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
 import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
+import { longReadableTimeConverter } from "../../utils/general.ts";
 
 export default function SubmissionList() {
   const { problemId } = useParams();
@@ -59,24 +60,11 @@ export default function SubmissionList() {
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
-    const date = new Date(fetchSubmission.createdAt);
-
-    const readableTime = date.toLocaleString("en-US", {
-      weekday: "long", // e.g., "Friday"
-      year: "numeric", // e.g., "2024"
-      month: "long", // e.g., "December"
-      day: "numeric", // e.g., "6"
-      hour: "numeric", // e.g., "8 AM"
-      minute: "numeric", // e.g., "57"
-      second: "numeric", // e.g., "20"
-      hour12: true, // 12-hour clock (AM/PM)
-    });
-
     return {
       ...fetchSubmission,
       language: language_BE_to_FE_map[fetchSubmission.language],
       verdict: verdictMap[fetchSubmission.verdict],
-      createdAt: readableTime,
+      createdAt: longReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 

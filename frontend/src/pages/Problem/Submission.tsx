@@ -19,6 +19,7 @@ import {
   languageEditorMap,
   verdictMap,
 } from "../../utils/constanst.ts";
+import { shortReadableTimeConverter } from "../../utils/general.ts";
 
 export default function Submission() {
   const { submissionId } = useParams();
@@ -78,19 +79,11 @@ export default function Submission() {
     return <Loader />;
   }
 
-  const date = new Date(fetchSubmission.createdAt);
-
-  const readableTime = date.toLocaleString("en-US", {
-    year: "numeric", // e.g., "2024"
-    month: "long", // e.g., "December"
-    day: "numeric", // e.g., "6"
-  });
-
   const submission = {
     ...fetchSubmission,
     language: language_BE_to_FE_map[fetchSubmission.language],
     verdict: verdictMap[fetchSubmission.verdict],
-    createdAt: readableTime,
+    createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
   };
 
   // const totalTime = results.reduce((sum, result) => sum + result.time, 0);

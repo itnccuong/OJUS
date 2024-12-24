@@ -16,6 +16,7 @@ import {
   difficultyMapping,
   language_BE_to_FE_map,
 } from "../../utils/constanst.ts";
+import { shortReadableTimeConverter } from "../../utils/general.ts";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -123,14 +124,6 @@ export default function Profile() {
   const masterSolved = masterProblems.size;
 
   const recentACSubmissions = fetchSubmissions.map((fetchSubmission) => {
-    const date = new Date(fetchSubmission.createdAt);
-
-    const readableTime = date.toLocaleString("en-US", {
-      year: "numeric", // e.g., "2024"
-      month: "long", // e.g., "December"
-      day: "numeric", // e.g., "6"
-    });
-
     return {
       ...fetchSubmission,
       problem: {
@@ -138,7 +131,7 @@ export default function Profile() {
         difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
       },
       language: language_BE_to_FE_map[fetchSubmission.language],
-      createdAt: readableTime,
+      createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 

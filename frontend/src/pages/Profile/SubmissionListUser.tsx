@@ -17,6 +17,7 @@ import {
   language_BE_to_FE_map,
   verdictMap,
 } from "../../utils/constanst.ts";
+import { shortReadableTimeConverter } from "../../utils/general.ts";
 
 export default function SubmissionListUser() {
   const token = getToken(); // Get token from localStorage
@@ -69,14 +70,6 @@ export default function SubmissionListUser() {
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
-    const date = new Date(fetchSubmission.createdAt);
-
-    const readableTime = date.toLocaleString("en-US", {
-      year: "numeric", // e.g., "2024"
-      month: "long", // e.g., "December"
-      day: "numeric", // e.g., "6"
-    });
-
     return {
       ...fetchSubmission,
       problem: {
@@ -85,7 +78,7 @@ export default function SubmissionListUser() {
       },
       verdict: verdictMap[fetchSubmission.verdict],
       language: language_BE_to_FE_map[fetchSubmission.language],
-      createdAt: readableTime,
+      createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
     };
   });
 
