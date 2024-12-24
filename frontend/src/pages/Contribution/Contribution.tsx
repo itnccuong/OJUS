@@ -131,13 +131,14 @@ export default function Contribution() {
         </div>
 
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
-          <div className="p-4 d-flex justify-content-between">
+          <div className="p-4 d-flex justify-content-between align-items-center">
             <Button
               variant="primary"
               onClick={() => submitProblem(code, language, problemId as string)}
             >
               Submit
             </Button>
+
             <div className="d-flex gap-3">
               <Button variant="danger" onClick={() => handleReject()}>
                 Reject
@@ -146,8 +147,14 @@ export default function Contribution() {
                 Accept
               </Button>
             </div>
-
-            <LanguageDropdown language={language} setLanguage={setLanguage} />
+            <div
+              className="d-flex justify-content-end"
+              style={{
+                width: "75px",
+              }}
+            >
+              <LanguageDropdown language={language} setLanguage={setLanguage} />
+            </div>
           </div>
           <div>
             <Editor
