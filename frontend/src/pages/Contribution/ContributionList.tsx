@@ -13,11 +13,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import {
-  difficultyMapping,
-  initialTags,
-  Tag,
-} from "../../../utils/constanst.ts";
+import { difficultyMapping, TagList, Tag } from "../../../utils/constanst.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();
@@ -32,7 +28,7 @@ export default function ContributionList() {
     }
   }, [token, navigate]);
 
-  const [tags, setTags] = useState<Tag[]>(initialTags);
+  const [tags, setTags] = useState<Tag[]>(TagList);
   const [search, setSearch] = useState("");
 
   const toggleTag = (index: number) => {
@@ -44,7 +40,7 @@ export default function ContributionList() {
   };
 
   const handleResetTags = () => {
-    setTags(initialTags);
+    setTags(TagList);
   };
 
   // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems

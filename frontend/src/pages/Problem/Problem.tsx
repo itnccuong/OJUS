@@ -1,11 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  OverlayTrigger,
-  Popover,
-} from "react-bootstrap";
+import { Button, Dropdown, DropdownButton } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 
@@ -21,10 +15,17 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
+import {
+  difficultyMapping,
+  languageEditorMap,
+  languageFeToBeMap,
+  LanguageList,
+} from "../../../utils/constanst.ts";
+import PopoverTag from "../../components/PopoverTag.tsx";
 
 export default function Problem() {
   const { problemId } = useParams();
-  const token = getToken(); // Get token from localStorage
+  const token = getToken();
   const [fetchProblem, setFetchProblem] =
     useState<ProblemWithUserStatusInterface>();
   const [language, setLanguage] = useState("C++");
@@ -69,52 +70,10 @@ export default function Problem() {
     return <Loader />;
   }
 
-  const difficultyMapping: Record<number, string> = {
-    1: "Bronze",
-    2: "Platinum",
-    3: "Master",
-  };
-
   const problem = {
     ...fetchProblem,
     difficulty: difficultyMapping[fetchProblem.difficulty],
     tags: fetchProblem.tags.split(","),
-  };
-
-  const Language = ["C++", "C", "Java", "Python", "Javascript"];
-
-  const popover = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">Topics</Popover.Header>
-      <Popover.Body>
-        <div className="mb-3">
-          {problem.tags.map((tag, index) => (
-            <span
-              key={index}
-              className={`badge rounded-pill bg-body-secondary text-dark m-1 mx-1`}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </Popover.Body>
-    </Popover>
-  );
-
-  const languageMapBackend: Record<string, string> = {
-    Python: "py",
-    "C++": "cpp",
-    C: "c",
-    Java: "java",
-    Javascript: "js",
-  };
-
-  const languageMapEditor: Record<string, string> = {
-    Python: "python",
-    "C++": "cpp",
-    C: "c",
-    Java: "java",
-    Javascript: "javascript",
   };
 
   const handleSubmit = async () => {
@@ -124,7 +83,7 @@ export default function Problem() {
           `/api/problems/${problemId}`,
           {
             code: code,
-            language: languageMapBackend[language],
+            language: languageFeToBeMap[language],
           },
           {
             headers: {
@@ -171,9 +130,7 @@ export default function Problem() {
             {problem.difficulty}
           </span>
 
-          <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
-            <span className="badge bg-body-secondary text-dark">Topics</span>
-          </OverlayTrigger>
+          <PopoverTag tags={problem.tags} />
 
           <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
         </div>
@@ -185,7 +142,7 @@ export default function Problem() {
 
             <DropdownButton variant="secondary" title={language}>
               <div className="d-flex flex-column">
-                {Language.map((lang, index) => (
+                {LanguageList.map((lang, index) => (
                   <Dropdown.Item
                     key={index}
                     onClick={() => {
@@ -211,7 +168,7 @@ export default function Problem() {
           <div>
             <Editor
               height="69vh"
-              language={languageMapEditor[language]}
+              language={languageEditorMap[language]}
               value={code}
               onChange={(value) => setCode(value)}
               options={{

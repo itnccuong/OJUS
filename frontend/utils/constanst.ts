@@ -9,7 +9,7 @@ export interface Tag {
   selected: boolean;
 }
 
-export const initialTags: Tag[] = [
+export const TagList: Tag[] = [
   { label: "Array", selected: false },
   { label: "String", selected: false },
   { label: "Hash Table", selected: false },
@@ -24,3 +24,21 @@ export const initialTags: Tag[] = [
   { label: "Tree", selected: false },
   { label: "Breadth-First Search", selected: false },
 ];
+
+export const LanguageList = ["C++", "C", "Java", "Python", "Javascript"];
+
+export const languageFeToBeMap: Record<string, string> = {
+  Python: "py",
+  "C++": "cpp",
+  C: "c",
+  Java: "java",
+  Javascript: "js",
+};
+
+export const languageEditorMap: Record<string, string> = {
+  Python: "python",
+  "C++": "cpp",
+  C: "c",
+  Java: "java",
+  Javascript: "javascript",
+};

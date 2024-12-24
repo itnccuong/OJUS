@@ -22,6 +22,7 @@ import {
 } from "../../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
+import { LanguageList } from "../../../utils/constanst.ts";
 
 export default function Contribution() {
   const navigate = useNavigate(); // Initialize navigate
@@ -31,8 +32,6 @@ export default function Contribution() {
   const onChange = React.useCallback((val: string) => {
     setCode(val);
   }, []);
-
-  const Language = ["C++", "C", "Java", "Python", "Javascript"];
 
   const [language, setLanguage] = useState("Python");
 
@@ -350,7 +349,7 @@ export default function Contribution() {
               <div className="container border-bottom p-2 ps-3 d-flex gap-2">
                 <DropdownButton variant="light" title={language}>
                   <div className="d-flex flex-column">
-                    {Language.map((lang, index) => (
+                    {LanguageList.map((lang, index) => (
                       <Dropdown.Item
                         key={index}
                         onClick={() => {
