@@ -836,6 +836,26 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SuccessResponseInterface__problem-Problem__": {
+				"properties": {
+					"data": {
+						"properties": {
+							"problem": {
+								"$ref": "#/components/schemas/Problem"
+							}
+						},
+						"required": [
+							"problem"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ContributionResponseInterface": {
 				"properties": {
 					"contribution": {
@@ -1346,6 +1366,36 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetProblem",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched problem without user data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__problem-Problem__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Problems"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/api/problems/no-account": {
@@ -1605,6 +1655,38 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/contributions/{problem_id}/submissions": {
+			"get": {
+				"operationId": "GetSubmissionsFromContribution",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from problem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface_GetAllSubmissionsFromProblemInterface_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/api/contributions/{contribute_id}": {

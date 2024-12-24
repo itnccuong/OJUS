@@ -3,10 +3,10 @@ import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import { formatResponse } from "../../utils/formatResponse";
 
-export const findPendingContribution = async (contributionId: number) => {
+export const findPendingContribution = async (problemId: number) => {
   const res = await prisma.problem.findUnique({
     where: {
-      problemId: contributionId,
+      problemId: problemId,
       status: 0,
     },
   });
@@ -27,4 +27,26 @@ export const findAllPendingContributions = async () => {
   });
 
   return contributions;
+};
+
+export const findSubmissionsContribution = async (
+  problem_id: number,
+  userId: number,
+) => {
+  const submissions = await prisma.submission.findMany({
+    where: {
+      userId,
+      problemId: problem_id,
+      problem: {
+        status: 0,
+      },
+    },
+    include: {
+      problem: true, // This joins with the problems table
+    },
+    orderBy: {
+      submissionId: "desc",
+    },
+  });
+  return submissions;
 };

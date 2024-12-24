@@ -21,8 +21,9 @@ import {
   addResultsToSubmissions,
   findSubmissionsProblem,
   getUserStatus,
-  queryProblems,
+  findAcceptedProblems,
   queryProblemStatus,
+  findAcceptedProblemById,
 } from "../services/problem.services/problem.service";
 
 import {
@@ -39,6 +40,7 @@ import {
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import { downloadTestcase } from "../utils/general";
+import { Problem } from "@prisma/client";
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
@@ -84,7 +86,7 @@ export class ProblemController extends Controller {
   public async getAllProblemsNoAccount(): Promise<
     SuccessResponseInterface<GetAllProblemInterface>
   > {
-    const problems = await queryProblems();
+    const problems = await findAcceptedProblems();
 
     return {
       data: { problems },
@@ -112,7 +114,7 @@ export class ProblemController extends Controller {
   public async getOneProblemNoAccount(
     @Path() problem_id: number,
   ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
-    const problem = await findProblemById(problem_id);
+    const problem = await findAcceptedProblemById(problem_id);
     const resProblem = { ...problem, userStatus: false };
     return {
       data: { problem: resProblem },
@@ -130,7 +132,7 @@ export class ProblemController extends Controller {
     @Request() req: RequestExpress,
   ): Promise<SuccessResponseInterface<GetOneProblemInterface>> {
     const userId = req.userId;
-    const problem = await findProblemById(problem_id);
+    const problem = await findAcceptedProblemById(problem_id);
     const userStatus = await getUserStatus(userId, problem.problemId);
     const resProblem = { ...problem, userStatus: userStatus.userStatus };
     return {
@@ -164,6 +166,19 @@ export class ProblemController extends Controller {
     const testcases = await downloadTestcase(fileUrl);
     return {
       data: { testcases: testcases },
+    };
+  }
+
+  //Get all problem with all status 0 1 2
+  @Get("/{problem_id}")
+  @SuccessResponse(200, "Successfully fetched problem without user data")
+  public async getProblem(
+    @Path() problem_id: number,
+  ): Promise<SuccessResponseInterface<{ problem: Problem }>> {
+    const problem = await findProblemById(problem_id);
+    const resProblem = { ...problem, userStatus: false };
+    return {
+      data: { problem: resProblem },
     };
   }
 }

@@ -10,7 +10,7 @@ import axiosInstance from "../../utils/getURL.ts";
 
 const useProblemData = (problemId: string) => {
   const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();
-  const [loading, setLoading] = useState(true);
+  const [problemLoading, setProblemLoading] = useState(true);
   const token = getToken();
 
   useEffect(() => {
@@ -36,14 +36,14 @@ const useProblemData = (problemId: string) => {
         }
         console.error(error);
       } finally {
-        setLoading(false);
+        setProblemLoading(false);
       }
     };
 
     fetchData();
   }, [problemId, token]);
 
-  return { problem, loading };
+  return { problem, problemLoading };
 };
 
 export default useProblemData;

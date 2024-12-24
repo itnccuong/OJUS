@@ -12,7 +12,7 @@ import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import useProblemData from "../../hooks/useProblemData.ts";
-import useSubmitProblem from "../../hooks/useSubmitProblem.ts";
+import useSubmitCodeProblem from "../../hooks/useSubmitCodeProblem.ts";
 import NotFound from "../NotFound.tsx";
 
 export default function Problem() {
@@ -20,10 +20,10 @@ export default function Problem() {
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
 
-  const { problem, loading } = useProblemData(problemId as string);
-  const { submitProblem } = useSubmitProblem();
+  const { problem, problemLoading } = useProblemData(problemId as string);
+  const { submitProblem } = useSubmitCodeProblem();
 
-  if (loading) {
+  if (problemLoading) {
     return <Loader />;
   }
 

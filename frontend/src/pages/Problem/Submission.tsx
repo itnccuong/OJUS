@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/getURL.ts";
 import {
   ProblemInterface,
-  ProblemWithUserStatusInterface,
   ResponseInterface,
   ResultInterface,
   SubmissionInterface,
@@ -37,10 +36,8 @@ export default function Submission() {
 
         //Fetch problem
         const resProblem = await axiosInstance.get<
-          ResponseInterface<{ problem: ProblemWithUserStatusInterface }>
-        >(
-          `/api/problems/no-account/${resSubmission.data.data.submission.problemId}`,
-        );
+          ResponseInterface<{ problem: ProblemInterface }>
+        >(`/api/problems/${resSubmission.data.data.submission.problemId}`);
         setProblem(resProblem.data.data.problem);
         console.log("Problem", resProblem.data.data.problem);
 
@@ -124,7 +121,11 @@ export default function Submission() {
       <div className="container-xxl d-flex flex-column">
         <h4 className="text-primary">
           <Link
-            to={`/problems/${submission.problemId}/description`}
+            to={
+              problem.status === 2
+                ? `/problems/${submission.problemId}/description`
+                : `/contributions/${submission.problemId}/description`
+            }
             style={{
               textDecoration: "none",
             }}

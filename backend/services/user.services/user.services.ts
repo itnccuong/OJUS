@@ -105,12 +105,13 @@ export const findAvatarById = async (avatarId: number | null) => {
 export const findSubmissionsUser = async (userId: number) => {
   const submissions = await prisma.submission.findMany({
     where: {
-      userId,
+      userId: userId,
     },
     orderBy: {
       submissionId: "desc",
     },
   });
+
   return submissions;
 };
 

@@ -6,11 +6,11 @@ import { ResponseInterface } from "../../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { language_FE_to_BE_map } from "../../utils/constanst.ts";
 
-const useProblemSubmission = () => {
+const useSubmitCodeProblem = () => {
   const navigate = useNavigate();
   const token = getToken();
 
-  const submitProblem = async (
+  const submitCode = async (
     code: string | undefined,
     language: string,
     problemId: string,
@@ -58,7 +58,7 @@ const useProblemSubmission = () => {
     }
   };
 
-  return { submitProblem };
+  return { submitProblem: submitCode };
 };
 
-export default useProblemSubmission;
+export default useSubmitCodeProblem;

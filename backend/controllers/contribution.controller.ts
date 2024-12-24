@@ -16,6 +16,8 @@ import {
 import { verifyToken } from "../middlewares/verify-token";
 import {
   ContributionResponseInterface,
+  GetAllSubmissionsFromProblemInterface,
+  GetOneProblemInterface,
   SuccessResponseInterface,
 } from "../interfaces/api-interface";
 
@@ -24,8 +26,15 @@ import { Problem } from "@prisma/client";
 import {
   findAllPendingContributions,
   findPendingContribution,
+  findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
+import { findProblemById } from "../services/problem.services/judging.services";
+import {
+  addResultsToSubmissions,
+  findSubmissionsProblem,
+  getUserStatus,
+} from "../services/problem.services/problem.service";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -44,17 +53,6 @@ export class ContributionController extends Controller {
     @UploadedFile()
     file: Express.Multer.File,
   ): Promise<SuccessResponseInterface<ContributionResponseInterface>> {
-    // Step 1: Start file upload process
-    // const details = await startUpload(file);
-    //
-    // // Step 2: Upload chunks to S3
-    // const etags = await uploadToS3(file, details.chunk_size, details.urls);
-    //
-    // // Step 3: Complete file upload and get the file URL
-    // const url = await completeUpload(details.key, details.upload_id!, etags);
-    //
-    // // Step 4: Save file information to the database
-    // const filename = `${title.replace(/\s+/g, "_")}_${Date.now()}`;
     const url = await uploadFile("testcases", file);
     const createFile = await prisma.files.create({
       data: {
@@ -65,7 +63,6 @@ export class ContributionController extends Controller {
       },
     });
 
-    // Step 5: Save contribution details to the database
     const contribution = await prisma.problem.create({
       data: {
         title: title,
@@ -79,7 +76,6 @@ export class ContributionController extends Controller {
       },
     });
 
-    // Step 6: Return a success response
     return {
       data: { contribution: contribution },
     };
@@ -99,12 +95,26 @@ export class ContributionController extends Controller {
     };
   }
 
+  @Get("/{problem_id}/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getSubmissionsFromContribution(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<GetAllSubmissionsFromProblemInterface>> {
+    const userId = req.userId;
+    const submissions = await findSubmissionsContribution(problem_id, userId);
+    const submissionsWithResults = await addResultsToSubmissions(submissions);
+    return {
+      data: { submissions: submissionsWithResults },
+    };
+  }
+
   @Get("{contribute_id}")
   @SuccessResponse("200", "Contribute fetched successfully")
   public async getOneContribute(
     @Path() contribute_id: number, // Contribution ID as a path parameter
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
-    // Fetch the pending contribution using the provided ID
     const contribution = await findPendingContribution(contribute_id);
 
     // Return a success response with the fetched contribution
