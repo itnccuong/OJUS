@@ -22,6 +22,7 @@ import {
   LanguageList,
 } from "../../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
+import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 
 export default function Problem() {
   const { problemId } = useParams();
@@ -118,17 +119,7 @@ export default function Problem() {
         <div className="col-6 p-4 border rounded-4 round shadow-sm bg-white">
           <ProblemNav problemId={problemId as string} />
           <h3 className="mb-3 mt-3">{problem.title}</h3>
-          <span
-            className={`badge bg-body-secondary me-2 ${
-              problem.difficulty === "Bronze"
-                ? "text-warning-emphasis"
-                : problem.difficulty === "Platinum"
-                  ? "text-primary"
-                  : "text-danger"
-            }`}
-          >
-            {problem.difficulty}
-          </span>
+          <DifficultyBadge difficulty={problem.difficulty} />
 
           <PopoverTag tags={problem.tags} />
 
