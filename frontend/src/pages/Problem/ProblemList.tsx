@@ -54,10 +54,10 @@ export default function ProblemList() {
     setTags(initialTags);
   };
 
-  // const pickRandom = () => {
-  //   const randomProblem = problems[Math.floor(Math.random() * problems.length)];
-  //   navigate(`/problems/${randomProblem.id}/description`);
-  // };
+  const pickRandom = () => {
+    const randomProblem = problems[Math.floor(Math.random() * problems.length)];
+    navigate(`/problems/${randomProblem.problemId}/description`);
+  };
 
   const [fetchProblems, setFetchProblems] = useState<
     ProblemWithUserStatusInterface[]
@@ -254,7 +254,7 @@ export default function ProblemList() {
           </Form>
           <div
             className="d-flex ms-2"
-            // onClick={() => pickRandom()}
+            onClick={() => pickRandom()}
             style={{
               cursor: "pointer",
             }}
