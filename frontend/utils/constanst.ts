@@ -27,7 +27,7 @@ export const TagList: Tag[] = [
 
 export const LanguageList = ["C++", "C", "Java", "Python", "Javascript"];
 
-export const languageFeToBeMap: Record<string, string> = {
+export const language_FE_to_BE_map: Record<string, string> = {
   Python: "py",
   "C++": "cpp",
   C: "c",

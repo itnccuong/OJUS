@@ -8,7 +8,7 @@ import {
 import getToken from "../../utils/getToken.ts";
 import axiosInstance from "../../utils/getURL.ts";
 
-export const useProblemData = (problemId: string) => {
+const useProblemData = (problemId: string) => {
   const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();
   const [loading, setLoading] = useState(true);
   const token = getToken();
@@ -45,3 +45,5 @@ export const useProblemData = (problemId: string) => {
 
   return { problem, loading };
 };
+
+export default useProblemData;
