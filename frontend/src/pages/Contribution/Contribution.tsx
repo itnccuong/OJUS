@@ -390,7 +390,7 @@
 //   );
 // }
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
@@ -406,12 +406,20 @@ import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import useContributionData from "../../hooks/useContributionData.ts";
 import useSubmitCodeContribution from "../../hooks/useSubmitCodeContribution.ts";
+import axiosInstance from "../../../utils/getURL.ts";
+import { toast } from "react-toastify";
+import {
+  ProblemInterface,
+  ResponseInterface,
+} from "../../../interfaces/interface.ts";
+import getToken from "../../../utils/getToken.ts";
+import { AxiosError } from "axios";
 
 export default function Contribution() {
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
-
+  const navigate = useNavigate();
   const { problem, loading } = useContributionData(problemId as string);
   const { submitProblem } = useSubmitCodeContribution();
 
@@ -422,6 +430,85 @@ export default function Contribution() {
   if (!problem) {
     return <NotFound />;
   }
+
+  const handleAccept = async () => {
+    const token = getToken();
+    if (!token) {
+      toast.error("Please login first");
+      return;
+    }
+    try {
+      const { data } = await toast.promise(
+        axiosInstance.put<
+          ResponseInterface<{ contribution: ProblemInterface }>
+        >(
+          `/api/contributions/${problemId}/accept`,
+          {},
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution accepted",
+        },
+      );
+      navigate("/contributions");
+
+      console.log("Accept response:", data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.data?.name === "UNAUTHORIZED") {
+          toast.error("Please login to submit your code");
+          navigate("/accounts/login");
+        } else {
+          const errorMessage = error.response?.data?.message;
+          toast.error(errorMessage);
+        }
+      }
+      console.error(error);
+    }
+  };
+
+  const handleReject = async () => {
+    const token = getToken();
+    if (!token) {
+      toast.error("Please login first");
+      return;
+    }
+    try {
+      const { data } = await toast.promise(
+        axiosInstance.put<
+          ResponseInterface<{ contribution: ProblemInterface }>
+        >(
+          `/api/contributions/${problemId}/reject`,
+          {},
+          {
+            // Config object
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        ),
+        {
+          pending: "Loading...",
+          success: "Contribution rejected",
+        },
+      );
+      navigate("/contributions");
+
+      console.log("Accept response:", data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        toast.error(errorMessage);
+      }
+      console.error(error);
+    }
+  };
   return (
     <div className="d-flex flex-grow-1 bg-body-tertiary px-5 py-4">
       <div className="container-xxl d-flex justify-content-between gap-3">
@@ -443,6 +530,14 @@ export default function Contribution() {
             >
               Submit
             </Button>
+            <div className="d-flex gap-3">
+              <Button variant="danger" onClick={() => handleReject()}>
+                Reject
+              </Button>
+              <Button variant="success" onClick={() => handleAccept()}>
+                Accept
+              </Button>
+            </div>
 
             <LanguageDropdown language={language} setLanguage={setLanguage} />
           </div>
