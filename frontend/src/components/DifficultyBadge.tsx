@@ -1,15 +1,18 @@
-const DifficultyBadge = ({ difficulty }: { difficulty: string }) => {
+import { difficultyMapping } from "../../utils/constanst.ts";
+
+const DifficultyBadge = ({ difficulty }: { difficulty: number }) => {
+  const difficultyString = difficultyMapping[difficulty];
   return (
     <span
       className={`badge bg-body-secondary me-2 ${
-        difficulty === "Bronze"
+        difficultyString === "Bronze"
           ? "text-warning-emphasis"
-          : difficulty === "Platinum"
+          : difficultyString === "Platinum"
             ? "text-primary"
             : "text-danger"
       }`}
     >
-      {difficulty}
+      {difficultyString}
     </span>
   );
 };

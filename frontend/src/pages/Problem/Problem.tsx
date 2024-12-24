@@ -16,7 +16,6 @@ import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
 import {
-  difficultyMapping,
   languageEditorMap,
   languageFeToBeMap,
 } from "../../../utils/constanst.ts";
@@ -27,8 +26,7 @@ import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 export default function Problem() {
   const { problemId } = useParams();
   const token = getToken();
-  const [fetchProblem, setFetchProblem] =
-    useState<ProblemWithUserStatusInterface>();
+  const [problem, setProblem] = useState<ProblemWithUserStatusInterface>();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
 
@@ -53,7 +51,7 @@ export default function Problem() {
           });
         }
         console.log(res.data);
-        setFetchProblem(res.data.data.problem);
+        setProblem(res.data.data.problem);
       } catch (error) {
         if (error instanceof AxiosError) {
           const errorMessage = error.response?.data?.message;
@@ -67,15 +65,9 @@ export default function Problem() {
     fetchData();
   }, []);
 
-  if (loading || !fetchProblem) {
+  if (loading || !problem) {
     return <Loader />;
   }
-
-  const problem = {
-    ...fetchProblem,
-    difficulty: difficultyMapping[fetchProblem.difficulty],
-    tags: fetchProblem.tags.split(","),
-  };
 
   const handleSubmit = async () => {
     try {
@@ -125,6 +117,7 @@ export default function Problem() {
 
           <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
         </div>
+
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
           <div className="p-4 d-flex justify-content-between">
             <Button variant="primary" onClick={() => handleSubmit()}>

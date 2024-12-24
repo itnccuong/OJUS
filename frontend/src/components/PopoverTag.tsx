@@ -1,12 +1,13 @@
 import { Popover, OverlayTrigger } from "react-bootstrap";
 
-const TagsPopover = ({ tags }: { tags: string[] }) => {
+const TagsPopover = ({ tags }: { tags: string }) => {
+  const tagsSplit = tags.split(",");
   const popoverTag = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">Topics</Popover.Header>
       <Popover.Body>
         <div className="mb-3">
-          {tags.map((tag, index) => (
+          {tagsSplit.map((tag, index) => (
             <span
               key={index}
               className="badge rounded-pill bg-body-secondary text-dark m-1 mx-1"
