@@ -17,6 +17,7 @@ import Editor from "@monaco-editor/react";
 import {
   language_BE_to_FE_map,
   languageEditorMap,
+  verdict,
   verdictMap,
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
@@ -113,9 +114,9 @@ export default function Submission() {
             <div>
               <div className="mb-2">
                 <span className="fw-bold">
-                  {submission.verdict === "Accepted"
+                  {submission.verdict === verdict.AC
                     ? `${testcases.input.length}`
-                    : submission.verdict === "Compile Error"
+                    : submission.verdict === verdict.CE
                       ? "0"
                       : `${results.length - 1}`}
                   /{testcases.input.length}
@@ -136,7 +137,7 @@ export default function Submission() {
                 <span>Verdict:</span>
                 <span
                   className={
-                    submission.verdict === "Accepted"
+                    submission.verdict === verdict.AC
                       ? "badge text-success"
                       : "badge text-danger"
                   }
@@ -159,11 +160,11 @@ export default function Submission() {
           </div>
         </div>
         {/*Log err*/}
-        {(submission.stderr || submission.verdict === "Wrong Answer") && (
+        {(submission.stderr || submission.verdict === verdict.WA) && (
           <div className="border border-danger shadow-sm rounded-4 p-3 mt-3">
             {submission.stderr ? (
               <div className="text-danger fw-medium">{submission.stderr}</div>
-            ) : submission.verdict === "Wrong Answer" ? (
+            ) : submission.verdict === verdict.WA ? (
               <>
                 <div className="border-bottom border-danger pb-3">
                   <span className="text-danger fw-medium">Input: </span>

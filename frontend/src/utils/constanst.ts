@@ -55,10 +55,18 @@ export const languageEditorMap: Record<string, string> = {
   Javascript: "javascript",
 };
 
+export const verdict = {
+  AC: "Accepted",
+  WA: "Wrong answer",
+  TLE: "Time limit exceeded",
+  RE: "Runtime error",
+  CE: "Compile error",
+};
+
 export const verdictMap: Record<string, string> = {
-  OK: "Accepted",
-  WRONG_ANSWER: "Wrong answer",
-  TIME_LIMIT_EXCEEDED: "Time limit exceeded",
-  RUNTIME_ERROR: "Runtime error",
-  COMPILE_ERROR: "Compile error",
+  OK: verdict.AC,
+  WRONG_ANSWER: verdict.WA,
+  TIME_LIMIT_EXCEEDED: verdict.TLE,
+  RUNTIME_ERROR: verdict.RE,
+  COMPILE_ERROR: verdict.CE,
 };
