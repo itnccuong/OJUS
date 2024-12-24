@@ -10,7 +10,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { difficultyMapping } from "../../utils/constanst.ts";
+import { difficultyMapping, TagListInit } from "../../utils/constanst.ts";
 
 interface Tag {
   label: string;
@@ -20,24 +20,9 @@ interface Tag {
 export default function ProblemList() {
   const navigate = useNavigate();
   const token = getToken();
-  const initialTags: Tag[] = [
-    { label: "Array", selected: false },
-    { label: "String", selected: false },
-    { label: "Hash Table", selected: false },
-    { label: "Dynamic Programming", selected: false },
-    { label: "Math", selected: false },
-    { label: "Sorting", selected: false },
-    { label: "Greedy", selected: false },
-    { label: "Depth-First Search", selected: false },
-    { label: "Database", selected: false },
-    { label: "Binary Search", selected: false },
-    { label: "Matrix", selected: false },
-    { label: "Tree", selected: false },
-    { label: "Breadth-First Search", selected: false },
-  ];
 
   const [loading, setLoading] = useState(true);
-  const [tags, setTags] = useState<Tag[]>(initialTags);
+  const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("All");
   const [status, setStatus] = useState("All");
@@ -51,7 +36,7 @@ export default function ProblemList() {
   };
 
   const handleResetTags = () => {
-    setTags(initialTags);
+    setTags(TagListInit);
   };
 
   const pickRandom = () => {

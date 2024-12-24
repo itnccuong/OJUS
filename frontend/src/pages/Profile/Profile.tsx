@@ -12,6 +12,10 @@ import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
 import getToken from "../../utils/getToken.ts";
 import { Button, Form, Modal, Table } from "react-bootstrap";
+import {
+  difficultyMapping,
+  language_BE_to_FE_map,
+} from "../../utils/constanst.ts";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -119,14 +123,6 @@ export default function Profile() {
   const masterSolved = masterProblems.size;
 
   const recentACSubmissions = fetchSubmissions.map((fetchSubmission) => {
-    const languageMap: Record<string, string> = {
-      py: "Python",
-      c: "C",
-      cpp: "C++",
-      java: "Java",
-      js: "JavaScript",
-    };
-
     const date = new Date(fetchSubmission.createdAt);
 
     const readableTime = date.toLocaleString("en-US", {
@@ -135,19 +131,13 @@ export default function Profile() {
       day: "numeric", // e.g., "6"
     });
 
-    const difficultyMapping: Record<number, string> = {
-      1: "Bronze",
-      2: "Platinum",
-      3: "Master",
-    };
-
     return {
       ...fetchSubmission,
       problem: {
         ...fetchSubmission.problem,
         difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
       },
-      language: languageMap[fetchSubmission.language],
+      language: language_BE_to_FE_map[fetchSubmission.language],
       createdAt: readableTime,
     };
   });

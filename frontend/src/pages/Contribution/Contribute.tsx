@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { TagListInit } from "../../utils/constanst.ts";
 
 interface Tag {
   label: string;
@@ -30,23 +31,7 @@ export default function Contribute() {
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
 
-  const initialTags: Tag[] = [
-    { label: "Array", selected: false },
-    { label: "String", selected: false },
-    { label: "Hash Table", selected: false },
-    { label: "Dynamic Programming", selected: false },
-    { label: "Math", selected: false },
-    { label: "Sorting", selected: false },
-    { label: "Greedy", selected: false },
-    { label: "Depth-First Search", selected: false },
-    { label: "Database", selected: false },
-    { label: "Binary Search", selected: false },
-    { label: "Matrix", selected: false },
-    { label: "Tree", selected: false },
-    { label: "Breadth-First Search", selected: false },
-  ];
-
-  const [tags, setTags] = useState<Tag[]>(initialTags);
+  const [tags, setTags] = useState<Tag[]>(TagListInit);
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
@@ -57,7 +42,7 @@ export default function Contribute() {
   };
 
   const handleResetTags = () => {
-    setTags(initialTags);
+    setTags(TagListInit);
   };
 
   const [isMarkdown, setIsMarkdown] = useState(false);
@@ -71,20 +56,20 @@ export default function Contribute() {
         .map((tag) => tag.label)
         .join(","); // Chuyển thành chuỗi với dấu phẩy
 
-      const formdata = new FormData();
-      formdata.append("title", title);
-      formdata.append("description", description);
-      formdata.append("difficulty", difficulty.toString());
-      formdata.append("timeLimit", timeLimit.toString());
-      formdata.append("memoryLimit", memoryLimit.toString());
-      formdata.append("tags", selectedTags);
-      formdata.append("file", file as Blob);
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("difficulty", difficulty.toString());
+      formData.append("timeLimit", timeLimit.toString());
+      formData.append("memoryLimit", memoryLimit.toString());
+      formData.append("tags", selectedTags);
+      formData.append("file", file as Blob);
 
       // Prepare API payload
 
       // Submit the form
       const res = await toast.promise(
-        axiosInstance.post("/api/contributions", formdata, {
+        axiosInstance.post("/api/contributions", formData, {
           headers: { Authorization: "Bearer " + token },
         }),
         {

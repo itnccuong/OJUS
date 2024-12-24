@@ -12,6 +12,11 @@ import {
 } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
+import {
+  difficultyMapping,
+  language_BE_to_FE_map,
+  verdictMap,
+} from "../../utils/constanst.ts";
 
 export default function SubmissionListUser() {
   const token = getToken(); // Get token from localStorage
@@ -45,7 +50,7 @@ export default function SubmissionListUser() {
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.response?.status === 401) {
-            // toast.error("You need to login to view submissions");
+            // toast.error("You need to log to view submissions");
           } else {
             const errorMessage = error.response?.data?.message;
             toast.error(errorMessage);
@@ -57,29 +62,13 @@ export default function SubmissionListUser() {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return <Loader />;
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
-    const languageMap: Record<string, string> = {
-      py: "Python",
-      c: "C",
-      cpp: "C++",
-      java: "Java",
-      js: "JavaScript",
-    };
-
-    const verdictMap: Record<string, string> = {
-      OK: "Accepted",
-      WRONG_ANSWER: "Wrong answer",
-      TIME_LIMIT_EXCEEDED: "Time limit exceeded",
-      RUNTIME_ERROR: "Runtime error",
-      COMPILE_ERROR: "Compile error",
-    };
-
     const date = new Date(fetchSubmission.createdAt);
 
     const readableTime = date.toLocaleString("en-US", {
@@ -88,11 +77,6 @@ export default function SubmissionListUser() {
       day: "numeric", // e.g., "6"
     });
 
-    const difficultyMapping: Record<number, string> = {
-      1: "Bronze",
-      2: "Platinum",
-      3: "Master",
-    };
     return {
       ...fetchSubmission,
       problem: {
@@ -100,7 +84,7 @@ export default function SubmissionListUser() {
         difficulty: difficultyMapping[fetchSubmission.problem.difficulty],
       },
       verdict: verdictMap[fetchSubmission.verdict],
-      language: languageMap[fetchSubmission.language],
+      language: language_BE_to_FE_map[fetchSubmission.language],
       createdAt: readableTime,
     };
   });

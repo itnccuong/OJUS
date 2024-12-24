@@ -14,6 +14,11 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import Editor from "@monaco-editor/react";
+import {
+  language_BE_to_FE_map,
+  languageEditorMap,
+  verdictMap,
+} from "../../utils/constanst.ts";
 
 export default function Submission() {
   const { submissionId } = useParams();
@@ -73,30 +78,6 @@ export default function Submission() {
     return <Loader />;
   }
 
-  const languageMap: Record<string, string> = {
-    py: "Python",
-    c: "C",
-    cpp: "C++",
-    java: "Java",
-    js: "JavaScript",
-  };
-
-  const languageMapEditor: Record<string, string> = {
-    Python: "python",
-    C: "c",
-    "C++": "cpp",
-    Java: "java",
-    JavaScript: "javascript",
-  };
-
-  const verdictMap: Record<string, string> = {
-    OK: "Accepted",
-    WRONG_ANSWER: "Wrong Answer",
-    TIME_LIMIT_EXCEEDED: "Time Limit Exceeded",
-    RUNTIME_ERROR: "Runtime Error",
-    COMPILE_ERROR: "Compile Error",
-  };
-
   const date = new Date(fetchSubmission.createdAt);
 
   const readableTime = date.toLocaleString("en-US", {
@@ -107,7 +88,7 @@ export default function Submission() {
 
   const submission = {
     ...fetchSubmission,
-    language: languageMap[fetchSubmission.language],
+    language: language_BE_to_FE_map[fetchSubmission.language],
     verdict: verdictMap[fetchSubmission.verdict],
     createdAt: readableTime,
   };
@@ -224,7 +205,7 @@ export default function Submission() {
           <div className="mt-3 mb-3">
             <Editor
               height="35vh"
-              language={languageMapEditor[submission.language]}
+              language={languageEditorMap[submission.language]}
               value={submission.code}
               // theme={"github"}
               options={{

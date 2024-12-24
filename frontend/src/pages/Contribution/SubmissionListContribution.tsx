@@ -12,6 +12,7 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ContributionNav from "../../components/ContributionNav.tsx";
+import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
 
 export default function SubmissionListContribution() {
   const { problemId } = useParams();
@@ -58,22 +59,6 @@ export default function SubmissionListContribution() {
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
-    const languageMap: Record<string, string> = {
-      py: "Python",
-      c: "C",
-      cpp: "C++",
-      java: "Java",
-      js: "JavaScript",
-    };
-
-    const verdictMap: Record<string, string> = {
-      OK: "Accepted",
-      WRONG_ANSWER: "Wrong answer",
-      TIME_LIMIT_EXCEEDED: "Time limit exceeded",
-      RUNTIME_ERROR: "Runtime error",
-      COMPILE_ERROR: "Compile error",
-    };
-
     const date = new Date(fetchSubmission.createdAt);
 
     const readableTime = date.toLocaleString("en-US", {
@@ -89,7 +74,7 @@ export default function SubmissionListContribution() {
 
     return {
       ...fetchSubmission,
-      language: languageMap[fetchSubmission.language],
+      language: language_BE_to_FE_map[fetchSubmission.language],
       verdict: verdictMap[fetchSubmission.verdict],
       createdAt: readableTime,
     };

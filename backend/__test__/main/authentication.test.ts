@@ -8,10 +8,7 @@ import {
   loginWithUsernameData,
   registerData,
 } from "../test_data";
-import {
-  ResponseInterfaceForTest,
-  SuccessResponseInterface,
-} from "../../interfaces/interface";
+import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import jwt from "jsonwebtoken";
 import { cleanDatabase } from "../test_utils";
