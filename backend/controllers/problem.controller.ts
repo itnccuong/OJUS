@@ -5,7 +5,6 @@ import {
   createSubmission,
   executeCodeService,
   findFileById,
-  findProblemById,
   updateSubmissionVerdict,
 } from "../services/problem.services/judging.services";
 import {
@@ -16,6 +15,7 @@ import {
   GetAllSubmissionsFromProblemInterface,
   SubmitCodeResponseInterface,
   GetTestcasesInterface,
+  ProblemWithUserStatusInterface,
 } from "../interfaces/api-interface";
 import {
   addResultsToSubmissions,
@@ -24,6 +24,7 @@ import {
   findAcceptedProblems,
   queryProblemStatus,
   findAcceptedProblemById,
+  findProblemById,
 } from "../services/problem.services/problem.service";
 
 import {
@@ -174,7 +175,9 @@ export class ProblemController extends Controller {
   @SuccessResponse(200, "Successfully fetched problem without user data")
   public async getProblem(
     @Path() problem_id: number,
-  ): Promise<SuccessResponseInterface<{ problem: Problem }>> {
+  ): Promise<
+    SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
+  > {
     const problem = await findProblemById(problem_id);
     const resProblem = { ...problem, userStatus: false };
     return {

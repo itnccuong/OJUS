@@ -362,10 +362,10 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SuccessResponseInterface__problem-Problem__": {
+    "SuccessResponseInterface__problem-ProblemWithUserStatusInterface__": {
         "dataType": "refObject",
         "properties": {
-            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"problem":{"ref":"Problem","required":true}},"required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"problem":{"ref":"ProblemWithUserStatusInterface","required":true}},"required":true},
         },
         "additionalProperties": false,
     },

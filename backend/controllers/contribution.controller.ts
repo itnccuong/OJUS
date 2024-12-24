@@ -29,9 +29,9 @@ import {
   findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
-import { findProblemById } from "../services/problem.services/judging.services";
 import {
   addResultsToSubmissions,
+  findProblemById,
   findSubmissionsProblem,
   getUserStatus,
 } from "../services/problem.services/problem.service";

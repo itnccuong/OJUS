@@ -1,11 +1,11 @@
 import prisma from "../../prisma/client";
 import { Submission, User } from "@prisma/client";
-import { findProblemById } from "../problem.services/judging.services";
 import { STATUS_CODE, verdict } from "../../utils/constants";
 import { uploadFile } from "../../utils/uploadFileUtils";
 import { CustomError } from "../../utils/errorClass";
 import { UpdateUserRequestInterface } from "../../interfaces/api-interface";
 import bcrypt from "bcryptjs";
+import { findProblemById } from "../problem.services/problem.service";
 
 export const findUserById = async (userId: number) => {
   const user = await prisma.user.findUnique({
@@ -50,7 +50,6 @@ export const updateUserService = async (
     fullname = body.fullname;
   }
   if (body.currentPassword !== undefined && body.newPassword !== undefined) {
-    console.log("body curpass", body.currentPassword);
     if (body.newPassword === "" || body.currentPassword === "") {
       throw new CustomError(
         "New password is required!",

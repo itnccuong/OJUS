@@ -3,6 +3,7 @@ import { downloadTestcase, saveCodeToFile } from "../../utils/general";
 import { STATUS_CODE, verdict } from "../../utils/constants";
 import prisma from "../../prisma/client";
 import { compile, executeAgainstTestcase } from "../../utils/codeExecutorUtils";
+import { findProblemById } from "./problem.service";
 
 export const createSubmission = async (
   problem_id: number,
@@ -21,21 +22,6 @@ export const createSubmission = async (
     },
   });
   return submission;
-};
-
-export const findProblemById = async (problem_id: number) => {
-  const problem = await prisma.problem.findUnique({
-    where: {
-      problemId: problem_id,
-    },
-  });
-  if (!problem) {
-    throw new CustomError(
-      "Problem not found in database!",
-      STATUS_CODE.NOT_FOUND,
-    );
-  }
-  return problem;
 };
 
 export const findFileById = async (fileId: number) => {

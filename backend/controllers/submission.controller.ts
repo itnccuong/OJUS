@@ -20,11 +20,9 @@ import {
   findResultBySubmissionId,
   findSubmissionById,
 } from "../services/submission.services/submission.service";
-import {
-  findFileById,
-  findProblemById,
-} from "../services/problem.services/judging.services";
+import { findFileById } from "../services/problem.services/judging.services";
 import { downloadTestcase } from "../utils/general";
+import { findProblemById } from "../services/problem.services/problem.service";
 
 @Route("/api/submissions") // Base path for authentication-related routes
 @Tags("Submission") // Group this endpoint under "Authentication" in Swagger

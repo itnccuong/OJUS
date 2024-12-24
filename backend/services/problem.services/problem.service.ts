@@ -47,21 +47,6 @@ export const queryProblemStatus = async (userId: number) => {
   return problemsWithStatus;
 };
 
-export const findProblemById = async (problem_id: number) => {
-  const problem = await prisma.problem.findUnique({
-    where: {
-      problemId: problem_id,
-    },
-  });
-  if (!problem) {
-    throw new CustomError(
-      "Problem not found in database!",
-      STATUS_CODE.NOT_FOUND,
-    );
-  }
-  return problem;
-};
-
 export const findAcceptedProblemById = async (problem_id: number) => {
   const problem = await prisma.problem.findUnique({
     where: {
@@ -128,4 +113,18 @@ export const addResultsToSubmissions = async (submissions: Submission[]) => {
     }),
   );
   return submissionsWithResults;
+};
+export const findProblemById = async (problem_id: number) => {
+  const problem = await prisma.problem.findUnique({
+    where: {
+      problemId: problem_id,
+    },
+  });
+  if (!problem) {
+    throw new CustomError(
+      "Problem not found in database!",
+      STATUS_CODE.NOT_FOUND,
+    );
+  }
+  return problem;
 };

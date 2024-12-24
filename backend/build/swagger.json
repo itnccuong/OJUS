@@ -836,12 +836,12 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponseInterface__problem-Problem__": {
+			"SuccessResponseInterface__problem-ProblemWithUserStatusInterface__": {
 				"properties": {
 					"data": {
 						"properties": {
 							"problem": {
-								"$ref": "#/components/schemas/Problem"
+								"$ref": "#/components/schemas/ProblemWithUserStatusInterface"
 							}
 						},
 						"required": [
@@ -1375,7 +1375,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__problem-Problem__"
+									"$ref": "#/components/schemas/SuccessResponseInterface__problem-ProblemWithUserStatusInterface__"
 								}
 							}
 						}
