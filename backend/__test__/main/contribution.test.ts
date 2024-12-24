@@ -16,6 +16,7 @@ import * as util from "node:util";
 import { exec } from "child_process";
 import { STATUS_CODE } from "../../utils/constants";
 import { numPending } from "../test_data";
+import { Problem } from "@prisma/client";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
 
@@ -139,9 +140,9 @@ describe("Admin Contribution Actions", () => {
 
     // Verify the contribution status is updated
     const problemRes = (await request(app).get(
-      "/api/problems/no-account/1",
+      "/api/problems/1",
     )) as ResponseInterfaceForTest<
-      SuccessResponseInterface<GetOneProblemInterface>
+      SuccessResponseInterface<{ problem: Problem }>
     >;
     const problem = problemRes.body.data.problem;
     expect(problem.status).toBe(1);
