@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 
@@ -19,10 +19,10 @@ import {
   difficultyMapping,
   languageEditorMap,
   languageFeToBeMap,
-  LanguageList,
 } from "../../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
+import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 
 export default function Problem() {
   const { problemId } = useParams();
@@ -131,30 +131,7 @@ export default function Problem() {
               Submit
             </Button>
 
-            <DropdownButton variant="secondary" title={language}>
-              <div className="d-flex flex-column">
-                {LanguageList.map((lang, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => {
-                      setLanguage(lang);
-                    }}
-                  >
-                    <Button variant="white">{lang}</Button>
-                    <span className="ms-4">
-                      {language === lang ? (
-                        <img
-                          src="/done.svg"
-                          width="30"
-                          height="24"
-                          alt="done"
-                        />
-                      ) : null}
-                    </span>
-                  </Dropdown.Item>
-                ))}
-              </div>
-            </DropdownButton>
+            <LanguageDropdown language={language} setLanguage={setLanguage} />
           </div>
           <div>
             <Editor
