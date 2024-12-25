@@ -1,16 +1,12 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ProblemWithUserStatusInterface,
-  ResponseInterface,
-} from "../../interfaces/interface.ts";
+import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import { difficultyMapping, TagListInit } from "../../utils/constanst.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { splitString } from "../../utils/general.ts";
 
 interface Tag {
   label: string;
@@ -19,13 +15,24 @@ interface Tag {
 
 export default function ProblemList() {
   const navigate = useNavigate();
-  const token = getToken();
 
-  const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("All");
   const [status, setStatus] = useState("All");
+
+  const token = getToken();
+  const { data, loading } = useFetch<{
+    problems: ProblemWithUserStatusInterface[];
+  }>(token ? `/api/problems/with-account/` : `/api/problems/no-account/`, {
+    includeToken: !!token,
+  });
+
+  const fetchProblems = data?.data.problems;
+
+  if (loading || !fetchProblems) {
+    return <Loader />;
+  }
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
@@ -44,45 +51,6 @@ export default function ProblemList() {
     navigate(`/problems/${randomProblem.problemId}/description`);
   };
 
-  const [fetchProblems, setFetchProblems] = useState<
-    ProblemWithUserStatusInterface[]
-  >([]);
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        let response;
-        if (!token) {
-          response = await axiosInstance.get<
-            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
-          >("/api/problems/no-account");
-        } else {
-          response = await axiosInstance.get<
-            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
-          >("/api/problems/with-account", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
-        setFetchProblems(response.data.data.problems);
-        console.log("Problems", response.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProblems();
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
-
   const problems = fetchProblems.map((fetchProblem) => {
     const statusMapping: Record<string, string> = {
       false: "Todo",
@@ -97,9 +65,6 @@ export default function ProblemList() {
       tags: splitString(fetchProblem.tags),
     };
   });
-  function splitString(inputString: string) {
-    return inputString.split(",");
-  }
 
   const Difficulty = ["Bronze", "Platinum", "Master"];
 
@@ -268,11 +233,7 @@ export default function ProblemList() {
                   }}
                 >
                   <span>Title</span>
-                  <img
-                    src="/sort.svg"
-                    // width="30"
-                    // height="24"
-                  />
+                  <img src="/sort.svg" />
                 </div>
               </th>
               {/* </div> */}
