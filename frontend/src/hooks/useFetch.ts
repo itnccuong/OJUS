@@ -4,7 +4,6 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import getToken from "../utils/getToken.ts";
 import axiosInstance from "../utils/axiosInstance.ts";
-import { ResponseInterface } from "../interfaces/interface.ts";
 
 const useFetch = <T>(
   url: string,
@@ -12,7 +11,7 @@ const useFetch = <T>(
     includeToken?: boolean; // Whether to include the Authorization token
   },
 ) => {
-  const [data, setData] = useState<ResponseInterface<T> | null>(null);
+  const [data, setData] = useState<{ data: T } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const token = getToken();
