@@ -88,6 +88,5 @@ export interface ProfilePayloadInterface {
 }
 
 export interface ResponseInterface<T> {
-  message: string;
   data: T;
 }

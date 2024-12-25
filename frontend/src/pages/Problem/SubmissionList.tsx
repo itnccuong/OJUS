@@ -12,7 +12,11 @@ import {
 import Loader from "../../components/Loader.tsx";
 import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
-import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
+import {
+  language_BE_to_FE_map,
+  verdict,
+  verdictMap,
+} from "../../utils/constanst.ts";
 import { longReadableTimeConverter } from "../../utils/general.ts";
 
 export default function SubmissionList() {
@@ -119,9 +123,9 @@ export default function SubmissionList() {
                         fontSize: "14px",
                       }}
                     >
-                      {submission.verdict === "Wrong answer" ||
-                      submission.verdict === "Runtime error" ||
-                      submission.verdict === "Time limit exceeded"
+                      {submission.verdict === verdict.WA ||
+                      submission.verdict === verdict.RE ||
+                      submission.verdict === verdict.TLE
                         ? `${submission.verdict} on test ${submission.results.length}`
                         : submission.verdict}
                     </span>

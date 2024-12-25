@@ -12,15 +12,24 @@ import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
-import useContributionData from "../../hooks/useContributionData.ts";
 import useAdjudicate from "../../hooks/useAdjudicate.ts";
 import useSubmitCode from "../../hooks/useSubmitCode.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { ProblemInterface } from "../../interfaces/interface.ts";
 
 export default function Contribution() {
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
-  const { problem, loading } = useContributionData(problemId as string);
+
+  const { data, loading } = useFetch<{ contribution: ProblemInterface }>(
+    `/api/contributions/${problemId}`,
+    {
+      includeToken: true,
+    },
+  );
+  const problem = data?.data.contribution;
+
   const { submitCode } = useSubmitCode();
   const { adjudicateHandler } = useAdjudicate();
 
