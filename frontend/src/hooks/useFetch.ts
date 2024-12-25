@@ -9,6 +9,7 @@ const useFetch = <T>(
   url: string,
   options?: {
     includeToken?: boolean; // Whether to include the Authorization token
+    skip?: boolean;
   },
 ) => {
   const [data, setData] = useState<{ data: T } | null>(null);
@@ -19,6 +20,10 @@ const useFetch = <T>(
 
   useEffect(() => {
     const fetchData = async () => {
+      if (options?.skip) {
+        setLoading(false);
+        return;
+      }
       try {
         if (options?.includeToken && !token) {
           toast.error("You need to sign in first");
@@ -49,7 +54,7 @@ const useFetch = <T>(
     };
 
     fetchData();
-  }, [url, options?.includeToken, token, navigate]);
+  }, [url, options?.includeToken, options?.skip, token, navigate]);
 
   return { data, loading, error };
 };
