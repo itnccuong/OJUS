@@ -13,15 +13,15 @@ import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import useContributionData from "../../hooks/useContributionData.ts";
-import useSubmitCodeContribution from "../../hooks/useSubmitCodeContribution.ts";
 import useAdjudicate from "../../hooks/useAdjudicate.ts";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 
 export default function Contribution() {
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
   const { problem, loading } = useContributionData(problemId as string);
-  const { submitProblem } = useSubmitCodeContribution();
+  const { submitCode } = useSubmitCode();
   const { adjudicateHandler } = useAdjudicate();
 
   if (loading) {
@@ -49,7 +49,9 @@ export default function Contribution() {
           <div className="p-4 d-flex justify-content-between align-items-center">
             <Button
               variant="primary"
-              onClick={() => submitProblem(code, language, problemId as string)}
+              onClick={() =>
+                submitCode(code, language, problemId as string, true)
+              }
             >
               Submit
             </Button>

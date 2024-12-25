@@ -6,7 +6,7 @@ import { ResponseInterface } from "../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { language_FE_to_BE_map } from "../utils/constanst.ts";
 
-const useSubmitCodeProblem = () => {
+const useSubmitCode = () => {
   const navigate = useNavigate();
   const token = getToken();
 
@@ -14,6 +14,7 @@ const useSubmitCodeProblem = () => {
     code: string | undefined,
     language: string,
     problemId: string,
+    isContribution: boolean,
   ) => {
     if (!token) {
       toast.error("Please login to submit your code");
@@ -41,7 +42,9 @@ const useSubmitCodeProblem = () => {
       );
 
       console.log("Submit response: ", res.data);
-      navigate(`/contributions/${problemId}/submissions`);
+      navigate(
+        `/${isContribution ? "contributions" : "problems"}/${problemId}/submissions`,
+      );
 
       return res.data;
     } catch (error) {
@@ -51,14 +54,16 @@ const useSubmitCodeProblem = () => {
         } else {
           const errorMessage = error.response?.data?.message;
           toast.error(errorMessage);
-          navigate(`/contributions/${problemId}/submissions`);
+          navigate(
+            `/${isContribution ? "contributions" : "problems"}/${problemId}/submissions`,
+          );
         }
       }
       console.error(error);
     }
   };
 
-  return { submitProblem: submitCode };
+  return { submitCode };
 };
 
-export default useSubmitCodeProblem;
+export default useSubmitCode;

@@ -12,7 +12,7 @@ import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import useProblemData from "../../hooks/useProblemData.ts";
-import useSubmitCodeProblem from "../../hooks/useSubmitCodeProblem.ts";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 import NotFound from "../NotFound.tsx";
 
 export default function Problem() {
@@ -21,7 +21,7 @@ export default function Problem() {
   const [code, setCode] = useState<string | undefined>("");
 
   const { problem, problemLoading } = useProblemData(problemId as string);
-  const { submitProblem } = useSubmitCodeProblem();
+  const { submitCode } = useSubmitCode();
 
   if (problemLoading) {
     return <Loader />;
@@ -47,7 +47,9 @@ export default function Problem() {
           <div className="p-4 d-flex justify-content-between">
             <Button
               variant="primary"
-              onClick={() => submitProblem(code, language, problemId as string)}
+              onClick={() =>
+                submitCode(code, language, problemId as string, false)
+              }
             >
               Submit
             </Button>

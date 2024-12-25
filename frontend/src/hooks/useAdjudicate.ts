@@ -26,7 +26,6 @@ const useAdjudicate = () => {
           `/api/contributions/${problemId}/${isAccept ? "accept" : "reject"}`,
           {},
           {
-            // Config object
             headers: {
               Authorization: "Bearer " + token,
             },
