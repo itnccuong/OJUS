@@ -11,19 +11,32 @@ import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
-import useProblemData from "../../hooks/useProblemData.ts";
 import useSubmitCode from "../../hooks/useSubmitCode.ts";
 import NotFound from "../NotFound.tsx";
+import getToken from "../../utils/getToken.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 
 export default function Problem() {
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
 
-  const { problem, problemLoading } = useProblemData(problemId as string);
+  const token = getToken();
+  const { data, loading } = useFetch<{
+    problem: ProblemWithUserStatusInterface;
+  }>(
+    token
+      ? `/api/problems/with-account/${problemId}`
+      : `/api/problems/no-account/${problemId}`,
+    {
+      includeToken: !!token,
+    },
+  );
+  const problem = data?.data.problem;
   const { submitCode } = useSubmitCode();
 
-  if (problemLoading) {
+  if (loading) {
     return <Loader />;
   }
 
