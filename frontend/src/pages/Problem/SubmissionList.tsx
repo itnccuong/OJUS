@@ -13,10 +13,6 @@ import useFetch from "../../hooks/useFetch.ts";
 
 export default function SubmissionList() {
   const { problemId } = useParams();
-  // const [fetchSubmissions, setFetchSubmissions] = useState<
-  //   SubmissionWithResults[]
-  // >([]);
-
   const navigate = useNavigate();
 
   const { data, loading } = useFetch<{ submissions: SubmissionWithResults[] }>(

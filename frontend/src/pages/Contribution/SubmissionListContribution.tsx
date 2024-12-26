@@ -1,61 +1,26 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
-
-import { toast } from "react-toastify";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ResponseInterface,
-  SubmissionWithResults,
-} from "../../interfaces/interface.ts";
+import { SubmissionWithResults } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import { language_BE_to_FE_map, verdictMap } from "../../utils/constanst.ts";
 import { longReadableTimeConverter } from "../../utils/general.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 export default function SubmissionListContribution() {
   const { problemId } = useParams();
-  const token = getToken(); // Get token from localStorage
-  const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithResults[]
-  >([]);
 
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axiosInstance.get<
-          ResponseInterface<{ submissions: SubmissionWithResults[] }>
-        >(`/api/contributions/${problemId}/submissions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const { data, loading } = useFetch<{ submissions: SubmissionWithResults[] }>(
+    `/api/contributions/${problemId}/submissions`,
+    {
+      includeToken: true,
+    },
+  );
+  const fetchSubmissions = data?.data.submissions;
 
-        console.log(res.data);
-        setFetchSubmissions(res.data.data.submissions);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            toast.error("You need to login to view submissions");
-          } else {
-            const errorMessage = error.response?.data?.message;
-            toast.error(errorMessage);
-          }
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  if (loading) {
+  if (loading || !fetchSubmissions) {
     return <Loader />;
   }
 
