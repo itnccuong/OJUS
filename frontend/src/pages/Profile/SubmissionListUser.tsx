@@ -1,29 +1,22 @@
 import { useNavigate } from "react-router-dom";
 
 import { Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { toast } from "react-toastify";
 import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ResponseInterface,
-  SubmissionWithProblem,
-} from "../../interfaces/interface.ts";
+import { SubmissionWithProblem } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
 import {
   difficultyMapping,
   language_BE_to_FE_map,
   verdictMap,
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 export default function SubmissionListUser() {
   const token = getToken(); // Get token from localStorage
-  const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithProblem[]
-  >([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -33,39 +26,15 @@ export default function SubmissionListUser() {
     }
   }, [token, navigate]);
 
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useFetch<{ submissions: SubmissionWithProblem[] }>(
+    `/api/user/submissions`,
+    {
+      includeToken: true,
+    },
+  );
+  const fetchSubmissions = data?.data.submissions;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axiosInstance.get<
-          ResponseInterface<{ submissions: SubmissionWithProblem[] }>
-        >(`/api/user/submissions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log(res.data);
-        setFetchSubmissions(res.data.data.submissions);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            // toast.error("You need to log to view submissions");
-          } else {
-            const errorMessage = error.response?.data?.message;
-            toast.error(errorMessage);
-          }
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [token]);
-
-  if (loading) {
+  if (loading || !fetchSubmissions) {
     return <Loader />;
   }
 
