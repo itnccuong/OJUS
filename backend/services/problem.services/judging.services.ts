@@ -51,7 +51,9 @@ export const compileService = async (
       compileResult.stderr,
     );
 
-    throw new CustomError("Compile error", STATUS_CODE.BAD_REQUEST);
+    throw new CustomError("Compile error", STATUS_CODE.BAD_REQUEST, {
+      submissionId: submissionId,
+    });
   }
 
   return compileResult.filenameWithoutExtension;
@@ -130,7 +132,9 @@ export const executeCodeService = async (
         result.stderr,
       );
 
-      throw new CustomError(result.verdict, STATUS_CODE.BAD_REQUEST);
+      throw new CustomError(result.verdict, STATUS_CODE.BAD_REQUEST, {
+        submissionId: submissionId,
+      });
     }
   }
 };

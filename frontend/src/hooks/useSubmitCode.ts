@@ -13,7 +13,6 @@ const useSubmitCode = () => {
     code: string | undefined,
     language: string,
     problemId: string,
-    isContribution: boolean,
   ) => {
     if (!token) {
       toast.error("Please login to submit your code");
@@ -22,7 +21,11 @@ const useSubmitCode = () => {
 
     try {
       const res = await toast.promise(
-        axiosInstance.post(
+        axiosInstance.post<{
+          data: {
+            submissionId: number;
+          };
+        }>(
           `/api/problems/${problemId}`,
           {
             code,
@@ -41,19 +44,18 @@ const useSubmitCode = () => {
       );
 
       console.log("Submit response: ", res.data);
-      navigate(
-        `/${isContribution ? "contributions" : "problems"}/${problemId}/submissions`,
-      );
+      const submissionId = res.data.data.submissionId;
+      navigate(`/submissions/${submissionId}`);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           toast.error("Please login to submit your code");
+        } else if (error.response?.status === 400) {
+          const submissionId = error.response.data.data.submissionId;
+          navigate(`/submissions/${submissionId}`);
         } else {
           const errorMessage = error.response?.data?.message;
           toast.error(errorMessage);
-          navigate(
-            `/${isContribution ? "contributions" : "problems"}/${problemId}/submissions`,
-          );
         }
       }
       console.error(error);

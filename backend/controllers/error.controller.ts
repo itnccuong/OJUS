@@ -11,7 +11,7 @@ const globalErrorHandler = (
 ) => {
   console.log("Error in global error handler:", err);
   if (err instanceof CustomError) {
-    return formatResponse(res, err.message, err.status);
+    return formatResponse(res, err.message, err.status, err.data);
   }
   return formatResponse(res, err.message, STATUS_CODE.INTERNAL_SERVER_ERROR);
 };
