@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 interface LoginInterface {
   usernameOrEmail: string;
   password: string;
@@ -9,6 +11,13 @@ interface RegisterConfig {
   password: string;
   fullname: string;
 }
+
+export const fake_token = jwt.sign(
+  { userId: 1 }, // Payload
+  process.env.JWT_SECRET as string, // Secret
+  { expiresIn: "3m" }, // Token expiration
+);
+
 export const compileFailAnswer = [
   {
     language: "c",

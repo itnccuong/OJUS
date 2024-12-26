@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { PrismaClient, type User } from "@prisma/client";
-import { Request as RequestExpress, Response } from "express";
+import { Request as RequestExpress } from "express";
 import {
   Controller,
   Get,

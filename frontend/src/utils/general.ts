@@ -22,3 +22,7 @@ export const shortReadableTimeConverter = (time: string) => {
     day: "numeric", // e.g., "6"
   });
 };
+
+export const splitString = (inputString: string) => {
+  return inputString.split(",");
+};

@@ -1,31 +1,21 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import { app } from "../../src/app";
 import request from "supertest";
-import jwt from "jsonwebtoken";
 import {
   ProblemWithUserStatusInterface,
   ResponseInterfaceForTest,
-  SuccessResponseInterface,
 } from "../../interfaces/interface";
 import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
-import { numAccept } from "../test_data";
+import { fake_token, numAccept } from "../test_data";
 
 jest.setTimeout(60000);
-
-let fake_token = "";
 
 const execPromise = util.promisify(exec);
 beforeEach(async () => {
   await cleanDatabase();
   await execPromise("ts-node prisma/seed-test.ts");
-
-  fake_token = jwt.sign(
-    { userId: 1 }, // Payload
-    process.env.JWT_SECRET as string, // Secret
-    { expiresIn: "3m" }, // Token expiration
-  );
 });
 
 describe("Get problem list", () => {

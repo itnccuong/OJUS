@@ -4,10 +4,6 @@ import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
-import {
-  ResponseInterface,
-  UserInterface,
-} from "../../interfaces/interface.ts";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -28,15 +24,12 @@ export default function Register() {
 
     try {
       const res = await toast.promise(
-        axiosInstance.post<ResponseInterface<{ user: UserInterface }>>(
-          "/api/auth/register",
-          {
-            username,
-            password,
-            email,
-            fullname,
-          },
-        ),
+        axiosInstance.post("/api/auth/register", {
+          username,
+          password,
+          email,
+          fullname,
+        }),
         {
           pending: "Sign up...",
           success: "Sign up successfully",

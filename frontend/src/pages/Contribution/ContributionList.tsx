@@ -1,32 +1,15 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getToken from "../../utils/getToken.ts";
-
-import { useEffect } from "react";
-
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ProblemInterface,
-  ResponseInterface,
-} from "../../interfaces/interface.ts";
+import { ProblemInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import { difficultyMapping, TagListInit, Tag } from "../../utils/constanst.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { splitString } from "../../utils/general.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();
   const [difficulty, setDifficulty] = useState("All");
-
-  //Check if user is logged in
-  const token = getToken();
-  useEffect(() => {
-    if (!token) {
-      toast.error("Please login first");
-      navigate("/accounts/login");
-    }
-  }, [token, navigate]);
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
@@ -43,51 +26,25 @@ export default function ContributionList() {
     setTags(TagListInit);
   };
 
-  // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
-  const [contributes, setContributes] = useState<ProblemInterface[]>([]);
+  const { data, loading } = useFetch<{
+    contributions: ProblemInterface[];
+  }>("/api/contributions/", {
+    includeToken: true,
+  });
+  const fetchContributions = data?.data.contributions;
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchContributes = async () => {
-      try {
-        const { data } = await axiosInstance.get<
-          ResponseInterface<{ contributions: ProblemInterface[] }>
-        >("/api/contributions/", {
-          headers: { Authorization: "Bearer " + token },
-        });
-
-        setContributes(data.data.contributions);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContributes();
-  }, []);
-
-  if (loading) {
+  if (loading || !fetchContributions) {
     return <Loader />;
   }
 
-  // Chuyển đổi dữ liệu từ contribute thành problem
-  const Problems = contributes.map((contribute) => {
+  const Problems = fetchContributions.map((contribution) => {
     return {
-      id: contribute.problemId,
-      title: contribute.title,
-      difficulty: difficultyMapping[contribute.difficulty] || "Unknown",
-      tags: splitString(contribute.tags),
+      id: contribution.problemId,
+      title: contribution.title,
+      difficulty: difficultyMapping[contribution.difficulty] || "Unknown",
+      tags: splitString(contribution.tags),
     };
   });
-
-  function splitString(inputString: string) {
-    return inputString.split(",");
-  }
 
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
@@ -111,9 +68,10 @@ export default function ContributionList() {
       <div className="container-xxl">
         <div className="d-flex flex-row align-items-center gap-2">
           <DropdownButton variant="secondary" title="Difficulty">
-            <div className="d-flex flex-column">
+            <div>
               {Difficulty.map((diff, index) => (
                 <Dropdown.Item
+                  className="d-flex justify-content-between p-3"
                   key={index}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -122,8 +80,7 @@ export default function ContributionList() {
                       : setDifficulty(diff);
                   }}
                 >
-                  <Button
-                    variant="white"
+                  <div
                     className={`text-${
                       diff === "Bronze"
                         ? "warning-emphasis"
@@ -133,8 +90,8 @@ export default function ContributionList() {
                     }`}
                   >
                     {diff}
-                  </Button>
-                  <span className="ms-4">
+                  </div>
+                  <span>
                     {difficulty === diff ? (
                       <img src="/done.svg" width="30" height="24" />
                     ) : null}

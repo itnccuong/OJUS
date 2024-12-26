@@ -1,16 +1,12 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ProblemWithUserStatusInterface,
-  ResponseInterface,
-} from "../../interfaces/interface.ts";
+import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import { difficultyMapping, TagListInit } from "../../utils/constanst.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { splitString } from "../../utils/general.ts";
 
 interface Tag {
   label: string;
@@ -19,13 +15,24 @@ interface Tag {
 
 export default function ProblemList() {
   const navigate = useNavigate();
-  const token = getToken();
 
-  const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("All");
   const [status, setStatus] = useState("All");
+
+  const token = getToken();
+  const { data, loading } = useFetch<{
+    problems: ProblemWithUserStatusInterface[];
+  }>(token ? `/api/problems/with-account/` : `/api/problems/no-account/`, {
+    includeToken: !!token,
+  });
+
+  const fetchProblems = data?.data.problems;
+
+  if (loading || !fetchProblems) {
+    return <Loader />;
+  }
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
@@ -44,45 +51,6 @@ export default function ProblemList() {
     navigate(`/problems/${randomProblem.problemId}/description`);
   };
 
-  const [fetchProblems, setFetchProblems] = useState<
-    ProblemWithUserStatusInterface[]
-  >([]);
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        let response;
-        if (!token) {
-          response = await axiosInstance.get<
-            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
-          >("/api/problems/no-account");
-        } else {
-          response = await axiosInstance.get<
-            ResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
-          >("/api/problems/with-account", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
-        setFetchProblems(response.data.data.problems);
-        console.log("Problems", response.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProblems();
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
-
   const problems = fetchProblems.map((fetchProblem) => {
     const statusMapping: Record<string, string> = {
       false: "Todo",
@@ -97,9 +65,6 @@ export default function ProblemList() {
       tags: splitString(fetchProblem.tags),
     };
   });
-  function splitString(inputString: string) {
-    return inputString.split(",");
-  }
 
   const Difficulty = ["Bronze", "Platinum", "Master"];
 
@@ -119,9 +84,10 @@ export default function ProblemList() {
       <div className="container-xxl">
         <div className="d-flex flex-row align-items-center gap-2">
           <DropdownButton variant="secondary" title="Difficulty">
-            <div className="d-flex flex-column">
+            <div>
               {Difficulty.map((diff, index) => (
                 <Dropdown.Item
+                  className="d-flex justify-content-between px-3 py-2"
                   key={index}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -130,8 +96,8 @@ export default function ProblemList() {
                       : setDifficulty(diff);
                   }}
                 >
-                  <Button
-                    variant="white"
+                  <div
+                    // variant="white"
                     className={`text-${
                       diff === "Bronze"
                         ? "warning-emphasis"
@@ -141,8 +107,8 @@ export default function ProblemList() {
                     }`}
                   >
                     {diff}
-                  </Button>
-                  <span className="ms-4">
+                  </div>
+                  <span>
                     {difficulty === diff ? (
                       <img src="/done.svg" width="30" height="24" />
                     ) : null}
@@ -153,20 +119,19 @@ export default function ProblemList() {
           </DropdownButton>
 
           <DropdownButton variant="secondary" title="Status">
-            <div className="d-flex flex-column">
+            <div>
               <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                   status === "Solved" ? setStatus("All") : setStatus("Solved");
                 }}
               >
-                <Button variant="white" className="text-success">
-                  <div className="d-flex gap-2">
-                    <img src="/accept.png" width="24" height="24" />
-                    Solved
-                  </div>
-                </Button>
-                <span className="ms-4">
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/accept.png" width="20" height="20" />
+                  <span className="text-success">Solved</span>
+                </div>
+                <span>
                   {status === "Solved" ? (
                     <img src="/done.svg" width="30" height="24" />
                   ) : null}
@@ -174,18 +139,17 @@ export default function ProblemList() {
               </Dropdown.Item>
 
               <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                   status === "Todo" ? setStatus("All") : setStatus("Todo");
                 }}
               >
-                <Button variant="white" className="text-warning">
-                  <div className="d-flex gap-2">
-                    <img src="/reject.png" width="24" height="24" />
-                    To do
-                  </div>
-                </Button>
-                <span className="ms-4">
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/reject.png" width="20" height="20" />
+                  <span className="text-danger">To do</span>
+                </div>
+                <span>
                   {status === "Todo" ? (
                     <img src="/done.svg" width="30" height="24" />
                   ) : null}
@@ -247,7 +211,6 @@ export default function ProblemList() {
         <Table striped bordered hover className="mt-3">
           <thead>
             <tr>
-              {/* <div className="d-flex"> */}
               <th
                 style={{
                   width: "6%",
@@ -258,21 +221,12 @@ export default function ProblemList() {
               <th style={{ width: "40%" }}>
                 <div
                   className="d-flex justify-content-between cursor-pointer"
-                  style={
-                    {
-                      // cursor: "pointer",
-                    }
-                  }
                   onClick={() => {
                     alert("implement sort");
                   }}
                 >
                   <span>Title</span>
-                  <img
-                    src="/sort.svg"
-                    // width="30"
-                    // height="24"
-                  />
+                  <img src="/sort.svg" />
                 </div>
               </th>
               {/* </div> */}

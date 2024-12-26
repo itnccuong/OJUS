@@ -1,18 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 
-import { useEffect, useState } from "react";
-
-import { toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   ProblemInterface,
-  ResponseInterface,
   ResultInterface,
   SubmissionInterface,
   TestcaseInterface,
 } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
 import Editor from "@monaco-editor/react";
 import {
   language_BE_to_FE_map,
@@ -21,73 +15,54 @@ import {
   verdictMap,
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 export default function Submission() {
   const { submissionId } = useParams();
-  const [fetchSubmission, setFetchSubmission] = useState<SubmissionInterface>();
-  const [results, setResults] = useState<ResultInterface[]>([]);
-  const [testcases, setTestcases] = useState<TestcaseInterface>();
-  const [problem, setProblem] = useState<ProblemInterface>();
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        //Fetch submission
-        const resSubmission = await axiosInstance.get<
-          ResponseInterface<{ submission: SubmissionInterface }>
-        >(`/api/submissions/${submissionId}`);
+  const { data: fetchSubmission, loading: submissionLoading } = useFetch<{
+    submission: SubmissionInterface;
+  }>(`/api/submissions/${submissionId}`);
+  let submission = fetchSubmission?.data.submission;
 
-        setFetchSubmission(resSubmission.data.data.submission);
-        console.log("Submission", resSubmission.data.data.submission);
+  const { data: fetchProblem, loading: problemLoading } = useFetch<{
+    problem: ProblemInterface;
+  }>(`/api/problems/${submission?.problemId}`, {
+    skip: !submission,
+  });
+  const problem = fetchProblem?.data.problem;
 
-        //Fetch problem
-        const resProblem = await axiosInstance.get<
-          ResponseInterface<{ problem: ProblemInterface }>
-        >(`/api/problems/${resSubmission.data.data.submission.problemId}`);
-        setProblem(resProblem.data.data.problem);
-        console.log("Problem", resProblem.data.data.problem);
+  const { data: fetchResults, loading: resultsLoading } = useFetch<{
+    results: ResultInterface[];
+  }>(`/api/submissions/${submissionId}/results`);
+  const results = fetchResults?.data.results;
 
-        //Fetch results
-        const resResults = await axiosInstance.get<
-          ResponseInterface<{ results: ResultInterface[] }>
-        >(`/api/submissions/${submissionId}/results`);
-        setResults(resResults.data.data.results);
-        console.log("Results", resResults.data.data.results);
-
-        //Fetch testcases
-        const resTestcases = await axiosInstance.get<
-          ResponseInterface<{ testcases: TestcaseInterface }>
-        >(
-          `/api/problems/${resSubmission.data.data.submission.problemId}/testcases`,
-        );
-        setTestcases(resTestcases.data.data.testcases);
-        console.log("Testcases", resTestcases.data.data.testcases);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  if (loading || !fetchSubmission || !problem || !testcases) {
+  const { data: fetchTestcases, loading: testcasesLoading } = useFetch<{
+    testcases: TestcaseInterface;
+  }>(`/api/problems/${submission?.problemId}/testcases`, {
+    skip: !submission,
+  });
+  const testcases = fetchTestcases?.data.testcases;
+  if (
+    submissionLoading ||
+    problemLoading ||
+    resultsLoading ||
+    testcasesLoading ||
+    !submission ||
+    !problem ||
+    !results ||
+    !testcases
+  ) {
     return <Loader />;
   }
 
-  const submission = {
-    ...fetchSubmission,
-    language: language_BE_to_FE_map[fetchSubmission.language],
-    verdict: verdictMap[fetchSubmission.verdict],
-    createdAt: shortReadableTimeConverter(fetchSubmission.createdAt),
+  submission = {
+    ...submission,
+    language: language_BE_to_FE_map[submission.language],
+    verdict: verdictMap[submission.verdict],
+    createdAt: shortReadableTimeConverter(submission.createdAt),
   };
 
-  // const totalTime = results.reduce((sum, result) => sum + result.time, 0);
   const maxTime = Math.max(0, ...results.map((result) => result.time));
   const totalMemory = results.reduce((sum, result) => sum + result.memory, 0);
 

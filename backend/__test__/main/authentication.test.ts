@@ -19,7 +19,7 @@ import type { User } from "@prisma/client";
 jest.setTimeout(60000);
 
 const execPromise = util.promisify(exec);
-beforeAll(async () => {
+beforeEach(async () => {
   await cleanDatabase();
   await execPromise("ts-node prisma/seed-test.ts");
 });

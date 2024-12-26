@@ -3,9 +3,8 @@ import request from "supertest";
 import { app } from "../../src/app";
 import { STATUS_CODE } from "../../utils/constants";
 import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
-import jwt from "jsonwebtoken";
 
-import { compileFailAnswer, correctAnswers } from "../test_data";
+import { compileFailAnswer, correctAnswers, fake_token } from "../test_data";
 import {
   ErrorResponseInterface,
   ResponseInterfaceForTest,
@@ -16,18 +15,15 @@ import util from "node:util";
 import { exec } from "child_process";
 
 jest.setTimeout(60000);
-let fake_token = "";
 
 const execPromise = util.promisify(exec);
 beforeAll(async () => {
   await initAllDockerContainers();
+});
+
+beforeEach(async () => {
   await cleanDatabase();
   await execPromise("ts-node prisma/seed-test.ts");
-  fake_token = jwt.sign(
-    { userId: 1 }, // Payload
-    process.env.JWT_SECRET as string, // Secret
-    { expiresIn: "3m" }, // Token expiration
-  );
 });
 
 describe("Compile code", () => {
