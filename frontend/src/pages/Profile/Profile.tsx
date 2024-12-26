@@ -94,7 +94,7 @@ export default function Profile() {
   // Only show the "Edit Profile" button if the usernames match
   const isUserMatchAccount = usernameFromToken == username;
 
-  const hanldeUpdateAvatar = async () => {
+  const handleUpdateAvatar = async () => {
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
@@ -117,6 +117,7 @@ export default function Profile() {
       console.log("Update avatar", response);
       setShow(false);
       setFile(null);
+      window.location.reload();
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message;
@@ -142,6 +143,7 @@ export default function Profile() {
       console.log("Update avatar", response);
       setShow(false);
       setFile(null);
+      window.location.reload();
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message;
@@ -273,7 +275,7 @@ export default function Profile() {
               <Button
                 disabled={!file}
                 variant="primary"
-                onClick={() => hanldeUpdateAvatar()}
+                onClick={() => handleUpdateAvatar()}
               >
                 Save Changes
               </Button>
