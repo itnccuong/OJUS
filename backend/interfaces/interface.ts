@@ -4,7 +4,8 @@ export interface SuccessResponseInterface<T> {
   data: T;
 }
 
-export interface ErrorResponseInterface {
+export interface ErrorResponseInterface<T> {
+  data: T;
   message: string;
 }
 
@@ -12,6 +13,7 @@ export interface ResponseInterfaceForTest<T> {
   status: number;
   body: {
     data: T;
+    message?: string;
   };
 }
 
