@@ -23,6 +23,7 @@ export default function Profile() {
   const { username } = useParams();
   const [show, setShow] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const token = getToken();
 
   const { data: fetchUser, loading: userLoading } = useFetch<{
     user: UserWithAvatarInterface;
@@ -32,6 +33,7 @@ export default function Profile() {
   const { data: userFromToken, loading: userFromTokenLoading } = useFetch<{
     user: UserWithAvatarInterface;
   }>("/api/user", {
+    skip: !token,
     includeToken: true,
   });
   const usernameFromToken = userFromToken?.data.user.username;
@@ -40,7 +42,6 @@ export default function Profile() {
     useFetch<{
       submissions: SubmissionWithProblem[];
     }>(`/api/user/${user?.userId}/submissions/AC`, {
-      includeToken: true,
       skip: !user,
     });
   const fetchSubmissions = fetchSubmissionData?.data.submissions;
@@ -50,8 +51,7 @@ export default function Profile() {
     userFromTokenLoading ||
     fetchSubmissionLoading ||
     !user ||
-    !fetchSubmissions ||
-    !userFromToken
+    !fetchSubmissions
   ) {
     return <Loader />;
   }
@@ -166,7 +166,7 @@ export default function Profile() {
               <img
                 src={user.avatar ? user.avatar.url : "/user.png"}
                 alt="Profile"
-                className="profile-img rounded-circle"
+                className="profile-img rounded-circle border shadow-sm"
                 width={100}
                 height={100}
                 onClick={() => {
@@ -175,8 +175,11 @@ export default function Profile() {
                 }}
                 style={{
                   cursor: "pointer",
-                  objectFit: "cover", // Ensures the image covers the container
+                  objectFit: "cover",
+                  transition: "opacity 0.3s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               />
             </div>
             {/* Fullname Section */}
