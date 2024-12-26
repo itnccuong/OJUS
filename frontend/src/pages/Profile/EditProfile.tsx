@@ -1,37 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
 import getToken from "../../utils/getToken";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import Loader from "../../components/Loader.tsx";
 import {
   ProfilePayloadInterface,
-  ResponseInterface,
   UserWithAvatarInterface,
 } from "../../interfaces/interface.ts";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import useFetch from "../../hooks/useFetch.ts";
 interface EditProfileInterface {
   fullname: string;
-  facebookLink?: string;
-  githubLink?: string;
-  username: string;
+  facebookLink: string;
+  githubLink: string;
 }
 
 export default function EditProfile() {
-  const navigate = useNavigate();
   const token = getToken();
   const [profile, setProfile] = useState<EditProfileInterface>({
     fullname: "",
     facebookLink: "",
     githubLink: "",
-    username: "",
   });
 
   const [editingFields, setEditingFields] = useState({
     fullname: false,
-    gender: false,
-    birthday: false,
     facebookLink: false,
     githubLink: false,
     password: false,
@@ -44,60 +39,26 @@ export default function EditProfile() {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(true);
 
+  const { data, loading } = useFetch<{ user: UserWithAvatarInterface }>(
+    "/api/user",
+    {
+      includeToken: true,
+    },
+  );
+
+  const userData = data?.data.user;
   useEffect(() => {
-    if (!token) {
-      navigate("/accounts/login");
-      return;
-    }
+    setProfile({
+      fullname: userData?.fullname || "",
+      facebookLink: userData?.facebookLink || "",
+      githubLink: userData?.githubLink || "",
+    });
+  }, [userData]);
 
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axiosInstance.get<
-          ResponseInterface<{ user: UserWithAvatarInterface }>
-        >("/api/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log("Data User:", response.data.data.user);
-        const { fullname, facebookLink, githubLink, username } =
-          response.data.data.user;
-        console.log(
-          "Data init: ",
-          fullname,
-          facebookLink,
-          githubLink,
-          username,
-        );
-        setProfile(() => {
-          const newProfile = {
-            fullname,
-            facebookLink,
-            githubLink,
-            username,
-          };
-          console.log("Updated Profile:", newProfile);
-          return newProfile;
-        });
-        console.log("Profile showed:", profile);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, [token, navigate]);
-
-  if (loading) {
+  if (loading || !profile) {
     return <Loader />;
   }
-
   const toggleEditField = (field: keyof typeof editingFields) => {
     setEditingFields((prev) => ({
       ...prev,
@@ -108,7 +69,6 @@ export default function EditProfile() {
       delete newErrors[field];
       return newErrors;
     });
-    // setSuccessMessage("");
   };
 
   const handleProfileChange = (
@@ -221,7 +181,6 @@ export default function EditProfile() {
       console.error(error);
     }
   };
-  console.log("Profile data before showed: ", profile);
 
   return (
     <div className="d-flex flex-grow-1 justify-content-center align-items-center bg-light p-5">

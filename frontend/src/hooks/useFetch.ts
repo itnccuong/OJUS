@@ -12,7 +12,7 @@ const useFetch = <T>(
     skip?: boolean;
   },
 ) => {
-  const [data, setData] = useState<{ data: T } | null>(null);
+  const [data, setData] = useState<{ data: T }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const token = getToken();
