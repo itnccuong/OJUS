@@ -60,11 +60,16 @@ export default function SubmissionListContribution() {
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
+    const maxTime = Math.max(
+      0,
+      ...fetchSubmission.results.map((result) => result.time),
+    );
     return {
       ...fetchSubmission,
       language: language_BE_to_FE_map[fetchSubmission.language],
       verdict: verdictMap[fetchSubmission.verdict],
       createdAt: longReadableTimeConverter(fetchSubmission.createdAt),
+      maxTime: maxTime,
     };
   });
 
@@ -88,8 +93,11 @@ export default function SubmissionListContribution() {
                   Language
                 </th>
                 {/* </div> */}
-                <th className="text-center" style={{ width: "30%" }}>
+                <th className="text-center" style={{ width: "25%" }}>
                   Verdict
+                </th>
+                <th className="text-center" style={{ width: "15%" }}>
+                  Runtime
                 </th>
                 <th className="text-center">Submit time</th>
               </tr>
@@ -126,7 +134,7 @@ export default function SubmissionListContribution() {
                         : submission.verdict}
                     </span>
                   </td>
-
+                  <td className="text-center">{`${submission.maxTime} ms`}</td>
                   <td className="text-center">{submission.createdAt}</td>
                 </tr>
               ))}

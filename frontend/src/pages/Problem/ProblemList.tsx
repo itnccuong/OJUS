@@ -212,7 +212,6 @@ export default function ProblemList() {
         <Table striped bordered hover className="mt-3">
           <thead>
             <tr>
-              {/* <div className="d-flex"> */}
               <th
                 style={{
                   width: "6%",
@@ -223,11 +222,6 @@ export default function ProblemList() {
               <th style={{ width: "40%" }}>
                 <div
                   className="d-flex justify-content-between cursor-pointer"
-                  style={
-                    {
-                      // cursor: "pointer",
-                    }
-                  }
                   onClick={() => {
                     alert("implement sort");
                   }}

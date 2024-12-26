@@ -1,16 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
-
-import { toast } from "react-toastify";
-import getToken from "../../utils/getToken.ts";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ResponseInterface,
-  SubmissionWithResults,
-} from "../../interfaces/interface.ts";
+import { SubmissionWithResults } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
 import ProblemNav from "../../components/ProblemNav.tsx";
 import {
   language_BE_to_FE_map,
@@ -18,57 +9,39 @@ import {
   verdictMap,
 } from "../../utils/constanst.ts";
 import { longReadableTimeConverter } from "../../utils/general.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 export default function SubmissionList() {
   const { problemId } = useParams();
-  const token = getToken(); // Get token from localStorage
-  const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithResults[]
-  >([]);
+  // const [fetchSubmissions, setFetchSubmissions] = useState<
+  //   SubmissionWithResults[]
+  // >([]);
 
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axiosInstance.get<
-          ResponseInterface<{ submissions: SubmissionWithResults[] }>
-        >(`/api/problems/${problemId}/submissions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const { data, loading } = useFetch<{ submissions: SubmissionWithResults[] }>(
+    `/api/problems/${problemId}/submissions`,
+    {
+      includeToken: true,
+    },
+  );
+  const fetchSubmissions = data?.data.submissions;
 
-        console.log(res.data);
-        setFetchSubmissions(res.data.data.submissions);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            toast.error("You need to login to view submissions");
-          } else {
-            const errorMessage = error.response?.data?.message;
-            toast.error(errorMessage);
-          }
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [problemId, token]);
-
-  if (loading) {
+  if (loading || !fetchSubmissions) {
     return <Loader />;
   }
 
   const submissions = fetchSubmissions.map((fetchSubmission) => {
+    const maxTime = Math.max(
+      0,
+      ...fetchSubmission.results.map((result) => result.time),
+    );
     return {
       ...fetchSubmission,
       language: language_BE_to_FE_map[fetchSubmission.language],
       verdict: verdictMap[fetchSubmission.verdict],
       createdAt: longReadableTimeConverter(fetchSubmission.createdAt),
+      maxTime: maxTime,
     };
   });
 
@@ -88,12 +61,14 @@ export default function SubmissionList() {
                 >
                   ID
                 </th>
-                <th className="text-center" style={{ width: "20%" }}>
+                <th className="text-center" style={{ width: "15%" }}>
                   Language
                 </th>
-                {/* </div> */}
-                <th className="text-center" style={{ width: "30%" }}>
+                <th className="text-center" style={{ width: "25%" }}>
                   Verdict
+                </th>
+                <th className="text-center" style={{ width: "15%" }}>
+                  Runtime
                 </th>
                 <th className="text-center">Submit time</th>
               </tr>
@@ -131,6 +106,7 @@ export default function SubmissionList() {
                     </span>
                   </td>
 
+                  <td className="text-center">{`${submission.maxTime} ms`}</td>
                   <td className="text-center">{submission.createdAt}</td>
                 </tr>
               ))}
