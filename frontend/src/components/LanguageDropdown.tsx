@@ -1,4 +1,4 @@
-import { DropdownButton, Dropdown, Button } from "react-bootstrap";
+import { DropdownButton, Dropdown } from "react-bootstrap";
 import { LanguageList } from "../utils/constanst.ts";
 
 const LanguageDropdown = ({

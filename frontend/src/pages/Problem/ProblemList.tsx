@@ -127,8 +127,8 @@ export default function ProblemList() {
                   status === "Solved" ? setStatus("All") : setStatus("Solved");
                 }}
               >
-                <div className="d-flex gap-2">
-                  <img src="/accept.png" width="24" height="24" />
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/accept.png" width="20" height="20" />
                   <span className="text-success">Solved</span>
                 </div>
                 <span>
@@ -145,8 +145,8 @@ export default function ProblemList() {
                   status === "Todo" ? setStatus("All") : setStatus("Todo");
                 }}
               >
-                <div className="d-flex gap-2">
-                  <img src="/reject.png" width="24" height="24" />
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/reject.png" width="20" height="20" />
                   <span className="text-danger">To do</span>
                 </div>
                 <span>

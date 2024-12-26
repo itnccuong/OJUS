@@ -49,8 +49,6 @@ export default function Login() {
           className="p-4 border border-dark-subtle rounded-4 w-25 bg-white shadow my-5"
           onSubmit={handleSubmit}
         >
-          {/* <h3 className="text-center mb-3">Sign In</h3>
-           */}
           <div className="d-flex justify-content-center align-items-center mb-4">
             <img src="/ojus.png" width="72" height="48" />
           </div>

@@ -3,7 +3,6 @@ import { app } from "../src/app";
 import {
   ErrorResponseInterface,
   ResponseInterfaceForTest,
-  SuccessResponseInterface,
 } from "../interfaces/interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";
@@ -44,7 +43,6 @@ export const testCorrect = async (
     .send({
       code,
       language,
-    })) as ResponseInterfaceForTest<SuccessResponseInterface<{}>>;
-  console.log("Res correct", res);
+    })) as ResponseInterfaceForTest<{}>;
   expect(res.status).toBe(STATUS_CODE.SUCCESS);
 };

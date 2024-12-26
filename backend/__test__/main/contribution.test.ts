@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import { app } from "../../src/app";
 import request from "supertest";
-import jwt from "jsonwebtoken";
 import path from "path";
 import {
   ProblemWithUserStatusInterface,
@@ -13,25 +12,18 @@ import { cleanDatabase } from "../test_utils";
 import * as util from "node:util";
 import { exec } from "child_process";
 import { STATUS_CODE } from "../../utils/constants";
-import { numPending } from "../test_data";
+import { fake_token, numPending } from "../test_data";
 import { Problem } from "@prisma/client";
 
 const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
 
 jest.setTimeout(60000);
 
-let fake_token = "";
-
 const execPromise = util.promisify(exec);
+
 beforeEach(async () => {
   await cleanDatabase();
   await execPromise("ts-node prisma/seed-test.ts");
-
-  fake_token = jwt.sign(
-    { userId: 1 }, // Payload
-    process.env.JWT_SECRET as string, // Secret
-    { expiresIn: "3m" }, // Token expiration
-  );
 });
 
 describe("Contribute", () => {

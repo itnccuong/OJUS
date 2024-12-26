@@ -178,7 +178,7 @@ export default function Profile() {
                   objectFit: "cover",
                   transition: "opacity 0.3s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.5")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               />
             </div>
