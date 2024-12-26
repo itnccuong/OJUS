@@ -12,19 +12,18 @@ const LanguageDropdown = ({
     <DropdownButton variant="secondary" title={language}>
       {LanguageList.map((lang, index) => (
         <Dropdown.Item
+          className="d-flex justify-content-between px-3 py-2"
           key={index}
           onClick={() => {
             setLanguage(lang);
           }}
         >
-          <div className="d-flex justify-content-between">
-            <Button variant="white">{lang}</Button>
-            <span className="ms-4">
-              {language === lang ? (
-                <img src="/done.svg" width="30" height="24" alt="done" />
-              ) : null}
-            </span>
-          </div>
+          <div>{lang}</div>
+          <span>
+            {language === lang ? (
+              <img src="/done.svg" width="30" height="24" alt="done" />
+            ) : null}
+          </span>
         </Dropdown.Item>
       ))}
     </DropdownButton>

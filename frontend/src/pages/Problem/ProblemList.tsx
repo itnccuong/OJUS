@@ -84,9 +84,10 @@ export default function ProblemList() {
       <div className="container-xxl">
         <div className="d-flex flex-row align-items-center gap-2">
           <DropdownButton variant="secondary" title="Difficulty">
-            <div className="d-flex flex-column">
+            <div>
               {Difficulty.map((diff, index) => (
                 <Dropdown.Item
+                  className="d-flex justify-content-between px-3 py-2"
                   key={index}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -95,8 +96,8 @@ export default function ProblemList() {
                       : setDifficulty(diff);
                   }}
                 >
-                  <Button
-                    variant="white"
+                  <div
+                    // variant="white"
                     className={`text-${
                       diff === "Bronze"
                         ? "warning-emphasis"
@@ -106,8 +107,8 @@ export default function ProblemList() {
                     }`}
                   >
                     {diff}
-                  </Button>
-                  <span className="ms-4">
+                  </div>
+                  <span>
                     {difficulty === diff ? (
                       <img src="/done.svg" width="30" height="24" />
                     ) : null}
@@ -118,20 +119,19 @@ export default function ProblemList() {
           </DropdownButton>
 
           <DropdownButton variant="secondary" title="Status">
-            <div className="d-flex flex-column">
+            <div>
               <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                   status === "Solved" ? setStatus("All") : setStatus("Solved");
                 }}
               >
-                <Button variant="white" className="text-success">
-                  <div className="d-flex gap-2">
-                    <img src="/accept.png" width="24" height="24" />
-                    Solved
-                  </div>
-                </Button>
-                <span className="ms-4">
+                <div className="d-flex gap-2">
+                  <img src="/accept.png" width="24" height="24" />
+                  <span className="text-success">Solved</span>
+                </div>
+                <span>
                   {status === "Solved" ? (
                     <img src="/done.svg" width="30" height="24" />
                   ) : null}
@@ -139,18 +139,17 @@ export default function ProblemList() {
               </Dropdown.Item>
 
               <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                   status === "Todo" ? setStatus("All") : setStatus("Todo");
                 }}
               >
-                <Button variant="white" className="text-warning">
-                  <div className="d-flex gap-2">
-                    <img src="/reject.png" width="24" height="24" />
-                    To do
-                  </div>
-                </Button>
-                <span className="ms-4">
+                <div className="d-flex gap-2">
+                  <img src="/reject.png" width="24" height="24" />
+                  <span className="text-danger">To do</span>
+                </div>
+                <span>
                   {status === "Todo" ? (
                     <img src="/done.svg" width="30" height="24" />
                   ) : null}

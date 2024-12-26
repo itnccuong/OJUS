@@ -68,9 +68,10 @@ export default function ContributionList() {
       <div className="container-xxl">
         <div className="d-flex flex-row align-items-center gap-2">
           <DropdownButton variant="secondary" title="Difficulty">
-            <div className="d-flex flex-column">
+            <div>
               {Difficulty.map((diff, index) => (
                 <Dropdown.Item
+                  className="d-flex justify-content-between p-3"
                   key={index}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -79,8 +80,7 @@ export default function ContributionList() {
                       : setDifficulty(diff);
                   }}
                 >
-                  <Button
-                    variant="white"
+                  <div
                     className={`text-${
                       diff === "Bronze"
                         ? "warning-emphasis"
@@ -90,8 +90,8 @@ export default function ContributionList() {
                     }`}
                   >
                     {diff}
-                  </Button>
-                  <span className="ms-4">
+                  </div>
+                  <span>
                     {difficulty === diff ? (
                       <img src="/done.svg" width="30" height="24" />
                     ) : null}
