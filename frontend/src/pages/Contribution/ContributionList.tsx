@@ -1,13 +1,8 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import getToken from "../../utils/getToken.ts";
-
-import { useEffect } from "react";
-
 import { ProblemInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { toast } from "react-toastify";
 import { difficultyMapping, TagListInit, Tag } from "../../utils/constanst.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { splitString } from "../../utils/general.ts";
@@ -15,15 +10,6 @@ import { splitString } from "../../utils/general.ts";
 export default function ContributionList() {
   const navigate = useNavigate();
   const [difficulty, setDifficulty] = useState("All");
-
-  //Check if user is logged in
-  const token = getToken();
-  useEffect(() => {
-    if (!token) {
-      toast.error("Please login first");
-      navigate("/accounts/login");
-    }
-  }, [token, navigate]);
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");

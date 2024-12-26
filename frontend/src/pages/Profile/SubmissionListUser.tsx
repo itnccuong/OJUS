@@ -1,10 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
 import { Table } from "react-bootstrap";
-import { useEffect } from "react";
-
-import { toast } from "react-toastify";
-import getToken from "../../utils/getToken.ts";
 import { SubmissionWithProblem } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
 import {
@@ -16,15 +11,7 @@ import { shortReadableTimeConverter } from "../../utils/general.ts";
 import useFetch from "../../hooks/useFetch.ts";
 
 export default function SubmissionListUser() {
-  const token = getToken(); // Get token from localStorage
-
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!token) {
-      toast.error("You need to login to view submission");
-      navigate("/accounts/login");
-    }
-  }, [token, navigate]);
 
   const { data, loading } = useFetch<{ submissions: SubmissionWithProblem[] }>(
     `/api/user/submissions`,

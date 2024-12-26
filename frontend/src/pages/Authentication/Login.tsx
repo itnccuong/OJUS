@@ -1,13 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
-import {
-  ResponseInterface,
-  UserInterface,
-} from "../../interfaces/interface.ts";
+import { UserInterface } from "../../interfaces/interface.ts";
 import { storageKeyMap } from "../../utils/constanst.ts";
 
 export default function Login() {
@@ -21,12 +18,13 @@ export default function Login() {
 
     try {
       const res = await toast.promise(
-        axiosInstance.post<
-          ResponseInterface<{ user: UserInterface; token: string }>
-        >("/api/auth/login", {
-          usernameOrEmail,
-          password,
-        }),
+        axiosInstance.post<{ data: { user: UserInterface; token: string } }>(
+          "/api/auth/login",
+          {
+            usernameOrEmail,
+            password,
+          },
+        ),
         {
           pending: "Sign in...",
           success: "Sign in successfully",

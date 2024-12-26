@@ -2,10 +2,6 @@ import { useNavigate } from "react-router-dom";
 import getToken from "../utils/getToken.ts";
 import { toast } from "react-toastify";
 import axiosInstance from "../utils/axiosInstance.ts";
-import {
-  ProblemInterface,
-  ResponseInterface,
-} from "../interfaces/interface.ts";
 import { AxiosError } from "axios";
 
 const useAdjudicate = () => {
@@ -20,9 +16,7 @@ const useAdjudicate = () => {
 
     try {
       const { data } = await toast.promise(
-        axiosInstance.put<
-          ResponseInterface<{ contribution: ProblemInterface }>
-        >(
+        axiosInstance.put(
           `/api/contributions/${problemId}/${isAccept ? "accept" : "reject"}`,
           {},
           {

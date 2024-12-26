@@ -86,7 +86,3 @@ export interface ProfilePayloadInterface {
   currentPassword?: string;
   newPassword?: string;
 }
-
-export interface ResponseInterface<T> {
-  data: T;
-}

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import getToken from "../utils/getToken.ts";
 import { toast } from "react-toastify";
 import axiosInstance from "../utils/axiosInstance.ts";
-import { ResponseInterface } from "../interfaces/interface.ts";
 import { AxiosError } from "axios";
 import { language_FE_to_BE_map } from "../utils/constanst.ts";
 
@@ -23,7 +22,7 @@ const useSubmitCode = () => {
 
     try {
       const res = await toast.promise(
-        axiosInstance.post<ResponseInterface<{ submissionId: number }>>(
+        axiosInstance.post(
           `/api/problems/${problemId}`,
           {
             code,
@@ -45,8 +44,6 @@ const useSubmitCode = () => {
       navigate(
         `/${isContribution ? "contributions" : "problems"}/${problemId}/submissions`,
       );
-
-      return res.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
