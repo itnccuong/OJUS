@@ -5,15 +5,12 @@ import getToken from "../../utils/getToken.ts";
 
 import { useEffect } from "react";
 
-import axiosInstance from "../../utils/axiosInstance.ts";
-import {
-  ProblemInterface,
-  ResponseInterface,
-} from "../../interfaces/interface.ts";
+import { ProblemInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { difficultyMapping, TagListInit, Tag } from "../../utils/constanst.ts";
+import useFetch from "../../hooks/useFetch.ts";
+import { splitString } from "../../utils/general.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();
@@ -43,51 +40,25 @@ export default function ContributionList() {
     setTags(TagListInit);
   };
 
-  // const [Problems, setProblems] = useState([]); // Khởi tạo state cho Problems
-  const [contributes, setContributes] = useState<ProblemInterface[]>([]);
+  const { data, loading } = useFetch<{
+    contributions: ProblemInterface[];
+  }>("/api/contributions/", {
+    includeToken: true,
+  });
+  const fetchContributions = data?.data.contributions;
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchContributes = async () => {
-      try {
-        const { data } = await axiosInstance.get<
-          ResponseInterface<{ contributions: ProblemInterface[] }>
-        >("/api/contributions/", {
-          headers: { Authorization: "Bearer " + token },
-        });
-
-        setContributes(data.data.contributions);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
-        }
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContributes();
-  }, []);
-
-  if (loading) {
+  if (loading || !fetchContributions) {
     return <Loader />;
   }
 
-  // Chuyển đổi dữ liệu từ contribute thành problem
-  const Problems = contributes.map((contribute) => {
+  const Problems = fetchContributions.map((contribution) => {
     return {
-      id: contribute.problemId,
-      title: contribute.title,
-      difficulty: difficultyMapping[contribute.difficulty] || "Unknown",
-      tags: splitString(contribute.tags),
+      id: contribution.problemId,
+      title: contribution.title,
+      difficulty: difficultyMapping[contribution.difficulty] || "Unknown",
+      tags: splitString(contribution.tags),
     };
   });
-
-  function splitString(inputString: string) {
-    return inputString.split(",");
-  }
 
   const pickRandom = () => {
     const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
