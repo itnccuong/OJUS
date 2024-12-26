@@ -60,9 +60,7 @@ export default function Problem() {
           <div className="p-4 d-flex justify-content-between">
             <Button
               variant="primary"
-              onClick={() =>
-                submitCode(code, language, problemId as string, false)
-              }
+              onClick={() => submitCode(code, language, problemId as string)}
             >
               Submit
             </Button>

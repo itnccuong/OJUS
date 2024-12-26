@@ -58,9 +58,7 @@ export default function Contribution() {
           <div className="p-4 d-flex justify-content-between align-items-center">
             <Button
               variant="primary"
-              onClick={() =>
-                submitCode(code, language, problemId as string, true)
-              }
+              onClick={() => submitCode(code, language, problemId as string)}
             >
               Submit
             </Button>
