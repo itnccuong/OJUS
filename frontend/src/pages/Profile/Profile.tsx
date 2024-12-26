@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import axiosInstance from "../../utils/axiosInstance.ts";
 import {
-  ResponseInterface,
   SubmissionWithProblem,
   UserWithAvatarInterface,
 } from "../../interfaces/interface.ts";
@@ -17,86 +16,43 @@ import {
   language_BE_to_FE_map,
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 export default function Profile() {
   const navigate = useNavigate();
   const { username } = useParams();
-
   const [show, setShow] = useState(false);
-  const [user, setUser] = useState<UserWithAvatarInterface>();
-
   const [file, setFile] = useState<File | null>(null);
 
-  const [usernameFromToken, SetUsernameFromToken] = useState("");
+  const { data: fetchUser, loading: userLoading } = useFetch<{
+    user: UserWithAvatarInterface;
+  }>(`/api/user/by-name/${username}`);
+  const user = fetchUser?.data.user;
 
-  const [fetchSubmissions, setFetchSubmissions] = useState<
-    SubmissionWithProblem[]
-  >([]);
+  const { data: userFromToken, loading: userFromTokenLoading } = useFetch<{
+    user: UserWithAvatarInterface;
+  }>("/api/user", {
+    includeToken: true,
+  });
+  const usernameFromToken = userFromToken?.data.user.username;
 
-  const [loading, setLoading] = useState(true);
+  const { data: fetchSubmissionData, loading: fetchSubmissionLoading } =
+    useFetch<{
+      submissions: SubmissionWithProblem[];
+    }>(`/api/user/${user?.userId}/submissions/AC`, {
+      includeToken: true,
+      skip: !user,
+    });
+  const fetchSubmissions = fetchSubmissionData?.data.submissions;
 
-  const getUserFromName = async () => {
-    try {
-      const { data } = await axiosInstance.get<
-        ResponseInterface<{ user: UserWithAvatarInterface }>
-      >(`/api/user/by-name/${username}`);
-      console.log("Get user from name", data);
-      setUser(data.data.user);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const getUserFromToken = async () => {
-    try {
-      const token = getToken();
-      if (!token) {
-        return;
-      }
-      const response = await axiosInstance.get<
-        ResponseInterface<{ user: UserWithAvatarInterface }>
-      >("/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send token in the Authorization header
-        },
-      });
-      console.log("Get user from token", response);
-      SetUsernameFromToken(response.data.data.user.username);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      if (!user) {
-        return;
-      }
-      const res = await axiosInstance.get<
-        ResponseInterface<{ submissions: SubmissionWithProblem[] }>
-      >(`/api/user/${user.userId}/submissions/AC`);
-
-      console.log("Fetch AC submission", res.data);
-      setFetchSubmissions(res.data.data.submissions);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
-      }
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getUserFromName();
-    getUserFromToken();
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [user]);
-
-  if (loading || !user) {
+  if (
+    userLoading ||
+    userFromTokenLoading ||
+    fetchSubmissionLoading ||
+    !user ||
+    !fetchSubmissions ||
+    !userFromToken
+  ) {
     return <Loader />;
   }
 
@@ -136,7 +92,7 @@ export default function Profile() {
   });
 
   // Only show the "Edit Profile" button if the usernames match
-  const shouldShowEditButton = usernameFromToken == username;
+  const isUserMatchAccount = usernameFromToken == username;
 
   const hanldeUpdateAvatar = async () => {
     const formData = new FormData();
@@ -161,7 +117,6 @@ export default function Profile() {
       console.log("Update avatar", response);
       setShow(false);
       setFile(null);
-      getUserFromName();
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message;
@@ -187,7 +142,6 @@ export default function Profile() {
       console.log("Update avatar", response);
       setShow(false);
       setFile(null);
-      getUserFromName();
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message;
@@ -215,7 +169,7 @@ export default function Profile() {
                 height={100}
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                  shouldShowEditButton && setShow(true);
+                  isUserMatchAccount && setShow(true);
                 }}
                 style={{
                   cursor: "pointer",
@@ -249,8 +203,8 @@ export default function Profile() {
 
           <div className="edit-button mt-4 border-bottom pb-3">
             <Button
-              disabled={!shouldShowEditButton}
-              variant={shouldShowEditButton ? "success" : "secondary"}
+              disabled={!isUserMatchAccount}
+              variant={isUserMatchAccount ? "success" : "secondary"}
               onClick={() => navigate("/profile")}
               className="w-100 rounded-5"
             >
@@ -379,7 +333,7 @@ export default function Profile() {
         <div className="col-8 border rounded-4 shadow p-4 bg-white">
           <div className="d-flex justify-content-between">
             <h4>Recent AC</h4>
-            {shouldShowEditButton && (
+            {isUserMatchAccount && (
               <Button onClick={() => navigate(`/submissions`)}>
                 View all submissions
               </Button>
