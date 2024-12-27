@@ -59,9 +59,8 @@ export default function ProblemList() {
 
     return {
       ...fetchProblem,
-      userStatus:
-        statusMapping[fetchProblem.userStatus.toString()] || "Unknown",
-      difficulty: difficultyMapping[fetchProblem.difficulty] || "Unknown",
+      userStatus: statusMapping[fetchProblem.userStatus.toString()],
+      difficulty: difficultyMapping[fetchProblem.difficulty],
       tags: splitString(fetchProblem.tags),
     };
   });

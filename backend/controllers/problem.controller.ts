@@ -17,9 +17,10 @@ import {
   findSubmissionsProblem,
   getUserStatus,
   findAcceptedProblems,
-  queryProblemStatus,
   findAcceptedProblemById,
   findProblemById,
+  addFalseUserStatusToProblems,
+  addUserStatusToProblems,
 } from "../services/problem.services/problem.service";
 
 import {
@@ -84,8 +85,10 @@ export class ProblemController extends Controller {
   > {
     const problems = await findAcceptedProblems();
 
+    const problemsWithUserStatus = addFalseUserStatusToProblems(problems);
+
     return {
-      data: { problems },
+      data: { problems: problemsWithUserStatus },
     };
   }
 
@@ -98,9 +101,13 @@ export class ProblemController extends Controller {
     SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
   > {
     const userId = req.userId;
-    const responseData = await queryProblemStatus(userId);
+    const problems = await findAcceptedProblems();
+    const problemsWithUserStatus = await addUserStatusToProblems(
+      problems,
+      userId,
+    );
     return {
-      data: { problems: responseData },
+      data: { problems: problemsWithUserStatus },
     };
   }
 

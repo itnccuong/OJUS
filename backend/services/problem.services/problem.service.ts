@@ -1,6 +1,6 @@
 import prisma from "../../prisma/client";
 import { STATUS_CODE, verdict } from "../../utils/constants";
-import { Submission } from "@prisma/client";
+import { Problem, Submission } from "@prisma/client";
 import { findResultBySubmissionId } from "../submission.services/submission.service";
 import { CustomError } from "../../utils/errorClass";
 
@@ -11,20 +11,21 @@ export const findAcceptedProblems = async () => {
     },
   });
 
-  const res = problems.map((problem) => ({
+  return problems;
+};
+
+export const addFalseUserStatusToProblems = (problems: Problem[]) => {
+  return problems.map((problem) => ({
     ...problem,
     userStatus: false,
   }));
-  return res;
 };
 
-export const queryProblemStatus = async (userId: number) => {
-  const problems = await prisma.problem.findMany({
-    where: {
-      status: 2,
-    },
-  });
-  const problemsWithStatus = await Promise.all(
+export const addUserStatusToProblems = async (
+  problems: Problem[],
+  userId: number,
+) => {
+  return await Promise.all(
     problems.map(async (problem) => {
       const submission = await prisma.submission.findMany({
         where: {
@@ -43,8 +44,6 @@ export const queryProblemStatus = async (userId: number) => {
       };
     }),
   );
-
-  return problemsWithStatus;
 };
 
 export const findAcceptedProblemById = async (problem_id: number) => {
