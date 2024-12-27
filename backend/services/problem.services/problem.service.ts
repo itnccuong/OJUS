@@ -62,11 +62,18 @@ export const findAcceptedProblemById = async (problem_id: number) => {
   return problem;
 };
 
-export const getUserStatus = async (userId: number, problemId: number) => {
+export const addFalseUserStatusToProblem = (problem: Problem) => {
+  return { ...problem, userStatus: false };
+};
+
+export const addUserStatusToProblem = async (
+  userId: number,
+  problem: Problem,
+) => {
   const submission = await prisma.submission.findMany({
     where: {
       userId: userId,
-      problemId: problemId,
+      problemId: problem.problemId,
     },
   });
   let userStatus = false;
@@ -74,9 +81,7 @@ export const getUserStatus = async (userId: number, problemId: number) => {
   if (submission.some((sub) => sub.verdict === verdict.OK)) {
     userStatus = true;
   }
-  return {
-    userStatus: userStatus,
-  };
+  return { ...problem, userStatus: userStatus };
 };
 
 export const findSubmissionsProblem = async (

@@ -27,7 +27,11 @@ import {
   findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
-import { addResultsToSubmissions } from "../services/problem.services/problem.service";
+import {
+  addResultsToSubmissions,
+  addUserStatusToProblem,
+  addUserStatusToProblems,
+} from "../services/problem.services/problem.service";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -75,16 +79,39 @@ export class ContributionController extends Controller {
   }
 
   @Get("/")
+  @Middlewares(verifyToken)
   @SuccessResponse("200", "All contributions fetched successfully")
-  public async getAllContribute(): Promise<
-    SuccessResponseInterface<{ contributions: Problem[] }>
-  > {
+  public async getAllContribute(
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<{ contributions: Problem[] }>> {
     // Fetch all pending contributions
     const contributions = await findAllPendingContributions();
 
+    const contributionsWithUserStatus = await addUserStatusToProblems(
+      contributions,
+      req.userId,
+    );
     // Return a success response with the fetched contributions
     return {
-      data: { contributions: contributions },
+      data: { contributions: contributionsWithUserStatus },
+    };
+  }
+
+  @Get("{contribute_id}")
+  @Middlewares(verifyToken)
+  @SuccessResponse("200", "Contribute fetched successfully")
+  public async getOneContribute(
+    @Request() req: RequestExpress,
+    @Path() contribute_id: number, // Contribution ID as a path parameter
+  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
+    const contribution = await findPendingContribution(contribute_id);
+    const contributionWithUserStatus = await addUserStatusToProblem(
+      req.userId,
+      contribution,
+    );
+
+    return {
+      data: { contribution: contributionWithUserStatus },
     };
   }
 
@@ -102,19 +129,6 @@ export class ContributionController extends Controller {
     const submissionsWithResults = await addResultsToSubmissions(submissions);
     return {
       data: { submissions: submissionsWithResults },
-    };
-  }
-
-  @Get("{contribute_id}")
-  @SuccessResponse("200", "Contribute fetched successfully")
-  public async getOneContribute(
-    @Path() contribute_id: number, // Contribution ID as a path parameter
-  ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
-    const contribution = await findPendingContribution(contribute_id);
-
-    // Return a success response with the fetched contribution
-    return {
-      data: { contribution: contribution },
     };
   }
 

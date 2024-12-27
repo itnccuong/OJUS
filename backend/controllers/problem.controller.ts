@@ -15,12 +15,13 @@ import {
 import {
   addResultsToSubmissions,
   findSubmissionsProblem,
-  getUserStatus,
+  addUserStatusToProblem,
   findAcceptedProblems,
   findAcceptedProblemById,
   findProblemById,
   addFalseUserStatusToProblems,
   addUserStatusToProblems,
+  addFalseUserStatusToProblem,
 } from "../services/problem.services/problem.service";
 
 import {
@@ -122,9 +123,9 @@ export class ProblemController extends Controller {
     SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
   > {
     const problem = await findAcceptedProblemById(problem_id);
-    const resProblem = { ...problem, userStatus: false };
+    const problemWithUserStatus = addFalseUserStatusToProblem(problem);
     return {
-      data: { problem: resProblem },
+      data: { problem: problemWithUserStatus },
     };
   }
 
@@ -142,10 +143,13 @@ export class ProblemController extends Controller {
   > {
     const userId = req.userId;
     const problem = await findAcceptedProblemById(problem_id);
-    const userStatus = await getUserStatus(userId, problem.problemId);
-    const resProblem = { ...problem, userStatus: userStatus.userStatus };
+    const userStatus = await addUserStatusToProblem(userId, problem);
+    const problemWithUserStatus = {
+      ...problem,
+      userStatus: userStatus.userStatus,
+    };
     return {
-      data: { problem: resProblem },
+      data: { problem: problemWithUserStatus },
     };
   }
 
