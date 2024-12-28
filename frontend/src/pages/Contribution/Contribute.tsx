@@ -77,6 +77,7 @@ export default function Contribute() {
           success: "Your question has been submitted",
         },
       );
+      navigate("/contributions");
 
       console.log("Submit contribute response: ", res.data);
     } catch (error) {

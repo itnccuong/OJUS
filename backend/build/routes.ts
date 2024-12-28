@@ -34,12 +34,13 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DefaultSelection_Prisma._36_UserPayload_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatarId":{"dataType":"double","required":true},"githubLink":{"dataType":"string","required":true},"facebookLink":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"password":{"dataType":"string","required":true},"fullname":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"userId":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"admin":{"dataType":"boolean","required":true},"avatarId":{"dataType":"double","required":true},"githubLink":{"dataType":"string","required":true},"facebookLink":{"dataType":"string","required":true},"createdAt":{"dataType":"datetime","required":true},"password":{"dataType":"string","required":true},"fullname":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"userId":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserWithAvatarInterface": {
         "dataType": "refObject",
         "properties": {
+            "admin": {"dataType":"boolean","required":true},
             "avatarId": {"dataType":"double","required":true},
             "githubLink": {"dataType":"string","required":true},
             "facebookLink": {"dataType":"string","required":true},
@@ -849,6 +850,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function ContributionController_getAllContribute(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -872,43 +874,13 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/contributions/:problem_id/submissions',
-            ...(fetchMiddlewares<RequestHandler>(ContributionController)),
-            ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getSubmissionsFromContribution)),
-
-            async function ContributionController_getSubmissionsFromContribution(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new ContributionController();
-
-              await templateService.apiHandler({
-                methodName: 'getSubmissionsFromContribution',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/contributions/:contribute_id',
             ...(fetchMiddlewares<RequestHandler>(ContributionController)),
             ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getOneContribute)),
 
             async function ContributionController_getOneContribute(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
                     contribute_id: {"in":"path","name":"contribute_id","required":true,"dataType":"double"},
             };
 
@@ -982,6 +954,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'rejectContribution',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/contributions/:problem_id/submissions',
+            ...(fetchMiddlewares<RequestHandler>(ContributionController)),
+            ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getSubmissionsFromContribution)),
+
+            async function ContributionController_getSubmissionsFromContribution(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ContributionController();
+
+              await templateService.apiHandler({
+                methodName: 'getSubmissionsFromContribution',
                 controller,
                 response,
                 next,

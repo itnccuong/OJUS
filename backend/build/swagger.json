@@ -1458,38 +1458,6 @@
 				]
 			}
 		},
-		"/api/contributions/{problem_id}/submissions": {
-			"get": {
-				"operationId": "GetSubmissionsFromContribution",
-				"responses": {
-					"200": {
-						"description": "Successfully fetched submissions from problem",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Contributions"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "problem_id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
 		"/api/contributions/{contribute_id}/accept": {
 			"put": {
 				"operationId": "AcceptContribution",
