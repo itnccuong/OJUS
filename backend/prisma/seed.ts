@@ -8,9 +8,22 @@ async function main() {
   const hashedPassword = bcrypt.hashSync("1", salt);
 
   // Define user data
-  const userData: User = {
+  const admin: User = {
     userId: 1,
     email: "hienvuongnhat@gmail.com",
+    password: hashedPassword,
+    fullname: "Admin",
+    username: "admin",
+    avatarId: null,
+    facebookLink: "https://www.facebook.com/nhathien03042004",
+    githubLink: "https://github.com/VuongNhatHien",
+    createdAt: new Date(),
+    admin: true,
+  };
+
+  const user: User = {
+    userId: 2,
+    email: "22120103@student.hcmus.edu.vn",
     password: hashedPassword,
     fullname: "Nhat Hien",
     username: "hien",
@@ -18,7 +31,7 @@ async function main() {
     facebookLink: "https://www.facebook.com/nhathien03042004",
     githubLink: "https://github.com/VuongNhatHien",
     createdAt: new Date(),
-    admin: true,
+    admin: false,
   };
 
   // Define files data
@@ -97,8 +110,13 @@ async function main() {
   // Upsert data
   await prisma.user.upsert({
     where: { userId: 1 },
-    update: userData,
-    create: userData,
+    update: admin,
+    create: admin,
+  });
+  await prisma.user.upsert({
+    where: { userId: 2 },
+    update: user,
+    create: user,
   });
   await prisma.files.upsert({
     where: { fileId: 1 },
