@@ -849,7 +849,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function ContributionController_getAllContribute(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -862,37 +861,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAllContribute',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/contributions/:contribute_id',
-            ...(fetchMiddlewares<RequestHandler>(ContributionController)),
-            ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getOneContribute)),
-
-            async function ContributionController_getOneContribute(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                    contribute_id: {"in":"path","name":"contribute_id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new ContributionController();
-
-              await templateService.apiHandler({
-                methodName: 'getOneContribute',
                 controller,
                 response,
                 next,
@@ -924,6 +892,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getSubmissionsFromContribution',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/contributions/:contribute_id',
+            ...(fetchMiddlewares<RequestHandler>(ContributionController)),
+            ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getOneContribute)),
+
+            async function ContributionController_getOneContribute(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    contribute_id: {"in":"path","name":"contribute_id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ContributionController();
+
+              await templateService.apiHandler({
+                methodName: 'getOneContribute',
                 controller,
                 response,
                 next,

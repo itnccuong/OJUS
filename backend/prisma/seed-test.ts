@@ -31,6 +31,7 @@ async function main() {
     facebookLink: null,
     githubLink: null,
     createdAt: new Date(),
+    admin: true,
   };
 
   // Define files data

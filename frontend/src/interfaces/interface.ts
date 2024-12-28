@@ -6,7 +6,8 @@ export interface UserInterface {
   githubLink: string;
   facebookLink: string;
   avatarId: number;
-  created_at: string;
+  createdAt: string;
+  admin: boolean;
 }
 
 export interface FileInterface {

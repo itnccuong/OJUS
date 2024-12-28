@@ -18,6 +18,7 @@ async function main() {
     facebookLink: "https://www.facebook.com/nhathien03042004",
     githubLink: "https://github.com/VuongNhatHien",
     createdAt: new Date(),
+    admin: true,
   };
 
   // Define files data
