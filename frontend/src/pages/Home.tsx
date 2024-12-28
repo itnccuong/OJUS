@@ -113,7 +113,7 @@ export default function Home() {
       >
         <h2>About Us</h2>
         <p
-          className="creator-label fs-6"
+          className="creator-label"
           style={{ fontSize: "18px", color: "#555" }}
         >
           THE CREATORS:
@@ -169,10 +169,17 @@ export default function Home() {
                   }}
                 />
               </Link>
-              <h3 className="creator-name mt-2 mb-0">{creator.name}</h3>
+              <h3
+                className="creator-name mt-2 mb-0"
+                style={{
+                  fontSize: "20px",
+                }}
+              >
+                {creator.name}
+              </h3>
               <div
                 className="creator-role text-secondary"
-                // style={{ fontSize: "14px", color: "#555" }}
+                style={{ fontSize: "14px", color: "#555" }}
               >
                 {creator.role}
               </div>
