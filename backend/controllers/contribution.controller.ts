@@ -14,6 +14,7 @@ import {
   Put,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
+import { verifyAdmin } from "../middlewares/verify-admin";
 import {
   SubmissionWithResults,
   SuccessResponseInterface,
@@ -76,6 +77,7 @@ export class ContributionController extends Controller {
 
   @Get("/")
   @SuccessResponse("200", "All contributions fetched successfully")
+  @Middlewares(verifyAdmin)
   public async getAllContribute(): Promise<
     SuccessResponseInterface<{ contributions: Problem[] }>
   > {

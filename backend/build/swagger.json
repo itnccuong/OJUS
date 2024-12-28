@@ -47,6 +47,9 @@
 			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
+					"admin": {
+						"type": "boolean"
+					},
 					"avatarId": {
 						"type": "number",
 						"format": "double"
@@ -79,6 +82,7 @@
 					}
 				},
 				"required": [
+					"admin",
 					"avatarId",
 					"githubLink",
 					"facebookLink",
@@ -93,6 +97,9 @@
 			},
 			"UserWithAvatarInterface": {
 				"properties": {
+					"admin": {
+						"type": "boolean"
+					},
 					"avatarId": {
 						"type": "number",
 						"format": "double"
@@ -133,6 +140,7 @@
 					}
 				},
 				"required": [
+					"admin",
 					"avatarId",
 					"githubLink",
 					"facebookLink",

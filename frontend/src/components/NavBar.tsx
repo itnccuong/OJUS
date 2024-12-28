@@ -48,9 +48,11 @@ function NavBar() {
             <Nav.Link as={NavLink} to={"/contribute"}>
               Contribute
             </Nav.Link>
-            <Nav.Link as={NavLink} to={"/contributions"}>
-              Contributions
-            </Nav.Link>
+            {user?.admin && (
+              <Nav.Link as={NavLink} to="/contributions">
+                Contributions
+              </Nav.Link>
+            )}
           </Nav>
         </div>
 
