@@ -32,7 +32,7 @@ export default function Login() {
       );
       console.log(res.data);
       localStorage.setItem(storageKeyMap.token, res.data.data.token);
-      navigate("/");
+      navigate("/problems");
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message;
