@@ -15,7 +15,7 @@ import { STATUS_CODE } from "../../utils/constants";
 import { fake_token, numPending } from "../test_data";
 import { Problem } from "@prisma/client";
 
-const filePath = path.resolve(__dirname, "../../temp/testcases.zip");
+const filePath = path.resolve(__dirname, "../../testcaseForTest/testcase.zip");
 
 jest.setTimeout(60000);
 

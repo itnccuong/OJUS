@@ -1,18 +1,31 @@
 import { Button, Dropdown, DropdownButton, Form, Table } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProblemInterface } from "../../interfaces/interface.ts";
+import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { difficultyMapping, TagListInit, Tag } from "../../utils/constanst.ts";
+import { difficultyMapping, Tag, TagListInit } from "../../utils/constanst.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { splitString } from "../../utils/general.ts";
 
 export default function ContributionList() {
   const navigate = useNavigate();
-  const [difficulty, setDifficulty] = useState("All");
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
   const [search, setSearch] = useState("");
+  const [difficulty, setDifficulty] = useState("All");
+  const [status, setStatus] = useState("All");
+
+  const { data, loading } = useFetch<{
+    contributions: ProblemWithUserStatusInterface[];
+  }>(`/api/contributions/`, {
+    includeToken: true,
+  });
+
+  const fetchContributions = data?.data.contributions;
+
+  if (loading || !fetchContributions) {
+    return <Loader />;
+  }
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
@@ -26,41 +39,37 @@ export default function ContributionList() {
     setTags(TagListInit);
   };
 
-  const { data, loading } = useFetch<{
-    contributions: ProblemInterface[];
-  }>("/api/contributions/", {
-    includeToken: true,
-  });
-  const fetchContributions = data?.data.contributions;
+  const pickRandom = () => {
+    const randomProblem =
+      contributions[Math.floor(Math.random() * contributions.length)];
+    navigate(`/contributions/${randomProblem.problemId}/description`);
+  };
 
-  if (loading || !fetchContributions) {
-    return <Loader />;
-  }
+  const contributions = fetchContributions.map((fetchContribution) => {
+    const statusMapping: Record<string, string> = {
+      false: "Todo",
+      true: "Solved",
+    };
 
-  const Problems = fetchContributions.map((contribution) => {
     return {
-      id: contribution.problemId,
-      title: contribution.title,
-      difficulty: difficultyMapping[contribution.difficulty] || "Unknown",
-      tags: splitString(contribution.tags),
+      ...fetchContribution,
+      userStatus: statusMapping[fetchContribution.userStatus.toString()],
+      difficulty: difficultyMapping[fetchContribution.difficulty],
+      tags: splitString(fetchContribution.tags),
     };
   });
-
-  const pickRandom = () => {
-    const randomProblem = Problems[Math.floor(Math.random() * Problems.length)];
-    navigate(`/contributions/${randomProblem.id}/description`);
-  };
 
   const Difficulty = ["Bronze", "Platinum", "Master"];
 
   const getSelectedTags = () =>
     tags.filter((tag) => tag.selected).map((tag) => tag.label);
 
-  const filteredProblems = Problems.filter(
-    (problem) =>
-      (problem.difficulty === difficulty || difficulty === "All") &&
-      getSelectedTags().every((tag) => problem.tags.includes(tag)) &&
-      problem.title.toLowerCase().includes(search.toLowerCase()),
+  const filteredContributions = contributions.filter(
+    (contribution) =>
+      (contribution.difficulty === difficulty || difficulty === "All") &&
+      (contribution.userStatus === status || status === "All") &&
+      getSelectedTags().every((tag) => contribution.tags.includes(tag)) &&
+      contribution.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -71,7 +80,7 @@ export default function ContributionList() {
             <div>
               {Difficulty.map((diff, index) => (
                 <Dropdown.Item
-                  className="d-flex justify-content-between p-3"
+                  className="d-flex justify-content-between px-3 py-2"
                   key={index}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -81,6 +90,7 @@ export default function ContributionList() {
                   }}
                 >
                   <div
+                    // variant="white"
                     className={`text-${
                       diff === "Bronze"
                         ? "warning-emphasis"
@@ -101,11 +111,47 @@ export default function ContributionList() {
             </div>
           </DropdownButton>
 
-          <DropdownButton
-            // key="2"
-            variant="secondary"
-            title="Tags"
-          >
+          <DropdownButton variant="secondary" title="Status">
+            <div>
+              <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  status === "Solved" ? setStatus("All") : setStatus("Solved");
+                }}
+              >
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/accept.png" width="20" height="20" />
+                  <span className="text-success">Solved</span>
+                </div>
+                <span>
+                  {status === "Solved" ? (
+                    <img src="/done.svg" width="30" height="24" />
+                  ) : null}
+                </span>
+              </Dropdown.Item>
+
+              <Dropdown.Item
+                className="d-flex justify-content-between px-3 py-2"
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  status === "Todo" ? setStatus("All") : setStatus("Todo");
+                }}
+              >
+                <div className="d-flex gap-2 align-items-center">
+                  <img src="/reject.png" width="20" height="20" />
+                  <span className="text-danger">To do</span>
+                </div>
+                <span>
+                  {status === "Todo" ? (
+                    <img src="/done.svg" width="30" height="24" />
+                  ) : null}
+                </span>
+              </Dropdown.Item>
+            </div>
+          </DropdownButton>
+
+          <DropdownButton variant="secondary" title="Tags">
             <div
               className="mb-3"
               style={{
@@ -158,41 +204,52 @@ export default function ContributionList() {
         <Table striped bordered hover className="mt-3">
           <thead>
             <tr>
+              <th
+                style={{
+                  width: "6%",
+                }}
+              >
+                Status
+              </th>
               <th style={{ width: "40%" }}>
                 <div
-                  className="d-flex justify-content-between"
-                  style={{
-                    cursor: "pointer",
-                  }}
+                  className="d-flex justify-content-between cursor-pointer"
                   onClick={() => {
                     alert("implement sort");
                   }}
                 >
                   <span>Title</span>
-                  <img src="/sort.svg" alt="React Bootstrap logo" />
+                  <img src="/sort.svg" />
                 </div>
               </th>
+              {/* </div> */}
               <th style={{ width: "40%" }}>Tags</th>
               <th className="text-center">Difficulty</th>
             </tr>
           </thead>
           <tbody>
-            {/* Kiểm tra nếu không có vấn đề nào trong Problems */}
-            {filteredProblems.length === 0 ? (
+            {filteredContributions.length === 0 ? (
               <tr>
-                <td colSpan={3} className="text-center">
+                <td colSpan={4} className="text-center">
                   <strong>No problems found</strong>
                 </td>
               </tr>
             ) : (
-              filteredProblems.map((problem) => (
+              filteredContributions.map((problem) => (
                 <tr
-                  key={problem.id}
+                  key={problem.problemId}
                   onClick={() =>
-                    navigate(`/contributions/${problem.id}/description`)
+                    navigate(`/contributions/${problem.problemId}/description`)
                   }
                   style={{ cursor: "pointer" }}
                 >
+                  <td className="text-center">
+                    {problem.userStatus === "Solved" ? (
+                      <img src="/accept.png" width="20" height="20" />
+                    ) : (
+                      <img src="/reject.png" width="20" height="20" />
+                    )}
+                  </td>
                   <td>{problem.title}</td>
 
                   <td>

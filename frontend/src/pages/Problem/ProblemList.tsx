@@ -4,14 +4,9 @@ import { useNavigate } from "react-router-dom";
 import getToken from "../../utils/getToken.ts";
 import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 import Loader from "../../components/Loader.tsx";
-import { difficultyMapping, TagListInit } from "../../utils/constanst.ts";
+import { difficultyMapping, Tag, TagListInit } from "../../utils/constanst.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { splitString } from "../../utils/general.ts";
-
-interface Tag {
-  label: string;
-  selected: boolean;
-}
 
 export default function ProblemList() {
   const navigate = useNavigate();
@@ -59,9 +54,8 @@ export default function ProblemList() {
 
     return {
       ...fetchProblem,
-      userStatus:
-        statusMapping[fetchProblem.userStatus.toString()] || "Unknown",
-      difficulty: difficultyMapping[fetchProblem.difficulty] || "Unknown",
+      userStatus: statusMapping[fetchProblem.userStatus.toString()],
+      difficulty: difficultyMapping[fetchProblem.difficulty],
       tags: splitString(fetchProblem.tags),
     };
   });

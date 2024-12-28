@@ -15,11 +15,13 @@ import {
 import {
   addResultsToSubmissions,
   findSubmissionsProblem,
-  getUserStatus,
+  addUserStatusToProblem,
   findAcceptedProblems,
-  queryProblemStatus,
   findAcceptedProblemById,
   findProblemById,
+  addFalseUserStatusToProblems,
+  addUserStatusToProblems,
+  addFalseUserStatusToProblem,
 } from "../services/problem.services/problem.service";
 
 import {
@@ -84,8 +86,10 @@ export class ProblemController extends Controller {
   > {
     const problems = await findAcceptedProblems();
 
+    const problemsWithUserStatus = addFalseUserStatusToProblems(problems);
+
     return {
-      data: { problems },
+      data: { problems: problemsWithUserStatus },
     };
   }
 
@@ -98,9 +102,13 @@ export class ProblemController extends Controller {
     SuccessResponseInterface<{ problems: ProblemWithUserStatusInterface[] }>
   > {
     const userId = req.userId;
-    const responseData = await queryProblemStatus(userId);
+    const problems = await findAcceptedProblems();
+    const problemsWithUserStatus = await addUserStatusToProblems(
+      problems,
+      userId,
+    );
     return {
-      data: { problems: responseData },
+      data: { problems: problemsWithUserStatus },
     };
   }
 
@@ -115,9 +123,9 @@ export class ProblemController extends Controller {
     SuccessResponseInterface<{ problem: ProblemWithUserStatusInterface }>
   > {
     const problem = await findAcceptedProblemById(problem_id);
-    const resProblem = { ...problem, userStatus: false };
+    const problemWithUserStatus = addFalseUserStatusToProblem(problem);
     return {
-      data: { problem: resProblem },
+      data: { problem: problemWithUserStatus },
     };
   }
 
@@ -135,10 +143,13 @@ export class ProblemController extends Controller {
   > {
     const userId = req.userId;
     const problem = await findAcceptedProblemById(problem_id);
-    const userStatus = await getUserStatus(userId, problem.problemId);
-    const resProblem = { ...problem, userStatus: userStatus.userStatus };
+    const userStatus = await addUserStatusToProblem(userId, problem);
+    const problemWithUserStatus = {
+      ...problem,
+      userStatus: userStatus.userStatus,
+    };
     return {
-      data: { problem: resProblem },
+      data: { problem: problemWithUserStatus },
     };
   }
 

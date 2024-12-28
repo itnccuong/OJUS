@@ -47,6 +47,9 @@
 			},
 			"DefaultSelection_Prisma._36_UserPayload_": {
 				"properties": {
+					"admin": {
+						"type": "boolean"
+					},
 					"avatarId": {
 						"type": "number",
 						"format": "double"
@@ -79,6 +82,7 @@
 					}
 				},
 				"required": [
+					"admin",
 					"avatarId",
 					"githubLink",
 					"facebookLink",
@@ -93,6 +97,9 @@
 			},
 			"UserWithAvatarInterface": {
 				"properties": {
+					"admin": {
+						"type": "boolean"
+					},
 					"avatarId": {
 						"type": "number",
 						"format": "double"
@@ -133,6 +140,7 @@
 					}
 				},
 				"required": [
+					"admin",
 					"avatarId",
 					"githubLink",
 					"facebookLink",
@@ -1418,38 +1426,6 @@
 				"parameters": []
 			}
 		},
-		"/api/contributions/{problem_id}/submissions": {
-			"get": {
-				"operationId": "GetSubmissionsFromContribution",
-				"responses": {
-					"200": {
-						"description": "Successfully fetched submissions from problem",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Contributions"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "problem_id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
 		"/api/contributions/{contribute_id}": {
 			"get": {
 				"operationId": "GetOneContribute",
@@ -1537,6 +1513,38 @@
 					{
 						"in": "path",
 						"name": "contribute_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions/{problem_id}/submissions": {
+			"get": {
+				"operationId": "GetSubmissionsFromContribution",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from problem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
 						"required": true,
 						"schema": {
 							"format": "double",

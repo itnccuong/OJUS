@@ -40,6 +40,14 @@ const useFetch = <T>(
         setData(res.data);
       } catch (err) {
         if (err instanceof AxiosError) {
+          const axiosError = err as AxiosError;
+
+          // Handle 403 Forbidden
+          if (axiosError.response?.status === 403) {
+            toast.error("Access Denied: Admins only");
+            navigate("/notadmin");
+            return; // Exit early to prevent further error handling
+          }
           const errorMessage =
             err.response?.data?.message || "An error occurred";
           setError(errorMessage);

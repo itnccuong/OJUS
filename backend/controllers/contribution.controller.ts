@@ -14,6 +14,7 @@ import {
   Put,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
+import { verifyAdmin } from "../middlewares/verify-admin";
 import {
   SubmissionWithResults,
   SuccessResponseInterface,
@@ -27,7 +28,11 @@ import {
   findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/uploadFileUtils";
-import { addResultsToSubmissions } from "../services/problem.services/problem.service";
+import {
+  addResultsToSubmissions,
+  addUserStatusToProblem,
+  addUserStatusToProblems,
+} from "../services/problem.services/problem.service";
 
 @Route("/api/contributions") // Base path for contribution-related routes
 @Tags("Contributions") // Group this endpoint under "Contributions" in Swagger
@@ -76,49 +81,43 @@ export class ContributionController extends Controller {
 
   @Get("/")
   @SuccessResponse("200", "All contributions fetched successfully")
-  public async getAllContribute(): Promise<
-    SuccessResponseInterface<{ contributions: Problem[] }>
-  > {
+  @Middlewares(verifyAdmin)
+  public async getAllContribute(
+    @Request() req: RequestExpress,
+  ): Promise<SuccessResponseInterface<{ contributions: Problem[] }>> {
     // Fetch all pending contributions
     const contributions = await findAllPendingContributions();
 
+    const contributionsWithUserStatus = await addUserStatusToProblems(
+      contributions,
+      req.userId,
+    );
     // Return a success response with the fetched contributions
     return {
-      data: { contributions: contributions },
-    };
-  }
-
-  @Get("/{problem_id}/submissions")
-  @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched submissions from problem")
-  public async getSubmissionsFromContribution(
-    @Path() problem_id: number,
-    @Request() req: RequestExpress,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
-  > {
-    const userId = req.userId;
-    const submissions = await findSubmissionsContribution(problem_id, userId);
-    const submissionsWithResults = await addResultsToSubmissions(submissions);
-    return {
-      data: { submissions: submissionsWithResults },
+      data: { contributions: contributionsWithUserStatus },
     };
   }
 
   @Get("{contribute_id}")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribute fetched successfully")
   public async getOneContribute(
+    @Request() req: RequestExpress,
     @Path() contribute_id: number, // Contribution ID as a path parameter
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     const contribution = await findPendingContribution(contribute_id);
+    const contributionWithUserStatus = await addUserStatusToProblem(
+      req.userId,
+      contribution,
+    );
 
-    // Return a success response with the fetched contribution
     return {
-      data: { contribution: contribution },
+      data: { contribution: contributionWithUserStatus },
     };
   }
 
   @Put("{contribute_id}/accept")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution accepted successfully")
   public async acceptContribution(
     @Path() contribute_id: number,
@@ -143,6 +142,7 @@ export class ContributionController extends Controller {
   }
 
   @Put("{contribute_id}/reject")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution rejected successfully")
   public async rejectContribution(
     @Path() contribute_id: number,
@@ -163,6 +163,23 @@ export class ContributionController extends Controller {
     // Return success response
     return {
       data: { contribution: updateContribution },
+    };
+  }
+
+  @Get("/{problem_id}/submissions")
+  @Middlewares(verifyAdmin)
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getSubmissionsFromContribution(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
+  > {
+    const userId = req.userId;
+    const submissions = await findSubmissionsContribution(problem_id, userId);
+    const submissionsWithResults = await addResultsToSubmissions(submissions);
+    return {
+      data: { submissions: submissionsWithResults },
     };
   }
 }

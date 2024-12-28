@@ -22,6 +22,7 @@ import SubmissionListUser from "./pages/Profile/SubmissionListUser.tsx";
 import NavBar from "./components/NavBar.tsx";
 import Footer from "./components/Footer.tsx";
 import SubmissionListContribution from "./pages/Contribution/SubmissionListContribution.tsx";
+import NotAdmin from "./pages/Contribution/NotAdmin.tsx";
 
 export default function App() {
   return (
@@ -61,6 +62,7 @@ export default function App() {
             path="/contributions/:problemId/description"
             element={<Contribution />}
           />
+          <Route path="/notadmin" element={<NotAdmin />} />
           <Route
             path="/contributions/:problemId/submissions"
             element={<SubmissionListContribution />}
