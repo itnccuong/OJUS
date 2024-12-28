@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Home() {
   return (
     <div className="homepage flex-grow-1 d-flex flex-column">
@@ -122,21 +124,25 @@ export default function Home() {
               name: "Cuong",
               role: "Backend",
               avatar: "Cuong.jpg",
+              link: "https://github.com/itnccuong",
             },
             {
               name: "Duy",
               role: "Frontend",
               avatar: "Duy.jpg",
+              link: "https://github.com/QDuy0082",
             },
             {
               name: "Hien",
               role: "Backend",
               avatar: "Hien.jpg",
+              link: "https://github.com/VuongNhatHien",
             },
             {
               name: "Hoang",
               role: "Frontend",
               avatar: "Hoang.jpg",
+              link: "https://github.com/hodinhhoang312",
             },
           ].map((creator, index) => (
             <div
@@ -147,7 +153,11 @@ export default function Home() {
                 width: "200px",
               }}
             >
-              <div className="creator-avatar">
+              <Link
+                to={creator.link}
+                target="_blank" // Open in new tab
+                rel="noopener noreferrer" // Open in new tab
+              >
                 <img
                   src={creator.avatar}
                   alt="Avatar"
@@ -158,7 +168,7 @@ export default function Home() {
                     objectFit: "cover",
                   }}
                 />
-              </div>
+              </Link>
               <h3 className="creator-name mt-2 mb-0">{creator.name}</h3>
               <div
                 className="creator-role text-secondary"
