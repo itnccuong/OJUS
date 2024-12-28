@@ -90,24 +90,8 @@ export class ContributionController extends Controller {
     };
   }
 
-  @Get("/{problem_id}/submissions")
-  @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched submissions from problem")
-  public async getSubmissionsFromContribution(
-    @Path() problem_id: number,
-    @Request() req: RequestExpress,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
-  > {
-    const userId = req.userId;
-    const submissions = await findSubmissionsContribution(problem_id, userId);
-    const submissionsWithResults = await addResultsToSubmissions(submissions);
-    return {
-      data: { submissions: submissionsWithResults },
-    };
-  }
-
   @Get("{contribute_id}")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribute fetched successfully")
   public async getOneContribute(
     @Path() contribute_id: number, // Contribution ID as a path parameter
@@ -121,6 +105,7 @@ export class ContributionController extends Controller {
   }
 
   @Put("{contribute_id}/accept")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution accepted successfully")
   public async acceptContribution(
     @Path() contribute_id: number,
@@ -145,6 +130,7 @@ export class ContributionController extends Controller {
   }
 
   @Put("{contribute_id}/reject")
+  @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution rejected successfully")
   public async rejectContribution(
     @Path() contribute_id: number,
@@ -165,6 +151,23 @@ export class ContributionController extends Controller {
     // Return success response
     return {
       data: { contribution: updateContribution },
+    };
+  }
+
+  @Get("/{problem_id}/submissions")
+  @Middlewares(verifyAdmin)
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  public async getSubmissionsFromContribution(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
+  > {
+    const userId = req.userId;
+    const submissions = await findSubmissionsContribution(problem_id, userId);
+    const submissionsWithResults = await addResultsToSubmissions(submissions);
+    return {
+      data: { submissions: submissionsWithResults },
     };
   }
 }
