@@ -160,8 +160,6 @@ export class ContributionController extends Controller {
         status: 1,
       },
     });
-    //wait 2 seconds
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     return {
       data: { contribution: updateContribution },
     };

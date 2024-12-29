@@ -10,11 +10,10 @@ import { AxiosError } from "axios";
 export default function Login() {
   const navigate = useNavigate();
 
-  const { submit, isSubmitting } = useSubmit();
-
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { submit, isSubmitting } = useSubmit();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
