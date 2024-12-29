@@ -33,8 +33,6 @@ export class AuthController extends Controller {
 
     // Generate a token
     const token = await signToken(user.userId);
-    //wait 1 sec
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     return {
       data: {
         user: user,

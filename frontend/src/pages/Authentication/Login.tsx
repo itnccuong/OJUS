@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 import { storageKeyMap } from "../../utils/constanst.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import useSubmit from "../../hooks/useSubmit.ts";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
 
-  const { submit, loading } = useSubmit();
+  const { submit, isSubmitting } = useSubmit();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,17 +18,29 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const body = {
-      usernameOrEmail,
-      password,
-    };
-    const res = await submit("/api/auth/login", "POST", body);
+    try {
+      const body = {
+        usernameOrEmail,
+        password,
+      };
+      const res = await submit<{ token: string }>(
+        "/api/auth/login",
+        "POST",
+        body,
+      );
 
-    if (res.success) {
-      localStorage.setItem(storageKeyMap.token, res.data.data.token);
-      navigate("/problems");
-      toast.success("Login successfully");
+      if (res?.token) {
+        localStorage.setItem(storageKeyMap.token, res.token);
+        navigate("/problems");
+        toast.success("Login successfully");
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message);
+      }
+      console.error(err);
     }
+
     // try {
     //   setIsSubmitting(true);
     //   const res = await axiosInstance.post<{
@@ -95,10 +108,10 @@ export default function Login() {
           <div className="mb-3">
             <button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="btn btn-primary w-100"
             >
-              {loading ? <CustomSpinner /> : "Sign In"}
+              {isSubmitting ? <CustomSpinner /> : "Sign In"}
             </button>
           </div>
 
