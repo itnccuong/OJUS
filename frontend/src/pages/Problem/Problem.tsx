@@ -46,8 +46,8 @@ export default function Problem() {
   const handleSubmit = async () => {
     try {
       const res = await submit<{ submissionId: number }>(
-        `/api/problems/${problemId}`,
         "POST",
+        `/api/problems/${problemId}`,
         {
           code,
           language: language_FE_to_BE_map[language],
@@ -58,7 +58,7 @@ export default function Problem() {
       );
 
       console.log("Submit response: ", res);
-      const submissionId = res?.submissionId;
+      const submissionId = res.submissionId;
       navigate(`/submissions/${submissionId}`);
     } catch (error) {
       console.error(error);
@@ -98,7 +98,6 @@ export default function Problem() {
               style={{ width: "80px" }}
               variant="primary"
               disabled={isSubmitting}
-              // onClick={() => submitCode(code, language, problemId as string)}
               onClick={() => handleSubmit()}
             >
               {isSubmitting ? <CustomSpinner /> : "Submit"}

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
@@ -6,18 +6,25 @@ import { useState } from "react";
 import Editor from "@monaco-editor/react";
 
 import Loader from "../../components/Loader.tsx";
-import { languageEditorMap } from "../../utils/constanst.ts";
+import {
+  language_FE_to_BE_map,
+  languageEditorMap,
+} from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
 import useAdjudicate from "../../hooks/useAdjudicate.ts";
-import useSubmitCode from "../../hooks/useSubmitCode.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { ProblemInterface } from "../../interfaces/interface.ts";
+import useSubmit from "../../hooks/useSubmit.ts";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
 
 export default function Contribution() {
+  const navigate = useNavigate();
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
@@ -30,7 +37,36 @@ export default function Contribution() {
   );
   const problem = data?.data.contribution;
 
-  const { submitCode } = useSubmitCode();
+  const { submit, isSubmitting } = useSubmit();
+  const handleSubmit = async () => {
+    try {
+      const res = await submit<{ submissionId: number }>(
+        "POST",
+        `/api/problems/${problemId}`,
+        {
+          code,
+          language: language_FE_to_BE_map[language],
+        },
+        {
+          includeToken: true,
+        },
+      );
+
+      console.log("Submit response: ", res);
+      const submissionId = res.submissionId;
+      navigate(`/submissions/${submissionId}`);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          toast.error("Please login to submit your code");
+        } else if (error.response?.status === 400) {
+          const submissionId = error.response.data.data.submissionId;
+          navigate(`/submissions/${submissionId}`);
+        }
+      }
+    }
+  };
   const { adjudicateHandler } = useAdjudicate();
 
   if (loading) {
@@ -57,10 +93,12 @@ export default function Contribution() {
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
           <div className="p-4 d-flex justify-content-between align-items-center">
             <Button
+              style={{ width: "80px" }}
               variant="primary"
-              onClick={() => submitCode(code, language, problemId as string)}
+              disabled={isSubmitting}
+              onClick={() => handleSubmit()}
             >
-              Submit
+              {isSubmitting ? <CustomSpinner /> : "Submit"}
             </Button>
 
             <div className="d-flex gap-3">

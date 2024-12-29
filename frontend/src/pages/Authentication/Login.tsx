@@ -19,12 +19,13 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await submit<{ token: string }>("/api/auth/login", "POST", {
+      const res = await submit<{ token: string }>("POST", "/api/auth/login", {
         usernameOrEmail,
         password,
       });
 
       localStorage.setItem(storageKeyMap.token, res.token);
+      toast.success("Logged in successfully");
       navigate("/problems");
     } catch (err) {
       if (err instanceof AxiosError) {

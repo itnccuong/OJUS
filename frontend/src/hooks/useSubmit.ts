@@ -8,8 +8,8 @@ const useSubmit = () => {
   const token = getToken();
 
   const submit = async <T>(
-    url: string,
     method: AllowedMethods,
+    url: string,
     body?: unknown,
     options?: {
       includeToken?: boolean;
