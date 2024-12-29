@@ -12,6 +12,7 @@ import {
   UploadedFile,
   FormField,
   Put,
+  Patch,
 } from "tsoa";
 import { verifyToken } from "../middlewares/verify-token";
 import { verifyAdmin } from "../middlewares/verify-admin";
@@ -116,7 +117,7 @@ export class ContributionController extends Controller {
     };
   }
 
-  @Put("{contribute_id}/accept")
+  @Patch("{contribute_id}/accept")
   @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution accepted successfully")
   public async acceptContribution(
@@ -134,14 +135,13 @@ export class ContributionController extends Controller {
         status: 2,
       },
     });
-
     // Return success response
     return {
       data: { contribution: updateContribution },
     };
   }
 
-  @Put("{contribute_id}/reject")
+  @Patch("{contribute_id}/reject")
   @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution rejected successfully")
   public async rejectContribution(
@@ -160,7 +160,6 @@ export class ContributionController extends Controller {
       },
     });
 
-    // Return success response
     return {
       data: { contribution: updateContribution },
     };

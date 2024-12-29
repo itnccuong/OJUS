@@ -71,7 +71,7 @@ export default function App() {
         <Footer />
       </Router>
       <ToastContainer
-        position="top-center"
+        position="top-right"
         autoClose={3000}
         hideProgressBar
         newestOnTop={false}

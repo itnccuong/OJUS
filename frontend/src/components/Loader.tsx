@@ -12,7 +12,7 @@ export default function Loader() {
         // loading={loading}
         // cssOverride={override}
         size={100}
-        aria-label="Loading Spinner"
+        aria-label="Loading CustomSpinner"
         data-testid="loader"
       />
       <div

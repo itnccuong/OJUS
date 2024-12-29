@@ -1459,7 +1459,7 @@
 			}
 		},
 		"/api/contributions/{contribute_id}/accept": {
-			"put": {
+			"patch": {
 				"operationId": "AcceptContribution",
 				"responses": {
 					"200": {
@@ -1491,7 +1491,7 @@
 			}
 		},
 		"/api/contributions/{contribute_id}/reject": {
-			"put": {
+			"patch": {
 				"operationId": "RejectContribution",
 				"responses": {
 					"200": {

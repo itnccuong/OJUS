@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import { AxiosError } from "axios";
-import { UserInterface } from "../../interfaces/interface.ts";
 import { storageKeyMap } from "../../utils/constanst.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmit from "../../hooks/useSubmit.ts";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,32 +13,24 @@ export default function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { submit, isSubmitting } = useSubmit();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const res = await toast.promise(
-        axiosInstance.post<{ data: { user: UserInterface; token: string } }>(
-          "/api/auth/login",
-          {
-            usernameOrEmail,
-            password,
-          },
-        ),
-        {
-          pending: "Sign in...",
-          success: "Sign in successfully",
-        },
-      );
-      console.log(res.data);
-      localStorage.setItem(storageKeyMap.token, res.data.data.token);
+      const res = await submit<{ token: string }>("POST", "/api/auth/login", {
+        usernameOrEmail,
+        password,
+      });
+
+      localStorage.setItem(storageKeyMap.token, res.token);
+      toast.success("Logged in successfully");
       navigate("/problems");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message);
       }
-      console.error(error);
+      console.error(err);
     }
   };
 
@@ -83,8 +75,12 @@ export default function Login() {
           </FloatingLabel>
 
           <div className="mb-3">
-            <button type="submit" className="btn btn-primary w-100">
-              Sign In
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary w-100"
+            >
+              {isSubmitting ? <CustomSpinner /> : "Sign In"}
             </button>
           </div>
 

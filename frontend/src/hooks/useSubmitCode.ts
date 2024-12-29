@@ -1,68 +1,46 @@
-import { useNavigate } from "react-router-dom";
-import getToken from "../utils/getToken.ts";
-import { toast } from "react-toastify";
-import axiosInstance from "../utils/axiosInstance.ts";
-import { AxiosError } from "axios";
+import useSubmit from "./useSubmit.ts";
 import { language_FE_to_BE_map } from "../utils/constanst.ts";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const useSubmitCode = () => {
+  const { submit, isSubmitting } = useSubmit();
   const navigate = useNavigate();
-  const token = getToken();
-
-  const submitCode = async (
+  const handleSubmit = async (
+    problemId: string,
     code: string | undefined,
     language: string,
-    problemId: string,
   ) => {
-    if (!token) {
-      toast.error("Please login to submit your code");
-      return;
-    }
-
     try {
-      const res = await toast.promise(
-        axiosInstance.post<{
-          data: {
-            submissionId: number;
-          };
-        }>(
-          `/api/problems/${problemId}`,
-          {
-            code,
-            language: language_FE_to_BE_map[language],
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        ),
+      const res = await submit<{ submissionId: number }>(
+        "POST",
+        `/api/problems/${problemId}`,
         {
-          pending: "Submitting...",
-          success: "All test cases passed",
+          code,
+          language: language_FE_to_BE_map[language],
+        },
+        {
+          includeToken: true,
         },
       );
 
-      console.log("Submit response: ", res.data);
-      const submissionId = res.data.data.submissionId;
+      console.log("Submit response: ", res);
+      const submissionId = res.submissionId;
       navigate(`/submissions/${submissionId}`);
     } catch (error) {
+      console.error(error);
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           toast.error("Please login to submit your code");
         } else if (error.response?.status === 400) {
           const submissionId = error.response.data.data.submissionId;
           navigate(`/submissions/${submissionId}`);
-        } else {
-          const errorMessage = error.response?.data?.message;
-          toast.error(errorMessage);
         }
       }
-      console.error(error);
     }
   };
-
-  return { submitCode };
+  return { handleSubmit, isSubmitting };
 };
 
 export default useSubmitCode;

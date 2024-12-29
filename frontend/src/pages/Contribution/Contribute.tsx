@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { TagListInit } from "../../utils/constanst.ts";
+import useSubmit from "../../hooks/useSubmit.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
+import { AxiosError } from "axios";
 
 interface Tag {
   label: string;
@@ -47,9 +48,10 @@ export default function Contribute() {
 
   const [isMarkdown, setIsMarkdown] = useState(false);
 
+  const { submit, isSubmitting } = useSubmit();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const selectedTags = tags
         .filter((tag) => tag.selected)
@@ -65,27 +67,18 @@ export default function Contribute() {
       formData.append("tags", selectedTags);
       formData.append("file", file as Blob);
 
-      // Prepare API payload
-
-      // Submit the form
-      const res = await toast.promise(
-        axiosInstance.post("/api/contributions", formData, {
-          headers: { Authorization: "Bearer " + token },
-        }),
-        {
-          pending: "Submitting...",
-          success: "Your question has been submitted",
-        },
-      );
+      const res = await submit("POST", "/api/contributions", formData, {
+        includeToken: true,
+      });
+      toast.success("Contribution submitted");
       navigate("/contributions");
 
-      console.log("Submit contribute response: ", res.data);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
+      console.log("Submit contribute response: ", res);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message);
       }
-      console.error(error);
+      console.error(err);
     }
   };
 
@@ -246,8 +239,13 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             />
 
             <div className="d-flex justify-content-center mt-3">
-              <Button className="w-25" type="submit">
-                Submit
+              <Button
+                className="w-25"
+                type={"submit"}
+                variant="primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? <CustomSpinner /> : "Submit"}
               </Button>
             </div>
           </Form>

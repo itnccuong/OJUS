@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
@@ -12,12 +12,16 @@ import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
-import useAdjudicate from "../../hooks/useAdjudicate.ts";
-import useSubmitCode from "../../hooks/useSubmitCode.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { ProblemInterface } from "../../interfaces/interface.ts";
+import useSubmit from "../../hooks/useSubmit.ts";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 
 export default function Contribution() {
+  const navigate = useNavigate();
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
@@ -30,8 +34,41 @@ export default function Contribution() {
   );
   const problem = data?.data.contribution;
 
-  const { submitCode } = useSubmitCode();
-  const { adjudicateHandler } = useAdjudicate();
+  const { handleSubmit, isSubmitting } = useSubmitCode();
+  const { submit: accept, isSubmitting: acceptLoading } = useSubmit();
+  const { submit: reject, isSubmitting: rejectLoading } = useSubmit();
+
+  const adjudicateHandler = async (isAccept: boolean) => {
+    try {
+      const res = isAccept
+        ? await accept<{ data: string }>(
+            "PATCH",
+            `/api/contributions/${problemId}/accept`,
+            {},
+            {
+              includeToken: true,
+            },
+          )
+        : await reject<{ data: string }>(
+            "PATCH",
+            `/api/contributions/${problemId}/reject`,
+            {},
+            {
+              includeToken: true,
+            },
+          );
+      toast.success(`Contribution ${isAccept ? "accepted" : "rejected"}`);
+      navigate("/contributions");
+      console.log("Adjudicate response:", res);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 403) {
+          navigate("/notadmin");
+        }
+      }
+      console.error(error);
+    }
+  };
 
   if (loading) {
     return <Loader />;
@@ -57,24 +94,31 @@ export default function Contribution() {
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
           <div className="p-4 d-flex justify-content-between align-items-center">
             <Button
+              style={{ width: "80px" }}
               variant="primary"
-              onClick={() => submitCode(code, language, problemId as string)}
+              disabled={isSubmitting}
+              onClick={() => handleSubmit(problemId as string, code, language)}
             >
-              Submit
+              {isSubmitting ? <CustomSpinner /> : "Submit"}
             </Button>
 
             <div className="d-flex gap-3">
               <Button
+                style={{ width: "80px" }}
                 variant="danger"
-                onClick={() => adjudicateHandler(false, problemId as string)}
+                disabled={rejectLoading}
+                onClick={() => adjudicateHandler(false)}
               >
-                Reject
+                {rejectLoading ? <CustomSpinner /> : "Reject"}
               </Button>
+
               <Button
+                style={{ width: "80px" }}
                 variant="success"
-                onClick={() => adjudicateHandler(true, problemId as string)}
+                disabled={acceptLoading}
+                onClick={() => adjudicateHandler(true)}
               >
-                Accept
+                {acceptLoading ? <CustomSpinner /> : "Accept"}
               </Button>
             </div>
             <div

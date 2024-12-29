@@ -26,7 +26,7 @@ function NavBar() {
   const user = data?.data.user;
 
   return (
-    <Navbar className="border-bottom shadow-sm d-flex px-4">
+    <Navbar className="border-bottom shadow-sm d-flex px-4 sticky-top bg-white">
       <div className="container-xxl">
         <div className="d-flex gap-3 justify-content-start">
           <Navbar.Brand as={NavLink} to={"/"}>

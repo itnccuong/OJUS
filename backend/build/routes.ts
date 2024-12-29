@@ -905,7 +905,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/api/contributions/:contribute_id/accept',
+        app.patch('/api/contributions/:contribute_id/accept',
             ...(fetchMiddlewares<RequestHandler>(ContributionController)),
             ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.acceptContribution)),
 
@@ -935,7 +935,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/api/contributions/:contribute_id/reject',
+        app.patch('/api/contributions/:contribute_id/reject',
             ...(fetchMiddlewares<RequestHandler>(ContributionController)),
             ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.rejectContribution)),
 

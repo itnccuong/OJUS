@@ -11,11 +11,12 @@ import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
-import useSubmitCode from "../../hooks/useSubmitCode.ts";
 import NotFound from "../NotFound.tsx";
 import getToken from "../../utils/getToken.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 
 export default function Problem() {
   const { problemId } = useParams();
@@ -34,8 +35,8 @@ export default function Problem() {
     },
   );
   const problem = data?.data.problem;
-  const { submitCode } = useSubmitCode();
 
+  const { handleSubmit, isSubmitting } = useSubmitCode();
   if (loading) {
     return <Loader />;
   }
@@ -59,10 +60,12 @@ export default function Problem() {
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">
           <div className="p-4 d-flex justify-content-between">
             <Button
+              style={{ width: "80px" }}
               variant="primary"
-              onClick={() => submitCode(code, language, problemId as string)}
+              disabled={isSubmitting}
+              onClick={() => handleSubmit(problemId as string, code, language)}
             >
-              Submit
+              {isSubmitting ? <CustomSpinner /> : "Submit"}
             </Button>
 
             <LanguageDropdown language={language} setLanguage={setLanguage} />

@@ -1,9 +1,10 @@
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance.ts";
 import { AxiosError } from "axios";
+import useSubmit from "../../hooks/useSubmit.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -14,37 +15,31 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [fullname, setFullName] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const { submit, isSubmitting } = useSubmit();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       toast.error("The passwords you entered do not match.");
       return;
     }
-
     try {
-      const res = await toast.promise(
-        axiosInstance.post("/api/auth/register", {
-          username,
-          password,
-          email,
-          fullname,
-        }),
-        {
-          pending: "Sign up...",
-          success: "Sign up successfully",
-        },
-      );
-      console.log(res.data);
+      const res = await submit("POST", "/api/auth/register", {
+        username,
+        password,
+        email,
+        fullname,
+      });
+      console.log(res);
+      toast.success("Sign up successfully");
       navigate("/accounts/login");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message);
       }
-      console.error(error);
+      console.error(err);
     }
   };
+
   return (
     <div className="d-flex flex-grow-1 bg-body-tertiary">
       <div className="container-xxl d-flex justify-content-center align-items-center">
@@ -132,8 +127,12 @@ export default function Register() {
           </FloatingLabel>
 
           <div className="mb-3">
-            <button className="btn btn-primary w-100" type="submit">
-              Sign Up
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary w-100"
+            >
+              {isSubmitting ? <CustomSpinner /> : "Sign Up"}
             </button>
           </div>
 

@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-import axiosInstance from "../../utils/axiosInstance.ts";
 import {
   SubmissionWithProblem,
   UserWithAvatarInterface,
 } from "../../interfaces/interface.ts";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader.tsx";
 import getToken from "../../utils/getToken.ts";
@@ -17,6 +14,8 @@ import {
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
 import useFetch from "../../hooks/useFetch.ts";
+import useSubmit from "../../hooks/useSubmit.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -45,6 +44,50 @@ export default function Profile() {
       skip: !user,
     });
   const fetchSubmissions = fetchSubmissionData?.data.submissions;
+
+  const { submit: updateAvatar, isSubmitting: updateLoading } = useSubmit();
+  const handleUpdateAvatar = async () => {
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+    } else {
+      console.log("No file");
+      return;
+    }
+    try {
+      const res = await updateAvatar("PATCH", "/api/user/avatar", formData, {
+        includeToken: true,
+      });
+      console.log("Update avatar", res);
+      setShow(false);
+      setFile(null);
+      window.location.reload();
+      toast.success("Update avatar successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const { submit: deleteAvatar, isSubmitting: deleteLoading } = useSubmit();
+  const handleDeleteAvatar = async () => {
+    try {
+      const res = await deleteAvatar(
+        "DELETE",
+        "/api/user/avatar",
+        {},
+        {
+          includeToken: true,
+        },
+      );
+      console.log("Delete avatar", res);
+      setShow(false);
+      setFile(null);
+      window.location.reload();
+      toast.success("Delete avatar successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (
     userLoading ||
@@ -94,66 +137,33 @@ export default function Profile() {
   // Only show the "Edit Profile" button if the usernames match
   const isUserMatchAccount = usernameFromToken == username;
 
-  const handleUpdateAvatar = async () => {
-    const formData = new FormData();
-    if (file) {
-      formData.append("file", file);
-    } else {
-      console.log("No file");
-      return;
-    }
-    try {
-      const response = await toast.promise(
-        axiosInstance.patch("/api/user/avatar", formData, {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }),
-        {
-          pending: "Updating...",
-          success: "Update avatar successfully",
-        },
-      );
-      console.log("Update avatar", response);
-      setShow(false);
-      setFile(null);
-      window.location.reload();
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
-      }
-      console.error(error);
-    }
-  };
-
-  const handleDeleteAvatar = async () => {
-    try {
-      const response = await toast.promise(
-        axiosInstance.delete("/api/user/avatar", {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }),
-        {
-          pending: "Updating...",
-          success: "Update avatar successfully",
-        },
-      );
-      console.log("Update avatar", response);
-      setShow(false);
-      setFile(null);
-      window.location.reload();
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
-      }
-      console.error(error);
-    } finally {
-      setShow(false);
-    }
-  };
+  // const handleDeleteAvatar = async () => {
+  //   try {
+  //     const response = await toast.promise(
+  //       axiosInstance.delete("/api/user/avatar", {
+  //         headers: {
+  //           Authorization: `Bearer ${getToken()}`,
+  //         },
+  //       }),
+  //       {
+  //         pending: "Updating...",
+  //         success: "Update avatar successfully",
+  //       },
+  //     );
+  //     console.log("Update avatar", response);
+  //     setShow(false);
+  //     setFile(null);
+  //     window.location.reload();
+  //   } catch (error) {
+  //     if (error instanceof AxiosError) {
+  //       const errorMessage = error.response?.data?.message;
+  //       toast.error(errorMessage);
+  //     }
+  //     console.error(error);
+  //   } finally {
+  //     setShow(false);
+  //   }
+  // };
 
   return (
     <div className="flex-grow-1 py-4 px-5 bg-body-tertiary">
@@ -269,18 +279,20 @@ export default function Profile() {
             </Modal.Body>
             <Modal.Footer>
               <Button
-                disabled={!user.avatar}
+                style={{ width: "130px" }}
                 variant="danger"
+                disabled={!user.avatar || deleteLoading}
                 onClick={() => handleDeleteAvatar()}
               >
-                Delete avatar
+                {deleteLoading ? <CustomSpinner /> : "Delete avatar"}
               </Button>
               <Button
-                disabled={!file}
+                style={{ width: "130px" }}
                 variant="primary"
+                disabled={!file || updateLoading}
                 onClick={() => handleUpdateAvatar()}
               >
-                Save Changes
+                {updateLoading ? <CustomSpinner /> : "Save changes"}
               </Button>
             </Modal.Footer>
           </Modal>
