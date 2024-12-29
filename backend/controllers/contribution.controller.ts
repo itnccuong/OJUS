@@ -135,7 +135,6 @@ export class ContributionController extends Controller {
         status: 2,
       },
     });
-
     // Return success response
     return {
       data: { contribution: updateContribution },
@@ -160,6 +159,7 @@ export class ContributionController extends Controller {
         status: 1,
       },
     });
+
     return {
       data: { contribution: updateContribution },
     };

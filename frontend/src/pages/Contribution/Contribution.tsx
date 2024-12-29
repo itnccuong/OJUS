@@ -69,17 +69,26 @@ export default function Contribution() {
   const { submit: accept, isSubmitting: acceptLoading } = useSubmit();
   const { submit: reject, isSubmitting: rejectLoading } = useSubmit();
 
-  const acceptHandler = async () => {
+  const adjudicateHandler = async (isAccept: boolean) => {
     try {
-      const res = await accept<{ data: string }>(
-        "PATCH",
-        `/api/contributions/${problemId}/accept`,
-        {},
-        {
-          includeToken: true,
-        },
-      );
-      toast.success(`Contribution accepted`);
+      const res = isAccept
+        ? await accept<{ data: string }>(
+            "PATCH",
+            `/api/contributions/${problemId}/accept`,
+            {},
+            {
+              includeToken: true,
+            },
+          )
+        : await reject<{ data: string }>(
+            "PATCH",
+            `/api/contributions/${problemId}/reject`,
+            {},
+            {
+              includeToken: true,
+            },
+          );
+      toast.success(`Contribution ${isAccept ? "accepted" : "rejected"}`);
       navigate("/contributions");
       console.log("Adjudicate response:", res);
     } catch (error) {
@@ -92,28 +101,6 @@ export default function Contribution() {
     }
   };
 
-  const rejectHandler = async () => {
-    try {
-      const res = await reject<{ data: string }>(
-        "PATCH",
-        `/api/contributions/${problemId}/reject`,
-        {},
-        {
-          includeToken: true,
-        },
-      );
-      toast.success(`Contribution rejected`);
-      navigate("/contributions");
-      console.log("Adjudicate response:", res);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 403) {
-          navigate("/notadmin");
-        }
-      }
-      console.error(error);
-    }
-  };
   if (loading) {
     return <Loader />;
   }
@@ -151,7 +138,7 @@ export default function Contribution() {
                 style={{ width: "80px" }}
                 variant="danger"
                 disabled={rejectLoading}
-                onClick={() => rejectHandler()}
+                onClick={() => adjudicateHandler(false)}
               >
                 {rejectLoading ? <CustomSpinner /> : "Reject"}
               </Button>
@@ -160,7 +147,7 @@ export default function Contribution() {
                 style={{ width: "80px" }}
                 variant="success"
                 disabled={acceptLoading}
-                onClick={() => acceptHandler()}
+                onClick={() => adjudicateHandler(true)}
               >
                 {acceptLoading ? <CustomSpinner /> : "Accept"}
               </Button>
