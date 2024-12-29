@@ -15,7 +15,6 @@ import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 import NotFound from "../NotFound.tsx";
 import ContributionNav from "../../components/ContributionNav.tsx";
-import useAdjudicate from "../../hooks/useAdjudicate.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { ProblemInterface } from "../../interfaces/interface.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
@@ -67,8 +66,29 @@ export default function Contribution() {
       }
     }
   };
-  const { adjudicateHandler } = useAdjudicate();
-
+  const { submit: adjudicate, isSubmitting: adjudicateLoading } = useSubmit();
+  const adjudicateHandler = async (isAccept: boolean) => {
+    try {
+      const res = await adjudicate<{ data: string }>(
+        "PATCH",
+        `/api/contributions/${problemId}/${isAccept ? "accept" : "reject"}`,
+        {},
+        {
+          includeToken: true,
+        },
+      );
+      toast.success(`Contribution ${isAccept ? "accepted" : "rejected"}`);
+      navigate("/contributions");
+      console.log("Adjudicate response:", res);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 403) {
+          navigate("/notadmin");
+        }
+      }
+      console.error(error);
+    }
+  };
   if (loading) {
     return <Loader />;
   }
@@ -103,16 +123,21 @@ export default function Contribution() {
 
             <div className="d-flex gap-3">
               <Button
+                style={{ width: "80px" }}
                 variant="danger"
-                onClick={() => adjudicateHandler(false, problemId as string)}
+                disabled={adjudicateLoading}
+                onClick={() => adjudicateHandler(false)}
               >
-                Reject
+                {adjudicateLoading ? <CustomSpinner /> : "Reject"}
               </Button>
+
               <Button
+                style={{ width: "80px" }}
                 variant="success"
-                onClick={() => adjudicateHandler(true, problemId as string)}
+                disabled={adjudicateLoading}
+                onClick={() => adjudicateHandler(true)}
               >
-                Accept
+                {adjudicateLoading ? <CustomSpinner /> : "Accept"}
               </Button>
             </div>
             <div
