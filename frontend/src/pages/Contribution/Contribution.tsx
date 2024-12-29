@@ -6,10 +6,7 @@ import { useState } from "react";
 import Editor from "@monaco-editor/react";
 
 import Loader from "../../components/Loader.tsx";
-import {
-  language_FE_to_BE_map,
-  languageEditorMap,
-} from "../../utils/constanst.ts";
+import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
@@ -21,6 +18,7 @@ import useSubmit from "../../hooks/useSubmit.ts";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 
 export default function Contribution() {
   const navigate = useNavigate();
@@ -36,36 +34,7 @@ export default function Contribution() {
   );
   const problem = data?.data.contribution;
 
-  const { submit, isSubmitting } = useSubmit();
-  const handleSubmit = async () => {
-    try {
-      const res = await submit<{ submissionId: number }>(
-        "POST",
-        `/api/problems/${problemId}`,
-        {
-          code,
-          language: language_FE_to_BE_map[language],
-        },
-        {
-          includeToken: true,
-        },
-      );
-
-      console.log("Submit response: ", res);
-      const submissionId = res.submissionId;
-      navigate(`/submissions/${submissionId}`);
-    } catch (error) {
-      console.error(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          toast.error("Please login to submit your code");
-        } else if (error.response?.status === 400) {
-          const submissionId = error.response.data.data.submissionId;
-          navigate(`/submissions/${submissionId}`);
-        }
-      }
-    }
-  };
+  const { handleSubmit, isSubmitting } = useSubmitCode();
   const { submit: accept, isSubmitting: acceptLoading } = useSubmit();
   const { submit: reject, isSubmitting: rejectLoading } = useSubmit();
 
@@ -128,7 +97,7 @@ export default function Contribution() {
               style={{ width: "80px" }}
               variant="primary"
               disabled={isSubmitting}
-              onClick={() => handleSubmit()}
+              onClick={() => handleSubmit(problemId as string, code, language)}
             >
               {isSubmitting ? <CustomSpinner /> : "Submit"}
             </Button>

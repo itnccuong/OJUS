@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
@@ -7,10 +7,7 @@ import Editor from "@monaco-editor/react";
 
 import Loader from "../../components/Loader.tsx";
 import ProblemNav from "../../components/ProblemNav.tsx";
-import {
-  language_FE_to_BE_map,
-  languageEditorMap,
-} from "../../utils/constanst.ts";
+import { languageEditorMap } from "../../utils/constanst.ts";
 import PopoverTag from "../../components/PopoverTag.tsx";
 import DifficultyBadge from "../../components/DifficultyBadge.tsx";
 import LanguageDropdown from "../../components/LanguageDropdown.tsx";
@@ -18,13 +15,10 @@ import NotFound from "../NotFound.tsx";
 import getToken from "../../utils/getToken.ts";
 import useFetch from "../../hooks/useFetch.ts";
 import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
-import useSubmit from "../../hooks/useSubmit.ts";
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmitCode from "../../hooks/useSubmitCode.ts";
 
 export default function Problem() {
-  const navigate = useNavigate();
   const { problemId } = useParams();
   const [language, setLanguage] = useState("C++");
   const [code, setCode] = useState<string | undefined>("");
@@ -42,36 +36,7 @@ export default function Problem() {
   );
   const problem = data?.data.problem;
 
-  const { submit, isSubmitting } = useSubmit();
-  const handleSubmit = async () => {
-    try {
-      const res = await submit<{ submissionId: number }>(
-        "POST",
-        `/api/problems/${problemId}`,
-        {
-          code,
-          language: language_FE_to_BE_map[language],
-        },
-        {
-          includeToken: true,
-        },
-      );
-
-      console.log("Submit response: ", res);
-      const submissionId = res.submissionId;
-      navigate(`/submissions/${submissionId}`);
-    } catch (error) {
-      console.error(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          toast.error("Please login to submit your code");
-        } else if (error.response?.status === 400) {
-          const submissionId = error.response.data.data.submissionId;
-          navigate(`/submissions/${submissionId}`);
-        }
-      }
-    }
-  };
+  const { handleSubmit, isSubmitting } = useSubmitCode();
   if (loading) {
     return <Loader />;
   }
@@ -98,7 +63,7 @@ export default function Problem() {
               style={{ width: "80px" }}
               variant="primary"
               disabled={isSubmitting}
-              onClick={() => handleSubmit()}
+              onClick={() => handleSubmit(problemId as string, code, language)}
             >
               {isSubmitting ? <CustomSpinner /> : "Submit"}
             </Button>

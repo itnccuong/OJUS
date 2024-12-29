@@ -90,7 +90,7 @@ describe("Get contributions", () => {
 describe("Admin Contribution Actions", () => {
   test("Accept a contribution", async () => {
     const res = (await request(app)
-      .put("/api/contributions/1/accept")
+      .patch("/api/contributions/1/accept")
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
@@ -109,7 +109,7 @@ describe("Admin Contribution Actions", () => {
 
   test("Reject a contribution", async () => {
     const res = (await request(app)
-      .put("/api/contributions/1/reject")
+      .patch("/api/contributions/1/reject")
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
@@ -127,7 +127,7 @@ describe("Admin Contribution Actions", () => {
   });
   test("Accept a non-pending contribution", async () => {
     const res = (await request(app)
-      .put("/api/contributions/6/accept")
+      .patch("/api/contributions/6/accept")
       .set(
         "Authorization",
         `Bearer ${fake_token}`,
