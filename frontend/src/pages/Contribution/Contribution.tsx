@@ -66,18 +66,43 @@ export default function Contribution() {
       }
     }
   };
-  const { submit: adjudicate, isSubmitting: adjudicateLoading } = useSubmit();
-  const adjudicateHandler = async (isAccept: boolean) => {
+  const { submit: accept, isSubmitting: acceptLoading } = useSubmit();
+  const { submit: reject, isSubmitting: rejectLoading } = useSubmit();
+
+  const acceptHandler = async () => {
     try {
-      const res = await adjudicate<{ data: string }>(
+      const res = await accept<{ data: string }>(
         "PATCH",
-        `/api/contributions/${problemId}/${isAccept ? "accept" : "reject"}`,
+        `/api/contributions/${problemId}/accept`,
         {},
         {
           includeToken: true,
         },
       );
-      toast.success(`Contribution ${isAccept ? "accepted" : "rejected"}`);
+      toast.success(`Contribution accepted`);
+      navigate("/contributions");
+      console.log("Adjudicate response:", res);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 403) {
+          navigate("/notadmin");
+        }
+      }
+      console.error(error);
+    }
+  };
+
+  const rejectHandler = async () => {
+    try {
+      const res = await reject<{ data: string }>(
+        "PATCH",
+        `/api/contributions/${problemId}/reject`,
+        {},
+        {
+          includeToken: true,
+        },
+      );
+      toast.success(`Contribution rejected`);
       navigate("/contributions");
       console.log("Adjudicate response:", res);
     } catch (error) {
@@ -125,19 +150,19 @@ export default function Contribution() {
               <Button
                 style={{ width: "80px" }}
                 variant="danger"
-                disabled={adjudicateLoading}
-                onClick={() => adjudicateHandler(false)}
+                disabled={rejectLoading}
+                onClick={() => rejectHandler()}
               >
-                {adjudicateLoading ? <CustomSpinner /> : "Reject"}
+                {rejectLoading ? <CustomSpinner /> : "Reject"}
               </Button>
 
               <Button
                 style={{ width: "80px" }}
                 variant="success"
-                disabled={adjudicateLoading}
-                onClick={() => adjudicateHandler(true)}
+                disabled={acceptLoading}
+                onClick={() => acceptHandler()}
               >
-                {adjudicateLoading ? <CustomSpinner /> : "Accept"}
+                {acceptLoading ? <CustomSpinner /> : "Accept"}
               </Button>
             </div>
             <div
