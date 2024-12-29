@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance.ts";
-import { AxiosError } from "axios";
-import { UserInterface } from "../../interfaces/interface.ts";
 import { storageKeyMap } from "../../utils/constanst.ts";
+import CustomSpinner from "../../components/CustomSpinner.tsx";
+import useSubmit from "../../hooks/useSubmit.ts";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const { submit, loading } = useSubmit();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,30 +17,39 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      const res = await toast.promise(
-        axiosInstance.post<{ data: { user: UserInterface; token: string } }>(
-          "/api/auth/login",
-          {
-            usernameOrEmail,
-            password,
-          },
-        ),
-        {
-          pending: "Sign in...",
-          success: "Sign in successfully",
-        },
-      );
-      console.log(res.data);
+    const body = {
+      usernameOrEmail,
+      password,
+    };
+    const res = await submit("/api/auth/login", "POST", body);
+
+    if (res.success) {
       localStorage.setItem(storageKeyMap.token, res.data.data.token);
       navigate("/problems");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message;
-        toast.error(errorMessage);
-      }
-      console.error(error);
+      toast.success("Login successfully");
     }
+    // try {
+    //   setIsSubmitting(true);
+    //   const res = await axiosInstance.post<{
+    //     data: { user: UserInterface; token: string };
+    //   }>("/api/auth/login", {
+    //     usernameOrEmail,
+    //     password,
+    //   });
+    //
+    //   console.log(res.data);
+    //   localStorage.setItem(storageKeyMap.token, res.data.data.token);
+    //   navigate("/problems");
+    //   toast.success("Login successfully");
+    // } catch (error) {
+    //   if (error instanceof AxiosError) {
+    //     const errorMessage = error.response?.data?.message;
+    //     toast.error(errorMessage);
+    //   }
+    //   console.error(error);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   return (
@@ -83,8 +93,12 @@ export default function Login() {
           </FloatingLabel>
 
           <div className="mb-3">
-            <button type="submit" className="btn btn-primary w-100">
-              Sign In
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-100"
+            >
+              {loading ? <CustomSpinner /> : "Sign In"}
             </button>
           </div>
 

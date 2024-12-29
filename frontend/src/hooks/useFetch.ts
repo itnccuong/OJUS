@@ -48,8 +48,7 @@ const useFetch = <T>(
             navigate("/notadmin");
             return; // Exit early to prevent further error handling
           }
-          const errorMessage =
-            err.response?.data?.message || "An error occurred";
+          const errorMessage = err.response?.data?.message;
           setError(errorMessage);
           toast.error(errorMessage);
         } else {
