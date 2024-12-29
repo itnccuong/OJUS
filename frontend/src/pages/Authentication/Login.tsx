@@ -19,50 +19,19 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const body = {
+      const res = await submit<{ token: string }>("/api/auth/login", "POST", {
         usernameOrEmail,
         password,
-      };
-      const res = await submit<{ token: string }>(
-        "/api/auth/login",
-        "POST",
-        body,
-      );
+      });
 
-      if (res?.token) {
-        localStorage.setItem(storageKeyMap.token, res.token);
-        navigate("/problems");
-        toast.success("Login successfully");
-      }
+      localStorage.setItem(storageKeyMap.token, res.token);
+      navigate("/problems");
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message);
       }
       console.error(err);
     }
-
-    // try {
-    //   setIsSubmitting(true);
-    //   const res = await axiosInstance.post<{
-    //     data: { user: UserInterface; token: string };
-    //   }>("/api/auth/login", {
-    //     usernameOrEmail,
-    //     password,
-    //   });
-    //
-    //   console.log(res.data);
-    //   localStorage.setItem(storageKeyMap.token, res.data.data.token);
-    //   navigate("/problems");
-    //   toast.success("Login successfully");
-    // } catch (error) {
-    //   if (error instanceof AxiosError) {
-    //     const errorMessage = error.response?.data?.message;
-    //     toast.error(errorMessage);
-    //   }
-    //   console.error(error);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
   };
 
   return (
