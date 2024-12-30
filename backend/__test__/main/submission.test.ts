@@ -24,6 +24,7 @@ import {
   SubmissionWithResults,
 } from "../../interfaces/interface";
 import { STATUS_CODE, verdict } from "../../utils/constants";
+import { Submission } from "@prisma/client";
 
 jest.setTimeout(60000);
 
@@ -81,4 +82,17 @@ test("Get all submissions", async () => {
   submissions.map((submission) => {
     expect(submission.userId).toBe(user.userId);
   });
+});
+
+test("Get one submission", async () => {
+  const res = (await request(app).get(
+    `/api/submissions/${submission1.submissionId}`,
+  )) as ResponseInterfaceForTest<{
+    submission: Submission;
+  }>;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  const submission = res.body.data.submission;
+  expect(submission.submissionId).toBe(submission1.submissionId);
+  expect(submission.problemId).toBe(problem1.problemId);
+  expect(submission.userId).toBe(user.userId);
 });
