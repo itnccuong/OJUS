@@ -6,6 +6,7 @@ import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
 
 import {
   compileFailAnswer,
+  correctAnswers,
   fake_token,
   file1,
   problem1,
@@ -32,43 +33,43 @@ beforeEach(async () => {
   await insertProblem(problem1);
 });
 
-describe("Compile code", () => {
-  describe("Compile fail", () => {
-    compileFailAnswer.forEach(({ language, invalidCode }) => {
-      test(`${language} - Compile Error`, async () => {
-        await testCompile(
-          problem1.problemId,
-          invalidCode,
-          language,
-          true,
-          fake_token,
-        );
-      });
-    });
-  });
-
-  describe("Compile success", () => {
-    compileFailAnswer.forEach(({ language, validCode }) => {
-      test(`${language} - Successful Compilation`, async () => {
-        await testCompile(
-          problem1.problemId,
-          validCode,
-          language,
-          false,
-          fake_token,
-        );
-      });
-    });
-  });
-});
-
-// describe("Correct answer code", () => {
-//   correctAnswers.forEach(({ language, code }) => {
-//     test(`${language} - Correct answer`, async () => {
-//       await testCorrect(code, language, fake_token);
+// describe("Compile code", () => {
+//   describe("Compile fail", () => {
+//     compileFailAnswer.forEach(({ language, invalidCode }) => {
+//       test(`${language} - Compile Error`, async () => {
+//         await testCompile(
+//           problem1.problemId,
+//           invalidCode,
+//           language,
+//           true,
+//           fake_token,
+//         );
+//       });
+//     });
+//   });
+//
+//   describe("Compile success", () => {
+//     compileFailAnswer.forEach(({ language, validCode }) => {
+//       test(`${language} - Successful Compilation`, async () => {
+//         await testCompile(
+//           problem1.problemId,
+//           validCode,
+//           language,
+//           false,
+//           fake_token,
+//         );
+//       });
 //     });
 //   });
 // });
+
+describe("Correct answer code", () => {
+  correctAnswers.forEach(({ language, code }) => {
+    test(`${language} - Correct answer`, async () => {
+      await testCorrect(problem1, code, language, fake_token);
+    });
+  });
+});
 //
 // describe("Submit code (C++)", () => {
 //   test("Wrong answer", async () => {
