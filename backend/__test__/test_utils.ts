@@ -3,6 +3,8 @@ import { Files, Problem, Result, Submission, User } from "@prisma/client";
 import request from "supertest";
 import { app } from "../src/app";
 import { ResponseInterfaceForTest } from "../interfaces/interface";
+import { expect } from "@jest/globals";
+import { STATUS_CODE, verdict } from "../utils/constants";
 
 export const cleanDatabase = async () => {
   const deleteResult = prisma.result.deleteMany();
@@ -65,6 +67,14 @@ export const getSubmitCodeResults = async (
   const getResultResponse = (await request(app).get(
     `/api/submissions/${submissionId}/results`,
   )) as ResponseInterfaceForTest<{ results: Result[] }>;
+  expect(res.body.data.submissionId).toBeTruthy();
+  expect(getSubmissionResponse.status).toBe(STATUS_CODE.SUCCESS);
+  expect(getResultResponse.status).toBe(STATUS_CODE.SUCCESS);
+  expect(getSubmissionResponse.body.data.submission.problemId).toBe(problemId);
+  getResultResponse.body.data.results.map((result) => {
+    expect(result.submissionId).toBe(res.body.data.submissionId);
+  });
+
   return {
     submitCodeResponse: res,
     getSubmissionResponse: getSubmissionResponse,

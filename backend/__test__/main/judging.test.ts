@@ -12,10 +12,12 @@ import {
 import { testCompile, testCorrect } from "../test_services";
 import {
   cleanDatabase,
+  getSubmitCodeResults,
   insertFile,
   insertProblem,
   insertUser,
 } from "../test_utils";
+import { STATUS_CODE } from "../../utils/constants";
 
 jest.setTimeout(60000);
 
@@ -62,12 +64,19 @@ describe("Correct answer code", () => {
 //       code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -1;\n}",
 //       language: "cpp",
 //     };
+//     const { submitCodeResponse, getSubmissionResponse, getResultResponse } =
+//       await getSubmitCodeResults(
+//         problem1.problemId,
+//         body.code,
+//         body.language,
+//         fake_token,
+//       );
 //
-//     const res = await request(app)
-//       .post(`/api/problems/${problem1.problemId}`)
-//       .set("Authorization", `Bearer ${fake_token}`)
-//       .send(body);
-//     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
+//     expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
+//
+//     expect(getSubmissionResponse.body.data.submission.problemId).toBe(
+//       problem1.problemId,
+//     );
 //   });
 //
 //   test("Runtime Error", async () => {

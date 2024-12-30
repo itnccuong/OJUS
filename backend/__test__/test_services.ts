@@ -13,14 +13,11 @@ export const testCompile = async (
   const { submitCodeResponse, getSubmissionResponse, getResultResponse } =
     await getSubmitCodeResults(problem.problemId, code, language, token);
 
-  expect(submitCodeResponse.body.data.submissionId).toBeTruthy();
-
   expect(getSubmissionResponse.body.data.submission.problemId).toBe(
     problem.problemId,
   );
   if (isCompileError) {
     expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
-    expect(getSubmissionResponse.status).toBe(STATUS_CODE.SUCCESS);
     expect(getSubmissionResponse.body.data.submission.verdict).toBe(
       verdict.COMPILE_ERROR,
     );
@@ -31,7 +28,6 @@ export const testCompile = async (
     expect(getSubmissionResponse.body.data.submission.verdict).not.toBe(
       verdict.COMPILE_ERROR,
     );
-    expect(getResultResponse.status).toBe(STATUS_CODE.SUCCESS);
     expect(getResultResponse.body.data.results.length).toBeGreaterThan(0);
   }
 };
@@ -46,19 +42,12 @@ export const testCorrect = async (
     await getSubmitCodeResults(problem.problemId, code, language, token);
 
   expect(submitCodeResponse.status).toBe(STATUS_CODE.SUCCESS);
-  expect(submitCodeResponse.body.data.submissionId).toBeTruthy();
 
-  expect(getSubmissionResponse.body.data.submission.problemId).toBe(
-    problem.problemId,
-  );
-  expect(getSubmissionResponse.status).toBe(STATUS_CODE.SUCCESS);
   expect(getSubmissionResponse.body.data.submission.verdict).toBe(verdict.OK);
   expect(getSubmissionResponse.body.data.submission.stderr).toBeFalsy();
 
-  expect(getResultResponse.status).toBe(STATUS_CODE.SUCCESS);
   expect(getResultResponse.body.data.results.length).toBeGreaterThan(0);
   getResultResponse.body.data.results.map((result) => {
-    expect(result.submissionId).toBe(submitCodeResponse.body.data.submissionId);
     expect(result.verdict).toBe(verdict.OK);
     expect(result.time).toBeLessThan(problem.timeLimit);
     expect(result.memory).toBeLessThan(problem.memoryLimit);
