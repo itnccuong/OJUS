@@ -26,6 +26,7 @@ import {
 import { Problem } from "@prisma/client";
 import { deleteFile } from "../../utils/fileUtilsDO";
 import { STATUS_CODE } from "../../utils/constants";
+import axios from "axios";
 
 const filePath = path.resolve(__dirname, "../../testcaseForTest/testcase.zip");
 
@@ -70,6 +71,8 @@ test("Contribute", async () => {
   if (file) {
     expect(file.fileType).toContain("zip");
     expect(file.url).toBeTruthy();
+    const requestFileUrl = await axios.get(file.url);
+    expect(requestFileUrl.status).toBe(STATUS_CODE.SUCCESS);
     expect(file.key).toBeTruthy();
     await deleteFile(file.key as string);
   }
