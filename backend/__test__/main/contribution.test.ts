@@ -4,8 +4,22 @@ import request from "supertest";
 import path from "path";
 import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import prisma from "../../prisma/client";
-import { cleanDatabase, insertUser } from "../test_utils";
-import { userToken, user } from "../test_data";
+import {
+  cleanDatabase,
+  insertFile,
+  insertProblem,
+  insertUser,
+} from "../test_utils";
+import {
+  userToken,
+  user,
+  contribution1,
+  contribution2,
+  file3,
+  file4,
+  adminToken,
+  admin,
+} from "../test_data";
 import { Problem } from "@prisma/client";
 import { deleteFile } from "../../utils/fileUtilsDO";
 import { STATUS_CODE } from "../../utils/constants";
@@ -17,6 +31,9 @@ jest.setTimeout(60000);
 beforeEach(async () => {
   await cleanDatabase();
   await insertUser(user);
+  await insertUser(admin);
+  await insertFile(file3);
+  await insertProblem(contribution1);
 });
 
 describe("Contribute", () => {
@@ -57,22 +74,23 @@ describe("Contribute", () => {
     }
   });
 });
-//
-// describe("Get contributions", () => {
-//   test("Get all contributions", async () => {
-//     const res = (await request(app)
-//       .get("/api/contributions")
-//       .set(
-//         "Authorization",
-//         `Bearer ${fake_token}`,
-//       )) as ResponseInterfaceForTest<{ contributions: Problem[] }>;
-//     expect(res.status).toBe(200);
-//     const contributions = res.body.data.contributions;
-//     expect(contributions.length).toBe(numPending);
-//     contributions.map((contribution) => {
-//       expect(contribution.status).toBe(0);
-//     });
-//   });
+
+test("Get all contributions", async () => {
+  await insertFile(file4);
+  await insertProblem(contribution2);
+
+  const res = (await request(app)
+    .get("/api/contributions")
+    .set("Authorization", `Bearer ${adminToken}`)) as ResponseInterfaceForTest<{
+    contributions: Problem[];
+  }>;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  const contributions = res.body.data.contributions;
+  expect(contributions.length).toBe(2);
+  contributions.map((contribution) => {
+    expect(contribution.status).toBe(0);
+  });
+});
 //
 //   test("Get one contribution", async () => {
 //     const res = (await request(app)

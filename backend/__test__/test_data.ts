@@ -36,6 +36,12 @@ export const userToken = jwt.sign(
   { expiresIn: "3m" }, // Token expiration
 );
 
+export const adminToken = jwt.sign(
+  { userId: admin.userId }, // Payload
+  process.env.JWT_SECRET as string, // Secret
+  { expiresIn: "3m" }, // Token expiration
+);
+
 export const file1: Files = {
   fileId: 1,
   filename: `testcase_1`,
@@ -81,6 +87,54 @@ export const problem2: Problem = {
   memoryLimit: 1000,
   authorId: 1,
   fileId: 2,
+  createdAt: new Date(),
+};
+
+export const file3: Files = {
+  fileId: 3,
+  filename: `testcase_3`,
+  filesize: 1057,
+  fileType: "application/x-zip-compressed",
+  url: "https://ojus-bucket-test.sgp1.cdn.digitaloceanspaces.com/testcase.zip",
+  key: null,
+  createdAt: new Date(),
+};
+
+export const file4: Files = {
+  fileId: 4,
+  filename: `testcase_4`,
+  filesize: 1057,
+  fileType: "application/x-zip-compressed",
+  url: "https://ojus-bucket-test.sgp1.cdn.digitaloceanspaces.com/testcase.zip",
+  key: null,
+  createdAt: new Date(),
+};
+
+export const contribution1: Problem = {
+  problemId: 3,
+  title: "Contribution 1",
+  description: "Description for problem 1",
+  status: 0,
+  difficulty: 2,
+  tags: `Array`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 3,
+  createdAt: new Date(),
+};
+
+export const contribution2: Problem = {
+  problemId: 4,
+  title: "Contribution 2",
+  description: "Description for problem 2",
+  status: 0,
+  difficulty: 3,
+  tags: `String`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 4,
   createdAt: new Date(),
 };
 
