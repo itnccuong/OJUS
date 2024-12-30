@@ -85,7 +85,7 @@ export default function Register() {
     e.preventDefault();
     
     // Validate inputs before submission
-    if (!validateUsername(username) || !validatePassword(password)) {
+    if (!validateUsername(username) || !validatePassword(password) || !validateEmail(email) || !validateFullname(fullname)) {
       return;
     }
 
