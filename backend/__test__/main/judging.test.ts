@@ -25,7 +25,7 @@
 //   await initAllDockerContainers();
 // });
 //
-// beforeEach(async () => {
+// beforeAll(async () => {
 //   await cleanDatabase();
 //   await insertUser(user);
 //   await insertFile(file1);

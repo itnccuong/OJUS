@@ -1531,7 +1531,7 @@
 				"operationId": "GetSubmissionsFromContribution",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched submissions from problem",
+						"description": "Successfully fetched submissions from contribution",
 						"content": {
 							"application/json": {
 								"schema": {

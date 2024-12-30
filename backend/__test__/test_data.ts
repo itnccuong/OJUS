@@ -1,4 +1,4 @@
-import { Files, Problem, Submission, User } from "@prisma/client";
+import { Files, Problem, Result, Submission, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { verdict } from "../utils/constants";
@@ -170,6 +170,28 @@ export const submission3: Submission = {
   language: "py",
   verdict: verdict.OK,
   stderr: "",
+};
+
+export const result1: Result = {
+  resultId: 1,
+  submissionId: submission1.submissionId,
+  output: "-1",
+  testcaseIndex: 1,
+  verdict: verdict.OK,
+  time: 100,
+  memory: 100,
+  createdAt: new Date(),
+};
+
+export const result2: Result = {
+  resultId: 2,
+  submissionId: submission1.submissionId,
+  output: "-2",
+  testcaseIndex: 2,
+  verdict: verdict.OK,
+  time: 100,
+  memory: 100,
+  createdAt: new Date(),
 };
 
 export const compileFailAnswer = [

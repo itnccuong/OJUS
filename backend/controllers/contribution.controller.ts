@@ -168,7 +168,7 @@ export class ContributionController extends Controller {
 
   @Get("/{problem_id}/submissions")
   @Middlewares(verifyAdmin)
-  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  @SuccessResponse(200, "Successfully fetched submissions from contribution")
   public async getSubmissionsFromContribution(
     @Path() problem_id: number,
     @Request() req: RequestExpress,
