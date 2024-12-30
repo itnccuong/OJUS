@@ -833,7 +833,7 @@
 				"operationId": "UpdateProfile",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched user profile",
+						"description": "Successfully edit user profile",
 						"content": {
 							"application/json": {
 								"schema": {

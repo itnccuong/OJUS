@@ -77,7 +77,7 @@ export class UserController extends Controller {
 
   @Patch("/")
   @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched user profile")
+  @SuccessResponse(200, "Successfully edit user profile")
   public async updateProfile(
     @Request() req: RequestExpress,
     @Body()

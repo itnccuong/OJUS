@@ -137,34 +137,6 @@ export default function Profile() {
   // Only show the "Edit Profile" button if the usernames match
   const isUserMatchAccount = usernameFromToken == username;
 
-  // const handleDeleteAvatar = async () => {
-  //   try {
-  //     const response = await toast.promise(
-  //       axiosInstance.delete("/api/user/avatar", {
-  //         headers: {
-  //           Authorization: `Bearer ${getToken()}`,
-  //         },
-  //       }),
-  //       {
-  //         pending: "Updating...",
-  //         success: "Update avatar successfully",
-  //       },
-  //     );
-  //     console.log("Update avatar", response);
-  //     setShow(false);
-  //     setFile(null);
-  //     window.location.reload();
-  //   } catch (error) {
-  //     if (error instanceof AxiosError) {
-  //       const errorMessage = error.response?.data?.message;
-  //       toast.error(errorMessage);
-  //     }
-  //     console.error(error);
-  //   } finally {
-  //     setShow(false);
-  //   }
-  // };
-
   return (
     <div className="flex-grow-1 py-4 px-5 bg-body-tertiary">
       {/* Left Side - Profile Box */}
