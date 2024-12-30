@@ -1,5 +1,12 @@
-import { User } from "@prisma/client";
+import { Problem, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+export const fake_token = jwt.sign(
+  { userId: 1 }, // Payload
+  process.env.JWT_SECRET as string, // Secret
+  { expiresIn: "3m" }, // Token expiration
+);
 
 const salt = bcrypt.genSaltSync(10);
 const hashedPassword = bcrypt.hashSync("1", salt);
@@ -29,6 +36,52 @@ export const admin: User = {
   admin: true,
 };
 
+export const file1 = {
+  fileId: 1,
+  filename: `testcase_1`,
+  filesize: 1057,
+  fileType: "application/x-zip-compressed",
+  url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
+  createdAt: new Date(),
+};
+
+export const file2 = {
+  fileId: 2,
+  filename: `testcase_2`,
+  filesize: 1057,
+  fileType: "application/x-zip-compressed",
+  url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
+  createdAt: new Date(),
+};
+
+export const problem1: Problem = {
+  problemId: 1,
+  title: "Problem 1",
+  description: "Description for problem 1",
+  status: 2,
+  difficulty: 2,
+  tags: `Array`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 1,
+  createdAt: new Date(),
+};
+
+export const problem2: Problem = {
+  problemId: 2,
+  title: "Problem 2",
+  description: "Description for problem 2",
+  status: 2,
+  difficulty: 3,
+  tags: `String`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 2,
+  createdAt: new Date(),
+};
+
 // interface LoginInterface {
 //   usernameOrEmail: string;
 //   password: string;
@@ -41,11 +94,7 @@ export const admin: User = {
 //   fullname: string;
 // }
 //
-// export const fake_token = jwt.sign(
-//   { userId: 1 }, // Payload
-//   process.env.JWT_SECRET as string, // Secret
-//   { expiresIn: "3m" }, // Token expiration
-// );
+
 //
 // export const compileFailAnswer = [
 //   {

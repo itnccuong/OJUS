@@ -1,5 +1,5 @@
 import prisma from "../prisma/client";
-import { User } from "@prisma/client";
+import { Files, Problem, User } from "@prisma/client";
 
 export const cleanDatabase = async () => {
   const deleteResult = prisma.result.deleteMany();
@@ -22,5 +22,17 @@ export const cleanDatabase = async () => {
 export const insertUser = async (user: User) => {
   await prisma.user.create({
     data: user,
+  });
+};
+
+export const insertProblem = async (problem: Problem) => {
+  await prisma.problem.create({
+    data: problem,
+  });
+};
+
+export const insertFile = async (file: Files) => {
+  await prisma.files.create({
+    data: file,
   });
 };

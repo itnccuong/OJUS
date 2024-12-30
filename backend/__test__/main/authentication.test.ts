@@ -7,14 +7,13 @@ import { user } from "../test_data";
 import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import jwt from "jsonwebtoken";
-import { insertUser } from "../test_utils";
+import { cleanDatabase, insertUser } from "../test_utils";
 import type { User } from "@prisma/client";
 
 jest.setTimeout(60000);
 
 beforeEach(async () => {
-  await prisma.user.deleteMany();
-
+  await cleanDatabase();
   await insertUser(user);
 });
 
