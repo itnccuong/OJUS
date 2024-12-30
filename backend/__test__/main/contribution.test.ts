@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, test } from "@jest/globals";
 import { app } from "../../src/app";
 import request from "supertest";
 import path from "path";
-import { ResponseInterfaceForTest } from "../../interfaces/interface";
+import {
+  ProblemWithUserStatusInterface,
+  ResponseInterfaceForTest,
+} from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import {
   cleanDatabase,
@@ -91,68 +94,57 @@ test("Get all contributions", async () => {
     expect(contribution.status).toBe(0);
   });
 });
-//
-//   test("Get one contribution", async () => {
-//     const res = (await request(app)
-//       .get("/api/contributions/1")
-//       .set(
-//         "Authorization",
-//         `Bearer ${fake_token}`,
-//       )) as ResponseInterfaceForTest<{ contribution: Problem }>;
-//     const contribution = res.body.data.contribution;
-//     expect(res.status).toBe(200);
-//     expect(contribution.problemId).toBe(1);
-//     expect(contribution.status).toBe(0);
-//   });
-// });
-//
-// describe("Admin Contribution Actions", () => {
-//   test("Accept a contribution", async () => {
-//     const res = (await request(app)
-//       .patch("/api/contributions/1/accept")
-//       .set(
-//         "Authorization",
-//         `Bearer ${fake_token}`,
-//       )) as ResponseInterfaceForTest<{ contribution: Problem }>;
-//
-//     expect(res.status).toBe(200);
-//     expect(res.body.data.contribution.status).toBe(2);
-//
-//     // Verify the contribution status is updated
-//     const problemRes = (await request(app).get(
-//       "/api/problems/no-account/1",
-//     )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
-//     const problem = problemRes.body.data.problem;
-//     expect(problem.status).toBe(2);
-//   });
-//
-//   test("Reject a contribution", async () => {
-//     const res = (await request(app)
-//       .patch("/api/contributions/1/reject")
-//       .set(
-//         "Authorization",
-//         `Bearer ${fake_token}`,
-//       )) as ResponseInterfaceForTest<{ contribution: Problem }>;
-//
-//     expect(res.status).toBe(200);
-//     expect(res.body.data.contribution.status).toBe(1);
-//
-//     // Verify the contribution status is updated
-//     const problemRes = (await request(app).get(
-//       "/api/problems/1",
-//     )) as ResponseInterfaceForTest<{ problem: Problem }>;
-//     const problem = problemRes.body.data.problem;
-//     expect(problem.status).toBe(1);
-//   });
-//   test("Accept a non-pending contribution", async () => {
-//     const res = (await request(app)
-//       .patch("/api/contributions/6/accept")
-//       .set(
-//         "Authorization",
-//         `Bearer ${fake_token}`,
-//       )) as ResponseInterfaceForTest<
-//       SuccessResponseInterface<{ contribution: Problem }>
-//     >;
-//     expect(res.status).toBe(STATUS_CODE.NOT_FOUND);
-//   });
-// });
+
+test("Get one contribution", async () => {
+  const res = (await request(app)
+    .get(`/api/contributions/${contribution1.problemId}`)
+    .set("Authorization", `Bearer ${adminToken}`)) as ResponseInterfaceForTest<{
+    contribution: Problem;
+  }>;
+  const contribution = res.body.data.contribution;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  expect(contribution.problemId).toBe(contribution1.problemId);
+  expect(contribution.status).toBe(0);
+});
+
+describe("Admin Contribution Actions", () => {
+  test("Accept a contribution", async () => {
+    const res = (await request(app)
+      .patch(`/api/contributions/${contribution1.problemId}/accept`)
+      .set(
+        "Authorization",
+        `Bearer ${adminToken}`,
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
+
+    const problemId = res.body.data.contribution.problemId;
+
+    expect(res.status).toBe(STATUS_CODE.SUCCESS);
+    expect(problemId).toBe(contribution1.problemId);
+    // Verify the contribution status is updated
+    const acceptedProblem = (await request(app).get(
+      `/api/problems/${problemId}`,
+    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
+    const problem = acceptedProblem.body.data.problem;
+    expect(problem.status).toBe(2);
+  });
+
+  test("Reject a contribution", async () => {
+    const res = (await request(app)
+      .patch(`/api/contributions/${contribution1.problemId}/reject`)
+      .set(
+        "Authorization",
+        `Bearer ${adminToken}`,
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
+
+    const problemId = res.body.data.contribution.problemId;
+
+    expect(res.status).toBe(STATUS_CODE.SUCCESS);
+    expect(problemId).toBe(contribution1.problemId);
+    // Verify the contribution status is updated
+    const acceptedProblem = (await request(app).get(
+      `/api/problems/${problemId}`,
+    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
+    const problem = acceptedProblem.body.data.problem;
+    expect(problem.status).toBe(1);
+  });
+});
