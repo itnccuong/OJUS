@@ -68,8 +68,10 @@ export const getSubmitCodeResults = async (
     `/api/submissions/${submissionId}/results`,
   )) as ResponseInterfaceForTest<{ results: Result[] }>;
   expect(res.body.data.submissionId).toBeTruthy();
+
   expect(getSubmissionResponse.status).toBe(STATUS_CODE.SUCCESS);
   expect(getResultResponse.status).toBe(STATUS_CODE.SUCCESS);
+
   expect(getSubmissionResponse.body.data.submission.problemId).toBe(problemId);
   getResultResponse.body.data.results.map((result) => {
     expect(result.submissionId).toBe(res.body.data.submissionId);
