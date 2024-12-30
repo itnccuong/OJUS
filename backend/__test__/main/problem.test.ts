@@ -12,7 +12,7 @@ import {
   insertUser,
 } from "../test_utils";
 import {
-  fake_token,
+  userToken,
   file1,
   file2,
   problem1,
@@ -53,7 +53,7 @@ describe("Get problem list", () => {
       .get("/api/problems/with-account")
       .set(
         "Authorization",
-        `Bearer ${fake_token}`,
+        `Bearer ${userToken}`,
       )) as ResponseInterfaceForTest<{
       problems: ProblemWithUserStatusInterface[];
     }>;
@@ -83,7 +83,7 @@ describe("Get one problem", () => {
       .get(`/api/problems/with-account/${problem1.problemId}`)
       .set(
         "Authorization",
-        `Bearer ${fake_token}`,
+        `Bearer ${userToken}`,
       )) as ResponseInterfaceForTest<{
       problem: ProblemWithUserStatusInterface;
     }>;

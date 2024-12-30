@@ -4,7 +4,7 @@ import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
 import {
   compileFailAnswer,
   correctAnswers,
-  fake_token,
+  userToken,
   file1,
   problem1,
   user,
@@ -36,7 +36,7 @@ describe("Compile code", () => {
   describe("Compile fail", () => {
     compileFailAnswer.forEach(({ language, invalidCode }) => {
       test(`${language} - Compile Error`, async () => {
-        await testCompile(problem1, invalidCode, language, true, fake_token);
+        await testCompile(problem1, invalidCode, language, true, userToken);
       });
     });
   });
@@ -44,7 +44,7 @@ describe("Compile code", () => {
   describe("Compile success", () => {
     compileFailAnswer.forEach(({ language, validCode }) => {
       test(`${language} - Successful Compilation`, async () => {
-        await testCompile(problem1, validCode, language, false, fake_token);
+        await testCompile(problem1, validCode, language, false, userToken);
       });
     });
   });
@@ -53,7 +53,7 @@ describe("Compile code", () => {
 describe("Correct answer code", () => {
   correctAnswers.forEach(({ language, code }) => {
     test(`${language} - Correct answer`, async () => {
-      await testCorrect(problem1, code, language, fake_token);
+      await testCorrect(problem1, code, language, userToken);
     });
   });
 });
@@ -69,7 +69,7 @@ describe("Submit code (C++)", () => {
         problem1.problemId,
         body.code,
         body.language,
-        fake_token,
+        userToken,
       );
 
     expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
@@ -100,7 +100,7 @@ describe("Submit code (C++)", () => {
         problem1.problemId,
         body.code,
         body.language,
-        fake_token,
+        userToken,
       );
 
     expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
@@ -130,7 +130,7 @@ describe("Submit code (C++)", () => {
         problem1.problemId,
         body.code,
         body.language,
-        fake_token,
+        userToken,
       );
 
     expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);

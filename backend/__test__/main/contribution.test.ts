@@ -1,61 +1,62 @@
-// import { beforeEach, describe, expect, test } from "@jest/globals";
-// import { app } from "../../src/app";
-// import request from "supertest";
-// import path from "path";
-// import {
-//   ProblemWithUserStatusInterface,
-//   ResponseInterfaceForTest,
-//   SuccessResponseInterface,
-// } from "../../interfaces/interface";
-// import prisma from "../../prisma/client";
-// import { cleanDatabase } from "../test_utils";
-// import * as util from "node:util";
-// import { exec } from "child_process";
-// import { STATUS_CODE } from "../../utils/constants";
-// import { fake_token, numPending } from "../test_data";
-// import { Problem } from "@prisma/client";
-//
-// const filePath = path.resolve(__dirname, "../../testcaseForTest/testcase.zip");
-//
-// jest.setTimeout(60000);
-//
-// const execPromise = util.promisify(exec);
-//
-// beforeEach(async () => {
-//   await cleanDatabase();
-//   await execPromise("ts-node prisma/seed-test.ts");
-// });
-//
-// describe("Contribute", () => {
-//   test("Contribute", async () => {
-//     const res = (await request(app)
-//       .post("/api/contributions")
-//       .set("Authorization", `Bearer ${fake_token}`)
-//       .field("title", "Contribution Title")
-//       .field("description", "Contribution Description")
-//       .field("difficulty", "2")
-//       .field("tags", "ok")
-//       .field("timeLimit", "1000")
-//       .field("memoryLimit", "1000")
-//       .attach("file", filePath)
-//       .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
-//       contribution: Problem;
-//     }>;
-//     expect(res.status).toBe(201);
-//     expect(res.body.data.contribution.title).toBe("Contribution Title");
-//     expect(res.body.data.contribution.status).toBe(0);
-//     expect(res.body.data.contribution.authorId).toBe(1);
-//
-//     const file = await prisma.files.findFirst({
-//       where: { fileId: res.body.data.contribution.fileId },
-//     });
-//     expect(file).toBeTruthy();
-//     if (file) {
-//       expect(file.fileType).toContain("zip");
-//       expect(file.url).toBeTruthy();
-//     }
-//   });
-// });
+import { beforeEach, describe, expect, test } from "@jest/globals";
+import { app } from "../../src/app";
+import request from "supertest";
+import path from "path";
+import { ResponseInterfaceForTest } from "../../interfaces/interface";
+import prisma from "../../prisma/client";
+import { cleanDatabase, insertUser } from "../test_utils";
+import { userToken, user } from "../test_data";
+import { Problem } from "@prisma/client";
+import { deleteFile } from "../../utils/fileUtilsDO";
+import { STATUS_CODE } from "../../utils/constants";
+
+const filePath = path.resolve(__dirname, "../../testcaseForTest/testcase.zip");
+
+jest.setTimeout(60000);
+
+beforeEach(async () => {
+  await cleanDatabase();
+  await insertUser(user);
+});
+
+describe("Contribute", () => {
+  test("Contribute", async () => {
+    const res = (await request(app)
+      .post("/api/contributions")
+      .set("Authorization", `Bearer ${userToken}`)
+      .field("title", "Contribution Title")
+      .field("description", "Contribution Description")
+      .field("difficulty", "2")
+      .field("tags", "ok")
+      .field("timeLimit", "1000")
+      .field("memoryLimit", "1000")
+      .attach("file", filePath)
+      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
+      contribution: Problem;
+    }>;
+    expect(res.status).toBe(STATUS_CODE.CREATED);
+    const contribution = await prisma.problem.findFirst({
+      where: { problemId: res.body.data.contribution.problemId },
+    });
+    expect(contribution).toBeTruthy();
+    if (contribution) {
+      expect(contribution.title).toBe("Contribution Title");
+      expect(res.body.data.contribution.status).toBe(0);
+      expect(res.body.data.contribution.authorId).toBe(user.userId);
+    }
+
+    const file = await prisma.files.findFirst({
+      where: { fileId: contribution?.fileId },
+    });
+    expect(file).toBeTruthy();
+    if (file) {
+      expect(file.fileType).toContain("zip");
+      expect(file.url).toBeTruthy();
+      expect(file.key).toBeTruthy();
+      await deleteFile(file.key as string);
+    }
+  });
+});
 //
 // describe("Get contributions", () => {
 //   test("Get all contributions", async () => {

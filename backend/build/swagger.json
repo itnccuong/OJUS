@@ -9,6 +9,9 @@
 		"schemas": {
 			"DefaultSelection_Prisma._36_FilesPayload_": {
 				"properties": {
+					"key": {
+						"type": "string"
+					},
 					"url": {
 						"type": "string"
 					},
@@ -32,6 +35,7 @@
 					}
 				},
 				"required": [
+					"key",
 					"url",
 					"fileType",
 					"filesize",

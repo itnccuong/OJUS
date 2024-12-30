@@ -1,12 +1,6 @@
-import { Problem, User } from "@prisma/client";
+import { Files, Problem, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-export const fake_token = jwt.sign(
-  { userId: 1 }, // Payload
-  process.env.JWT_SECRET as string, // Secret
-  { expiresIn: "3m" }, // Token expiration
-);
 
 const salt = bcrypt.genSaltSync(10);
 const hashedPassword = bcrypt.hashSync("1", salt);
@@ -36,21 +30,29 @@ export const admin: User = {
   admin: true,
 };
 
-export const file1 = {
+export const userToken = jwt.sign(
+  { userId: user.userId }, // Payload
+  process.env.JWT_SECRET as string, // Secret
+  { expiresIn: "3m" }, // Token expiration
+);
+
+export const file1: Files = {
   fileId: 1,
   filename: `testcase_1`,
   filesize: 1057,
   fileType: "application/x-zip-compressed",
-  url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
+  url: "https://ojus-bucket-test.sgp1.cdn.digitaloceanspaces.com/testcase.zip",
+  key: null,
   createdAt: new Date(),
 };
 
-export const file2 = {
+export const file2: Files = {
   fileId: 2,
   filename: `testcase_2`,
   filesize: 1057,
   fileType: "application/x-zip-compressed",
-  url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
+  url: "https://ojus-bucket-test.sgp1.cdn.digitaloceanspaces.com/testcase.zip",
+  key: null,
   createdAt: new Date(),
 };
 

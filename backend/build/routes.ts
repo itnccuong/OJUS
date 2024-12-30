@@ -24,7 +24,7 @@ const multer = require('multer');
 const models: TsoaRoute.Models = {
     "DefaultSelection_Prisma._36_FilesPayload_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"url":{"dataType":"string","required":true},"fileType":{"dataType":"string","required":true},"filesize":{"dataType":"double","required":true},"filename":{"dataType":"string","required":true},"fileId":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"key":{"dataType":"string","required":true},"url":{"dataType":"string","required":true},"fileType":{"dataType":"string","required":true},"filesize":{"dataType":"double","required":true},"filename":{"dataType":"string","required":true},"fileId":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Files": {

@@ -1,7 +1,7 @@
 import prisma from "../../prisma/client";
 import { Submission } from "@prisma/client";
 import { STATUS_CODE, verdict } from "../../utils/constants";
-import { uploadFile } from "../../utils/uploadFileUtils";
+import { uploadFile } from "../../utils/fileUtilsDO";
 import { CustomError } from "../../utils/errorClass";
 import bcrypt from "bcryptjs";
 import { findProblemById } from "../problem.services/problem.service";
@@ -141,13 +141,14 @@ export const filterSubmissionsAC = async (submissions: Submission[]) => {
 
 export const uploadAvatar = async (file: Express.Multer.File) => {
   const location = "avatars";
-  const url = await uploadFile(location, file);
+  const { url, key } = await uploadFile(location, file);
   const avatar = await prisma.files.create({
     data: {
       filename: file.originalname,
       filesize: file.size,
       fileType: file.mimetype,
       url: url,
+      key: key,
     },
   });
   return avatar;
