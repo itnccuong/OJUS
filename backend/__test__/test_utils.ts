@@ -48,6 +48,11 @@ export const insertSubmission = async (submission: Submission) => {
   });
 };
 
+export const insertResult = async (result: Result) => {
+  await prisma.result.create({
+    data: result,
+  });
+};
 export const getSubmitCodeResults = async (
   problemId: number,
   code: string,
