@@ -57,6 +57,8 @@ jobs:
         echo DO_SECRET=${{ secrets.DO_SECRET }} >> ./.env
 
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./.env.test
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./.env.test
+
       working-directory: ./backend
     - name: Run containers
       run: docker compose -f docker-compose.langs.yaml up -d

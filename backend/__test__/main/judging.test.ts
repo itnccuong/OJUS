@@ -1,45 +1,67 @@
-// import { describe, expect, test } from "@jest/globals";
-// import request from "supertest";
-// import { app } from "../../src/app";
-// import { STATUS_CODE } from "../../utils/constants";
-// import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
-//
-// import { compileFailAnswer, correctAnswers, fake_token } from "../test_data";
-// import { testCompile, testCorrect } from "../test_services";
-// import { cleanDatabase } from "../test_utils";
-// import util from "node:util";
-// import { exec } from "child_process";
-//
-// jest.setTimeout(60000);
-//
-// const execPromise = util.promisify(exec);
-// beforeAll(async () => {
-//   await initAllDockerContainers();
-// });
-//
-// beforeEach(async () => {
-//   await cleanDatabase();
-//   await execPromise("ts-node prisma/seed-test.ts");
-// });
-//
-// describe("Compile code", () => {
-//   describe("Compile fail", () => {
-//     compileFailAnswer.forEach(({ language, invalidCode }) => {
-//       test(`${language} - Compile Error`, async () => {
-//         await testCompile(invalidCode, language, true, fake_token);
-//       });
-//     });
-//   });
-//
-//   describe("Compile success", () => {
-//     compileFailAnswer.forEach(({ language, validCode }) => {
-//       test(`${language} - Successful Compilation`, async () => {
-//         await testCompile(validCode, language, false, fake_token);
-//       });
-//     });
-//   });
-// });
-//
+import { describe, expect, test } from "@jest/globals";
+import request from "supertest";
+import { app } from "../../src/app";
+import { STATUS_CODE } from "../../utils/constants";
+import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
+
+import {
+  compileFailAnswer,
+  fake_token,
+  file1,
+  problem1,
+  user,
+} from "../test_data";
+import { testCompile, testCorrect } from "../test_services";
+import {
+  cleanDatabase,
+  insertFile,
+  insertProblem,
+  insertUser,
+} from "../test_utils";
+
+jest.setTimeout(60000);
+
+beforeAll(async () => {
+  await initAllDockerContainers();
+});
+
+beforeEach(async () => {
+  await cleanDatabase();
+  await insertUser(user);
+  await insertFile(file1);
+  await insertProblem(problem1);
+});
+
+describe("Compile code", () => {
+  describe("Compile fail", () => {
+    compileFailAnswer.forEach(({ language, invalidCode }) => {
+      test(`${language} - Compile Error`, async () => {
+        await testCompile(
+          problem1.problemId,
+          invalidCode,
+          language,
+          true,
+          fake_token,
+        );
+      });
+    });
+  });
+
+  describe("Compile success", () => {
+    compileFailAnswer.forEach(({ language, validCode }) => {
+      test(`${language} - Successful Compilation`, async () => {
+        await testCompile(
+          problem1.problemId,
+          validCode,
+          language,
+          false,
+          fake_token,
+        );
+      });
+    });
+  });
+});
+
 // describe("Correct answer code", () => {
 //   correctAnswers.forEach(({ language, code }) => {
 //     test(`${language} - Correct answer`, async () => {

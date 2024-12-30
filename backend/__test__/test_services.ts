@@ -1,21 +1,19 @@
 import request from "supertest";
 import { app } from "../src/app";
-import {
-  ErrorResponseInterface,
-  ResponseInterfaceForTest,
-} from "../interfaces/interface";
+import { ResponseInterfaceForTest } from "../interfaces/interface";
 import { expect } from "@jest/globals";
 import { STATUS_CODE } from "../utils/constants";
 import { Result, Submission } from "@prisma/client";
 
 export const testCompile = async (
+  problemId: number,
   code: string,
   language: string,
   isCompileError: boolean,
   token: string,
 ) => {
   const submitCodeResponse = (await request(app)
-    .post(`/api/problems/1`)
+    .post(`/api/problems/${problemId}`)
     .set("Authorization", `Bearer ${token}`)
     .send({
       code,
