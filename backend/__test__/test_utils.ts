@@ -1,5 +1,8 @@
 import prisma from "../prisma/client";
-import { Files, Problem, User } from "@prisma/client";
+import { Files, Problem, Result, Submission, User } from "@prisma/client";
+import request from "supertest";
+import { app } from "../src/app";
+import { ResponseInterfaceForTest } from "../interfaces/interface";
 
 export const cleanDatabase = async () => {
   const deleteResult = prisma.result.deleteMany();
@@ -35,4 +38,36 @@ export const insertFile = async (file: Files) => {
   await prisma.files.create({
     data: file,
   });
+};
+
+export const getSubmitCodeResults = async (
+  problemId: number,
+  code: string,
+  language: string,
+  token: string,
+) => {
+  const res = (await request(app)
+    .post(`/api/problems/${problemId}`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      code,
+      language,
+    })) as ResponseInterfaceForTest<{ submissionId: number }>;
+
+  const submissionId = res.body.data.submissionId;
+
+  const getSubmissionResponse = (await request(app).get(
+    `/api/submissions/${submissionId}`,
+  )) as ResponseInterfaceForTest<{
+    submission: Submission;
+  }>;
+
+  const getResultResponse = (await request(app).get(
+    `/api/submissions/${submissionId}/results`,
+  )) as ResponseInterfaceForTest<{ results: Result[] }>;
+  return {
+    submitCodeResponse: res,
+    getSubmissionResponse: getSubmissionResponse,
+    getResultResponse: getResultResponse,
+  };
 };

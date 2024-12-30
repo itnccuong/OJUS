@@ -1,7 +1,4 @@
 import { describe, expect, test } from "@jest/globals";
-import request from "supertest";
-import { app } from "../../src/app";
-import { STATUS_CODE } from "../../utils/constants";
 import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
 
 import {
@@ -33,35 +30,23 @@ beforeEach(async () => {
   await insertProblem(problem1);
 });
 
-// describe("Compile code", () => {
-//   describe("Compile fail", () => {
-//     compileFailAnswer.forEach(({ language, invalidCode }) => {
-//       test(`${language} - Compile Error`, async () => {
-//         await testCompile(
-//           problem1.problemId,
-//           invalidCode,
-//           language,
-//           true,
-//           fake_token,
-//         );
-//       });
-//     });
-//   });
-//
-//   describe("Compile success", () => {
-//     compileFailAnswer.forEach(({ language, validCode }) => {
-//       test(`${language} - Successful Compilation`, async () => {
-//         await testCompile(
-//           problem1.problemId,
-//           validCode,
-//           language,
-//           false,
-//           fake_token,
-//         );
-//       });
-//     });
-//   });
-// });
+describe("Compile code", () => {
+  describe("Compile fail", () => {
+    compileFailAnswer.forEach(({ language, invalidCode }) => {
+      test(`${language} - Compile Error`, async () => {
+        await testCompile(problem1, invalidCode, language, true, fake_token);
+      });
+    });
+  });
+
+  describe("Compile success", () => {
+    compileFailAnswer.forEach(({ language, validCode }) => {
+      test(`${language} - Successful Compilation`, async () => {
+        await testCompile(problem1, validCode, language, false, fake_token);
+      });
+    });
+  });
+});
 
 describe("Correct answer code", () => {
   correctAnswers.forEach(({ language, code }) => {
@@ -70,7 +55,7 @@ describe("Correct answer code", () => {
     });
   });
 });
-//
+
 // describe("Submit code (C++)", () => {
 //   test("Wrong answer", async () => {
 //     const body = {
@@ -79,7 +64,7 @@ describe("Correct answer code", () => {
 //     };
 //
 //     const res = await request(app)
-//       .post(`/api/problems/1`)
+//       .post(`/api/problems/${problem1.problemId}`)
 //       .set("Authorization", `Bearer ${fake_token}`)
 //       .send(body);
 //     expect(res.status).toBe(STATUS_CODE.BAD_REQUEST);
