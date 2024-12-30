@@ -16,14 +16,15 @@ export default function Register() {
   const [fullname, setFullName] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [fullnameError, setFullnameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const { submit, isSubmitting } = useSubmit();
 
   // Password validation
   const validatePassword = (pass: string): boolean => {
-    // Commonly allowed special characters in passwords
-    const allowedSpecialChars = /^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
-    
+    const allowedSpecialChars = /^[A-Za-z0-9#@!*]+$/; // Only allows #, !, @, * as special characters
+ 
     if (pass.length < 8) {
       setPasswordError("Password must be at least 8 characters long");
       return false;
@@ -57,6 +58,26 @@ export default function Register() {
       return false;
     }
     setUsernameError("");
+    return true;
+  };
+
+  const validateFullname = (full: string): boolean => {
+    if (full.length < 1 || full.length > 50) {
+      setFullnameError("Username must be between 1 and 50 characters");
+      return false;
+    }
+    setFullnameError("");
+    return true;
+  };
+
+  const validateEmail = (email : string) : boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Stricter email validation regex
+
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid email address.");
+      return false;
+    }
+    setEmailError("");
     return true;
   };
 
@@ -113,6 +134,7 @@ export default function Register() {
               required
               type="text"
               placeholder="Username"
+              maxLength={30}
               onChange={(e) => {
                 setUsername(e.target.value);
                 validateUsername(e.target.value);
@@ -135,8 +157,16 @@ export default function Register() {
               required
               type="text"
               placeholder="Full Name"
-              onChange={(e) => setFullName(e.target.value)}
+              maxLength={50}
+              onChange={(e) => {
+                setFullName(e.target.value);
+                validateFullname(e.target.value);
+              }}
+              isInvalid={!!fullnameError}
             />
+            <Form.Control.Feedback type="invalid">
+              {fullnameError}
+            </Form.Control.Feedback>
           </FloatingLabel>
 
           <FloatingLabel
@@ -187,8 +217,15 @@ export default function Register() {
               required
               type="email"
               placeholder="E-mail address"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                validateEmail(e.target.value);
+              }}
+              isInvalid={!!emailError}
             />
+            <Form.Control.Feedback type="invalid">
+              {emailError}
+            </Form.Control.Feedback>
           </FloatingLabel>
 
           <div className="mb-3">
