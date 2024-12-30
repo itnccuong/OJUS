@@ -68,3 +68,17 @@ test("Get AC submissions", async () => {
     expect(submission.userId).toBe(user.userId);
   });
 });
+
+test("Get all submissions", async () => {
+  const res = (await request(app)
+    .get("/api/user/submissions")
+    .set("Authorization", `Bearer ${userToken}`)) as ResponseInterfaceForTest<{
+    submissions: SubmissionWithProblem[];
+  }>;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  const submissions = res.body.data.submissions;
+  expect(submissions.length).toBe(3);
+  submissions.map((submission) => {
+    expect(submission.userId).toBe(user.userId);
+  });
+});

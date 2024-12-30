@@ -97,22 +97,6 @@ export class UserController extends Controller {
     };
   }
 
-  @Get("/submissions")
-  @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched submissions from user")
-  public async getSubmissionsFromUser(
-    @Request() req: RequestExpress,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
-  > {
-    const userId = req.userId;
-    const submissions = await findSubmissionsUser(userId);
-    const submissionsWithProblem = await addProblemToSubmissions(submissions);
-    return {
-      data: { submissions: submissionsWithProblem },
-    };
-  }
-
   @SuccessResponse("200", "Update avatar successfully")
   @Patch("/avatar")
   @Middlewares(verifyToken) // Middleware to verify the user's token
@@ -161,6 +145,23 @@ export class UserController extends Controller {
       },
     };
   }
+
+  @Get("/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getSubmissionsFromUser(
+    @Request() req: RequestExpress,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
+    const userId = req.userId;
+    const submissions = await findSubmissionsUser(userId);
+    const submissionsWithProblem = await addProblemToSubmissions(submissions);
+    return {
+      data: { submissions: submissionsWithProblem },
+    };
+  }
+
   @Get("/{userId}/submissions/AC")
   @SuccessResponse(200, "Successfully fetched submissions from user")
   public async getACSubmissionsFromUser(

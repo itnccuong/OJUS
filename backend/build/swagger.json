@@ -908,28 +908,6 @@
 				]
 			}
 		},
-		"/api/user/submissions": {
-			"get": {
-				"operationId": "GetSubmissionsFromUser",
-				"responses": {
-					"200": {
-						"description": "Successfully fetched submissions from user",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
 		"/api/user/avatar": {
 			"patch": {
 				"operationId": "UploadAvatar",
@@ -979,6 +957,28 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SuccessResponseInterface__user-User__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/user/submissions": {
+			"get": {
+				"operationId": "GetSubmissionsFromUser",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
 								}
 							}
 						}
