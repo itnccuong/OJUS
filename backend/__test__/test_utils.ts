@@ -1,4 +1,5 @@
 import prisma from "../prisma/client";
+import { User } from "@prisma/client";
 
 export const cleanDatabase = async () => {
   const deleteResult = prisma.result.deleteMany();
@@ -16,4 +17,10 @@ export const cleanDatabase = async () => {
     deleteResult,
   ]);
   await prisma.$executeRawUnsafe(`SET FOREIGN_KEY_CHECKS = 1;`);
+};
+
+export const insertUser = async (user: User) => {
+  await prisma.user.create({
+    data: user,
+  });
 };

@@ -3,91 +3,96 @@ import request from "supertest";
 import { app } from "../../src/app";
 import { STATUS_CODE } from "../../utils/constants";
 
-import {
-  loginWithEmailData,
-  loginWithUsernameData,
-  registerData,
-} from "../test_data";
+import { user } from "../test_data";
 import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import prisma from "../../prisma/client";
 import jwt from "jsonwebtoken";
-import { cleanDatabase } from "../test_utils";
-import util from "node:util";
-import { exec } from "child_process";
+import { insertUser } from "../test_utils";
 import type { User } from "@prisma/client";
 
 jest.setTimeout(60000);
 
-const execPromise = util.promisify(exec);
 beforeEach(async () => {
-  await cleanDatabase();
-  await execPromise("ts-node prisma/seed-test.ts");
+  await prisma.user.deleteMany();
+
+  await insertUser(user);
 });
 
 describe("Register", () => {
   test("Correct all fields", async () => {
+    const body = {
+      email: "hienvuongnhat@gmail.com2",
+      password: "2",
+      fullname: "Hien2",
+      username: "hien2",
+    };
     const res = (await request(app)
       .post("/api/auth/register")
-      .send(registerData)) as ResponseInterfaceForTest<{ user: User }>;
+      .send(body)) as ResponseInterfaceForTest<{ user: User }>;
+
     expect(res.status).toBe(STATUS_CODE.CREATED);
-    expect(res.body.data.user.password).not.toBe(registerData.password);
+    expect(res.body.data.user.password).not.toBe(body.password);
+
     const user = await prisma.user.findFirst({
-      where: { username: registerData.username },
+      where: {
+        userId: res.body.data.user.userId,
+      },
     });
+
     expect(user).toBeTruthy();
     if (user) {
-      expect(user.email).toBe(registerData.email);
-      expect(user.fullname).toBe(registerData.fullname);
+      expect(user.email).toBe(body.email);
+      expect(user.fullname).toBe(body.fullname);
     }
   });
 });
 
+const loginTest = async (body: {
+  usernameOrEmail: string;
+  password: string;
+}) => {
+  const res = (await request(app)
+    .post("/api/auth/login")
+    .send(body)) as ResponseInterfaceForTest<{
+    user: User;
+    token: string;
+  }>;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  const token = res.body.data.token;
+
+  expect(token).toBeTruthy();
+  let userId = 0;
+  jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+    userId = (decoded as { userId: number }).userId;
+  });
+  const user = await prisma.user.findFirst({
+    where: {
+      userId: userId,
+    },
+  });
+  expect(user).toBeTruthy();
+  if (user) {
+    expect(
+      body.usernameOrEmail === user.username ||
+        body.usernameOrEmail === user.email,
+    ).toBeTruthy();
+  }
+};
+
 describe("Login", () => {
   test("Correct username and password", async () => {
-    const res = (await request(app)
-      .post("/api/auth/login")
-      .send(loginWithUsernameData)) as ResponseInterfaceForTest<{
-      user: User;
-      token: string;
-    }>;
-    expect(res.status).toBe(STATUS_CODE.SUCCESS);
-    const token = res.body.data.token;
-
-    expect(token).toBeTruthy();
-    let userId = 0;
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
-      userId = (decoded as { userId: number }).userId;
-    });
-    expect(userId).toBeTruthy();
-
-    const user = await prisma.user.findFirst({ where: { userId: userId } });
-    expect(user).toBeTruthy();
-    if (user) {
-      expect(user.username).toBe(loginWithUsernameData.usernameOrEmail);
-    }
+    const body = {
+      usernameOrEmail: "hien",
+      password: "1",
+    };
+    await loginTest(body);
   });
 
   test("Correct email and password", async () => {
-    const res = (await request(app)
-      .post("/api/auth/login")
-      .send(loginWithEmailData)) as ResponseInterfaceForTest<{
-      user: User;
-      token: string;
-    }>;
-    expect(res.status).toBe(STATUS_CODE.SUCCESS);
-    const token = res.body.data.token;
-
-    expect(token).toBeTruthy();
-    let userId = 0;
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
-      userId = (decoded as { userId: number }).userId;
-    });
-    expect(userId).toBeTruthy();
-
-    const user = await prisma.user.findFirst({ where: { userId: userId } });
-    expect(user).toBeTruthy();
-    if (user) {
-      expect(user.username).toBe(loginWithUsernameData.usernameOrEmail);
-    }
+    const body = {
+      usernameOrEmail: "hienvuongnhat@gmail.com",
+      password: "1",
+    };
+    await loginTest(body);
   });
 });
