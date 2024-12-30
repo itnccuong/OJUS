@@ -28,7 +28,7 @@ import {
   findPendingContribution,
   findSubmissionsContribution,
 } from "../services/contribution.services/contribution.services";
-import { uploadFile } from "../utils/uploadFileUtils";
+import { uploadFile } from "../utils/fileUtilsDO";
 import {
   addResultsToSubmissions,
   addUserStatusToProblem,
@@ -52,11 +52,12 @@ export class ContributionController extends Controller {
     @UploadedFile()
     file: Express.Multer.File,
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
-    const url = await uploadFile("testcases", file);
+    const { url, key } = await uploadFile("testcases", file);
     const createFile = await prisma.files.create({
       data: {
         filename: file.originalname,
         url: url,
+        key: key,
         filesize: file.size,
         fileType: file.mimetype,
       },
@@ -167,7 +168,7 @@ export class ContributionController extends Controller {
 
   @Get("/{problem_id}/submissions")
   @Middlewares(verifyAdmin)
-  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  @SuccessResponse(200, "Successfully fetched submissions from contribution")
   public async getSubmissionsFromContribution(
     @Path() problem_id: number,
     @Request() req: RequestExpress,

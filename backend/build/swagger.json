@@ -9,6 +9,9 @@
 		"schemas": {
 			"DefaultSelection_Prisma._36_FilesPayload_": {
 				"properties": {
+					"key": {
+						"type": "string"
+					},
 					"url": {
 						"type": "string"
 					},
@@ -32,6 +35,7 @@
 					}
 				},
 				"required": [
+					"key",
 					"url",
 					"fileType",
 					"filesize",
@@ -829,7 +833,7 @@
 				"operationId": "UpdateProfile",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched user profile",
+						"description": "Successfully edit user profile",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -904,60 +908,6 @@
 				]
 			}
 		},
-		"/api/user/submissions": {
-			"get": {
-				"operationId": "GetSubmissionsFromUser",
-				"responses": {
-					"200": {
-						"description": "Successfully fetched submissions from user",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/api/user/{userId}/submissions/AC": {
-			"get": {
-				"operationId": "GetACSubmissionsFromUser",
-				"responses": {
-					"200": {
-						"description": "Successfully fetched submissions from user",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
 		"/api/user/avatar": {
 			"patch": {
 				"operationId": "UploadAvatar",
@@ -1017,6 +967,60 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/user/submissions": {
+			"get": {
+				"operationId": "GetSubmissionsFromUser",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/user/{userId}/submissions/AC": {
+			"get": {
+				"operationId": "GetACSubmissionsFromUser",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched submissions from user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithProblem-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/api/submissions/{submission_id}": {
@@ -1527,7 +1531,7 @@
 				"operationId": "GetSubmissionsFromContribution",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched submissions from problem",
+						"description": "Successfully fetched submissions from contribution",
 						"content": {
 							"application/json": {
 								"schema": {

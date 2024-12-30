@@ -57,6 +57,15 @@ jobs:
         echo DO_SECRET=${{ secrets.DO_SECRET }} >> ./.env
 
         echo DATABASE_URL=${{ secrets.DATABASE_URL_TEST }} >> ./.env.test
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./.env.test
+
+        echo DO_ENDPOINT=${{ vars.DO_ENDPOINT }} >> ./.env.test
+        echo DO_CDN_URL=${{ vars.DO_CDN_URL_TEST }} >> ./.env.test
+        echo DO_REGION=${{ vars.DO_REGION }} >> ./.env.test
+        echo DO_BUCKET=${{ vars.DO_BUCKET_TEST }} >> ./.env.test
+        echo DO_ACCESS=${{ secrets.DO_ACCESS }} >> ./.env.test
+        echo DO_SECRET=${{ secrets.DO_SECRET }} >> ./.env.test
+
       working-directory: ./backend
     - name: Run containers
       run: docker compose -f docker-compose.langs.yaml up -d

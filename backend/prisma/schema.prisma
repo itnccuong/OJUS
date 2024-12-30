@@ -20,7 +20,7 @@ model User {
   avatarId     Int?     @unique
   avatar       Files?   @relation(fields: [avatarId], references: [fileId])
   admin        Boolean  @default(false)
-  
+
   problems   Problem[] // Relation to Problem model (many-to-many)
   Submission Submission[] // Relation to Submission model (many-to-many)
 }
@@ -49,6 +49,7 @@ model Files {
   filesize  Int
   fileType  String
   url       String
+  key       String?
   createdAt DateTime @default(now())
   problem   Problem?
   user      User?

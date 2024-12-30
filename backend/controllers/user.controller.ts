@@ -77,7 +77,7 @@ export class UserController extends Controller {
 
   @Patch("/")
   @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched user profile")
+  @SuccessResponse(200, "Successfully edit user profile")
   public async updateProfile(
     @Request() req: RequestExpress,
     @Body()
@@ -94,38 +94,6 @@ export class UserController extends Controller {
       data: {
         user: updateUser,
       },
-    };
-  }
-
-  @Get("/submissions")
-  @Middlewares(verifyToken)
-  @SuccessResponse(200, "Successfully fetched submissions from user")
-  public async getSubmissionsFromUser(
-    @Request() req: RequestExpress,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
-  > {
-    const userId = req.userId;
-    const submissions = await findSubmissionsUser(userId);
-    const submissionsWithProblem = await addProblemToSubmissions(submissions);
-    return {
-      data: { submissions: submissionsWithProblem },
-    };
-  }
-
-  @Get("/{userId}/submissions/AC")
-  @SuccessResponse(200, "Successfully fetched submissions from user")
-  public async getACSubmissionsFromUser(
-    @Path() userId: number,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
-  > {
-    const submissions = await findSubmissionsUser(userId);
-    const submissionFilteredAC = await filterSubmissionsAC(submissions);
-    const submissionsWithProblem =
-      await addProblemToSubmissions(submissionFilteredAC);
-    return {
-      data: { submissions: submissionsWithProblem },
     };
   }
 
@@ -175,6 +143,38 @@ export class UserController extends Controller {
       data: {
         user: user,
       },
+    };
+  }
+
+  @Get("/submissions")
+  @Middlewares(verifyToken)
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getSubmissionsFromUser(
+    @Request() req: RequestExpress,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
+    const userId = req.userId;
+    const submissions = await findSubmissionsUser(userId);
+    const submissionsWithProblem = await addProblemToSubmissions(submissions);
+    return {
+      data: { submissions: submissionsWithProblem },
+    };
+  }
+
+  @Get("/{userId}/submissions/AC")
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getACSubmissionsFromUser(
+    @Path() userId: number,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
+    const submissions = await findSubmissionsUser(userId);
+    const submissionFilteredAC = await filterSubmissionsAC(submissions);
+    const submissionsWithProblem =
+      await addProblemToSubmissions(submissionFilteredAC);
+    return {
+      data: { submissions: submissionsWithProblem },
     };
   }
 }

@@ -15,10 +15,9 @@ export const findAcceptedProblems = async () => {
 };
 
 export const addFalseUserStatusToProblems = (problems: Problem[]) => {
-  return problems.map((problem) => ({
-    ...problem,
-    userStatus: false,
-  }));
+  return problems.map((problem) => {
+    return addFalseUserStatusToProblem(problem);
+  });
 };
 
 export const addUserStatusToProblems = async (
@@ -27,21 +26,7 @@ export const addUserStatusToProblems = async (
 ) => {
   return await Promise.all(
     problems.map(async (problem) => {
-      const submission = await prisma.submission.findMany({
-        where: {
-          userId: userId,
-          problemId: problem.problemId,
-        },
-      });
-      let userStatus = false;
-      //If at least one submission is correct, return true
-      if (submission.some((sub) => sub.verdict === verdict.OK)) {
-        userStatus = true;
-      }
-      return {
-        ...problem,
-        userStatus: userStatus,
-      };
+      return await addUserStatusToProblem(userId, problem);
     }),
   );
 };

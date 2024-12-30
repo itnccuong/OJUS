@@ -137,34 +137,6 @@ export default function Profile() {
   // Only show the "Edit Profile" button if the usernames match
   const isUserMatchAccount = usernameFromToken == username;
 
-  // const handleDeleteAvatar = async () => {
-  //   try {
-  //     const response = await toast.promise(
-  //       axiosInstance.delete("/api/user/avatar", {
-  //         headers: {
-  //           Authorization: `Bearer ${getToken()}`,
-  //         },
-  //       }),
-  //       {
-  //         pending: "Updating...",
-  //         success: "Update avatar successfully",
-  //       },
-  //     );
-  //     console.log("Update avatar", response);
-  //     setShow(false);
-  //     setFile(null);
-  //     window.location.reload();
-  //   } catch (error) {
-  //     if (error instanceof AxiosError) {
-  //       const errorMessage = error.response?.data?.message;
-  //       toast.error(errorMessage);
-  //     }
-  //     console.error(error);
-  //   } finally {
-  //     setShow(false);
-  //   }
-  // };
-
   return (
     <div className="flex-grow-1 py-4 px-5 bg-body-tertiary">
       {/* Left Side - Profile Box */}
@@ -301,7 +273,7 @@ export default function Profile() {
             <h4>Problem Stats</h4>
           </div>
           <div className="stat-body">
-            <div className="d-flex justify-content-between align-items-center bg-body-tertiary border p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-tertiary shadow-sm border p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/challenger.png"
@@ -312,7 +284,7 @@ export default function Profile() {
               <h4>{totalSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-body-tertiary border p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-tertiary shadow-sm border p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/bronze.png"
@@ -323,7 +295,7 @@ export default function Profile() {
               <h4>{bronzeSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-body-tertiary border p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-tertiary shadow-sm border p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/platinum.png"
@@ -334,7 +306,7 @@ export default function Profile() {
               <h4>{platinumSolved}</h4>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center bg-body-tertiary border p-3 rounded-4 mt-3">
+            <div className="d-flex justify-content-between align-items-center bg-body-tertiary shadow-sm border p-3 rounded-4 mt-3">
               <img
                 className="rounded-circle"
                 src="/master.png"
