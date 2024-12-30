@@ -1,4 +1,3 @@
-import { beforeEach } from "@jest/globals";
 import {
   cleanDatabase,
   insertFile,
@@ -21,9 +20,10 @@ import request from "supertest";
 import { app } from "../../src/app";
 import {
   ResponseInterfaceForTest,
+  SubmissionWithProblem,
   SubmissionWithResults,
 } from "../../interfaces/interface";
-import { STATUS_CODE } from "../../utils/constants";
+import { STATUS_CODE, verdict } from "../../utils/constants";
 
 jest.setTimeout(60000);
 
@@ -50,6 +50,21 @@ test("Get submissions from problem", async () => {
   expect(submissions.length).toBe(2);
   submissions.map((submission) => {
     expect(submission.problemId).toBe(problem1.problemId);
+    expect(submission.userId).toBe(user.userId);
+  });
+});
+
+test("Get AC submissions", async () => {
+  const res = (await request(app).get(
+    `/api/user/${user.userId}/submissions/AC`,
+  )) as ResponseInterfaceForTest<{
+    submissions: SubmissionWithProblem[];
+  }>;
+  expect(res.status).toBe(STATUS_CODE.SUCCESS);
+  const submissions = res.body.data.submissions;
+  expect(submissions.length).toBe(2);
+  submissions.map((submission) => {
+    expect(submission.verdict).toBe(verdict.OK);
     expect(submission.userId).toBe(user.userId);
   });
 });
