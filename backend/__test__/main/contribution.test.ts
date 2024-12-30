@@ -34,80 +34,86 @@ jest.setTimeout(60000);
 beforeEach(async () => {
   await cleanDatabase();
   await insertUser(user);
-  await insertUser(admin);
   await insertFile(file3);
   await insertProblem(contribution1);
 });
 
-describe("Contribute", () => {
-  test("Contribute", async () => {
-    const res = (await request(app)
-      .post("/api/contributions")
-      .set("Authorization", `Bearer ${userToken}`)
-      .field("title", "Contribution Title")
-      .field("description", "Contribution Description")
-      .field("difficulty", "2")
-      .field("tags", "ok")
-      .field("timeLimit", "1000")
-      .field("memoryLimit", "1000")
-      .attach("file", filePath)
-      .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
-      contribution: Problem;
-    }>;
-    expect(res.status).toBe(STATUS_CODE.CREATED);
-    const contribution = await prisma.problem.findFirst({
-      where: { problemId: res.body.data.contribution.problemId },
-    });
-    expect(contribution).toBeTruthy();
-    if (contribution) {
-      expect(contribution.title).toBe("Contribution Title");
-      expect(res.body.data.contribution.status).toBe(0);
-      expect(res.body.data.contribution.authorId).toBe(user.userId);
-    }
-
-    const file = await prisma.files.findFirst({
-      where: { fileId: contribution?.fileId },
-    });
-    expect(file).toBeTruthy();
-    if (file) {
-      expect(file.fileType).toContain("zip");
-      expect(file.url).toBeTruthy();
-      expect(file.key).toBeTruthy();
-      await deleteFile(file.key as string);
-    }
-  });
-});
-
-test("Get all contributions", async () => {
-  await insertFile(file4);
-  await insertProblem(contribution2);
-
+test("Contribute", async () => {
   const res = (await request(app)
-    .get("/api/contributions")
-    .set("Authorization", `Bearer ${adminToken}`)) as ResponseInterfaceForTest<{
-    contributions: Problem[];
-  }>;
-  expect(res.status).toBe(STATUS_CODE.SUCCESS);
-  const contributions = res.body.data.contributions;
-  expect(contributions.length).toBe(2);
-  contributions.map((contribution) => {
-    expect(contribution.status).toBe(0);
-  });
-});
-
-test("Get one contribution", async () => {
-  const res = (await request(app)
-    .get(`/api/contributions/${contribution1.problemId}`)
-    .set("Authorization", `Bearer ${adminToken}`)) as ResponseInterfaceForTest<{
+    .post("/api/contributions")
+    .set("Authorization", `Bearer ${userToken}`)
+    .field("title", "Contribution Title")
+    .field("description", "Contribution Description")
+    .field("difficulty", "2")
+    .field("tags", "ok")
+    .field("timeLimit", "1000")
+    .field("memoryLimit", "1000")
+    .attach("file", filePath)
+    .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
     contribution: Problem;
   }>;
-  const contribution = res.body.data.contribution;
-  expect(res.status).toBe(STATUS_CODE.SUCCESS);
-  expect(contribution.problemId).toBe(contribution1.problemId);
-  expect(contribution.status).toBe(0);
+  expect(res.status).toBe(STATUS_CODE.CREATED);
+  const contribution = await prisma.problem.findFirst({
+    where: { problemId: res.body.data.contribution.problemId },
+  });
+  expect(contribution).toBeTruthy();
+  if (contribution) {
+    expect(contribution.title).toBe("Contribution Title");
+    expect(res.body.data.contribution.status).toBe(0);
+    expect(res.body.data.contribution.authorId).toBe(user.userId);
+  }
+
+  const file = await prisma.files.findFirst({
+    where: { fileId: contribution?.fileId },
+  });
+  expect(file).toBeTruthy();
+  if (file) {
+    expect(file.fileType).toContain("zip");
+    expect(file.url).toBeTruthy();
+    expect(file.key).toBeTruthy();
+    await deleteFile(file.key as string);
+  }
 });
 
-describe("Admin Contribution Actions", () => {
+describe("Using admin account", () => {
+  beforeEach(async () => {
+    await insertUser(admin);
+  });
+  test("Get all contributions", async () => {
+    await insertFile(file4);
+    await insertProblem(contribution2);
+
+    const res = (await request(app)
+      .get("/api/contributions")
+      .set(
+        "Authorization",
+        `Bearer ${adminToken}`,
+      )) as ResponseInterfaceForTest<{
+      contributions: Problem[];
+    }>;
+    expect(res.status).toBe(STATUS_CODE.SUCCESS);
+    const contributions = res.body.data.contributions;
+    expect(contributions.length).toBe(2);
+    contributions.map((contribution) => {
+      expect(contribution.status).toBe(0);
+    });
+  });
+
+  test("Get one contribution", async () => {
+    const res = (await request(app)
+      .get(`/api/contributions/${contribution1.problemId}`)
+      .set(
+        "Authorization",
+        `Bearer ${adminToken}`,
+      )) as ResponseInterfaceForTest<{
+      contribution: Problem;
+    }>;
+    const contribution = res.body.data.contribution;
+    expect(res.status).toBe(STATUS_CODE.SUCCESS);
+    expect(contribution.problemId).toBe(contribution1.problemId);
+    expect(contribution.status).toBe(0);
+  });
+
   test("Accept a contribution", async () => {
     const res = (await request(app)
       .patch(`/api/contributions/${contribution1.problemId}/accept`)
@@ -123,7 +129,9 @@ describe("Admin Contribution Actions", () => {
     // Verify the contribution status is updated
     const acceptedProblem = (await request(app).get(
       `/api/problems/${problemId}`,
-    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
+    )) as ResponseInterfaceForTest<{
+      problem: ProblemWithUserStatusInterface;
+    }>;
     const problem = acceptedProblem.body.data.problem;
     expect(problem.status).toBe(2);
   });
@@ -143,8 +151,58 @@ describe("Admin Contribution Actions", () => {
     // Verify the contribution status is updated
     const acceptedProblem = (await request(app).get(
       `/api/problems/${problemId}`,
-    )) as ResponseInterfaceForTest<{ problem: ProblemWithUserStatusInterface }>;
+    )) as ResponseInterfaceForTest<{
+      problem: ProblemWithUserStatusInterface;
+    }>;
     const problem = acceptedProblem.body.data.problem;
     expect(problem.status).toBe(1);
+  });
+});
+
+describe("Using user account", () => {
+  test("Get all contributions", async () => {
+    const res = (await request(app)
+      .get("/api/contributions")
+      .set(
+        "Authorization",
+        `Bearer ${userToken}`,
+      )) as ResponseInterfaceForTest<{
+      contributions: Problem[];
+    }>;
+    expect(res.status).toBe(STATUS_CODE.FORBIDDEN);
+  });
+
+  test("Get one contribution", async () => {
+    const res = (await request(app)
+      .get(`/api/contributions/${contribution1.problemId}`)
+      .set(
+        "Authorization",
+        `Bearer ${userToken}`,
+      )) as ResponseInterfaceForTest<{
+      contribution: Problem;
+    }>;
+    expect(res.status).toBe(STATUS_CODE.FORBIDDEN);
+  });
+
+  test("Accept a contribution", async () => {
+    const res = (await request(app)
+      .patch(`/api/contributions/${contribution1.problemId}/accept`)
+      .set(
+        "Authorization",
+        `Bearer ${userToken}`,
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
+
+    expect(res.status).toBe(STATUS_CODE.FORBIDDEN);
+  });
+
+  test("Reject a contribution", async () => {
+    const res = (await request(app)
+      .patch(`/api/contributions/${contribution1.problemId}/reject`)
+      .set(
+        "Authorization",
+        `Bearer ${userToken}`,
+      )) as ResponseInterfaceForTest<{ contribution: Problem }>;
+
+    expect(res.status).toBe(STATUS_CODE.FORBIDDEN);
   });
 });
