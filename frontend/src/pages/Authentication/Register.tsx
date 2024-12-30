@@ -14,14 +14,65 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [fullname, setFullName] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
 
   const { submit, isSubmitting } = useSubmit();
+
+  // Password validation
+  const validatePassword = (pass: string): boolean => {
+    // Commonly allowed special characters in passwords
+    const allowedSpecialChars = /^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
+    
+    if (pass.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return false;
+    }
+    if (pass.length > 50) {
+      setPasswordError("Password cannot exceed 50 characters");
+      return false;
+    }
+    if (!allowedSpecialChars.test(pass)) {
+      setPasswordError("Password can only contain letters, numbers, and common special characters (!@#$%^&*()_+-=[]{};':\"\\|,.<>/?)");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
+
+  // Username validation
+  const validateUsername = (user: string): boolean => {
+    const usernameRegex = /^[A-Za-z0-9._-]+$/;
+    
+    if (user.includes(" ")) {
+      setUsernameError("Username cannot contain spaces");
+      return false;
+    }
+    if (!usernameRegex.test(user)) {
+      setUsernameError("Username can only contain letters, numbers, dots, underscores, and hyphens");
+      return false;
+    }
+    if (user.length < 3 || user.length > 30) {
+      setUsernameError("Username must be between 3 and 30 characters");
+      return false;
+    }
+    setUsernameError("");
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Validate inputs before submission
+    if (!validateUsername(username) || !validatePassword(password)) {
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error("The passwords you entered do not match.");
       return;
     }
+
     try {
       const res = await submit("POST", "/api/auth/register", {
         username,
@@ -48,7 +99,7 @@ export default function Register() {
           onSubmit={handleSubmit}
         >
           <div className="d-flex justify-content-center align-items-center mb-4">
-            <img src="/ojus.png" width="72" height="48" />
+            <img src="/ojus.png" width="72" height="48" alt="logo" />
           </div>
 
           <FloatingLabel
@@ -59,14 +110,20 @@ export default function Register() {
             }}
           >
             <Form.Control
-              pattern="[^@]+"
-              title="The username cannot contain '@'"
               required
               type="text"
               placeholder="Username"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                validateUsername(e.target.value);
+              }}
+              isInvalid={!!usernameError}
             />
+            <Form.Control.Feedback type="invalid">
+              {usernameError}
+            </Form.Control.Feedback>
           </FloatingLabel>
+
           <FloatingLabel
             className="mb-3"
             label="Full Name"
@@ -81,6 +138,7 @@ export default function Register() {
               onChange={(e) => setFullName(e.target.value)}
             />
           </FloatingLabel>
+
           <FloatingLabel
             className="mb-3"
             label="Password"
@@ -92,8 +150,15 @@ export default function Register() {
               required
               type="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validatePassword(e.target.value);
+              }}
+              isInvalid={!!passwordError}
             />
+            <Form.Control.Feedback type="invalid">
+              {passwordError}
+            </Form.Control.Feedback>
           </FloatingLabel>
 
           <FloatingLabel
@@ -153,4 +218,4 @@ export default function Register() {
       </div>
     </div>
   );
-}
+} 
