@@ -1,6 +1,7 @@
-import { Files, Problem, User } from "@prisma/client";
+import { Files, Problem, Submission, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { verdict } from "../utils/constants";
 
 const salt = bcrypt.genSaltSync(10);
 const hashedPassword = bcrypt.hashSync("1", salt);
@@ -136,6 +137,39 @@ export const contribution2: Problem = {
   authorId: 1,
   fileId: 4,
   createdAt: new Date(),
+};
+
+export const submission1: Submission = {
+  submissionId: 1,
+  userId: user.userId,
+  createdAt: new Date(),
+  problemId: problem1.problemId,
+  code: "Dont care",
+  language: "py",
+  verdict: verdict.OK,
+  stderr: "",
+};
+
+export const submission2: Submission = {
+  submissionId: 2,
+  userId: user.userId,
+  createdAt: new Date(),
+  problemId: problem1.problemId,
+  code: "Dont care",
+  language: "py",
+  verdict: verdict.WRONG_ANSWER,
+  stderr: "",
+};
+
+export const submission3: Submission = {
+  submissionId: 3,
+  userId: user.userId,
+  createdAt: new Date(),
+  problemId: problem2.problemId,
+  code: "Dont care",
+  language: "py",
+  verdict: verdict.OK,
+  stderr: "",
 };
 
 export const compileFailAnswer = [

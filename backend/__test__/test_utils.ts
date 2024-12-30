@@ -42,6 +42,12 @@ export const insertFile = async (file: Files) => {
   });
 };
 
+export const insertSubmission = async (submission: Submission) => {
+  await prisma.submission.create({
+    data: submission,
+  });
+};
+
 export const getSubmitCodeResults = async (
   problemId: number,
   code: string,

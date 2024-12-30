@@ -113,22 +113,6 @@ export class UserController extends Controller {
     };
   }
 
-  @Get("/{userId}/submissions/AC")
-  @SuccessResponse(200, "Successfully fetched submissions from user")
-  public async getACSubmissionsFromUser(
-    @Path() userId: number,
-  ): Promise<
-    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
-  > {
-    const submissions = await findSubmissionsUser(userId);
-    const submissionFilteredAC = await filterSubmissionsAC(submissions);
-    const submissionsWithProblem =
-      await addProblemToSubmissions(submissionFilteredAC);
-    return {
-      data: { submissions: submissionsWithProblem },
-    };
-  }
-
   @SuccessResponse("200", "Update avatar successfully")
   @Patch("/avatar")
   @Middlewares(verifyToken) // Middleware to verify the user's token
@@ -175,6 +159,21 @@ export class UserController extends Controller {
       data: {
         user: user,
       },
+    };
+  }
+  @Get("/{userId}/submissions/AC")
+  @SuccessResponse(200, "Successfully fetched submissions from user")
+  public async getACSubmissionsFromUser(
+    @Path() userId: number,
+  ): Promise<
+    SuccessResponseInterface<{ submissions: SubmissionWithProblem[] }>
+  > {
+    const submissions = await findSubmissionsUser(userId);
+    const submissionFilteredAC = await filterSubmissionsAC(submissions);
+    const submissionsWithProblem =
+      await addProblemToSubmissions(submissionFilteredAC);
+    return {
+      data: { submissions: submissionsWithProblem },
     };
   }
 }
