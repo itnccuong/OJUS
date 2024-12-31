@@ -21,7 +21,7 @@ describe("Register", () => {
   test("Correct all fields", async () => {
     const body = {
       email: "hienvuongnhat@gmail.com2",
-      password: "2",
+      password: "12345678",
       fullname: "Hien2",
       username: "hien2",
     };
@@ -70,7 +70,7 @@ describe("Login", () => {
   test("Correct username and password", async () => {
     const body = {
       usernameOrEmail: "hien",
-      password: "1",
+      password: "12345678",
     };
     await loginTest(body);
   });
@@ -78,7 +78,7 @@ describe("Login", () => {
   test("Correct email and password", async () => {
     const body = {
       usernameOrEmail: "hienvuongnhat@gmail.com",
-      password: "1",
+      password: "12345678",
     };
     await loginTest(body);
   });

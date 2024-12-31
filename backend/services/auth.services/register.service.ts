@@ -2,6 +2,7 @@ import prisma from "../../prisma/client";
 import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcryptjs";
+import { validateRegistrationData } from "../../utils/validation.util";
 
 export const validateRegisterBody = async (data: {
   email: string;
@@ -9,20 +10,19 @@ export const validateRegisterBody = async (data: {
   password: string;
   fullname: string;
 }) => {
-  const { email, fullname, password, username } = data;
-  if (!email || !fullname || !password || !username) {
-    throw new CustomError("Please fill all fields!", STATUS_CODE.BAD_REQUEST);
-  }
+  // First validate the data format
+  validateRegistrationData(data);
 
+  // Then check for existing user
   const existingUser = await prisma.user.findFirst({
     where: {
-      OR: [{ email: email }, { username: username }],
+      OR: [{ email: data.email }, { username: data.username }],
     },
   });
 
   if (existingUser) {
     throw new CustomError(
-      existingUser.email === email
+      existingUser.email === data.email
         ? "Email already exists!"
         : "Username already exists!",
       STATUS_CODE.CONFLICT,
