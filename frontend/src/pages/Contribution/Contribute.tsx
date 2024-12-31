@@ -250,6 +250,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   required
                   type="file"
                   className="w-50"
+                  accept=".zip"
                   onChange={(e) =>
                     setFile((e.target as HTMLInputElement).files?.[0] || null)
                   }
