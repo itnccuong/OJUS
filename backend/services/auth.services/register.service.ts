@@ -2,7 +2,7 @@ import prisma from "../../prisma/client";
 import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import bcrypt from "bcryptjs";
-import { validateRegistrationData } from "./validation.service";
+import { validateRegistrationData } from "../../utils/validation";
 
 export const validateRegisterBody = async (data: {
   email: string;
