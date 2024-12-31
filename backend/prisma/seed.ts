@@ -5,7 +5,7 @@ import { Files, Problem, User } from "@prisma/client";
 async function main() {
   // Hash the password
   const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync("1", salt);
+  const hashedPassword = bcrypt.hashSync("12345678", salt);
 
   // Define user data
   const admin: User = {
@@ -41,6 +41,7 @@ async function main() {
     filesize: 1057,
     fileType: "application/x-zip-compressed",
     url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/c9fde101080b5b03_testcase.zip",
+    key: "testcases/c9fde101080b5b03_testcase.zip",
     createdAt: new Date(),
   };
 
@@ -50,6 +51,7 @@ async function main() {
     filesize: 24190,
     fileType: "application/x-zip-compressed",
     url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/9bc9ba906349656b_test69.zip",
+    key: "testcases/9bc9ba906349656b_test69.zip",
     createdAt: new Date(),
   };
 
@@ -59,6 +61,7 @@ async function main() {
     filesize: 375,
     fileType: "application/x-zip-compressed",
     url: "https://ojus-bucket.sgp1.cdn.digitaloceanspaces.com/testcases/95221dc5a5897da7_helloWorld.zip",
+    key: "testcases/95221dc5a5897da7_helloWorld.zip",
     createdAt: new Date(),
   };
 

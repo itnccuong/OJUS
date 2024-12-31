@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { verdict } from "../utils/constants";
 
 const salt = bcrypt.genSaltSync(10);
-const hashedPassword = bcrypt.hashSync("1", salt);
+const hashedPassword = bcrypt.hashSync("12345678", salt);
 export const user: User = {
   userId: 1,
   email: "hienvuongnhat@gmail.com",
