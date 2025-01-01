@@ -8,6 +8,10 @@ import { TagListInit } from "../../utils/constanst.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import 'katex/dist/katex.min.css';  // This imports the styles for KaTeX
+
 
 interface Tag {
   label: string;
@@ -178,34 +182,28 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Check
               type="switch"
               id="custom-switch"
-              label="Markdown Preview"
+              label="Markdown Preview (with LaTeX)"
               onChange={(e) => setIsMarkdown(e.target.checked)}
             />
 
             {isMarkdown ? (
-              <>
-                <div className="border rounded p-2">
-                  <ReactMarkdown
-                    children={description}
-                    // remarkPlugins={[remarkMath]}
-                    // rehypePlugins={[rehypeKatex]}
-                  />
-                  {/* {description} */}
-                  {/* </ReactMarkdown> */}
-                </div>
-              </>
+              <div className="border rounded p-2">
+              <ReactMarkdown
+                children={description}
+                remarkPlugins={[remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+              />
+              </div>
             ) : (
-              <>
-                <Form.Control
-                  placeholder="Write your description in markdown"
-                  className="mb-3 mt-2"
-                  required
-                  as="textarea"
-                  rows={8}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </>
+              <Form.Control
+              placeholder="Write your description in markdown"
+              className="mb-3 mt-2"
+              required
+              as="textarea"
+              rows={8}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              />
             )}
 
             <h5 className="mt-3 mb-3">Upload tests</h5>
