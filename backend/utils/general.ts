@@ -60,6 +60,7 @@ export const downloadTestcase = async (fileUrl: string) => {
   files.forEach((fileName: string) => {
     const filePath = path.join(extractedPath, fileName);
     const parsedFilename = parseFilename(fileName);
+    // console.log(filePath);
     const file = readFileSync(filePath, "utf-8");
     if (parsedFilename.type === "input") {
       testcase["input"][parsedFilename.number - 1] = file;
