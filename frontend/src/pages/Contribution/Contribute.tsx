@@ -15,6 +15,7 @@ import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
 import { HelpCircle } from "lucide-react";
+import JSZip from "jszip";
 
 interface Tag {
   label: string;
@@ -38,6 +39,7 @@ export default function Contribute() {
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
+  const [testcaseError, setTestcaseError] = useState("");
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
 
@@ -57,9 +59,89 @@ export default function Contribute() {
 
   const { submit, isSubmitting } = useSubmit();
 
+  const validateTestcase = async (file: File | null): Promise<boolean> => {
+    setTestcaseError("");
+    
+    // Check if file exists
+    if (!file) {
+      setTestcaseError("Please upload a test case file");
+      return false;
+    }
+  
+    // Check file extension
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (fileExtension !== 'zip') {
+      setTestcaseError("File must be a ZIP archive");
+      return false;
+    }
+  
+    try {
+      const zip = new JSZip();
+      const contents = await zip.loadAsync(file);
+      
+      // Get all file names in the root directory
+      const fileNames = Object.keys(contents.files).filter(name => !name.includes('/'));
+      
+      // Group input and output files
+      const inputFiles = fileNames.filter(name => name.startsWith('input') && name.endsWith('.txt'));
+      const outputFiles = fileNames.filter(name => name.startsWith('output') && name.endsWith('.txt'));
+      
+      // Validation checks
+      if (inputFiles.length === 0 || outputFiles.length === 0) {
+        setTestcaseError("ZIP must contain at least one pair of input/output files");
+        return false;
+      }
+  
+      if (inputFiles.length !== outputFiles.length) {
+        setTestcaseError("Number of input files must match number of output files");
+        return false;
+      }
+  
+      // Check matching pairs
+      for (const inputFile of inputFiles) {
+        const number = inputFile.match(/input(\d+)\.txt/)?.[1];
+        if (!number) {
+          setTestcaseError("Input files must be named 'input1.txt', 'input2.txt', etc.");
+          return false;
+        }
+  
+        const matchingOutput = `output${number}.txt`;
+        if (!outputFiles.includes(matchingOutput)) {
+          setTestcaseError(`Missing matching output file for ${inputFile}`);
+          return false;
+        }
+      }
+  
+      // Check file naming format
+      const validInputFormat = inputFiles.every(name => /^input\d+\.txt$/.test(name));
+      const validOutputFormat = outputFiles.every(name => /^output\d+\.txt$/.test(name));
+      
+      if (!validInputFormat || !validOutputFormat) {
+        setTestcaseError("Files must be named 'input1.txt'/'output1.txt', 'input2.txt'/'output2.txt', etc.");
+        return false;
+      }
+  
+      // Check if all files are in root directory
+      const hasNestedFiles = Object.keys(contents.files).some(name => name.includes('/'));
+      if (hasNestedFiles) {
+        setTestcaseError("All files must be in the root of the ZIP file");
+        return false;
+      }
+  
+      // All validations passed
+      return true;
+    } catch (error) {
+      console.error('Error validating ZIP file:', error);
+      setTestcaseError("Error reading ZIP file. Please ensure it's a valid ZIP archive.");
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (!await validateTestcase(file)) {
+      return;
+    }
     try {
       const selectedTags = tags
         .filter((tag) => tag.selected)
@@ -251,10 +333,17 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   type="file"
                   className="w-50"
                   accept=".zip"
-                  onChange={(e) =>
-                    setFile((e.target as HTMLInputElement).files?.[0] || null)
-                  }
+                  onChange={(e) => {
+                    setFile((e.target as HTMLInputElement).files?.[0] || null);
+                    validateTestcase(
+                      (e.target as HTMLInputElement).files?.[0] || null
+                    );
+                  }}
+                  isInvalid={!!testcaseError}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {testcaseError}
+                </Form.Control.Feedback>
                 <OverlayTrigger
                   trigger={["hover", "focus"]}
                   placement="right"
