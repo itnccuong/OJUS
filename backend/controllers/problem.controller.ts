@@ -40,6 +40,7 @@ import { verifyToken } from "../middlewares/verify-token";
 import { downloadTestcase } from "../utils/general";
 import { TestcaseInterface } from "../interfaces/code-executor-interface";
 import { sendSubmissionJob } from "../rabbitmq/submissionProducer";
+import fs from "fs/promises"; // Ensure you import the promises API from fs
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
@@ -164,17 +165,34 @@ export class ProblemController extends Controller {
   }
 
   @Get("/{problem_id}/testcases")
-  @SuccessResponse(200, "Successfully fetched submissions from problem")
+  @SuccessResponse(200, "Successfully fetched testcases for the problem")
   public async getTestcases(
     @Path() problem_id: number,
   ): Promise<SuccessResponseInterface<{ testcases: TestcaseInterface }>> {
-    const problem = await findProblemById(problem_id);
-    const file = await findFileById(problem.fileId);
-    const fileUrl = file.url;
-    const testcases = await downloadTestcase(fileUrl);
-    return {
-      data: { testcases: testcases },
-    };
+    let downloadedTestDir: string | undefined;
+
+    try {
+      const problem = await findProblemById(problem_id);
+      const file = await findFileById(problem.fileId);
+      const fileUrl = file.url;
+
+      const { testcase: testcases, testDir } = await downloadTestcase(fileUrl);
+      downloadedTestDir = testDir; // Assign to outer scope for cleanup
+
+      return {
+        data: { testcases },
+      };
+    } finally {
+      if (downloadedTestDir) {
+        try {
+          await fs.rm(downloadedTestDir, { recursive: true, force: true });
+          console.log(`Deleted test directory at ${downloadedTestDir}`);
+        } catch (deleteError) {
+          console.error(`Failed to delete test directory at ${downloadedTestDir}:`, deleteError);
+          // Optionally, emit a warning or log it for further inspection
+        }
+      }
+    }
   }
 
   //Get all problem with all status 0 1 2

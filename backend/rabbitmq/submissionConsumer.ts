@@ -27,7 +27,7 @@ export const startSubmissionConsumer = async () => {
 
           await updateSubmissionVerdict(submissionId, "OK", "");
 
-          console.log(`[x] Done Processes submission job #${submissionId}`);
+        //   console.log(`[x] Done Processes submission job #${submissionId}`);
           channel.ack(msg); 
         } catch (error) {
           console.error("Error processing submission job:", error);
