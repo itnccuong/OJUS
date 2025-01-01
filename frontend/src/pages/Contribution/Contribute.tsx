@@ -35,6 +35,7 @@ export default function Contribute() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [tutorial, setTutorial] = useState("");
   const [difficulty, setDifficulty] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
@@ -58,7 +59,8 @@ export default function Contribute() {
     setTags(TagListInit);
   };
 
-  const [isMarkdown, setIsMarkdown] = useState(false);
+  const [DescriptionMarkdown, setDescriptionMarkdown] = useState(false);
+  const [TutorialMarkdown, setTutorialMarkdown] = useState(false);
 
   const { submit, isSubmitting } = useSubmit();
 
@@ -255,6 +257,7 @@ export default function Contribute() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
+      formData.append("tutorial", tutorial);
       formData.append("difficulty", difficulty.toString());
       formData.append("timeLimit", timeLimit.toString());
       formData.append("memoryLimit", memoryLimit.toString());
@@ -400,10 +403,10 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               type="switch"
               id="custom-switch"
               label="Markdown Preview"
-              onChange={(e) => setIsMarkdown(e.target.checked)}
+              onChange={(e) => setDescriptionMarkdown(e.target.checked)}
             />
 
-            {isMarkdown ? (
+            {DescriptionMarkdown ? (
               <>
                 <div className="border rounded p-2">
                   <ReactMarkdown
@@ -425,6 +428,36 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   rows={8}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                />
+              </>
+            )}
+            
+            <h5 className="mt-3 mb-3">Tutorial</h5>
+            <Form.Check
+              type="switch"
+              id="custom-switch"
+              label="Markdown Preview"
+              onChange={(e) => setTutorialMarkdown(e.target.checked)}
+            />
+
+            {TutorialMarkdown ? (
+              <>
+                <div className="border rounded p-2">
+                  <ReactMarkdown
+                    children={tutorial}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <Form.Control
+                  placeholder="Write your tutorial in markdown"
+                  className="mb-3 mt-2"
+                  required
+                  as="textarea"
+                  rows={8}
+                  value={tutorial}
+                  onChange={(e) => setTutorial(e.target.value)}
                 />
               </>
             )}
