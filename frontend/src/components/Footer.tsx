@@ -33,7 +33,7 @@ export default function Footer() {
             target="_blank" // Open in new tab
             rel="noopener noreferrer" // Open in new tab
           >
-            <img src="/git.png" width="50" height="24" />
+            <img src="/github-mark.svg" width="24" height="24" />
           </a>
         </div>
       </div>
