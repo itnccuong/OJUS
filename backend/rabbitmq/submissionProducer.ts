@@ -13,5 +13,5 @@ export const sendSubmissionJob = async (jobData: any) => {
     { persistent: true },
   );
 
-  console.log(` [x] Sent submission job: ${JSON.stringify(jobData)}`);
+  console.log(` [x] Sent submission job: ${JSON.stringify(jobData.submissionId)}`);
 };

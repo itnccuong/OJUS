@@ -38,38 +38,49 @@ export const downloadTestcase = async (fileUrl: string) => {
   const zipPath = path.join(testDir, "testcase.zip");
   const extractedPath = path.join(testDir, "extracted");
 
-  //Download the ZIP file
-  const response = await axios.get(fileUrl, {
-    responseType: "stream",
-  });
+  try {
+    //Download the ZIP file
+    const response = await axios.get(fileUrl, {
+      responseType: "stream",
+    });
 
-  const writer = fs.createWriteStream(zipPath);
-  response.data.pipe(writer);
+    const writer = fs.createWriteStream(zipPath);
+    response.data.pipe(writer);
 
-  await new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
+    await new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
 
-  //Unzip the file
-  const zip = new AdmZip(zipPath);
-  zip.extractAllTo(extractedPath, true);
+    //Unzip the file
+    const zip = new AdmZip(zipPath);
+    zip.extractAllTo(extractedPath, true);
 
-  const testcase: TestcaseInterface = { input: [], output: [] };
-  const files = fs.readdirSync(extractedPath, "utf8");
-  files.forEach((fileName: string) => {
-    const filePath = path.join(extractedPath, fileName);
-    const parsedFilename = parseFilename(fileName);
-    // console.log(filePath);
-    const file = readFileSync(filePath, "utf-8");
-    if (parsedFilename.type === "input") {
-      testcase["input"][parsedFilename.number - 1] = file;
+    const testcase: TestcaseInterface = { input: [], output: [] };
+    const files = fs.readdirSync(extractedPath, "utf8");
+    files.forEach((fileName: string) => {
+      const filePath = path.join(extractedPath, fileName);
+      const parsedFilename = parseFilename(fileName);
+      // console.log(filePath);
+      const file = readFileSync(filePath, "utf-8");
+      if (parsedFilename.type === "input") {
+        testcase["input"][parsedFilename.number - 1] = file;
+      }
+      if (parsedFilename.type === "output") {
+        testcase.output[parsedFilename.number - 1] = file;
+      }
+    });
+    return testcase;
+  } finally {
+    if (fs.existsSync(zipPath)) {
+      try {
+        fs.unlinkSync(zipPath);
+        console.log(`Deleted ZIP file at ${zipPath}`);
+      } catch (deleteError) {
+        console.error(`Failed to delete ZIP file at ${zipPath}:`, deleteError);
+      }
     }
-    if (parsedFilename.type === "output") {
-      testcase.output[parsedFilename.number - 1] = file;
-    }
-  });
-  return testcase;
+  }
 };
 //Create new file in codeFiles directory from submitted code
 export const saveCodeToFile = (
