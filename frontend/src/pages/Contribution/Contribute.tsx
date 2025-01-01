@@ -1,4 +1,10 @@
-import { Accordion, Button, Form } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Form,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
@@ -8,6 +14,8 @@ import { TagListInit } from "../../utils/constanst.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
+import { HelpCircle } from "lucide-react";
+import JSZip from "jszip";
 
 interface Tag {
   label: string;
@@ -32,13 +40,17 @@ export default function Contribute() {
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
 
+  const [testcaseError, setTestcaseError] = useState("");
+  const [timeLimitError, setTimeLimitError] = useState("");
+  const [memoryLimitError, setMemoryLimitError] = useState("");
+
   const [tags, setTags] = useState<Tag[]>(TagListInit);
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag,
-      ),
+        i === index ? { ...tag, selected: !tag.selected } : tag
+      )
     );
   };
 
@@ -50,8 +62,190 @@ export default function Contribute() {
 
   const { submit, isSubmitting } = useSubmit();
 
+  const validateTestcase = async (file: File | null): Promise<boolean> => {
+    setTestcaseError("");
+
+    // Check if file exists
+    if (!file) {
+      setTestcaseError("Please upload a test case file");
+      return false;
+    }
+
+    // Check file extension
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "zip") {
+      setTestcaseError("File must be a ZIP archive");
+      return false;
+    }
+
+    try {
+      const zip = new JSZip();
+      const contents = await zip.loadAsync(file);
+
+      const allFiles = Object.keys(contents.files);
+
+      let testcaseFiles: string[] = [];
+
+      // If all files are in a single folder (except the folder itself)
+      const folders = allFiles
+        .filter((path) => path.endsWith("/"))
+        .map((path) => path.slice(0, -1)); // Remove trailing slash
+
+      if (folders.length === 1) {
+        // If there's exactly one folder, use files from there
+        const folderPath = folders[0] + "/";
+        testcaseFiles = allFiles
+          .filter((name) => name.startsWith(folderPath))
+          .map((name) => name.replace(folderPath, ""))
+          .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
+      } else if (folders.length === 0) {
+        // If no folders, use root files
+        testcaseFiles = allFiles.filter((name) => !name.includes("/"));
+      } else {
+        // Check if all non-root files are in a single folder
+        const nonRootFiles = allFiles.filter((name) => name.includes("/"));
+        const topLevelFolders = new Set(
+          nonRootFiles.map((path) => path.split("/")[0])
+        );
+
+        if (topLevelFolders.size === 1) {
+          const mainFolder = [...topLevelFolders][0] + "/";
+          testcaseFiles = allFiles
+            .filter((name) => name.startsWith(mainFolder))
+            .map((name) => name.replace(mainFolder, ""))
+            .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
+        } else {
+          setTestcaseError(
+            "ZIP must contain either files in root or in a single folder"
+          );
+          return false;
+        }
+      }
+
+      // Filter out directories
+      testcaseFiles = testcaseFiles.filter((name) => !name.endsWith("/"));
+
+      // Rest of the validation remains the same
+      const validFilePattern = /^(input|output)\d+\.txt$/;
+      const invalidFiles = testcaseFiles.filter(
+        (name) => !validFilePattern.test(name)
+      );
+
+      if (invalidFiles.length > 0) {
+        setTestcaseError(
+          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`
+        );
+        return false;
+      }
+
+      // Group valid input and output files
+      const inputFiles = testcaseFiles.filter(
+        (name) => name.startsWith("input") && name.endsWith(".txt")
+      );
+      const outputFiles = testcaseFiles.filter(
+        (name) => name.startsWith("output") && name.endsWith(".txt")
+      );
+
+      // Validation checks
+      if (inputFiles.length === 0 || outputFiles.length === 0) {
+        setTestcaseError(
+          "ZIP must contain at least one pair of input/output files"
+        );
+        return false;
+      }
+
+      if (inputFiles.length !== outputFiles.length) {
+        setTestcaseError(
+          "Number of input files must match number of output files"
+        );
+        return false;
+      }
+
+      // Check matching pairs
+      for (const inputFile of inputFiles) {
+        const number = inputFile.match(/input(\d+)\.txt/)?.[1];
+        if (!number) {
+          setTestcaseError(
+            "Input files must be named 'input1.txt', 'input2.txt', etc."
+          );
+          return false;
+        }
+
+        const matchingOutput = `output${number}.txt`;
+        if (!outputFiles.includes(matchingOutput)) {
+          setTestcaseError(`Missing matching output file for ${inputFile}`);
+          return false;
+        }
+      }
+
+      // All validations passed
+      return true;
+    } catch (error) {
+      console.error("Error validating ZIP file:", error);
+      setTestcaseError(
+        "Error reading ZIP file. Please ensure it's a valid ZIP archive."
+      );
+      return false;
+    }
+  };
+
+  const validateTimeLimit = (value: string): boolean => {
+    setTimeLimitError("");
+    const num = Number(value);
+
+    if (value.trim() === "") {
+      setTimeLimitError("Time limit is required");
+      return false;
+    }
+
+    if (isNaN(num) || !Number.isInteger(num)) {
+      setTimeLimitError("Time limit must be a valid number");
+      return false;
+    }
+
+    if (num <= 0) {
+      setTimeLimitError("Time limit must be greater than 0");
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateMemoryLimit = (value: string): boolean => {
+    setMemoryLimitError("");
+    const num = Number(value);
+
+    if (value.trim() === "") {
+      setMemoryLimitError("Memory limit is required");
+      return false;
+    }
+
+    if (isNaN(num) || !Number.isInteger(num)) {
+      setMemoryLimitError("Memory limit must be a valid number");
+      return false;
+    }
+
+    if (num <= 0) {
+      setMemoryLimitError("Memory limit must be greater than 0");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const isTimeLimitValid = validateTimeLimit(timeLimit.toString());
+    const isMemoryLimitValid = validateMemoryLimit(memoryLimit.toString());
+
+    if (!isTimeLimitValid || !isMemoryLimitValid) {
+      return;
+    }
+    if (!(await validateTestcase(file))) {
+      return;
+    }
+
     try {
       const selectedTags = tags
         .filter((tag) => tag.selected)
@@ -71,7 +265,7 @@ export default function Contribute() {
         includeToken: true,
       });
       toast.success("Contribution submitted");
-      navigate("/contributions");
+      navigate("/contribute");
 
       console.log("Submit contribute response: ", res);
     } catch (err) {
@@ -103,6 +297,33 @@ You may assume that each input would have exactly one solution, and you may not 
 Given \`nums = [2, 7, 11, 15]\`, \`target = 9\`,  
 Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   `;
+
+  const [showHelp, setShowHelp] = useState(false);
+
+  const helpText = (
+    <div className="p-2">
+      <h6 className="mb-3">Test Files Requirements:</h6>
+      <ol className="ps-3 mb-0">
+        <li className="mb-2">
+          Name format must be:
+          <ul className="mt-1">
+            <li>input1.txt, input2.txt, input3.txt...</li>
+            <li>output1.txt, output2.txt, output3.txt...</li>
+          </ul>
+        </li>
+        <li className="mb-2">Must be in a ZIP file</li>
+        <li className="mb-2">Each input must have matching output</li>
+        <li>Files must be in root of ZIP</li>
+      </ol>
+    </div>
+  );
+
+  const popover = (
+    <Popover id="file-format-popover" className="w-72">
+      <Popover.Body>{helpText}</Popover.Body>
+    </Popover>
+  );
+
   return (
     <div className="flex-grow-1 d-flex px-5">
       <div className="d-flex container-xxl">
@@ -209,34 +430,77 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             )}
 
             <h5 className="mt-3 mb-3">Upload tests</h5>
-            <Form.Control
-              required
-              type="file"
-              className="mb-3 w-50"
-              onChange={(e) =>
-                setFile((e.target as HTMLInputElement).files?.[0] || null)
-              }
-            />
+            <div className="mb-3">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <Form.Control
+                  required
+                  type="file"
+                  className="w-50"
+                  accept=".zip"
+                  onChange={(e) => {
+                    setFile((e.target as HTMLInputElement).files?.[0] || null);
+                    validateTestcase(
+                      (e.target as HTMLInputElement).files?.[0] || null
+                    );
+                  }}
+                  isInvalid={!!testcaseError}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {testcaseError}
+                </Form.Control.Feedback>
+                <OverlayTrigger
+                  trigger={["hover", "focus"]}
+                  placement="right"
+                  overlay={popover}
+                  onToggle={(show) => setShowHelp(show)}
+                  rootClose
+                >
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ cursor: "help" }}
+                  >
+                    <HelpCircle
+                      className={`text-primary ${showHelp ? "opacity-75" : ""}`}
+                      size={25}
+                    />
+                  </div>
+                </OverlayTrigger>
+              </div>
+            </div>
 
             <h5 className="mt-3 mb-3">Time limit (ms)</h5>
-
             <Form.Control
               required
               type="text"
               placeholder="Time limit"
-              onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setTimeLimit(parseInt(value) || 0);
+                validateTimeLimit(value);
+              }}
               className="w-50 mb-2"
+              isInvalid={!!timeLimitError}
             />
+            <Form.Control.Feedback type="invalid">
+              {timeLimitError}
+            </Form.Control.Feedback>
 
             <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
-
             <Form.Control
               required
               type="text"
               placeholder="Memory limit"
-              onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setMemoryLimit(parseInt(value) || 0);
+                validateMemoryLimit(value);
+              }}
               className="w-50 mb-2"
+              isInvalid={!!memoryLimitError}
             />
+            <Form.Control.Feedback type="invalid">
+              {memoryLimitError}
+            </Form.Control.Feedback>
 
             <div className="d-flex justify-content-center mt-3">
               <Button
