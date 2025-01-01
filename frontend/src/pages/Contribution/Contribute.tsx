@@ -94,22 +94,35 @@ export default function Contribute() {
         testcaseFiles = allFiles
           .filter((name) => name.startsWith(folderPath))
           .map((name) => name.replace(folderPath, ""))
-          .filter((name) => name !== ""); // Remove empty strings
+          .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
       } else if (folders.length === 0) {
         // If no folders, use root files
-        testcaseFiles = allFiles;
+        testcaseFiles = allFiles.filter((name) => !name.includes("/"));
       } else {
-        // Multiple folders found
-        setTestcaseError(
-          "ZIP must contain either files in root or in a single folder"
+        // Check if all non-root files are in a single folder
+        const nonRootFiles = allFiles.filter((name) => name.includes("/"));
+        const topLevelFolders = new Set(
+          nonRootFiles.map((path) => path.split("/")[0])
         );
-        return false;
+        
+        if (topLevelFolders.size === 1) {
+          const mainFolder = [...topLevelFolders][0] + "/";
+          testcaseFiles = allFiles
+            .filter((name) => name.startsWith(mainFolder))
+            .map((name) => name.replace(mainFolder, ""))
+            .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
+        } else {
+          setTestcaseError(
+            "ZIP must contain either files in root or in a single folder"
+          );
+          return false;
+        }
       }
 
       // Filter out directories
       testcaseFiles = testcaseFiles.filter((name) => !name.endsWith("/"));
 
-      // Check for any invalid files
+      // Rest of the validation remains the same
       const validFilePattern = /^(input|output)\d+\.txt$/;
       const invalidFiles = testcaseFiles.filter(
         (name) => !validFilePattern.test(name)
@@ -160,30 +173,6 @@ export default function Contribute() {
           setTestcaseError(`Missing matching output file for ${inputFile}`);
           return false;
         }
-      }
-
-      // Check file naming format
-      const validInputFormat = inputFiles.every((name) =>
-        /^input\d+\.txt$/.test(name)
-      );
-      const validOutputFormat = outputFiles.every((name) =>
-        /^output\d+\.txt$/.test(name)
-      );
-
-      if (!validInputFormat || !validOutputFormat) {
-        setTestcaseError(
-          "Files must be named 'input1.txt'/'output1.txt', 'input2.txt'/'output2.txt', etc."
-        );
-        return false;
-      }
-
-      // Check if all files are in root directory
-      const hasNestedFiles = Object.keys(contents.files).some((name) =>
-        name.includes("/")
-      );
-      if (hasNestedFiles) {
-        setTestcaseError("All files must be in the root of the ZIP file");
-        return false;
       }
 
       // All validations passed
