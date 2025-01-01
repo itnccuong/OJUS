@@ -61,85 +61,145 @@ export default function Contribute() {
 
   const validateTestcase = async (file: File | null): Promise<boolean> => {
     setTestcaseError("");
-    
+
     // Check if file exists
     if (!file) {
       setTestcaseError("Please upload a test case file");
       return false;
     }
-  
+
     // Check file extension
-    const fileExtension = file.name.split('.').pop()?.toLowerCase();
-    if (fileExtension !== 'zip') {
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension !== "zip") {
       setTestcaseError("File must be a ZIP archive");
       return false;
     }
-  
+
     try {
       const zip = new JSZip();
       const contents = await zip.loadAsync(file);
-      
-      // Get all file names in the root directory
-      const fileNames = Object.keys(contents.files).filter(name => !name.includes('/'));
-      
-      // Group input and output files
-      const inputFiles = fileNames.filter(name => name.startsWith('input') && name.endsWith('.txt'));
-      const outputFiles = fileNames.filter(name => name.startsWith('output') && name.endsWith('.txt'));
-      
+
+      const allFiles = Object.keys(contents.files);
+
+      let testcaseFiles: string[] = [];
+
+      // If all files are in a single folder (except the folder itself)
+      const folders = allFiles
+        .filter((path) => path.endsWith("/"))
+        .map((path) => path.slice(0, -1)); // Remove trailing slash
+
+      if (folders.length === 1) {
+        // If there's exactly one folder, use files from there
+        const folderPath = folders[0] + "/";
+        testcaseFiles = allFiles
+          .filter((name) => name.startsWith(folderPath))
+          .map((name) => name.replace(folderPath, ""))
+          .filter((name) => name !== ""); // Remove empty strings
+      } else if (folders.length === 0) {
+        // If no folders, use root files
+        testcaseFiles = allFiles;
+      } else {
+        // Multiple folders found
+        setTestcaseError(
+          "ZIP must contain either files in root or in a single folder"
+        );
+        return false;
+      }
+
+      // Filter out directories
+      testcaseFiles = testcaseFiles.filter((name) => !name.endsWith("/"));
+
+      // Check for any invalid files
+      const validFilePattern = /^(input|output)\d+\.txt$/;
+      const invalidFiles = testcaseFiles.filter(
+        (name) => !validFilePattern.test(name)
+      );
+
+      if (invalidFiles.length > 0) {
+        setTestcaseError(
+          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`
+        );
+        return false;
+      }
+
+      // Group valid input and output files
+      const inputFiles = testcaseFiles.filter(
+        (name) => name.startsWith("input") && name.endsWith(".txt")
+      );
+      const outputFiles = testcaseFiles.filter(
+        (name) => name.startsWith("output") && name.endsWith(".txt")
+      );
+
       // Validation checks
       if (inputFiles.length === 0 || outputFiles.length === 0) {
-        setTestcaseError("ZIP must contain at least one pair of input/output files");
+        setTestcaseError(
+          "ZIP must contain at least one pair of input/output files"
+        );
         return false;
       }
-  
+
       if (inputFiles.length !== outputFiles.length) {
-        setTestcaseError("Number of input files must match number of output files");
+        setTestcaseError(
+          "Number of input files must match number of output files"
+        );
         return false;
       }
-  
+
       // Check matching pairs
       for (const inputFile of inputFiles) {
         const number = inputFile.match(/input(\d+)\.txt/)?.[1];
         if (!number) {
-          setTestcaseError("Input files must be named 'input1.txt', 'input2.txt', etc.");
+          setTestcaseError(
+            "Input files must be named 'input1.txt', 'input2.txt', etc."
+          );
           return false;
         }
-  
+
         const matchingOutput = `output${number}.txt`;
         if (!outputFiles.includes(matchingOutput)) {
           setTestcaseError(`Missing matching output file for ${inputFile}`);
           return false;
         }
       }
-  
+
       // Check file naming format
-      const validInputFormat = inputFiles.every(name => /^input\d+\.txt$/.test(name));
-      const validOutputFormat = outputFiles.every(name => /^output\d+\.txt$/.test(name));
-      
+      const validInputFormat = inputFiles.every((name) =>
+        /^input\d+\.txt$/.test(name)
+      );
+      const validOutputFormat = outputFiles.every((name) =>
+        /^output\d+\.txt$/.test(name)
+      );
+
       if (!validInputFormat || !validOutputFormat) {
-        setTestcaseError("Files must be named 'input1.txt'/'output1.txt', 'input2.txt'/'output2.txt', etc.");
+        setTestcaseError(
+          "Files must be named 'input1.txt'/'output1.txt', 'input2.txt'/'output2.txt', etc."
+        );
         return false;
       }
-  
+
       // Check if all files are in root directory
-      const hasNestedFiles = Object.keys(contents.files).some(name => name.includes('/'));
+      const hasNestedFiles = Object.keys(contents.files).some((name) =>
+        name.includes("/")
+      );
       if (hasNestedFiles) {
         setTestcaseError("All files must be in the root of the ZIP file");
         return false;
       }
-  
+
       // All validations passed
       return true;
     } catch (error) {
-      console.error('Error validating ZIP file:', error);
-      setTestcaseError("Error reading ZIP file. Please ensure it's a valid ZIP archive.");
+      console.error("Error validating ZIP file:", error);
+      setTestcaseError(
+        "Error reading ZIP file. Please ensure it's a valid ZIP archive."
+      );
       return false;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!await validateTestcase(file)) {
+    if (!(await validateTestcase(file))) {
       return;
     }
     try {
