@@ -10,12 +10,14 @@ import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TagListInit } from "../../utils/constanst.ts";
+import { languageEditorMap, TagListInit } from "../../utils/constanst.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
 import { HelpCircle } from "lucide-react";
 import JSZip from "jszip";
+import { Editor } from "@monaco-editor/react";
+import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 
 interface Tag {
   label: string;
@@ -40,6 +42,8 @@ export default function Contribute() {
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
+  const [language, setLanguage] = useState("C++");
+  const [code, setCode] = useState<string | undefined>("");
 
   const [testcaseError, setTestcaseError] = useState("");
   const [timeLimitError, setTimeLimitError] = useState("");
@@ -431,7 +435,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 />
               </>
             )}
-            
+
             <h5 className="mt-3 mb-3">Tutorial</h5>
             <Form.Check
               type="switch"
@@ -443,9 +447,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             {TutorialMarkdown ? (
               <>
                 <div className="border rounded p-2">
-                  <ReactMarkdown
-                    children={tutorial}
-                  />
+                  <ReactMarkdown children={tutorial} />
                 </div>
               </>
             ) : (
@@ -534,6 +536,22 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Control.Feedback type="invalid">
               {memoryLimitError}
             </Form.Control.Feedback>
+
+            <h5 className="mt-3 mb-2">Solution</h5>
+            <div className="p-3 d-flex justify-content-between">
+              <LanguageDropdown language={language} setLanguage={setLanguage} />
+            </div>
+            <div>
+              <Editor
+                height="49vh"
+                language={languageEditorMap[language]}
+                value={code}
+                onChange={(value) => setCode(value)}
+                options={{
+                  minimap: { enabled: false },
+                }}
+              />
+            </div>
 
             <div className="d-flex justify-content-center mt-3">
               <Button
