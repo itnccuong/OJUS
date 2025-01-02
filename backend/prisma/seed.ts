@@ -78,9 +78,6 @@ async function main() {
     memoryLimit: 1000,
     authorId: 1,
     fileId: 1,
-    tutorial: "OK",
-    langSolution: "Python",
-    solution: "",
     createdAt: new Date(),
   };
 
@@ -96,9 +93,6 @@ async function main() {
     memoryLimit: 1000,
     authorId: 1,
     fileId: 2,
-    tutorial: "OK",
-    langSolution: "Python",
-    solution: "",
     createdAt: new Date(),
   };
 
@@ -114,9 +108,6 @@ async function main() {
     memoryLimit: 1000,
     authorId: 1,
     fileId: 3,
-    tutorial: "OK",
-    langSolution: "Python",
-    solution: "",
     createdAt: new Date(),
   };
   // Upsert data

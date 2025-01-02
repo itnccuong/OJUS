@@ -39,8 +39,6 @@ import {
 import { verifyToken } from "../middlewares/verify-token";
 import { downloadTestcase } from "../utils/general";
 import { TestcaseInterface } from "../interfaces/code-executor-interface";
-import { sendSubmissionJob } from "../rabbitmq/submissionProducer";
-import fs from "fs/promises"; // Ensure you import the promises API from fs
 
 @Route("/api/problems") // Base path for submission-related routes
 @Tags("Problems") // Group this endpoint under "Submission" in Swagger
@@ -54,20 +52,28 @@ export class ProblemController extends Controller {
     @Request() req: RequestExpress,
   ): Promise<SuccessResponseInterface<{ submissionId: number }>> {
     const { code, language } = body;
-    const userId = req.userId!;
-  
-    // 1) Create a submission record in DB
-    const submission = await createSubmission(problem_id, userId, code, language);
-  
-    // 2) Produce a message to RabbitMQ, letting the consumer do the compile/execute
-    await sendSubmissionJob({
-      submissionId: submission.submissionId,
+    const userId = req.userId;
+    const submission = await createSubmission(
+      problem_id,
+      userId,
       code,
       language,
+    );
+
+    const filename = await compileService(
+      code,
+      language,
+      submission.submissionId,
+    );
+
+    await executeCodeService(
+      filename,
+      language,
+      submission.submissionId,
       problem_id,
-    });
-  
-    // 3) Return a response — the consumer will do the judging asynchronously
+    );
+
+    await updateSubmissionVerdict(submission.submissionId, "OK", "");
     return {
       data: { submissionId: submission.submissionId },
     };
@@ -165,34 +171,17 @@ export class ProblemController extends Controller {
   }
 
   @Get("/{problem_id}/testcases")
-  @SuccessResponse(200, "Successfully fetched testcases for the problem")
+  @SuccessResponse(200, "Successfully fetched submissions from problem")
   public async getTestcases(
     @Path() problem_id: number,
   ): Promise<SuccessResponseInterface<{ testcases: TestcaseInterface }>> {
-    let downloadedTestDir: string | undefined;
-
-    try {
-      const problem = await findProblemById(problem_id);
-      const file = await findFileById(problem.fileId);
-      const fileUrl = file.url;
-
-      const { testcase: testcases, testDir } = await downloadTestcase(fileUrl);
-      downloadedTestDir = testDir; // Assign to outer scope for cleanup
-
-      return {
-        data: { testcases },
-      };
-    } finally {
-      if (downloadedTestDir) {
-        try {
-          await fs.rm(downloadedTestDir, { recursive: true, force: true });
-          console.log(`Deleted test directory at ${downloadedTestDir}`);
-        } catch (deleteError) {
-          console.error(`Failed to delete test directory at ${downloadedTestDir}:`, deleteError);
-          // Optionally, emit a warning or log it for further inspection
-        }
-      }
-    }
+    const problem = await findProblemById(problem_id);
+    const file = await findFileById(problem.fileId);
+    const fileUrl = file.url;
+    const testcases = await downloadTestcase(fileUrl);
+    return {
+      data: { testcases: testcases },
+    };
   }
 
   //Get all problem with all status 0 1 2
@@ -209,5 +198,4 @@ export class ProblemController extends Controller {
       data: { problem: resProblem },
     };
   }
-
 }

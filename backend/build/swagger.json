@@ -1385,7 +1385,7 @@
 				"operationId": "GetTestcases",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched testcases for the problem",
+						"description": "Successfully fetched submissions from problem",
 						"content": {
 							"application/json": {
 								"schema": {

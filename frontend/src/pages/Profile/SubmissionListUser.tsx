@@ -6,7 +6,6 @@ import {
   difficultyMapping,
   language_BE_to_FE_map,
   verdictMap,
-  verdict
 } from "../../utils/constanst.ts";
 import { shortReadableTimeConverter } from "../../utils/general.ts";
 import useFetch from "../../hooks/useFetch.ts";
@@ -97,17 +96,16 @@ export default function SubmissionListUser() {
                   <td className="text-center">
                     <span
                       className={
-                        submission.verdict === verdict.AC
+                        submission.verdict === "Accepted"
                           ? "badge text-success"
-                          : (submission.verdict === null || submission.verdict === undefined)
-                          ? "badge text-primary"
                           : "badge text-danger"
                       }
                       style={{
                         fontSize: "14px",
                       }}
                     >
-                    {submission.verdict === null || submission.verdict === undefined ? "In Progress" : submission.verdict}                    </span>
+                      {submission.verdict}
+                    </span>
                   </td>
 
                   <td className="text-center">{submission.createdAt}</td>

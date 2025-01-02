@@ -2,7 +2,6 @@ import { expect } from "@jest/globals";
 import { STATUS_CODE, verdict } from "../utils/constants";
 import { Problem, Result, Submission } from "@prisma/client";
 import { getSubmitCodeResults } from "./test_utils";
-import { get } from "http";
 
 export const testCompile = async (
   problem: Problem,
@@ -11,16 +10,14 @@ export const testCompile = async (
   isCompileError: boolean,
   token: string,
 ) => {
-
-  // let submitCodeResponse, getSubmissionResponse, getResultResponse;
   const { submitCodeResponse, getSubmissionResponse, getResultResponse } =
-  await getSubmitCodeResults(problem.problemId, code, language, token);
+    await getSubmitCodeResults(problem.problemId, code, language, token);
 
   expect(getSubmissionResponse.body.data.submission.problemId).toBe(
     problem.problemId,
   );
   if (isCompileError) {
-    expect(submitCodeResponse.status).toBe(STATUS_CODE.SUCCESS);
+    expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(getSubmissionResponse.body.data.submission.verdict).toBe(
       verdict.COMPILE_ERROR,
     );

@@ -1,27 +1,21 @@
 import { app } from "./app";
+import { initAllDockerContainers } from "../utils/codeExecutorUtils";
 import fs from "fs";
 import path from "path";
-
-import { initRabbitMQ } from "../rabbitmq/rabbitmqClient";
-import { startSubmissionConsumer } from "../rabbitmq/submissionConsumer";
-
 const dir = path.join("codeFiles");
 
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-(async () => {
-  try {
- 
-    await initRabbitMQ();
+initAllDockerContainers().catch((err) => {
+  console.log(err);
+});
 
-    const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => {
-      console.log(`Server running on port: ${PORT}`);
-    });
-  } catch (err) {
-    console.error("Startup error:", err);
-    process.exit(1);
-  }
-})();
+// server
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port: ${PORT}`);
+});
+//Test watch tower cleanup 22

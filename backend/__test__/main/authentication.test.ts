@@ -10,7 +10,7 @@ import { cleanDatabase, insertUser } from "../test_utils";
 import type { User } from "@prisma/client";
 import { findUserById } from "../../services/user.services/user.services";
 
-jest.setTimeout(600000);
+jest.setTimeout(60000);
 
 beforeEach(async () => {
   await cleanDatabase();

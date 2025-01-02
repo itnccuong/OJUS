@@ -22,7 +22,7 @@ import {
   submission1,
 } from "../test_data";
 
-jest.setTimeout(600000);
+jest.setTimeout(60000);
 
 beforeEach(async () => {
   await cleanDatabase();
