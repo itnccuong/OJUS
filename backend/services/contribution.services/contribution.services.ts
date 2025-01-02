@@ -2,6 +2,7 @@ import prisma from "../../prisma/client";
 import { CustomError } from "../../utils/errorClass";
 import { STATUS_CODE } from "../../utils/constants";
 import { formatResponse } from "../../utils/formatResponse";
+import { SolutionProblem } from "../../interfaces/interface";
 
 export const findPendingContribution = async (problemId: number) => {
   const res = await prisma.problem.findUnique({
@@ -49,4 +50,20 @@ export const findSubmissionsContribution = async (
     },
   });
   return submissions;
+};
+
+export const findSolutionProblem = async (problem_id: number) => {
+  const problem = await prisma.problem.findUnique({
+    where: {
+      problemId: problem_id,
+    },
+  });
+
+  const solution: SolutionProblem = {
+    solution: problem?.solution || null,
+    tutorial: problem?.tutorial || null,
+    langSolution: problem?.langSolution || null,
+  };
+
+  return solution;
 };

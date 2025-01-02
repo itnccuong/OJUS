@@ -24,3 +24,15 @@ services:
     command: sleep infinity
     volumes:
       - ./codeFiles:/codeFiles
+  
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"       # AMQP port
+      - "15672:15672"     # Management web UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq    # Persistent storage for RabbitMQ data
+
+volumes:
+  rabbitmq_data: 

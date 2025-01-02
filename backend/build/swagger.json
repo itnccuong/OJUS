@@ -209,6 +209,15 @@
 						"type": "number",
 						"format": "double"
 					},
+					"langSolution": {
+						"type": "string"
+					},
+					"solution": {
+						"type": "string"
+					},
+					"tutorial": {
+						"type": "string"
+					},
 					"memoryLimit": {
 						"type": "number",
 						"format": "double"
@@ -249,6 +258,9 @@
 				},
 				"required": [
 					"authorId",
+					"langSolution",
+					"solution",
+					"tutorial",
 					"memoryLimit",
 					"timeLimit",
 					"tags",
@@ -503,6 +515,15 @@
 						"type": "number",
 						"format": "double"
 					},
+					"langSolution": {
+						"type": "string"
+					},
+					"solution": {
+						"type": "string"
+					},
+					"tutorial": {
+						"type": "string"
+					},
 					"memoryLimit": {
 						"type": "number",
 						"format": "double"
@@ -546,6 +567,9 @@
 				},
 				"required": [
 					"authorId",
+					"langSolution",
+					"solution",
+					"tutorial",
 					"memoryLimit",
 					"timeLimit",
 					"tags",
@@ -753,6 +777,49 @@
 						},
 						"required": [
 							"contributions"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SolutionProblem": {
+				"properties": {
+					"solution": {
+						"type": "string",
+						"nullable": true
+					},
+					"tutorial": {
+						"type": "string",
+						"nullable": true
+					},
+					"langSolution": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"solution",
+					"tutorial",
+					"langSolution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponseInterface__solution-SolutionProblem__": {
+				"properties": {
+					"data": {
+						"properties": {
+							"solution": {
+								"$ref": "#/components/schemas/SolutionProblem"
+							}
+						},
+						"required": [
+							"solution"
 						],
 						"type": "object"
 					}
@@ -1318,7 +1385,7 @@
 				"operationId": "GetTestcases",
 				"responses": {
 					"200": {
-						"description": "Successfully fetched submissions from problem",
+						"description": "Successfully fetched testcases for the problem",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1390,6 +1457,15 @@
 									"memoryLimit": {
 										"type": "string"
 									},
+									"tutorial": {
+										"type": "string"
+									},
+									"solution": {
+										"type": "string"
+									},
+									"langSolution": {
+										"type": "string"
+									},
 									"file": {
 										"type": "string",
 										"format": "binary"
@@ -1402,6 +1478,9 @@
 									"tags",
 									"timeLimit",
 									"memoryLimit",
+									"tutorial",
+									"solution",
+									"langSolution",
 									"file"
 								]
 							}
@@ -1536,6 +1615,38 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/SuccessResponseInterface__submissions-SubmissionWithResults-Array__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contributions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "problem_id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/contributions/{problem_id}/solution": {
+			"get": {
+				"operationId": "GetSolutionFromContribution",
+				"responses": {
+					"200": {
+						"description": "Successfully fetched solution from contribution",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponseInterface__solution-SolutionProblem__"
 								}
 							}
 						}

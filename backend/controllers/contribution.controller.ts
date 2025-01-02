@@ -17,6 +17,7 @@ import {
 import { verifyToken } from "../middlewares/verify-token";
 import { verifyAdmin } from "../middlewares/verify-admin";
 import {
+  SolutionProblem,
   SubmissionWithResults,
   SuccessResponseInterface,
 } from "../interfaces/interface";
@@ -27,6 +28,7 @@ import {
   findAllPendingContributions,
   findPendingContribution,
   findSubmissionsContribution,
+  findSolutionProblem,
 } from "../services/contribution.services/contribution.services";
 import { uploadFile } from "../utils/fileUtilsDO";
 import {
@@ -49,8 +51,11 @@ export class ContributionController extends Controller {
     @FormField() tags: string,
     @FormField() timeLimit: string,
     @FormField() memoryLimit: string,
+    @FormField() tutorial: string,
+    @FormField() solution: string,
+    @FormField() langSolution: string,
     @UploadedFile()
-    file: Express.Multer.File,
+    file: Express.Multer.File
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     const { url, key } = await uploadFile("testcases", file);
     const createFile = await prisma.files.create({
@@ -71,6 +76,9 @@ export class ContributionController extends Controller {
         tags: tags,
         timeLimit: parseInt(timeLimit, 10),
         memoryLimit: parseInt(memoryLimit, 10),
+        tutorial: tutorial,
+        solution: solution,
+        langSolution: langSolution,
         authorId: req.userId, // Accessing the user's ID from the request
         fileId: createFile.fileId,
       },
@@ -85,14 +93,14 @@ export class ContributionController extends Controller {
   @SuccessResponse("200", "All contributions fetched successfully")
   @Middlewares(verifyAdmin)
   public async getAllContribute(
-    @Request() req: RequestExpress,
+    @Request() req: RequestExpress
   ): Promise<SuccessResponseInterface<{ contributions: Problem[] }>> {
     // Fetch all pending contributions
     const contributions = await findAllPendingContributions();
 
     const contributionsWithUserStatus = await addUserStatusToProblems(
       contributions,
-      req.userId,
+      req.userId
     );
     // Return a success response with the fetched contributions
     return {
@@ -105,12 +113,12 @@ export class ContributionController extends Controller {
   @SuccessResponse("200", "Contribute fetched successfully")
   public async getOneContribute(
     @Request() req: RequestExpress,
-    @Path() contribute_id: number, // Contribution ID as a path parameter
+    @Path() contribute_id: number // Contribution ID as a path parameter
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     const contribution = await findPendingContribution(contribute_id);
     const contributionWithUserStatus = await addUserStatusToProblem(
       req.userId,
-      contribution,
+      contribution
     );
 
     return {
@@ -122,7 +130,7 @@ export class ContributionController extends Controller {
   @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution accepted successfully")
   public async acceptContribution(
-    @Path() contribute_id: number,
+    @Path() contribute_id: number
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     // Validate that the contribution exists and is pending
     await findPendingContribution(contribute_id);
@@ -146,7 +154,7 @@ export class ContributionController extends Controller {
   @Middlewares(verifyAdmin)
   @SuccessResponse("200", "Contribution rejected successfully")
   public async rejectContribution(
-    @Path() contribute_id: number,
+    @Path() contribute_id: number
   ): Promise<SuccessResponseInterface<{ contribution: Problem }>> {
     // Validate that the contribution exists and is pending
     await findPendingContribution(contribute_id);
@@ -171,7 +179,7 @@ export class ContributionController extends Controller {
   @SuccessResponse(200, "Successfully fetched submissions from contribution")
   public async getSubmissionsFromContribution(
     @Path() problem_id: number,
-    @Request() req: RequestExpress,
+    @Request() req: RequestExpress
   ): Promise<
     SuccessResponseInterface<{ submissions: SubmissionWithResults[] }>
   > {
@@ -180,6 +188,20 @@ export class ContributionController extends Controller {
     const submissionsWithResults = await addResultsToSubmissions(submissions);
     return {
       data: { submissions: submissionsWithResults },
+    };
+  }
+
+  @Get("/{problem_id}/solution")
+  @Middlewares(verifyAdmin)
+  @SuccessResponse(200, "Successfully fetched solution from contribution")
+  public async getSolutionFromContribution(
+    @Path() problem_id: number,
+    @Request() req: RequestExpress
+  ): Promise<SuccessResponseInterface<{ solution: SolutionProblem }>> {
+    const solutionData = await findSolutionProblem(problem_id);
+
+    return {
+      data: { solution: solutionData },
     };
   }
 }

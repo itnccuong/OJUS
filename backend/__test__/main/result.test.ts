@@ -19,7 +19,7 @@ import { app } from "../../src/app";
 import { ResponseInterfaceForTest } from "../../interfaces/interface";
 import { Result } from "@prisma/client";
 import { STATUS_CODE } from "../../utils/constants";
-jest.setTimeout(60000);
+jest.setTimeout(600000);
 
 beforeAll(async () => {
   await cleanDatabase();

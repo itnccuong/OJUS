@@ -9,6 +9,7 @@ CREATE TABLE `User` (
     `facebookLink` VARCHAR(191) NULL,
     `githubLink` VARCHAR(191) NULL,
     `avatarId` INTEGER NULL,
+    `admin` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
@@ -27,6 +28,9 @@ CREATE TABLE `Problem` (
     `timeLimit` INTEGER NOT NULL,
     `memoryLimit` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `tutorial` TEXT NULL,
+    `solution` TEXT NULL,
+    `langSolution` VARCHAR(191) NULL,
     `authorId` INTEGER NOT NULL,
     `fileId` INTEGER NOT NULL,
 
@@ -42,6 +46,7 @@ CREATE TABLE `Files` (
     `filesize` INTEGER NOT NULL,
     `fileType` VARCHAR(191) NOT NULL,
     `url` VARCHAR(191) NOT NULL,
+    `key` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`fileId`)

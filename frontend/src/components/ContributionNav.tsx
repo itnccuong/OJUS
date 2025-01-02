@@ -15,6 +15,15 @@ const ContributionNav = ({ problemId }: { problemId: string }) => {
       <Nav.Item>
         <Nav.Link
           as={NavLink}
+          to={`/contributions/${problemId}/solution`}
+          className="text-dark"
+        >
+          Solution
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          as={NavLink}
           to={`/contributions/${problemId}/submissions`}
           className="text-dark"
         >
