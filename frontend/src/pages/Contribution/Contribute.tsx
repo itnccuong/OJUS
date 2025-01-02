@@ -256,7 +256,7 @@ export default function Contribute() {
       const selectedTags = tags
         .filter((tag) => tag.selected)
         .map((tag) => tag.label)
-        .join(","); // Chuyển thành chuỗi với dấu phẩy
+        .join(",");
 
       const formData = new FormData();
       formData.append("title", title);
@@ -266,6 +266,8 @@ export default function Contribute() {
       formData.append("timeLimit", timeLimit.toString());
       formData.append("memoryLimit", memoryLimit.toString());
       formData.append("tags", selectedTags);
+      formData.append("solution", code || "");
+      formData.append("langSolution", language);
       formData.append("file", file as Blob);
 
       const res = await submit("POST", "/api/contributions", formData, {
@@ -436,34 +438,6 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               </>
             )}
 
-            <h5 className="mt-3 mb-3">Tutorial</h5>
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Markdown Preview"
-              onChange={(e) => setTutorialMarkdown(e.target.checked)}
-            />
-
-            {TutorialMarkdown ? (
-              <>
-                <div className="border rounded p-2">
-                  <ReactMarkdown children={tutorial} />
-                </div>
-              </>
-            ) : (
-              <>
-                <Form.Control
-                  placeholder="Write your tutorial in markdown"
-                  className="mb-3 mt-2"
-                  required
-                  as="textarea"
-                  rows={8}
-                  value={tutorial}
-                  onChange={(e) => setTutorial(e.target.value)}
-                />
-              </>
-            )}
-
             <h5 className="mt-3 mb-3">Upload tests</h5>
             <div className="mb-3">
               <div className="d-flex align-items-center gap-2 mb-2">
@@ -537,28 +511,66 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               {memoryLimitError}
             </Form.Control.Feedback>
 
-            <h5 className="mt-3 mb-2">Solution</h5>
-            <div className="p-3 d-flex justify-content-between">
-              <LanguageDropdown language={language} setLanguage={setLanguage} />
-            </div>
-            <div>
-              <Editor
-                height="49vh"
-                language={languageEditorMap[language]}
-                value={code}
-                onChange={(value) => setCode(value)}
-                options={{
-                  minimap: { enabled: false },
-                }}
-              />
-            </div>
+            <h5 className="mt-3 mb-3">Tutorial</h5>
+            <Form.Check
+              type="switch"
+              id="custom-switch"
+              label="Markdown Preview"
+              onChange={(e) => setTutorialMarkdown(e.target.checked)}
+            />
 
+            {TutorialMarkdown ? (
+              <>
+                <div className="border rounded p-2">
+                  <ReactMarkdown children={tutorial} />
+                </div>
+              </>
+            ) : (
+              <>
+                <Form.Control
+                  placeholder="Write your tutorial in markdown"
+                  className="mb-3 mt-2"
+                  required
+                  as="textarea"
+                  rows={8}
+                  value={tutorial}
+                  onChange={(e) => setTutorial(e.target.value)}
+                />
+              </>
+            )}
+
+            <h5 className="mt-3 mb-2">Solution</h5>
+            <div
+              className="border border-dark-subtle shadow-sm rounded-4 mt-3"
+              style={{
+                height: "50vh",
+              }}
+            >
+              <div className="p-3 d-flex justify-content-between">
+                <LanguageDropdown
+                  language={language}
+                  setLanguage={setLanguage}
+                />
+              </div>
+              <div>
+                <Editor
+                  height="35vh"
+                  language={languageEditorMap[language]}
+                  value={code}
+                  onChange={(value) => setCode(value)}
+                  options={{
+                    minimap: { enabled: false },
+                  }}
+                />
+              </div>
+            </div>
             <div className="d-flex justify-content-center mt-3">
               <Button
                 className="w-25"
                 type={"submit"}
                 variant="primary"
                 disabled={isSubmitting}
+                size="lg"
               >
                 {isSubmitting ? <CustomSpinner /> : "Submit"}
               </Button>
