@@ -1,4 +1,4 @@
-export default function NotAdminNotAdmin() {
+export default function NotAdmin() {
     return (
       <>
         <div className="flex-grow-1 d-flex">

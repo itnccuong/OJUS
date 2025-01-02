@@ -10,12 +10,14 @@ import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TagListInit } from "../../utils/constanst.ts";
+import { languageEditorMap, TagListInit } from "../../utils/constanst.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
 import { HelpCircle } from "lucide-react";
 import JSZip from "jszip";
+import { Editor } from "@monaco-editor/react";
+import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 
 interface Tag {
   label: string;
@@ -35,19 +37,25 @@ export default function Contribute() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [tutorial, setTutorial] = useState("");
   const [difficulty, setDifficulty] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
+  const [language, setLanguage] = useState("C++");
+  const [code, setCode] = useState<string | undefined>("");
+
   const [testcaseError, setTestcaseError] = useState("");
+  const [timeLimitError, setTimeLimitError] = useState("");
+  const [memoryLimitError, setMemoryLimitError] = useState("");
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
 
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag,
-      ),
+        i === index ? { ...tag, selected: !tag.selected } : tag
+      )
     );
   };
 
@@ -55,7 +63,8 @@ export default function Contribute() {
     setTags(TagListInit);
   };
 
-  const [isMarkdown, setIsMarkdown] = useState(false);
+  const [DescriptionMarkdown, setDescriptionMarkdown] = useState(false);
+  const [TutorialMarkdown, setTutorialMarkdown] = useState(false);
 
   const { submit, isSubmitting } = useSubmit();
 
@@ -102,7 +111,7 @@ export default function Contribute() {
         // Check if all non-root files are in a single folder
         const nonRootFiles = allFiles.filter((name) => name.includes("/"));
         const topLevelFolders = new Set(
-          nonRootFiles.map((path) => path.split("/")[0]),
+          nonRootFiles.map((path) => path.split("/")[0])
         );
 
         if (topLevelFolders.size === 1) {
@@ -113,7 +122,7 @@ export default function Contribute() {
             .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
         } else {
           setTestcaseError(
-            "ZIP must contain either files in root or in a single folder",
+            "ZIP must contain either files in root or in a single folder"
           );
           return false;
         }
@@ -125,35 +134,35 @@ export default function Contribute() {
       // Rest of the validation remains the same
       const validFilePattern = /^(input|output)\d+\.txt$/;
       const invalidFiles = testcaseFiles.filter(
-        (name) => !validFilePattern.test(name),
+        (name) => !validFilePattern.test(name)
       );
 
       if (invalidFiles.length > 0) {
         setTestcaseError(
-          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`,
+          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`
         );
         return false;
       }
 
       // Group valid input and output files
       const inputFiles = testcaseFiles.filter(
-        (name) => name.startsWith("input") && name.endsWith(".txt"),
+        (name) => name.startsWith("input") && name.endsWith(".txt")
       );
       const outputFiles = testcaseFiles.filter(
-        (name) => name.startsWith("output") && name.endsWith(".txt"),
+        (name) => name.startsWith("output") && name.endsWith(".txt")
       );
 
       // Validation checks
       if (inputFiles.length === 0 || outputFiles.length === 0) {
         setTestcaseError(
-          "ZIP must contain at least one pair of input/output files",
+          "ZIP must contain at least one pair of input/output files"
         );
         return false;
       }
 
       if (inputFiles.length !== outputFiles.length) {
         setTestcaseError(
-          "Number of input files must match number of output files",
+          "Number of input files must match number of output files"
         );
         return false;
       }
@@ -163,7 +172,7 @@ export default function Contribute() {
         const number = inputFile.match(/input(\d+)\.txt/)?.[1];
         if (!number) {
           setTestcaseError(
-            "Input files must be named 'input1.txt', 'input2.txt', etc.",
+            "Input files must be named 'input1.txt', 'input2.txt', etc."
           );
           return false;
         }
@@ -180,36 +189,92 @@ export default function Contribute() {
     } catch (error) {
       console.error("Error validating ZIP file:", error);
       setTestcaseError(
-        "Error reading ZIP file. Please ensure it's a valid ZIP archive.",
+        "Error reading ZIP file. Please ensure it's a valid ZIP archive."
       );
       return false;
     }
   };
 
+  const validateTimeLimit = (value: string): boolean => {
+    setTimeLimitError("");
+    const num = Number(value);
+
+    if (value.trim() === "") {
+      setTimeLimitError("Time limit is required");
+      return false;
+    }
+
+    if (isNaN(num) || !Number.isInteger(num)) {
+      setTimeLimitError("Time limit must be a valid number");
+      return false;
+    }
+
+    if (num <= 0) {
+      setTimeLimitError("Time limit must be greater than 0");
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateMemoryLimit = (value: string): boolean => {
+    setMemoryLimitError("");
+    const num = Number(value);
+
+    if (value.trim() === "") {
+      setMemoryLimitError("Memory limit is required");
+      return false;
+    }
+
+    if (isNaN(num) || !Number.isInteger(num)) {
+      setMemoryLimitError("Memory limit must be a valid number");
+      return false;
+    }
+
+    if (num <= 0) {
+      setMemoryLimitError("Memory limit must be greater than 0");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const isTimeLimitValid = validateTimeLimit(timeLimit.toString());
+    const isMemoryLimitValid = validateMemoryLimit(memoryLimit.toString());
+
+    if (!isTimeLimitValid || !isMemoryLimitValid) {
+      return;
+    }
     if (!(await validateTestcase(file))) {
       return;
     }
+
     try {
       const selectedTags = tags
         .filter((tag) => tag.selected)
         .map((tag) => tag.label)
-        .join(","); // Chuyển thành chuỗi với dấu phẩy
+        .join(",");
 
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
+      formData.append("tutorial", tutorial);
       formData.append("difficulty", difficulty.toString());
       formData.append("timeLimit", timeLimit.toString());
       formData.append("memoryLimit", memoryLimit.toString());
       formData.append("tags", selectedTags);
+      formData.append("solution", code || "");
+      formData.append("langSolution", language);
       formData.append("file", file as Blob);
 
       const res = await submit("POST", "/api/contributions", formData, {
         includeToken: true,
       });
       toast.success("Contribution submitted");
+      navigate("/contribute");
 
       console.log("Submit contribute response: ", res);
     } catch (err) {
@@ -344,10 +409,10 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               type="switch"
               id="custom-switch"
               label="Markdown Preview"
-              onChange={(e) => setIsMarkdown(e.target.checked)}
+              onChange={(e) => setDescriptionMarkdown(e.target.checked)}
             />
 
-            {isMarkdown ? (
+            {DescriptionMarkdown ? (
               <>
                 <div className="border rounded p-2">
                   <ReactMarkdown
@@ -384,7 +449,44 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   onChange={(e) => {
                     setFile((e.target as HTMLInputElement).files?.[0] || null);
                     validateTestcase(
-                      (e.target as HTMLInputElement).files?.[0] || null,
+                      (e.target as HTMLInputElement).files?.[0] || null
+                    );
+                  }}
+                  isInvalid={!!testcaseError}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {testcaseError}
+                </Form.Control.Feedback>
+                <OverlayTrigger
+                  trigger={["hover", "focus"]}
+                  placement="right"
+                  overlay={popover}
+                  onToggle={(show) => setShowHelp(show)}
+                  rootClose
+                >
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ cursor: "help" }}
+                  >
+                    <HelpCircle
+                      className={`text-primary ${showHelp ? "opacity-75" : ""}`}
+                      size={25}
+                    />
+                  </div>
+                </OverlayTrigger>
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <Form.Control
+                  required
+                  type="file"
+                  className="w-50"
+                  accept=".zip"
+                  onChange={(e) => {
+                    setFile((e.target as HTMLInputElement).files?.[0] || null);
+                    validateTestcase(
+                      (e.target as HTMLInputElement).files?.[0] || null
                     );
                   }}
                   isInvalid={!!testcaseError}
@@ -417,26 +519,95 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               required
               type="text"
               placeholder="Time limit"
-              onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setTimeLimit(parseInt(value) || 0);
+                validateTimeLimit(value);
+              }}
               className="w-50 mb-2"
+              isInvalid={!!timeLimitError}
             />
+            <Form.Control.Feedback type="invalid">
+              {timeLimitError}
+            </Form.Control.Feedback>
 
             <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
-
             <Form.Control
               required
               type="text"
               placeholder="Memory limit"
-              onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setMemoryLimit(parseInt(value) || 0);
+                validateMemoryLimit(value);
+              }}
               className="w-50 mb-2"
+              isInvalid={!!memoryLimitError}
+            />
+            <Form.Control.Feedback type="invalid">
+              {memoryLimitError}
+            </Form.Control.Feedback>
+
+            <h5 className="mt-3 mb-3">Tutorial</h5>
+            <Form.Check
+              type="switch"
+              id="custom-switch"
+              label="Markdown Preview"
+              onChange={(e) => setTutorialMarkdown(e.target.checked)}
             />
 
+            {TutorialMarkdown ? (
+              <>
+                <div className="border rounded p-2">
+                  <ReactMarkdown children={tutorial} />
+                </div>
+              </>
+            ) : (
+              <>
+                <Form.Control
+                  placeholder="Write your tutorial in markdown"
+                  className="mb-3 mt-2"
+                  required
+                  as="textarea"
+                  rows={8}
+                  value={tutorial}
+                  onChange={(e) => setTutorial(e.target.value)}
+                />
+              </>
+            )}
+
+            <h5 className="mt-3 mb-2">Solution</h5>
+            <div
+              className="border border-dark-subtle shadow-sm rounded-4 mt-3"
+              style={{
+                height: "50vh",
+              }}
+            >
+              <div className="p-3 d-flex justify-content-between">
+                <LanguageDropdown
+                  language={language}
+                  setLanguage={setLanguage}
+                />
+              </div>
+              <div>
+                <Editor
+                  height="35vh"
+                  language={languageEditorMap[language]}
+                  value={code}
+                  onChange={(value) => setCode(value)}
+                  options={{
+                    minimap: { enabled: false },
+                  }}
+                />
+              </div>
+            </div>
             <div className="d-flex justify-content-center mt-3">
               <Button
                 className="w-25"
                 type={"submit"}
                 variant="primary"
                 disabled={isSubmitting}
+                size="lg"
               >
                 {isSubmitting ? <CustomSpinner /> : "Submit"}
               </Button>
