@@ -5,6 +5,13 @@ import {
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Form,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
@@ -306,6 +313,33 @@ You may assume that each input would have exactly one solution, and you may not 
 Given \`nums = [2, 7, 11, 15]\`, \`target = 9\`,  
 Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
   `;
+
+  const [showHelp, setShowHelp] = useState(false);
+
+  const helpText = (
+    <div className="p-2">
+      <h6 className="mb-3">Test Files Requirements:</h6>
+      <ol className="ps-3 mb-0">
+        <li className="mb-2">
+          Name format must be:
+          <ul className="mt-1">
+            <li>input1.txt, input2.txt, input3.txt...</li>
+            <li>output1.txt, output2.txt, output3.txt...</li>
+          </ul>
+        </li>
+        <li className="mb-2">Must be in a ZIP file</li>
+        <li className="mb-2">Each input must have matching output</li>
+        <li>Files must be in root of ZIP</li>
+      </ol>
+    </div>
+  );
+
+  const popover = (
+    <Popover id="file-format-popover" className="w-72">
+      <Popover.Body>{helpText}</Popover.Body>
+    </Popover>
+  );
+
 
   const [showHelp, setShowHelp] = useState(false);
 
