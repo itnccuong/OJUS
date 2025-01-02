@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { app } from "../../src/app";
 import request from "supertest";
 import path from "path";
@@ -51,6 +51,9 @@ test("Contribute", async () => {
     .field("tags", "ok")
     .field("timeLimit", "1000")
     .field("memoryLimit", "1000")
+    .field("langSolution", "cpp")
+    .field("tutorial", "hehehe")
+    .field("solution", "cout << duydeptrai")
     .attach("file", filePath)
     .set("Content-Type", "multipart/form-data")) as ResponseInterfaceForTest<{
     contribution: Problem;
