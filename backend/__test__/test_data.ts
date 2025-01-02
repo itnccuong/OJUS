@@ -3,11 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { verdict } from "../utils/constants";
 
-// Generate salt and hashed password for testing
 const salt = bcrypt.genSaltSync(10);
 const hashedPassword = bcrypt.hashSync("12345678", salt);
-
-// User and Admin data for testing
 export const user: User = {
   userId: 1,
   email: "hienvuongnhat@gmail.com",
@@ -34,7 +31,6 @@ export const admin: User = {
   admin: true,
 };
 
-// JWT tokens for user and admin
 export const userToken = jwt.sign(
   { userId: user.userId }, // Payload
   process.env.JWT_SECRET as string, // Secret
@@ -47,7 +43,6 @@ export const adminToken = jwt.sign(
   { expiresIn: "3m" }, // Token expiration
 );
 
-// Files for test cases
 export const file1: Files = {
   fileId: 1,
   filename: `testcase_1`,
@@ -65,6 +60,34 @@ export const file2: Files = {
   fileType: "application/x-zip-compressed",
   url: "https://ojus-bucket-test.sgp1.cdn.digitaloceanspaces.com/testcase.zip",
   key: null,
+  createdAt: new Date(),
+};
+
+export const problem1: Problem = {
+  problemId: 1,
+  title: "Problem 1",
+  description: "Description for problem 1",
+  status: 2,
+  difficulty: 2,
+  tags: `Array`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 1,
+  createdAt: new Date(),
+};
+
+export const problem2: Problem = {
+  problemId: 2,
+  title: "Problem 2",
+  description: "Description for problem 2",
+  status: 2,
+  difficulty: 3,
+  tags: `String`,
+  timeLimit: 1000,
+  memoryLimit: 1000,
+  authorId: 1,
+  fileId: 2,
   createdAt: new Date(),
 };
 
@@ -88,41 +111,6 @@ export const file4: Files = {
   createdAt: new Date(),
 };
 
-// Problem and contribution data
-export const problem1: Problem = {
-  problemId: 1,
-  title: "Problem 1",
-  description: "Description for problem 1",
-  status: 2,
-  difficulty: 2,
-  tags: `Array`,
-  timeLimit: 1000,
-  memoryLimit: 1000,
-  authorId: 1,
-  fileId: 1,
-  createdAt: new Date(),
-  langSolution: "py", // Random language
-  tutorial: "This is a tutorial for solving Problem 1. Follow the steps to solve it.", // Random tutorial string
-  solution: "def solve():\n    n = int(input())\n    print(-n)", // Random solution code
-};
-
-export const problem2: Problem = {
-  problemId: 2,
-  title: "Problem 2",
-  description: "Description for problem 2",
-  status: 2,
-  difficulty: 3,
-  tags: `String`,
-  timeLimit: 1000,
-  memoryLimit: 1000,
-  authorId: 1,
-  fileId: 2,
-  createdAt: new Date(),
-  langSolution: "cpp", // Random language
-  tutorial: "This is a tutorial for solving Problem 2. Follow the steps to solve it.", // Random tutorial string
-  solution: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -i;\n}", // Random solution code
-};
-
 export const contribution1: Problem = {
   problemId: 3,
   title: "Contribution 1",
@@ -135,9 +123,6 @@ export const contribution1: Problem = {
   authorId: 1,
   fileId: 3,
   createdAt: new Date(),
-  langSolution: "js", // Random language
-  tutorial: "This is a tutorial for Contribution 1. Follow the steps to solve it.", // Random tutorial string
-  solution: "process.stdin.resume();\nprocess.stdin.setEncoding('utf8');\n\nprocess.stdin.on('data', (input) => {\n  const n = parseInt(input);\n  console.log(-n);\n  process.exit();\n});", // Random solution code
 };
 
 export const contribution2: Problem = {
@@ -152,12 +137,8 @@ export const contribution2: Problem = {
   authorId: 1,
   fileId: 4,
   createdAt: new Date(),
-  langSolution: "java", // Random language
-  tutorial: "This is a tutorial for Contribution 2. Follow the steps to solve it.", // Random tutorial string
-  solution: "import java.util.Scanner;\n\nclass Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        System.out.println(-n);\n    }\n}\n", // Random solution code
 };
 
-// Submission and result data
 export const submission1: Submission = {
   submissionId: 1,
   userId: user.userId,
@@ -213,7 +194,6 @@ export const result2: Result = {
   createdAt: new Date(),
 };
 
-// Compile fail answers for testing
 export const compileFailAnswer = [
   {
     language: "c",
@@ -235,7 +215,6 @@ export const compileFailAnswer = [
   },
 ];
 
-// Correct answers for different languages
 export const correctAnswers = [
   {
     language: "c",

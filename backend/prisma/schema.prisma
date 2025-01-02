@@ -26,24 +26,21 @@ model User {
 }
 
 model Problem {
-  problemId     Int      @id @default(autoincrement())
-  title         String   @unique
-  description   String   @db.Text
-  status        Int      @default(0)
-  difficulty    Int
-  tags          String
-  timeLimit     Int
-  memoryLimit   Int
-  createdAt     DateTime @default(now())
-  tutorial      String?  @db.Text 
-  solution      String?  @db.Text 
-  langSolution  String?  
-  authorId      Int
-  author        User     @relation(fields: [authorId], references: [userId])
+  problemId   Int      @id @default(autoincrement())
+  title       String   @unique
+  description String   @db.Text
+  status      Int      @default(0)
+  difficulty  Int
+  tags        String
+  timeLimit   Int
+  memoryLimit Int
+  createdAt   DateTime @default(now())
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [userId])
 
-  fileId        Int          @unique
-  file          Files        @relation(fields: [fileId], references: [fileId])
-  Submission    Submission[]
+  fileId     Int          @unique
+  file       Files        @relation(fields: [fileId], references: [fileId])
+  Submission Submission[]
 }
 
 model Files {
