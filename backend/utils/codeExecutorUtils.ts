@@ -152,7 +152,7 @@ const executeAgainstTestcase = async (
     const timeoutId = setTimeout(() => {
       isTimeout = true;
       cmd.stdout.destroy();
-      cmd.kill();
+      cmd.kill('SIGKILL');
     }, timeLimit);
 
     const startTime = process.hrtime(); // Start tracking time
