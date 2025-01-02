@@ -37,6 +37,9 @@ export interface ProblemInterface {
   title: string;
   createdAt: string;
   problemId: number;
+  solution: string;
+  tutorial: string;
+  langSolution: string;
 }
 
 export interface ProblemWithUserStatusInterface extends ProblemInterface {
@@ -86,4 +89,10 @@ export interface ProfilePayloadInterface {
   githubLink?: string | null;
   currentPassword?: string;
   newPassword?: string;
+}
+
+export interface SolutionProblem {
+  solution: string | null;
+  tutorial: string | null;
+  langSolution: string | null;
 }

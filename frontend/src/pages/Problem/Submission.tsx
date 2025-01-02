@@ -166,7 +166,7 @@ export default function Submission() {
           </div>
         )}
 
-        <h4 className="mt-3">Code</h4>
+        <h4 className="mt-3">Solution</h4>
         <div
           className="border border-dark-subtle shadow-sm rounded-4 mt-3"
           style={{

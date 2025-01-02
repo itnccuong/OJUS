@@ -38,7 +38,6 @@ export default function Problem() {
     },
   );
   const problem = data?.data.problem;
-
   const { handleSubmit, isSubmitting } = useSubmitCode();
   if (loading) {
     return <Loader />;

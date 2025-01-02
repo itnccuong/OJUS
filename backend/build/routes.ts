@@ -78,7 +78,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DefaultSelection_Prisma._36_ProblemPayload_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"authorId":{"dataType":"double","required":true},"memoryLimit":{"dataType":"double","required":true},"timeLimit":{"dataType":"double","required":true},"tags":{"dataType":"string","required":true},"difficulty":{"dataType":"double","required":true},"status":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"problemId":{"dataType":"double","required":true},"fileId":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"authorId":{"dataType":"double","required":true},"langSolution":{"dataType":"string","required":true},"solution":{"dataType":"string","required":true},"tutorial":{"dataType":"string","required":true},"memoryLimit":{"dataType":"double","required":true},"timeLimit":{"dataType":"double","required":true},"tags":{"dataType":"string","required":true},"difficulty":{"dataType":"double","required":true},"status":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"problemId":{"dataType":"double","required":true},"fileId":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Problem": {
@@ -158,6 +158,9 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "authorId": {"dataType":"double","required":true},
+            "langSolution": {"dataType":"string","required":true},
+            "solution": {"dataType":"string","required":true},
+            "tutorial": {"dataType":"string","required":true},
             "memoryLimit": {"dataType":"double","required":true},
             "timeLimit": {"dataType":"double","required":true},
             "tags": {"dataType":"string","required":true},
@@ -242,6 +245,24 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"contributions":{"dataType":"array","array":{"dataType":"refAlias","ref":"Problem"},"required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SolutionProblem": {
+        "dataType": "refObject",
+        "properties": {
+            "solution": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "tutorial": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "langSolution": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SuccessResponseInterface__solution-SolutionProblem__": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"solution":{"ref":"SolutionProblem","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -820,6 +841,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                     tags: {"in":"formData","name":"tags","required":true,"dataType":"string"},
                     timeLimit: {"in":"formData","name":"timeLimit","required":true,"dataType":"string"},
                     memoryLimit: {"in":"formData","name":"memoryLimit","required":true,"dataType":"string"},
+                    tutorial: {"in":"formData","name":"tutorial","required":true,"dataType":"string"},
+                    solution: {"in":"formData","name":"solution","required":true,"dataType":"string"},
+                    langSolution: {"in":"formData","name":"langSolution","required":true,"dataType":"string"},
                     file: {"in":"formData","name":"file","required":true,"dataType":"file"},
             };
 
@@ -985,6 +1009,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getSubmissionsFromContribution',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/contributions/:problem_id/solution',
+            ...(fetchMiddlewares<RequestHandler>(ContributionController)),
+            ...(fetchMiddlewares<RequestHandler>(ContributionController.prototype.getSolutionFromContribution)),
+
+            async function ContributionController_getSolutionFromContribution(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    problem_id: {"in":"path","name":"problem_id","required":true,"dataType":"double"},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ContributionController();
+
+              await templateService.apiHandler({
+                methodName: 'getSolutionFromContribution',
                 controller,
                 response,
                 next,
