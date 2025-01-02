@@ -476,6 +476,43 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 </OverlayTrigger>
               </div>
             </div>
+            <div className="mb-3">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <Form.Control
+                  required
+                  type="file"
+                  className="w-50"
+                  accept=".zip"
+                  onChange={(e) => {
+                    setFile((e.target as HTMLInputElement).files?.[0] || null);
+                    validateTestcase(
+                      (e.target as HTMLInputElement).files?.[0] || null
+                    );
+                  }}
+                  isInvalid={!!testcaseError}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {testcaseError}
+                </Form.Control.Feedback>
+                <OverlayTrigger
+                  trigger={["hover", "focus"]}
+                  placement="right"
+                  overlay={popover}
+                  onToggle={(show) => setShowHelp(show)}
+                  rootClose
+                >
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ cursor: "help" }}
+                  >
+                    <HelpCircle
+                      className={`text-primary ${showHelp ? "opacity-75" : ""}`}
+                      size={25}
+                    />
+                  </div>
+                </OverlayTrigger>
+              </div>
+            </div>
 
             <h5 className="mt-3 mb-3">Time limit (ms)</h5>
             <Form.Control
