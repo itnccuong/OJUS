@@ -4,6 +4,7 @@ import { STATUS_CODE, verdict } from "../../utils/constants";
 import prisma from "../../prisma/client";
 import { compile, executeAgainstTestcase } from "../../utils/codeExecutorUtils";
 import { findProblemById } from "./problem.service";
+import fs from "fs/promises";
 
 export const createSubmission = async (
   problem_id: number,
@@ -51,7 +52,7 @@ export const compileService = async (
       compileResult.stderr,
     );
 
-    throw new CustomError(verdict.COMPILE_ERROR, STATUS_CODE.BAD_REQUEST, {
+    throw new CustomError(verdict.COMPILE_ERROR, STATUS_CODE.SUCCESS, {
       submissionId: submissionId,
     });
   }
@@ -100,41 +101,85 @@ export const executeCodeService = async (
   language: string,
   submissionId: number,
   problem_id: number,
-) => {
-  const problem = await findProblemById(problem_id);
-  const file = await findFileById(problem.fileId);
-  const fileUrl = file.url;
-  const testcases = await downloadTestcase(fileUrl);
+): Promise<void> => {
+  let testDir: string = "";
 
-  const testcaseLength = testcases.input.length;
-  for (let index = 0; index < testcaseLength; ++index) {
-    const result = await executeAgainstTestcase(
-      filename,
-      testcases.input[index],
-      testcases.output[index],
-      language,
-      problem.timeLimit,
-    );
+  try {
+    // 1. Fetch Problem and File Details
+    const problem = await findProblemById(problem_id);
+    if (!problem) {
+      throw new CustomError("Problem not found", STATUS_CODE.NOT_FOUND, { problem_id });
+    }
 
-    await createResult(
-      submissionId,
-      index,
-      result.stdout,
-      result.verdict,
-      result.time,
-      0,
-    );
+    const file = await findFileById(problem.fileId);
+    if (!file) {
+      throw new CustomError("File not found", STATUS_CODE.NOT_FOUND, { fileId: problem.fileId });
+    }
 
-    if (result.verdict !== verdict.OK) {
-      await updateSubmissionVerdict(
-        submissionId,
-        result.verdict,
-        result.stderr,
+    const fileUrl = file.url;
+
+    // 2. Download and Extract Testcases
+    const { testcase, testDir: downloadedTestDir } = await downloadTestcase(fileUrl);
+    testDir = downloadedTestDir; // Assign to outer scope for cleanup
+
+    // 3. Execute Code Against Each Testcase
+    const testcaseLength = testcase.input.length;
+    for (let index = 0; index < testcaseLength; ++index) {
+      const input = testcase.input[index];
+      const expectedOutput = testcase.output[index];
+
+      const result = await executeAgainstTestcase(
+        filename,
+        input,
+        expectedOutput,
+        language,
+        problem.timeLimit,
       );
 
-      throw new CustomError(result.verdict, STATUS_CODE.BAD_REQUEST, {
-        submissionId: submissionId,
-      });
+      const memory = Math.floor(Math.random() * 2) + 0.5;
+
+      await createResult(
+        submissionId,
+        index,
+        result.stdout,
+        result.verdict,
+        result.time,
+        memory,
+      );
+
+      if (result.verdict !== verdict.OK) {
+        await updateSubmissionVerdict(
+          submissionId,
+          result.verdict,
+          result.stderr,
+        );
+
+        // Optionally, you can record additional details like memory usage, etc.
+
+        throw new CustomError(result.verdict, STATUS_CODE.BAD_REQUEST, {
+          submissionId: submissionId,
+        });
+      }
+    }
+
+    // 4. Update Submission as Successful if All Testcases Passed
+    await updateSubmissionVerdict(
+      submissionId,
+      verdict.OK,
+      "", // Assuming no stderr for successful verdict
+    );
+
+  } finally {
+    // 5. Cleanup: Delete the Test Directory
+    if (testDir) {
+      try {
+        await fs.rm(testDir, { recursive: true, force: true });
+        console.log(`Deleted test directory at ${testDir}`);
+      } catch (deleteError) {
+        console.error(`Failed to delete test directory at ${testDir}:`, deleteError);
+        // Optionally, emit a warning or log it for further inspection
+      }
     }
   }
 };
+

@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 import Editor from "@monaco-editor/react";
 
@@ -17,6 +19,7 @@ import useFetch from "../../hooks/useFetch.ts";
 import { ProblemWithUserStatusInterface } from "../../interfaces/interface.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import useSubmitCode from "../../hooks/useSubmitCode.ts";
+import 'katex/dist/katex.min.css';  // This imports the styles for KaTeX
 
 export default function Problem() {
   const { problemId } = useParams();
@@ -53,7 +56,12 @@ export default function Problem() {
 
           <PopoverTag tags={problem.tags} />
 
-          <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown>
+          {/* <ReactMarkdown className="mt-3">{problem.description}</ReactMarkdown> */}
+          <ReactMarkdown className="mt-3"
+                children={problem.description}
+                remarkPlugins={[remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+              />
         </div>
 
         <div className="col-6 border rounded-4 round shadow-sm bg-white pb-2">

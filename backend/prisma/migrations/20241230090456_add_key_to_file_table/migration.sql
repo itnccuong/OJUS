@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Files` ADD COLUMN `key` VARCHAR(191) NULL;
