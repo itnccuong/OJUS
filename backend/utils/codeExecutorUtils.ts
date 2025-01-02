@@ -152,7 +152,7 @@ const executeAgainstTestcase = async (
     const timeoutId = setTimeout(() => {
       isTimeout = true;
       cmd.stdout.destroy();
-      cmd.kill('SIGKILL');
+      cmd.kill();
     }, timeLimit);
 
     const startTime = process.hrtime(); // Start tracking time
@@ -201,7 +201,7 @@ const executeAgainstTestcase = async (
           time: executionTime,
         });
       }
-      if (stdout.trimEnd() !== expectedOutput.trimEnd()) {
+      if (stdout !== expectedOutput) {
         resolve({
           stderr: stderr,
           stdout: stdout,

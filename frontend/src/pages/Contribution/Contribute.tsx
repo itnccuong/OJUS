@@ -10,18 +10,12 @@ import ReactMarkdown from "react-markdown";
 import getToken from "../../utils/getToken.ts";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { languageEditorMap, TagListInit } from "../../utils/constanst.ts";
+import { TagListInit } from "../../utils/constanst.ts";
 import useSubmit from "../../hooks/useSubmit.ts";
 import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import "katex/dist/katex.min.css"; // This imports the styles for KaTeX
-
 import { HelpCircle } from "lucide-react";
 import JSZip from "jszip";
-import { Editor } from "@monaco-editor/react";
-import LanguageDropdown from "../../components/LanguageDropdown.tsx";
 
 interface Tag {
   label: string;
@@ -41,17 +35,11 @@ export default function Contribute() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [tutorial, setTutorial] = useState("");
   const [difficulty, setDifficulty] = useState(1);
   const [file, setFile] = useState<File | null>(null);
   const [timeLimit, setTimeLimit] = useState(1000); // Đặt giá trị mặc định cho Time Limit
   const [memoryLimit, setMemoryLimit] = useState(128); // Đặt giá trị mặc định cho Memory Limit
-  const [language, setLanguage] = useState("C++");
-  const [code, setCode] = useState<string | undefined>("");
-
   const [testcaseError, setTestcaseError] = useState("");
-  const [timeLimitError, setTimeLimitError] = useState("");
-  const [memoryLimitError, setMemoryLimitError] = useState("");
 
   const [tags, setTags] = useState<Tag[]>(TagListInit);
 
@@ -67,8 +55,7 @@ export default function Contribute() {
     setTags(TagListInit);
   };
 
-  const [DescriptionMarkdown, setDescriptionMarkdown] = useState(false);
-  const [TutorialMarkdown, setTutorialMarkdown] = useState(false);
+  const [isMarkdown, setIsMarkdown] = useState(false);
 
   const { submit, isSubmitting } = useSubmit();
 
@@ -199,86 +186,30 @@ export default function Contribute() {
     }
   };
 
-  const validateTimeLimit = (value: string): boolean => {
-    setTimeLimitError("");
-    const num = Number(value);
-
-    if (value.trim() === "") {
-      setTimeLimitError("Time limit is required");
-      return false;
-    }
-
-    if (isNaN(num) || !Number.isInteger(num)) {
-      setTimeLimitError("Time limit must be a valid number");
-      return false;
-    }
-
-    if (num <= 0) {
-      setTimeLimitError("Time limit must be greater than 0");
-      return false;
-    }
-
-    return true;
-  };
-
-  const validateMemoryLimit = (value: string): boolean => {
-    setMemoryLimitError("");
-    const num = Number(value);
-
-    if (value.trim() === "") {
-      setMemoryLimitError("Memory limit is required");
-      return false;
-    }
-
-    if (isNaN(num) || !Number.isInteger(num)) {
-      setMemoryLimitError("Memory limit must be a valid number");
-      return false;
-    }
-
-    if (num <= 0) {
-      setMemoryLimitError("Memory limit must be greater than 0");
-      return false;
-    }
-
-    return true;
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const isTimeLimitValid = validateTimeLimit(timeLimit.toString());
-    const isMemoryLimitValid = validateMemoryLimit(memoryLimit.toString());
-
-    if (!isTimeLimitValid || !isMemoryLimitValid) {
-      return;
-    }
     if (!(await validateTestcase(file))) {
       return;
     }
-
     try {
       const selectedTags = tags
         .filter((tag) => tag.selected)
         .map((tag) => tag.label)
-        .join(",");
+        .join(","); // Chuyển thành chuỗi với dấu phẩy
 
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("tutorial", tutorial);
       formData.append("difficulty", difficulty.toString());
       formData.append("timeLimit", timeLimit.toString());
       formData.append("memoryLimit", memoryLimit.toString());
       formData.append("tags", selectedTags);
-      formData.append("solution", code || "");
-      formData.append("langSolution", language);
       formData.append("file", file as Blob);
 
       const res = await submit("POST", "/api/contributions", formData, {
         includeToken: true,
       });
       toast.success("Contribution submitted");
-      navigate("/");
 
       console.log("Submit contribute response: ", res);
     } catch (err) {
@@ -412,28 +343,34 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
             <Form.Check
               type="switch"
               id="custom-switch"
-              label="Markdown Preview (with LaTeX)"
-              onChange={(e) => setDescriptionMarkdown(e.target.checked)}
+              label="Markdown Preview"
+              onChange={(e) => setIsMarkdown(e.target.checked)}
             />
 
-            {DescriptionMarkdown ? (
-              <div className="border rounded p-2">
-                <ReactMarkdown
-                  children={description}
-                  remarkPlugins={[remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
-                />
-              </div>
+            {isMarkdown ? (
+              <>
+                <div className="border rounded p-2">
+                  <ReactMarkdown
+                    children={description}
+                    // remarkPlugins={[remarkMath]}
+                    // rehypePlugins={[rehypeKatex]}
+                  />
+                  {/* {description} */}
+                  {/* </ReactMarkdown> */}
+                </div>
+              </>
             ) : (
-              <Form.Control
-                placeholder="Write your description in markdown"
-                className="mb-3 mt-2"
-                required
-                as="textarea"
-                rows={8}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              <>
+                <Form.Control
+                  placeholder="Write your description in markdown"
+                  className="mb-3 mt-2"
+                  required
+                  as="textarea"
+                  rows={8}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </>
             )}
 
             <h5 className="mt-3 mb-3">Upload tests</h5>
@@ -480,115 +417,26 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               required
               type="text"
               placeholder="Time limit"
-              onChange={(e) => {
-                const value = e.target.value;
-                setTimeLimit(parseInt(value) || 0);
-                validateTimeLimit(value);
-              }}
+              onChange={(e) => setTimeLimit(parseInt(e.target.value))}
               className="w-50 mb-2"
-              isInvalid={!!timeLimitError}
             />
-            <Form.Control.Feedback type="invalid">
-              {timeLimitError}
-            </Form.Control.Feedback>
 
             <h5 className="mt-3 mb-3">Memory limit (MB)</h5>
+
             <Form.Control
               required
               type="text"
               placeholder="Memory limit"
-              onChange={(e) => {
-                const value = e.target.value;
-                setMemoryLimit(parseInt(value) || 0);
-                validateMemoryLimit(value);
-              }}
+              onChange={(e) => setMemoryLimit(parseInt(e.target.value))}
               className="w-50 mb-2"
-              isInvalid={!!memoryLimitError}
-            />
-            <Form.Control.Feedback type="invalid">
-              {memoryLimitError}
-            </Form.Control.Feedback>
-
-            <h5 className="mt-3 mb-3">Tutorial</h5>
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Markdown Preview"
-              onChange={(e) => setTutorialMarkdown(e.target.checked)}
             />
 
-            {/* {TutorialMarkdown ? (
-              <>
-                <div className="border rounded p-2">
-                  <ReactMarkdown children={tutorial} />
-                </div>
-              </>
-            ) : (
-              <>
-                <Form.Control
-                  placeholder="Write your tutorial in markdown"
-                  className="mb-3 mt-2"
-                  required
-                  as="textarea"
-                  rows={8}
-                  value={tutorial}
-                  onChange={(e) => setTutorial(e.target.value)}
-                />
-              </>
-            )} */}
-
-            {TutorialMarkdown ? (
-              <div className="border rounded p-2">
-                <ReactMarkdown
-                  children={tutorial}
-                  remarkPlugins={[remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
-                />
-              </div>
-            ) : (
-              <Form.Control
-                placeholder="Write your tutorial in markdown"
-                className="mb-3 mt-2"
-                required
-                as="textarea"
-                rows={8}
-                value={tutorial}
-                onChange={(e) => setTutorial(e.target.value)}
-              />
-            )}
-
-            <h5 className="mt-3 mb-2">Solution</h5>
-            <div
-              className="border border-dark-subtle shadow-sm rounded-4 mt-3"
-              style={{
-                height: "50vh",
-              }}
-            >
-              <div className="p-3 d-flex justify-content-between">
-                <LanguageDropdown
-                  language={language}
-                  setLanguage={setLanguage}
-                />
-              </div>
-              <div>
-                <Editor
-                  height="35vh"
-                  language={languageEditorMap[language]}
-                  value={code}
-                  onChange={(value) => setCode(value)}
-                  options={{
-                    minimap: { enabled: false },
-                  }}
-                />
-              </div>
-            </div>
             <div className="d-flex justify-content-center mt-3">
               <Button
                 className="w-25"
                 type={"submit"}
                 variant="primary"
                 disabled={isSubmitting}
-                size="lg"
               >
                 {isSubmitting ? <CustomSpinner /> : "Submit"}
               </Button>

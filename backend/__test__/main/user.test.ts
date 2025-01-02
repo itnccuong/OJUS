@@ -16,7 +16,7 @@ import { User } from "@prisma/client";
 
 const avatar = path.resolve(__dirname, "../../dataForTest/avatar.png");
 
-jest.setTimeout(600000);
+jest.setTimeout(60000);
 
 beforeEach(async () => {
   await cleanDatabase();

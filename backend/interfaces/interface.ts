@@ -32,9 +32,3 @@ export interface SubmissionWithProblem extends Submission {
 export interface UserWithAvatarInterface extends User {
   avatar: Files | null;
 }
-
-export interface SolutionProblem {
-  solution: string | null;
-  tutorial: string | null;
-  langSolution: string | null;
-}

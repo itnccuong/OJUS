@@ -6,7 +6,6 @@ import globalErrorHandler from "../controllers/error.controller";
 import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import { Response as ExResponse, Request as ExRequest } from "express";
-import multer from 'multer';
 
 const app = express();
 app.use(express.json());
@@ -26,13 +25,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const upload = multer({
-  limits: {
-    fileSize: 20971520, // 20 MB
-  }
-});
-
-RegisterRoutes(app, { multer: upload });
+RegisterRoutes(app);
 
 app.use(globalErrorHandler);
 

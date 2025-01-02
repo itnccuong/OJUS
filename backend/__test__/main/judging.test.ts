@@ -1,7 +1,5 @@
-import { beforeAll, describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test } from "@jest/globals";
 import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
-import { startSubmissionConsumer } from "../../rabbitmq/submissionConsumer";
-import { initRabbitMQ } from "../../rabbitmq/rabbitmqClient";
 
 import {
   compileFailAnswer,
@@ -21,12 +19,10 @@ import {
 } from "../test_utils";
 import { STATUS_CODE, verdict } from "../../utils/constants";
 
-jest.setTimeout(600000);
+jest.setTimeout(60000);
 
 beforeAll(async () => {
   await initAllDockerContainers();
-  await initRabbitMQ();
-  startSubmissionConsumer();
 });
 
 beforeAll(async () => {
@@ -76,7 +72,7 @@ describe("Submit code (C++)", () => {
         userToken,
       );
 
-    expect(submitCodeResponse.status).toBe(STATUS_CODE.SUCCESS);
+    expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(getSubmissionResponse.body.data.submission.verdict).toBe(
       verdict.WRONG_ANSWER,
     );
@@ -95,7 +91,7 @@ describe("Submit code (C++)", () => {
 
   test("Runtime Error", async () => {
     const body = {
-      code: "#include <iostream>\n\nint main() {\n    int *ptr = nullptr; // Initialize pointer to nullptr\n    std::cout << \"Dereferencing nullptr to cause runtime error.\" << std::endl;\n    std::cout << *ptr << std::endl; // Dereferencing nullptr which will cause a runtime error\n    return 0;\n}\n",
+      code: "#include <iostream>\nusing namespace std;\n\nint main() {\n  int i;\n  cin >> i;\n  cout << -2/0;\n}",
       language: "cpp",
     };
 
@@ -107,7 +103,7 @@ describe("Submit code (C++)", () => {
         userToken,
       );
 
-    expect(submitCodeResponse.status).toBe(STATUS_CODE.SUCCESS);
+    expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(getSubmissionResponse.body.data.submission.verdict).toBe(
       verdict.RUNTIME_ERROR,
     );
@@ -137,7 +133,7 @@ describe("Submit code (C++)", () => {
         userToken,
       );
 
-    expect(submitCodeResponse.status).toBe(STATUS_CODE.SUCCESS);
+    expect(submitCodeResponse.status).toBe(STATUS_CODE.BAD_REQUEST);
     expect(getSubmissionResponse.body.data.submission.verdict).toBe(
       verdict.TIME_LIMIT_EXCEEDED,
     );

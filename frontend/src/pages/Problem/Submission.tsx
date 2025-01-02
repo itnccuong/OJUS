@@ -91,20 +91,20 @@ export default function Submission() {
                 <span className="fw-bold">
                   {submission.verdict === verdict.AC
                     ? `${testcases.input.length}`
-                    : (submission.verdict === verdict.CE)
+                    : submission.verdict === verdict.CE
                       ? "0"
-                      : `${Math.max(0, results.length - 1)}`}
+                      : `${results.length - 1}`}
                   /{testcases.input.length}
                 </span>
                 <span> test cases passed</span>
               </div>
               <div>
                 <span>Runtime: </span>
-                <span className="fw-bold">{(submission.verdict === null || submission.verdict === undefined) ? "N/A" : `${maxTime} ms`}</span>
+                <span className="fw-bold">{maxTime} ms</span>
               </div>
               <div>
                 <span>Memory: </span>
-                <span className="fw-bold">{(submission.verdict === null || submission.verdict === undefined) ? "N/A" : `${totalMemory} MB`}</span>
+                <span className="fw-bold">{totalMemory} MB</span>
               </div>
             </div>
             <div>
@@ -114,15 +114,13 @@ export default function Submission() {
                   className={
                     submission.verdict === verdict.AC
                       ? "badge text-success"
-                      : (submission.verdict === null || submission.verdict === undefined)
-                      ? "badge text-primary"
                       : "badge text-danger"
                   }
                   style={{
                     fontSize: "18px",
                   }}
                 >
-                  {submission.verdict === null || submission.verdict === undefined ? "In Progress" : submission.verdict}
+                  {submission.verdict}
                 </span>
               </div>
               <div>
@@ -139,44 +137,34 @@ export default function Submission() {
         {/*Log err*/}
         {(submission.stderr || submission.verdict === verdict.WA) && (
           <div className="border border-danger shadow-sm rounded-4 p-3 mt-3">
-          {submission.stderr ? (
-            <div className="text-danger fw-medium">
-            {submission.stderr.length > 100
-              ? `${submission.stderr.slice(0, 100)}...`
-              : submission.stderr}
-            </div>
-          ) : submission.verdict === verdict.WA ? (
-            <>
-            <div className="border-bottom border-danger pb-3">
-              <span className="text-danger fw-medium">Input: </span>
-              <span className="fw-bold">
-              {testcases.input[results.length - 1].length > 100
-                ? `${testcases.input[results.length - 1].slice(0, 100)}...`
-                : testcases.input[results.length - 1]}
-              </span>
-            </div>
-            <div className="border-bottom border-danger pb-3 pt-3">
-              <span className="text-danger fw-medium">Expected: </span>
-              <span className="fw-bold text-success">
-              {testcases.output[results.length - 1].length > 100
-                ? `${testcases.output[results.length - 1].slice(0, 100)}...`
-                : testcases.output[results.length - 1]}
-              </span>
-            </div>
-            <div className="pt-3">
-              <span className="text-danger fw-medium">Output: </span>
-              <span className="fw-bold text-danger">
-              {results[results.length - 1].output.length > 100
-                ? `${results[results.length - 1].output.slice(0, 100)}...`
-                : results[results.length - 1].output}
-              </span>
-            </div>
-            </>
-          ) : null}
+            {submission.stderr ? (
+              <div className="text-danger fw-medium">{submission.stderr}</div>
+            ) : submission.verdict === verdict.WA ? (
+              <>
+                <div className="border-bottom border-danger pb-3">
+                  <span className="text-danger fw-medium">Input: </span>
+                  <span className="fw-bold">
+                    {testcases.input[results.length - 1]}
+                  </span>
+                </div>
+                <div className="border-bottom border-danger pb-3 pt-3">
+                  <span className="text-danger fw-medium">Expected: </span>
+                  <span className="fw-bold text-success">
+                    {testcases.output[results.length - 1]}
+                  </span>
+                </div>
+                <div className="pt-3">
+                  <span className="text-danger fw-medium">Output: </span>
+                  <span className="fw-bold text-danger">
+                    {results[results.length - 1].output}
+                  </span>
+                </div>
+              </>
+            ) : null}
           </div>
         )}
 
-        <h4 className="mt-3">Solution</h4>
+        <h4 className="mt-3">Code</h4>
         <div
           className="border border-dark-subtle shadow-sm rounded-4 mt-3"
           style={{

@@ -86,10 +86,8 @@ export default function SubmissionList() {
                   <td className="text-center">
                     <span
                       className={
-                        submission.verdict === verdict.AC
+                        submission.verdict === "Accepted"
                           ? "badge text-success"
-                          : (submission.verdict === null || submission.verdict === undefined)
-                          ? "badge text-primary"
                           : "badge text-danger"
                       }
                       style={{
@@ -100,7 +98,7 @@ export default function SubmissionList() {
                       submission.verdict === verdict.RE ||
                       submission.verdict === verdict.TLE
                         ? `${submission.verdict} on test ${submission.results.length}`
-                        : (submission.verdict === null || submission.verdict === undefined) ? "In Progress" : submission.verdict}
+                        : submission.verdict}
                     </span>
                   </td>
 

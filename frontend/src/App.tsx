@@ -23,8 +23,6 @@ import NavBar from "./components/NavBar.tsx";
 import Footer from "./components/Footer.tsx";
 import SubmissionListContribution from "./pages/Contribution/SubmissionListContribution.tsx";
 import NotAdmin from "./pages/Contribution/NotAdmin.tsx";
-import Solution from "./pages/Contribution/Solution.tsx";
-import ProblemSolution from "./pages/Problem/ProblemSolution.tsx";
 
 export default function App() {
   return (
@@ -46,10 +44,6 @@ export default function App() {
             path="/problems/:problemId/submissions"
             element={<SubmissionList />}
           />
-          <Route
-            path="/problems/:problemId/solution"
-            element={<ProblemSolution />}
-          />
           <Route path="/submissions/:submissionId" element={<Submission />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/accounts/password/reset" element={<ForgotPassword />} />
@@ -69,10 +63,6 @@ export default function App() {
             element={<Contribution />}
           />
           <Route path="/notadmin" element={<NotAdmin />} />
-          <Route
-            path="/contributions/:problemId/solution"
-            element={<Solution />}
-          />
           <Route
             path="/contributions/:problemId/submissions"
             element={<SubmissionListContribution />}
