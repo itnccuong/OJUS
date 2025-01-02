@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { beforeAll, describe, expect, jest, test } from "@jest/globals";
 import { initAllDockerContainers } from "../../utils/codeExecutorUtils";
 import { startSubmissionConsumer } from "../../rabbitmq/submissionConsumer";
 import { initRabbitMQ } from "../../rabbitmq/rabbitmqClient";
