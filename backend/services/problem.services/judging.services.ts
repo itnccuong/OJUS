@@ -52,7 +52,7 @@ export const compileService = async (
       compileResult.stderr,
     );
 
-    throw new CustomError(verdict.COMPILE_ERROR, STATUS_CODE.BAD_REQUEST, {
+    throw new CustomError(verdict.COMPILE_ERROR, STATUS_CODE.SUCCESS, {
       submissionId: submissionId,
     });
   }

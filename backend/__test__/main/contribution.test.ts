@@ -32,7 +32,7 @@ import { findProblemById } from "../../services/problem.services/problem.service
 
 const filePath = path.resolve(__dirname, "../../dataForTest/testcase.zip");
 
-jest.setTimeout(60000);
+jest.setTimeout(600000);
 
 beforeEach(async () => {
   await cleanDatabase();

@@ -69,11 +69,13 @@ export const getSubmitCodeResults = async (
 
   const submissionId = res.body.data.submissionId;
 
-  const getSubmissionResponse = (await request(app).get(
-    `/api/submissions/${submissionId}`,
-  )) as ResponseInterfaceForTest<{
-    submission: Submission;
-  }>;
+  let getSubmissionResponse: ResponseInterfaceForTest<{ submission: Submission }>;
+  do {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    getSubmissionResponse = (await request(app).get(
+      `/api/submissions/${submissionId}`,
+    ))
+  } while (getSubmissionResponse.body.data.submission.verdict === "");
 
   const getResultResponse = (await request(app).get(
     `/api/submissions/${submissionId}/results`,

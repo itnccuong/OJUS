@@ -1,5 +1,8 @@
 import { getChannel } from "./rabbitmqClient";
 import { compileService, executeCodeService, updateSubmissionVerdict } from "../services/problem.services/judging.services"
+import { CustomError } from "../utils/errorClass";
+import { STATUS_CODE } from "../utils/constants";
+import e from "express";
 
 const SUBMISSION_QUEUE = "submission_queue";
 
@@ -32,6 +35,9 @@ export const startSubmissionConsumer = async () => {
         } catch (error) {
           console.error("Error processing submission job:", error);
           channel.nack(msg, false, false);
+          if(error instanceof CustomError){
+            return new CustomError(error.message, error.status, error.data);
+          }
         }
       }
     },

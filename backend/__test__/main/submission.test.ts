@@ -26,7 +26,7 @@ import {
 import { STATUS_CODE, verdict } from "../../utils/constants";
 import { Submission } from "@prisma/client";
 
-jest.setTimeout(60000);
+jest.setTimeout(600000);
 
 beforeAll(async () => {
   await cleanDatabase();
