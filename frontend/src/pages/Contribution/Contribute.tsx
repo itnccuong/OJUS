@@ -413,10 +413,10 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               type="switch"
               id="custom-switch"
               label="Markdown Preview (with LaTeX)"
-              onChange={(e) => setIsMarkdown(e.target.checked)}
+              onChange={(e) => setDescriptionMarkdown(e.target.checked)}
             />
 
-            {isMarkdown ? (
+            {DescriptionMarkdown ? (
               <div className="border rounded p-2">
               <ReactMarkdown
                 children={description}
@@ -474,43 +474,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 </OverlayTrigger>
               </div>
             </div>
-            <div className="mb-3">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <Form.Control
-                  required
-                  type="file"
-                  className="w-50"
-                  accept=".zip"
-                  onChange={(e) => {
-                    setFile((e.target as HTMLInputElement).files?.[0] || null);
-                    validateTestcase(
-                      (e.target as HTMLInputElement).files?.[0] || null
-                    );
-                  }}
-                  isInvalid={!!testcaseError}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {testcaseError}
-                </Form.Control.Feedback>
-                <OverlayTrigger
-                  trigger={["hover", "focus"]}
-                  placement="right"
-                  overlay={popover}
-                  onToggle={(show) => setShowHelp(show)}
-                  rootClose
-                >
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ cursor: "help" }}
-                  >
-                    <HelpCircle
-                      className={`text-primary ${showHelp ? "opacity-75" : ""}`}
-                      size={25}
-                    />
-                  </div>
-                </OverlayTrigger>
-              </div>
-            </div>
+            
 
             <h5 className="mt-3 mb-3">Time limit (ms)</h5>
             <Form.Control
@@ -554,7 +518,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               onChange={(e) => setTutorialMarkdown(e.target.checked)}
             />
 
-            {TutorialMarkdown ? (
+            {/* {TutorialMarkdown ? (
               <>
                 <div className="border rounded p-2">
                   <ReactMarkdown children={tutorial} />
@@ -572,6 +536,26 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   onChange={(e) => setTutorial(e.target.value)}
                 />
               </>
+            )} */}
+
+              {TutorialMarkdown ? (
+              <div className="border rounded p-2">
+              <ReactMarkdown
+                children={tutorial}
+                remarkPlugins={[remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+              />
+              </div>
+            ) : (
+              <Form.Control
+              placeholder="Write your tutorial in markdown"
+              className="mb-3 mt-2"
+              required
+              as="textarea"
+              rows={8}
+              value={tutorial}
+              onChange={(e) => setTutorial(e.target.value)}
+              />
             )}
 
             <h5 className="mt-3 mb-2">Solution</h5>
