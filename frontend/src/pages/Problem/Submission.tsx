@@ -91,20 +91,20 @@ export default function Submission() {
                 <span className="fw-bold">
                   {submission.verdict === verdict.AC
                     ? `${testcases.input.length}`
-                    : submission.verdict === verdict.CE
+                    : (submission.verdict === verdict.CE)
                       ? "0"
-                      : `${results.length - 1}`}
+                      : `${Math.max(0, results.length - 1)}`}
                   /{testcases.input.length}
                 </span>
                 <span> test cases passed</span>
               </div>
               <div>
                 <span>Runtime: </span>
-                <span className="fw-bold">{maxTime} ms</span>
+                <span className="fw-bold">{(submission.verdict === null || submission.verdict === undefined) ? "N/A" : `${maxTime} ms`}</span>
               </div>
               <div>
                 <span>Memory: </span>
-                <span className="fw-bold">{totalMemory} MB</span>
+                <span className="fw-bold">{(submission.verdict === null || submission.verdict === undefined) ? "N/A" : `${totalMemory} MB`}</span>
               </div>
             </div>
             <div>
@@ -114,13 +114,15 @@ export default function Submission() {
                   className={
                     submission.verdict === verdict.AC
                       ? "badge text-success"
+                      : (submission.verdict === null || submission.verdict === undefined)
+                      ? "badge text-primary"
                       : "badge text-danger"
                   }
                   style={{
                     fontSize: "18px",
                   }}
                 >
-                  {submission.verdict}
+                  {submission.verdict === null || submission.verdict === undefined ? "In Progress" : submission.verdict}
                 </span>
               </div>
               <div>
