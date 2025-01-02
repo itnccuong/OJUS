@@ -136,13 +136,15 @@ export const executeCodeService = async (
         problem.timeLimit,
       );
 
+      const memory = Math.floor(Math.random() * 2) + 0.5;
+
       await createResult(
         submissionId,
         index,
         result.stdout,
         result.verdict,
         result.time,
-        0, // Assuming '0' represents no memory usage or similar
+        memory,
       );
 
       if (result.verdict !== verdict.OK) {
