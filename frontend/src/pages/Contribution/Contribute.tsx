@@ -16,7 +16,7 @@ import CustomSpinner from "../../components/CustomSpinner.tsx";
 import { AxiosError } from "axios";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import 'katex/dist/katex.min.css';  // This imports the styles for KaTeX
+import "katex/dist/katex.min.css"; // This imports the styles for KaTeX
 
 import { HelpCircle } from "lucide-react";
 import JSZip from "jszip";
@@ -58,8 +58,8 @@ export default function Contribute() {
   const toggleTag = (index: number) => {
     setTags((prevTags) =>
       prevTags.map((tag, i) =>
-        i === index ? { ...tag, selected: !tag.selected } : tag
-      )
+        i === index ? { ...tag, selected: !tag.selected } : tag,
+      ),
     );
   };
 
@@ -115,7 +115,7 @@ export default function Contribute() {
         // Check if all non-root files are in a single folder
         const nonRootFiles = allFiles.filter((name) => name.includes("/"));
         const topLevelFolders = new Set(
-          nonRootFiles.map((path) => path.split("/")[0])
+          nonRootFiles.map((path) => path.split("/")[0]),
         );
 
         if (topLevelFolders.size === 1) {
@@ -126,7 +126,7 @@ export default function Contribute() {
             .filter((name) => name !== "" && !name.includes("/")); // Remove empty strings and nested files
         } else {
           setTestcaseError(
-            "ZIP must contain either files in root or in a single folder"
+            "ZIP must contain either files in root or in a single folder",
           );
           return false;
         }
@@ -138,35 +138,35 @@ export default function Contribute() {
       // Rest of the validation remains the same
       const validFilePattern = /^(input|output)\d+\.txt$/;
       const invalidFiles = testcaseFiles.filter(
-        (name) => !validFilePattern.test(name)
+        (name) => !validFilePattern.test(name),
       );
 
       if (invalidFiles.length > 0) {
         setTestcaseError(
-          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`
+          `Invalid files found: ${invalidFiles.join(", ")}. Only inputN.txt and outputN.txt files are allowed.`,
         );
         return false;
       }
 
       // Group valid input and output files
       const inputFiles = testcaseFiles.filter(
-        (name) => name.startsWith("input") && name.endsWith(".txt")
+        (name) => name.startsWith("input") && name.endsWith(".txt"),
       );
       const outputFiles = testcaseFiles.filter(
-        (name) => name.startsWith("output") && name.endsWith(".txt")
+        (name) => name.startsWith("output") && name.endsWith(".txt"),
       );
 
       // Validation checks
       if (inputFiles.length === 0 || outputFiles.length === 0) {
         setTestcaseError(
-          "ZIP must contain at least one pair of input/output files"
+          "ZIP must contain at least one pair of input/output files",
         );
         return false;
       }
 
       if (inputFiles.length !== outputFiles.length) {
         setTestcaseError(
-          "Number of input files must match number of output files"
+          "Number of input files must match number of output files",
         );
         return false;
       }
@@ -176,7 +176,7 @@ export default function Contribute() {
         const number = inputFile.match(/input(\d+)\.txt/)?.[1];
         if (!number) {
           setTestcaseError(
-            "Input files must be named 'input1.txt', 'input2.txt', etc."
+            "Input files must be named 'input1.txt', 'input2.txt', etc.",
           );
           return false;
         }
@@ -193,7 +193,7 @@ export default function Contribute() {
     } catch (error) {
       console.error("Error validating ZIP file:", error);
       setTestcaseError(
-        "Error reading ZIP file. Please ensure it's a valid ZIP archive."
+        "Error reading ZIP file. Please ensure it's a valid ZIP archive.",
       );
       return false;
     }
@@ -278,7 +278,7 @@ export default function Contribute() {
         includeToken: true,
       });
       toast.success("Contribution submitted");
-      navigate("/contribute");
+      navigate("/");
 
       console.log("Submit contribute response: ", res);
     } catch (err) {
@@ -418,21 +418,21 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
 
             {DescriptionMarkdown ? (
               <div className="border rounded p-2">
-              <ReactMarkdown
-                children={description}
-                remarkPlugins={[remarkMath]}
-                rehypePlugins={[rehypeKatex]}
-              />
+                <ReactMarkdown
+                  children={description}
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                />
               </div>
             ) : (
               <Form.Control
-              placeholder="Write your description in markdown"
-              className="mb-3 mt-2"
-              required
-              as="textarea"
-              rows={8}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+                placeholder="Write your description in markdown"
+                className="mb-3 mt-2"
+                required
+                as="textarea"
+                rows={8}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             )}
 
@@ -447,7 +447,7 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                   onChange={(e) => {
                     setFile((e.target as HTMLInputElement).files?.[0] || null);
                     validateTestcase(
-                      (e.target as HTMLInputElement).files?.[0] || null
+                      (e.target as HTMLInputElement).files?.[0] || null,
                     );
                   }}
                   isInvalid={!!testcaseError}
@@ -474,7 +474,6 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
                 </OverlayTrigger>
               </div>
             </div>
-            
 
             <h5 className="mt-3 mb-3">Time limit (ms)</h5>
             <Form.Control
@@ -538,23 +537,23 @@ Because \`nums[0] + nums[1] = 2 + 7 = 9\`, return \`[0, 1]\`.
               </>
             )} */}
 
-              {TutorialMarkdown ? (
+            {TutorialMarkdown ? (
               <div className="border rounded p-2">
-              <ReactMarkdown
-                children={tutorial}
-                remarkPlugins={[remarkMath]}
-                rehypePlugins={[rehypeKatex]}
-              />
+                <ReactMarkdown
+                  children={tutorial}
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                />
               </div>
             ) : (
               <Form.Control
-              placeholder="Write your tutorial in markdown"
-              className="mb-3 mt-2"
-              required
-              as="textarea"
-              rows={8}
-              value={tutorial}
-              onChange={(e) => setTutorial(e.target.value)}
+                placeholder="Write your tutorial in markdown"
+                className="mb-3 mt-2"
+                required
+                as="textarea"
+                rows={8}
+                value={tutorial}
+                onChange={(e) => setTutorial(e.target.value)}
               />
             )}
 
