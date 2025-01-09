@@ -1,4 +1,4 @@
-# Vua-Leetcode
+# OJUS 
 
 This repo contains a full-stack coding platform built with React + TypeScript (Vite) on the frontend and Node.js + Express + Prisma on the backend. It allows users to register, submit solutions to coding problems, and get results in real time, and also contribute problems to the platform.
 
